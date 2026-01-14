@@ -16,8 +16,15 @@ final class AppState: ObservableObject {
     @Published var hasRequiredPermissions: Bool = false
     @Published var hasCompletedOnboarding: Bool = false
     
+    let menuBarManager: MenuBarManager
+    private var cancellables = Set<AnyCancellable>()
+    
     init() {
         hasCompletedOnboarding = UserDefaults.standard.bool(forKey: "hasCompletedOnboarding")
+        menuBarManager = MenuBarManager()
+        
+        menuBarManager.$isCollapsed
+            .assign(to: &$isCollapsed)
     }
     
     func completeOnboarding() {
@@ -26,6 +33,6 @@ final class AppState: ObservableObject {
     }
     
     func toggleMenuBar() {
-        isCollapsed.toggle()
+        menuBarManager.toggle()
     }
 }
