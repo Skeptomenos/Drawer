@@ -25,10 +25,16 @@ final class MenuBarManager: ObservableObject {
     private let toggleItem: NSStatusItem
     private let separatorItem: NSStatusItem
     
+    // MARK: - Dependencies
+    
+    private let settings: SettingsManager
+    private var cancellables = Set<AnyCancellable>()
+    private var autoCollapseTask: Task<Void, Never>?
+    
     // MARK: - Constants
     
     private let separatorExpandedLength: CGFloat = 20
-    private let separatorCollapsedLength: CGFloat = 10000  // The "10k pixel hack"
+    private let separatorCollapsedLength: CGFloat = 10000
     private let debounceDelay: TimeInterval = 0.3
     
     // MARK: - RTL Support
@@ -63,16 +69,25 @@ final class MenuBarManager: ObservableObject {
     
     // MARK: - Initialization
     
-    init() {
+    init(settings: SettingsManager = .shared) {
+        self.settings = settings
         self.toggleItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         self.separatorItem = NSStatusBar.system.statusItem(withLength: 1)
         
         setupUI()
+        setupSettingsBindings()
         
-        // Delay collapse to allow menu bar to settle (matches original Hidden Bar behavior)
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
             self?.collapse()
         }
+    }
+    
+    private func setupSettingsBindings() {
+        settings.autoCollapseSettingsChanged
+            .sink { [weak self] in
+                self?.restartAutoCollapseTimerIfNeeded()
+            }
+            .store(in: &cancellables)
     }
     
     // MARK: - Setup
@@ -160,13 +175,41 @@ final class MenuBarManager: ObservableObject {
         separatorItem.length = separatorExpandedLength
         toggleItem.button?.image = collapseImage
         isCollapsed = false
+        
+        startAutoCollapseTimer()
     }
     
     func collapse() {
         guard isSeparatorValidPosition, !isCollapsed else { return }
         
+        cancelAutoCollapseTimer()
         separatorItem.length = separatorCollapsedLength
         toggleItem.button?.image = expandImage
         isCollapsed = true
+    }
+    
+    // MARK: - Auto-Collapse Timer
+    
+    private func startAutoCollapseTimer() {
+        guard settings.autoCollapseEnabled else { return }
+        
+        cancelAutoCollapseTimer()
+        
+        let delay = settings.autoCollapseDelay
+        autoCollapseTask = Task { [weak self] in
+            try? await Task.sleep(for: .seconds(delay))
+            guard !Task.isCancelled else { return }
+            await self?.collapse()
+        }
+    }
+    
+    private func cancelAutoCollapseTimer() {
+        autoCollapseTask?.cancel()
+        autoCollapseTask = nil
+    }
+    
+    private func restartAutoCollapseTimerIfNeeded() {
+        guard !isCollapsed else { return }
+        startAutoCollapseTimer()
     }
 }

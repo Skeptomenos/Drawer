@@ -188,7 +188,7 @@ func testDebouncePreventRapidToggle() {
 
 ---
 
-### Task 1.3: Migrate Preferences → SettingsManager
+### Task 1.3: Migrate Preferences → SettingsManager ✅
 
 | Attribute | Value |
 |-----------|-------|
@@ -219,10 +219,10 @@ Replace the legacy `Preferences.swift` enum with a modern `SettingsManager` usin
 5. Integrate with `MenuBarManager` for auto-collapse timer
 
 **Acceptance Criteria**:
-- [ ] All settings persist across launches
-- [ ] Auto-collapse timer triggers after configured delay
-- [ ] Settings changes immediately affect app behavior
-- [ ] No migration needed from old keys (fresh start acceptable)
+- [x] All settings persist across launches
+- [x] Auto-collapse timer triggers after configured delay
+- [x] Settings changes immediately affect app behavior
+- [x] No migration needed from old keys (fresh start acceptable)
 
 **Test Cases**:
 ```swift

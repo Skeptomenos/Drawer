@@ -14,14 +14,19 @@ final class AppState: ObservableObject {
     @Published var isCollapsed: Bool = true
     @Published var isDrawerVisible: Bool = false
     @Published var hasRequiredPermissions: Bool = false
-    @Published var hasCompletedOnboarding: Bool = false
     
     let menuBarManager: MenuBarManager
+    let settings: SettingsManager
     private var cancellables = Set<AnyCancellable>()
     
-    init() {
-        hasCompletedOnboarding = UserDefaults.standard.bool(forKey: "hasCompletedOnboarding")
-        menuBarManager = MenuBarManager()
+    var hasCompletedOnboarding: Bool {
+        get { UserDefaults.standard.bool(forKey: "hasCompletedOnboarding") }
+        set { UserDefaults.standard.set(newValue, forKey: "hasCompletedOnboarding") }
+    }
+    
+    init(settings: SettingsManager = .shared) {
+        self.settings = settings
+        self.menuBarManager = MenuBarManager(settings: settings)
         
         menuBarManager.$isCollapsed
             .assign(to: &$isCollapsed)
@@ -29,7 +34,6 @@ final class AppState: ObservableObject {
     
     func completeOnboarding() {
         hasCompletedOnboarding = true
-        UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
     }
     
     func toggleMenuBar() {
