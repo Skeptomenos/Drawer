@@ -119,7 +119,7 @@ xcodebuild -scheme Drawer -configuration Debug build
 
 ---
 
-### Task 1.2: Port StatusBarController → MenuBarManager
+### Task 1.2: Port StatusBarController → MenuBarManager ✅
 
 | Attribute | Value |
 |-----------|-------|
@@ -155,12 +155,12 @@ Extract the "10k pixel hack" from `StatusBarController.swift` into a clean, obse
 7. Wire to `DrawerApp` via `@StateObject`
 
 **Acceptance Criteria**:
-- [ ] Menu bar shows toggle icon
-- [ ] Clicking toggle expands/collapses separator
-- [ ] Icons to the left of separator hide when collapsed
-- [ ] Position persists across app restarts
-- [ ] RTL languages work correctly
-- [ ] Rapid clicks don't cause issues (debounce works)
+- [x] Menu bar shows toggle icon
+- [x] Clicking toggle expands/collapses separator
+- [x] Icons to the left of separator hide when collapsed
+- [x] Position persists across app restarts
+- [x] RTL languages work correctly
+- [x] Rapid clicks don't cause issues (debounce works)
 
 **Verification**:
 1. Build and run app
