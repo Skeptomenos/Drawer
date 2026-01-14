@@ -25,6 +25,7 @@ final class AppState: ObservableObject {
     let drawerManager: DrawerManager
     let iconCapturer: IconCapturer
     let eventSimulator: EventSimulator
+    let hoverManager: HoverManager
     
     private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "com.drawer", category: "AppState")
     private var cancellables = Set<AnyCancellable>()
@@ -39,13 +40,15 @@ final class AppState: ObservableObject {
         permissions: PermissionManager = .shared,
         drawerManager: DrawerManager = .shared,
         iconCapturer: IconCapturer = .shared,
-        eventSimulator: EventSimulator = .shared
+        eventSimulator: EventSimulator = .shared,
+        hoverManager: HoverManager = .shared
     ) {
         self.settings = settings
         self.permissions = permissions
         self.drawerManager = drawerManager
         self.iconCapturer = iconCapturer
         self.eventSimulator = eventSimulator
+        self.hoverManager = hoverManager
         self.menuBarManager = MenuBarManager(settings: settings)
         self.drawerController = DrawerPanelController()
         
@@ -55,6 +58,7 @@ final class AppState: ObservableObject {
         setupPermissionBindings()
         setupDrawerBindings()
         setupCapturerBindings()
+        setupHoverBindings()
     }
     
     private func setupPermissionBindings() {
@@ -123,6 +127,39 @@ final class AppState: ObservableObject {
                 self?.drawerManager.updateItems(from: result)
             }
             .store(in: &cancellables)
+    }
+    
+    private func setupHoverBindings() {
+        hoverManager.onShouldShowDrawer = { [weak self] in
+            guard let self = self, self.settings.showOnHover else { return }
+            self.showDrawerWithCapture()
+        }
+        
+        hoverManager.onShouldHideDrawer = { [weak self] in
+            guard let self = self, self.settings.showOnHover else { return }
+            self.hideDrawer()
+        }
+        
+        $isDrawerVisible
+            .sink { [weak self] visible in
+                self?.hoverManager.setDrawerVisible(visible)
+            }
+            .store(in: &cancellables)
+        
+        settings.showOnHoverSubject
+            .removeDuplicates()
+            .sink { [weak self] enabled in
+                if enabled {
+                    self?.hoverManager.startMonitoring()
+                } else {
+                    self?.hoverManager.stopMonitoring()
+                }
+            }
+            .store(in: &cancellables)
+        
+        if settings.showOnHover {
+            hoverManager.startMonitoring()
+        }
     }
     
     func showDrawerWithCapture() {

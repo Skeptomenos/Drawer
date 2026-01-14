@@ -653,7 +653,7 @@ Make drawer icons interactive by simulating clicks on the real menu bar items.
 
 ---
 
-### Task 2.5: Hover & Auto-Show (EventMonitor)
+### Task 2.5: Hover & Auto-Show (EventMonitor) ✅
 
 | Attribute | Value |
 |-----------|-------|
@@ -676,10 +676,20 @@ Show the Drawer when mouse enters the menu bar area (optional feature).
 7. Implement auto-hide when mouse leaves Drawer area
 
 **Acceptance Criteria**:
-- [ ] Moving mouse to top of screen shows Drawer (when enabled)
-- [ ] Moving mouse away hides Drawer
-- [ ] No flicker on rapid mouse movement
-- [ ] Feature can be disabled in settings
+- [x] Moving mouse to top of screen shows Drawer (when enabled)
+- [x] Moving mouse away hides Drawer
+- [x] No flicker on rapid mouse movement (150ms show debounce, 300ms hide debounce)
+- [x] Feature can be disabled in settings (`showOnHover` in SettingsManager)
+
+**Completed Implementation**:
+- `Drawer/Utilities/GlobalEventMonitor.swift`: Refactored from legacy EventMonitor with both global and local monitor classes
+- `Drawer/Core/Managers/HoverManager.swift`: ObservableObject managing mouse tracking with:
+  - Trigger zone detection (top 24pt of screen)
+  - Show debounce (150ms) and hide debounce (300ms) to prevent flicker
+  - Auto-hide when mouse leaves drawer area (with 10pt padding)
+  - Callbacks for show/hide events
+- `Drawer/App/AppState.swift`: Integrated HoverManager with settings binding
+- `Drawer/Core/Managers/SettingsManager.swift`: Added `showOnHoverSubject` publisher
 
 ---
 

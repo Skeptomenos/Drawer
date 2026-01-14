@@ -44,16 +44,13 @@ final class SettingsManager: ObservableObject {
     /// Whether to use full status bar width when expanded
     @AppStorage("useFullStatusBarOnExpand") var useFullStatusBarOnExpand: Bool = false
     
-    /// Show drawer on hover (vs click only)
-    @AppStorage("showOnHover") var showOnHover: Bool = false
+    @AppStorage("showOnHover") var showOnHover: Bool = false {
+        didSet { showOnHoverSubject.send(showOnHover) }
+    }
     
-    // MARK: - Combine Publishers
-    
-    /// Publisher for auto-collapse enabled changes
     let autoCollapseEnabledSubject = PassthroughSubject<Bool, Never>()
-    
-    /// Publisher for auto-collapse delay changes
     let autoCollapseDelaySubject = PassthroughSubject<Double, Never>()
+    let showOnHoverSubject = PassthroughSubject<Bool, Never>()
     
     /// Combined publisher for any auto-collapse setting change
     var autoCollapseSettingsChanged: AnyPublisher<Void, Never> {
