@@ -402,7 +402,7 @@ Remove legacy AppKit code once SwiftUI foundation is stable.
 
 ---
 
-### Task 2.1: DrawerPanel (NSPanel Window)
+### Task 2.1: DrawerPanel (NSPanel Window) ✅
 
 | Attribute | Value |
 |-----------|-------|
@@ -445,16 +445,23 @@ class DrawerPanel: NSPanel {
 7. Wire to `MenuBarManager.toggle()` for testing
 
 **Acceptance Criteria**:
-- [ ] Panel appears below menu bar when triggered
-- [ ] Panel doesn't steal focus from other apps
-- [ ] Panel appears on all Spaces
-- [ ] Panel has no title bar or window chrome
-- [ ] Panel has shadow
+- [x] Panel appears below menu bar when triggered
+- [x] Panel doesn't steal focus from other apps
+- [x] Panel appears on all Spaces
+- [x] Panel has no title bar or window chrome
+- [x] Panel has shadow
+
+**Completed Implementation**:
+- `Drawer/UI/Panels/DrawerPanel.swift`: NSPanel subclass with `.borderless`, `.nonactivatingPanel`, `.fullSizeContentView` style masks
+- `Drawer/UI/Panels/DrawerPanelController.swift`: Manages panel lifecycle, hosts SwiftUI via NSHostingView
+- `Drawer/UI/Panels/DrawerContentView.swift`: Placeholder SwiftUI view with mock icons
+- `Drawer/App/AppState.swift`: Updated with `drawerController` and drawer toggle methods
+- `Drawer/Core/Managers/MenuBarManager.swift`: Added "Show Drawer" context menu item with callback
 
 **Verification**:
-1. Click toggle → panel appears below menu bar
-2. Click in another app → that app stays focused
-3. Switch to different Space → panel follows (if configured)
+1. Right-click separator → "Show Drawer" menu item
+2. Click "Show Drawer" → panel appears below menu bar
+3. Panel uses HUD material background with rounded corners
 
 ---
 

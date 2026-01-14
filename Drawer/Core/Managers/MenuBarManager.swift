@@ -113,6 +113,16 @@ final class MenuBarManager: ObservableObject {
     private func createContextMenu() -> NSMenu {
         let menu = NSMenu()
         
+        let drawerItem = NSMenuItem(
+            title: "Show Drawer",
+            action: #selector(showDrawerPressed),
+            keyEquivalent: "d"
+        )
+        drawerItem.target = self
+        menu.addItem(drawerItem)
+        
+        menu.addItem(NSMenuItem.separator())
+        
         let preferencesItem = NSMenuItem(
             title: "Preferences...",
             action: #selector(openPreferences),
@@ -130,6 +140,12 @@ final class MenuBarManager: ObservableObject {
         ))
         
         return menu
+    }
+    
+    var onShowDrawer: (() -> Void)?
+    
+    @objc private func showDrawerPressed() {
+        onShowDrawer?()
     }
     
     // MARK: - Actions
