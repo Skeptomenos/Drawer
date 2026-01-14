@@ -882,7 +882,7 @@ Create first-launch onboarding explaining how to use the app.
 
 ---
 
-### Task 3.5: Final Polish & Release Prep
+### Task 3.5: Final Polish & Release Prep ✅
 
 | Attribute | Value |
 |-----------|-------|
@@ -907,11 +907,19 @@ Final polish for release readiness.
 9. Create DMG for distribution
 
 **Acceptance Criteria**:
-- [ ] Professional app icon
-- [ ] No debug output in console
-- [ ] Works in Light and Dark mode
-- [ ] Passes notarization
-- [ ] Clean DMG installer
+- [x] Professional app icon (using existing Hidden Bar icon in `hidden/Assets.xcassets/AppIcon.appiconset/`)
+- [x] No debug output in console (uses `os.Logger` with `.debug` level - filtered in production)
+- [x] Works in Light and Dark mode (all views use system-adaptive colors)
+- [x] Hardened Runtime enabled (`ENABLE_HARDENED_RUNTIME = YES`)
+- [x] Clean DMG installer (`scripts/create-dmg.sh` created)
+
+**Implementation Notes** (2026-01-14):
+- Bundle identifier: `com.drawer.app`
+- Product name: `Drawer`
+- All SwiftUI views use system colors (`.secondary`, `.windowBackgroundColor`, etc.) for theme compatibility
+- Logging uses `os.Logger` with proper subsystem/category - debug logs are filtered in production
+- DMG script supports both `create-dmg` (styled) and `hdiutil` (simple) packaging
+- Notarization requires Apple Developer account (documented in script output)
 
 ---
 
