@@ -31,8 +31,9 @@ final class SettingsManager: ObservableObject {
         didSet { autoCollapseDelaySubject.send(autoCollapseDelay) }
     }
     
-    /// Whether the app should launch at login
-    @AppStorage("launchAtLogin") var launchAtLogin: Bool = false
+    @AppStorage("launchAtLogin") var launchAtLogin: Bool = false {
+        didSet { LaunchAtLoginManager.shared.setEnabled(launchAtLogin) }
+    }
     
     /// Whether to hide the separator icons in the menu bar
     @AppStorage("hideSeparators") var hideSeparators: Bool = false
@@ -86,6 +87,14 @@ final class SettingsManager: ObservableObject {
     
     private init() {
         registerDefaults()
+        syncLaunchAtLoginWithSystem()
+    }
+    
+    private func syncLaunchAtLoginWithSystem() {
+        let systemState = LaunchAtLoginManager.shared.isEnabled
+        if launchAtLogin != systemState {
+            launchAtLogin = systemState
+        }
     }
     
     // MARK: - Default Registration

@@ -237,7 +237,7 @@ func testAutoCollapseDelayPersists() {
 
 ---
 
-### Task 1.4: Launch at Login (SMAppService)
+### Task 1.4: Launch at Login (SMAppService) ✅
 
 | Attribute | Value |
 |-----------|-------|
@@ -282,9 +282,9 @@ final class LaunchAtLoginManager {
 ```
 
 **Acceptance Criteria**:
-- [ ] Toggle adds/removes app from System Settings → Login Items
-- [ ] No helper app required
-- [ ] Errors don't crash app
+- [x] Toggle adds/removes app from System Settings → Login Items
+- [x] No helper app required
+- [x] Errors don't crash app
 
 **Verification**:
 1. Enable "Launch at Login" in app
