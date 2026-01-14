@@ -21,6 +21,7 @@
 		DRAWER001000000000000012 /* IconCapturer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000012 /* IconCapturer.swift */; };
 		DRAWER001000000000000013 /* DrawerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000013 /* DrawerItem.swift */; };
 		DRAWER001000000000000014 /* DrawerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000014 /* DrawerManager.swift */; };
+		DRAWER001000000000000015 /* EventSimulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000015 /* EventSimulator.swift */; };
 		00117C4426600671005E517C /* Assets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00117C4326600671005E517C /* Assets.swift */; };
 		00137CDF24A63DB1004AC855 /* Notification.Name+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00137CDE24A63DB1004AC855 /* Notification.Name+Extension.swift */; };
 		0842CDFB23A9FDD000D14BD4 /* GlobalKeybindingPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0842CDFA23A9FDD000D14BD4 /* GlobalKeybindingPreferences.swift */; };
@@ -84,6 +85,7 @@
 		DRAWER002000000000000012 /* IconCapturer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconCapturer.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000013 /* DrawerItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerItem.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000014 /* DrawerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerManager.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000015 /* EventSimulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventSimulator.swift; sourceTree = "<group>"; };
 		00117C4326600671005E517C /* Assets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assets.swift; sourceTree = "<group>"; };
 		00137CDE24A63DB1004AC855 /* Notification.Name+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification.Name+Extension.swift"; sourceTree = "<group>"; };
 		0842CDFA23A9FDD000D14BD4 /* GlobalKeybindingPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalKeybindingPreferences.swift; sourceTree = "<group>"; };
@@ -254,8 +256,17 @@
 				DRAWER003000000000000003 /* Core */,
 				DRAWER003000000000000009 /* Models */,
 				DRAWER003000000000000005 /* UI */,
+				DRAWER003000000000000010 /* Utilities */,
 			);
 			path = Drawer;
+			sourceTree = "<group>";
+		};
+		DRAWER003000000000000010 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				DRAWER002000000000000015 /* EventSimulator.swift */,
+			);
+			path = Utilities;
 			sourceTree = "<group>";
 		};
 		DRAWER003000000000000009 /* Models */ = {
@@ -525,6 +536,7 @@
 				DRAWER001000000000000012 /* IconCapturer.swift in Sources */,
 				DRAWER001000000000000013 /* DrawerItem.swift in Sources */,
 				DRAWER001000000000000014 /* DrawerManager.swift in Sources */,
+				DRAWER001000000000000015 /* EventSimulator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

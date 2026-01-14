@@ -606,7 +606,7 @@ Define the data model for drawer items and render them in the DrawerContentView.
 
 ---
 
-### Task 2.4: Click-Through Interaction (CGEvent)
+### Task 2.4: Click-Through Interaction (CGEvent) ✅
 
 | Attribute | Value |
 |-----------|-------|
@@ -634,34 +634,16 @@ Make drawer icons interactive by simulating clicks on the real menu bar items.
 6. Post CGEvent mouseDown + mouseUp
 7. (Optional) Restore state after menu closes
 
-**Steps**:
-1. Add tap gesture to DrawerItem views
-2. Create `Utilities/EventSimulator.swift`
-3. Implement mouse move + click simulation:
-   ```swift
-   func simulateClick(at point: CGPoint) {
-       let moveEvent = CGEvent(
-           mouseEventSource: nil,
-           mouseType: .mouseMoved,
-           mouseCursorPosition: point,
-           mouseButton: .left
-       )
-       moveEvent?.post(tap: .cghidEventTap)
-       
-       let downEvent = CGEvent(/* ... */)
-       let upEvent = CGEvent(/* ... */)
-       downEvent?.post(tap: .cghidEventTap)
-       upEvent?.post(tap: .cghidEventTap)
-   }
-   ```
-4. Wire to DrawerItem tap handler
-5. Add error handling for permission denied
+**Completed Implementation**:
+- `Drawer/Utilities/EventSimulator.swift`: CGEvent-based mouse simulation with permission checks
+- `Drawer/App/AppState.swift`: Updated `handleItemTap()` and `performClickThrough()` methods
+- Flow: Hide drawer → Wait 50ms → Expand menu bar → Wait 100ms → Simulate click at original icon position
 
 **Acceptance Criteria**:
-- [ ] Clicking drawer icon opens real app's menu
-- [ ] Works with Accessibility permission granted
-- [ ] Graceful error when permission denied
-- [ ] Click position is accurate (within 2pt)
+- [x] Clicking drawer icon opens real app's menu
+- [x] Works with Accessibility permission granted
+- [x] Graceful error when permission denied
+- [x] Click position is accurate (within 2pt)
 
 **Verification**:
 1. Hide some icons (e.g., Dropbox, 1Password)

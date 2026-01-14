@@ -7,6 +7,7 @@
 
 import AppKit
 import Combine
+import os.log
 
 @MainActor
 final class AppState: ObservableObject {
@@ -23,6 +24,9 @@ final class AppState: ObservableObject {
     let drawerController: DrawerPanelController
     let drawerManager: DrawerManager
     let iconCapturer: IconCapturer
+    let eventSimulator: EventSimulator
+    
+    private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "com.drawer", category: "AppState")
     private var cancellables = Set<AnyCancellable>()
     
     var hasCompletedOnboarding: Bool {
@@ -34,12 +38,14 @@ final class AppState: ObservableObject {
         settings: SettingsManager = .shared,
         permissions: PermissionManager = .shared,
         drawerManager: DrawerManager = .shared,
-        iconCapturer: IconCapturer = .shared
+        iconCapturer: IconCapturer = .shared,
+        eventSimulator: EventSimulator = .shared
     ) {
         self.settings = settings
         self.permissions = permissions
         self.drawerManager = drawerManager
         self.iconCapturer = iconCapturer
+        self.eventSimulator = eventSimulator
         self.menuBarManager = MenuBarManager(settings: settings)
         self.drawerController = DrawerPanelController()
         
@@ -162,6 +168,33 @@ final class AppState: ObservableObject {
     }
     
     private func handleItemTap(_ item: DrawerItem) {
+        Task {
+            await performClickThrough(on: item)
+        }
+    }
+    
+    private func performClickThrough(on item: DrawerItem) async {
+        logger.info("Click-through initiated for item at index \(item.index)")
+        
+        guard permissions.hasAccessibility else {
+            logger.warning("Accessibility permission not granted, requesting...")
+            permissions.requestAccessibility()
+            return
+        }
+        
         hideDrawer()
+        
+        try? await Task.sleep(nanoseconds: 50_000_000)
+        
+        menuBarManager.expand()
+        
+        try? await Task.sleep(nanoseconds: 100_000_000)
+        
+        do {
+            try await eventSimulator.simulateClick(at: item.clickTarget)
+            logger.info("Click-through completed successfully")
+        } catch {
+            logger.error("Click-through failed: \(error.localizedDescription)")
+        }
     }
 }
