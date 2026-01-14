@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "929113F021F9D04100173149"
-               BuildableName = "Hidden Bar.app"
-               BlueprintName = "Hidden Bar"
+               BuildableName = "Drawer.app"
+               BlueprintName = "Drawer"
                ReferencedContainer = "container:Hidden Bar.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>

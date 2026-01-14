@@ -57,7 +57,6 @@
 			dstPath = Contents/Library/LoginItems;
 			dstSubfolderSpec = 1;
 			files = (
-				9220587E2212A7C0008A8B03 /* LauncherApplication.app in Copy Files */,
 			);
 			name = "Copy Files";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -100,7 +99,7 @@
 		55F3F1182608923B0054B881 /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		55F3F11C2608925A0054B881 /* StackView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StackView+Extension.swift"; sourceTree = "<group>"; };
 		9220587D22127050008A8B03 /* Hidden.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Hidden.entitlements; path = Hidden/Hidden.entitlements; sourceTree = "<group>"; };
-		929113F121F9D04100173149 /* Hidden Bar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Hidden Bar.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		929113F121F9D04100173149 /* Drawer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Drawer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		929113F421F9D04100173149 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		929113F821F9D04200173149 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		929113FB21F9D04200173149 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -294,7 +293,7 @@
 		929113F221F9D04100173149 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				929113F121F9D04100173149 /* Hidden Bar.app */,
+				929113F121F9D04100173149 /* Drawer.app */,
 				92C5054E21FEC03B0084719A /* LauncherApplication.app */,
 			);
 			name = Products;
@@ -352,25 +351,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		929113F021F9D04100173149 /* Hidden Bar */ = {
+		929113F021F9D04100173149 /* Drawer */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 9291141721F9D04200173149 /* Build configuration list for PBXNativeTarget "Hidden Bar" */;
+			buildConfigurationList = 9291141721F9D04200173149 /* Build configuration list for PBXNativeTarget "Drawer" */;
 			buildPhases = (
 				929113ED21F9D04100173149 /* Sources */,
 				929113EE21F9D04100173149 /* Frameworks */,
 				929113EF21F9D04100173149 /* Resources */,
-				92C5057B21FEC17A0084719A /* Copy Files */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = "Hidden Bar";
+			name = Drawer;
 			packageProductDependencies = (
 				08A5F85E23AA01EE00981CA5 /* HotKey */,
 			);
-			productName = vanillaClone;
-			productReference = 929113F121F9D04100173149 /* Hidden Bar.app */;
+			productName = Drawer;
+			productReference = 929113F121F9D04100173149 /* Drawer.app */;
 			productType = "com.apple.product-type.application";
 		};
 		92C5054D21FEC03B0084719A /* LauncherApplication */ = {
@@ -439,7 +437,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				929113F021F9D04100173149 /* Hidden Bar */,
+				929113F021F9D04100173149 /* Drawer */,
 				92C5054D21FEC03B0084719A /* LauncherApplication */,
 			);
 		};
@@ -452,7 +450,6 @@
 			files = (
 				929113F921F9D04200173149 /* Assets.xcassets in Resources */,
 				967F4B2824169CAF00F18D3C /* Localizable.strings in Resources */,
-				929113FC21F9D04200173149 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -670,7 +667,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = hidden/Info.plist;
@@ -679,9 +676,9 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.8;
-				PRODUCT_BUNDLE_IDENTIFIER = com.dwarvesv.minimalbar;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.drawer.app;
+				PRODUCT_NAME = Drawer;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 			};
@@ -695,7 +692,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = hidden/Info.plist;
@@ -704,9 +701,9 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.8;
-				PRODUCT_BUNDLE_IDENTIFIER = com.dwarvesv.minimalbar;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.drawer.app;
+				PRODUCT_NAME = Drawer;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 			};
@@ -772,7 +769,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		9291141721F9D04200173149 /* Build configuration list for PBXNativeTarget "Hidden Bar" */ = {
+		9291141721F9D04200173149 /* Build configuration list for PBXNativeTarget "Drawer" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9291141821F9D04200173149 /* Debug */,
