@@ -11,12 +11,31 @@ import SwiftUI
 
 struct DrawerContentView: View {
     
+    let icons: [CapturedIcon]
+    
+    init(icons: [CapturedIcon] = []) {
+        self.icons = icons
+    }
+    
     var body: some View {
-        HStack(spacing: 12) {
-            placeholderIcons
+        HStack(spacing: 8) {
+            if icons.isEmpty {
+                placeholderIcons
+            } else {
+                capturedIconsView
+            }
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 6)
+    }
+    
+    private var capturedIconsView: some View {
+        ForEach(icons) { icon in
+            Image(decorative: icon.image, scale: NSScreen.main?.backingScaleFactor ?? 2.0)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 22, height: 22)
+        }
     }
     
     private var placeholderIcons: some View {

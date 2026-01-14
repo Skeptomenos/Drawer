@@ -465,7 +465,7 @@ class DrawerPanel: NSPanel {
 
 ---
 
-### Task 2.2: IconCapturer (ScreenCaptureKit)
+### Task 2.2: IconCapturer (ScreenCaptureKit) ✅
 
 | Attribute | Value |
 |-----------|-------|
@@ -528,11 +528,11 @@ func captureHiddenIcons() async throws -> [CapturedIcon] {
 ```
 
 **Acceptance Criteria**:
-- [ ] Captures menu bar image when triggered
-- [ ] Slices into individual icon images
-- [ ] Works with Screen Recording permission granted
-- [ ] Graceful error when permission denied
-- [ ] Capture is fast enough to not be noticeable (<100ms)
+- [x] Captures menu bar image when triggered
+- [x] Slices into individual icon images
+- [x] Works with Screen Recording permission granted
+- [x] Graceful error when permission denied
+- [x] Capture is fast enough to not be noticeable (<100ms)
 
 **Verification**:
 1. Grant Screen Recording permission

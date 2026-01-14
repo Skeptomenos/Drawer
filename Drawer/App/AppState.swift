@@ -14,11 +14,15 @@ final class AppState: ObservableObject {
     @Published var isCollapsed: Bool = true
     @Published private(set) var isDrawerVisible: Bool = false
     @Published private(set) var hasRequiredPermissions: Bool = false
+    @Published private(set) var capturedIcons: [CapturedIcon] = []
+    @Published private(set) var isCapturing: Bool = false
+    @Published private(set) var captureError: CaptureError?
     
     let menuBarManager: MenuBarManager
     let settings: SettingsManager
     let permissions: PermissionManager
     let drawerController: DrawerPanelController
+    let iconCapturer: IconCapturer
     private var cancellables = Set<AnyCancellable>()
     
     var hasCompletedOnboarding: Bool {
@@ -26,9 +30,14 @@ final class AppState: ObservableObject {
         set { UserDefaults.standard.set(newValue, forKey: "hasCompletedOnboarding") }
     }
     
-    init(settings: SettingsManager = .shared, permissions: PermissionManager = .shared) {
+    init(
+        settings: SettingsManager = .shared,
+        permissions: PermissionManager = .shared,
+        iconCapturer: IconCapturer = .shared
+    ) {
         self.settings = settings
         self.permissions = permissions
+        self.iconCapturer = iconCapturer
         self.menuBarManager = MenuBarManager(settings: settings)
         self.drawerController = DrawerPanelController()
         
@@ -37,6 +46,7 @@ final class AppState: ObservableObject {
         
         setupPermissionBindings()
         setupDrawerBindings()
+        setupCapturerBindings()
     }
     
     private func setupPermissionBindings() {
@@ -58,13 +68,15 @@ final class AppState: ObservableObject {
     }
     
     func toggleDrawer() {
-        drawerController.toggle(content: DrawerContentView())
-        isDrawerVisible = drawerController.isVisible
+        if isDrawerVisible {
+            hideDrawer()
+        } else {
+            showDrawerWithCapture()
+        }
     }
     
     func showDrawer() {
-        drawerController.show(content: DrawerContentView())
-        isDrawerVisible = true
+        showDrawerWithCapture()
     }
     
     func hideDrawer() {
@@ -77,7 +89,44 @@ final class AppState: ObservableObject {
             .assign(to: &$isDrawerVisible)
         
         menuBarManager.onShowDrawer = { [weak self] in
-            self?.toggleDrawer()
+            self?.showDrawerWithCapture()
+        }
+    }
+    
+    private func setupCapturerBindings() {
+        iconCapturer.$isCapturing
+            .assign(to: &$isCapturing)
+        
+        iconCapturer.$lastError
+            .assign(to: &$captureError)
+        
+        iconCapturer.$lastCaptureResult
+            .compactMap { $0?.icons }
+            .assign(to: &$capturedIcons)
+    }
+    
+    func showDrawerWithCapture() {
+        Task {
+            await captureAndShowDrawer()
+        }
+    }
+    
+    func captureAndShowDrawer() async {
+        guard permissions.hasScreenRecording else {
+            permissions.requestScreenRecording()
+            return
+        }
+        
+        do {
+            let result = try await iconCapturer.captureHiddenIcons(menuBarManager: menuBarManager)
+            capturedIcons = result.icons
+            
+            let contentView = DrawerContentView(icons: capturedIcons)
+            drawerController.show(content: contentView)
+        } catch {
+            captureError = error as? CaptureError
+            let contentView = DrawerContentView(icons: [])
+            drawerController.show(content: contentView)
         }
     }
 }
