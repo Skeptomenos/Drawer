@@ -294,7 +294,7 @@ final class LaunchAtLoginManager {
 
 ---
 
-### Task 1.5: PermissionManager (Accessibility + Screen Recording)
+### Task 1.5: PermissionManager (Accessibility + Screen Recording) ✅
 
 | Attribute | Value |
 |-----------|-------|
@@ -335,10 +335,10 @@ Create a centralized permission manager for TCC (Transparency, Consent, and Cont
 5. Add to app as debug/onboarding view
 
 **Acceptance Criteria**:
-- [ ] App correctly reports Accessibility permission status
-- [ ] App correctly reports Screen Recording permission status
-- [ ] Requesting permission opens System Settings
-- [ ] Status updates after user grants permission
+- [x] App correctly reports Accessibility permission status
+- [x] App correctly reports Screen Recording permission status
+- [x] Requesting permission opens System Settings
+- [x] Status updates after user grants permission
 
 **Verification**:
 1. Run app without permissions → shows "Not Granted"
