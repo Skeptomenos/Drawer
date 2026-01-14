@@ -9,9 +9,7 @@
 import AppKit
 import HotKey
 
-@NSApplicationMain
-
-class AppDelegate: NSObject, NSApplicationDelegate{
+class AppDelegate: NSObject, NSApplicationDelegate {
     
     var statusBarController = StatusBarController()
     

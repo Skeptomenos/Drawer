@@ -2,7 +2,7 @@
 
 **Goal**: Establish a modern SwiftUI codebase using Hidden Bar's core logic as a reference, but discarding its legacy UI architecture. By the end of this phase, the app should be able to hide/show icons using the "separator" method, but without the Drawer UI.
 
-## Task 1.1: Project Setup & Clean Slate
+## Task 1.1: Project Setup ## Task 1.1: Project Setup & Clean Slate Clean Slate ✅
 - **Objective**: Initialize a new SwiftUI project structure and migrate essential assets/logic.
 - **Inputs**: Hidden Bar source code.
 - **Steps**:
