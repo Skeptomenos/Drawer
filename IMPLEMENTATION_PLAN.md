@@ -782,7 +782,7 @@ Add smooth, spring-based animations for Drawer show/hide.
 
 ---
 
-### Task 3.3: Settings UI (SwiftUI)
+### Task 3.3: Settings UI (SwiftUI) ✅
 
 | Attribute | Value |
 |-----------|-------|
@@ -823,10 +823,18 @@ Create a comprehensive Settings window using SwiftUI.
 6. Style with platter-based grouping (Form + Section)
 
 **Acceptance Criteria**:
-- [ ] Settings window opens from menu bar context menu
-- [ ] All settings persist and take effect immediately
-- [ ] UI matches macOS native settings style
-- [ ] Keyboard shortcut (⌘,) opens settings
+- [x] Settings window opens from menu bar context menu
+- [x] All settings persist and take effect immediately
+- [x] UI matches macOS native settings style
+- [x] Keyboard shortcut (⌘,) opens settings
+
+**Implementation Notes** (2026-01-14):
+- Created `UI/Settings/SettingsView.swift` with TabView (General, Appearance, About)
+- Created `UI/Settings/GeneralSettingsView.swift` with Launch at Login, Auto-collapse, Show on Hover, Global Hotkey
+- Created `UI/Settings/AppearanceSettingsView.swift` with Hide separators, Always-hidden section, Full menu bar width
+- Created `UI/Settings/AboutView.swift` with app icon, version, credits, GitHub link
+- Uses SwiftUI `Settings` scene for native ⌘, integration
+- All settings bound to `SettingsManager.shared` for immediate persistence
 
 ---
 
