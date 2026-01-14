@@ -9,6 +9,25 @@ import AppKit
 import Combine
 import SwiftUI
 
+// MARK: - Animation Constants
+
+private enum DrawerAnimation {
+    /// Duration for show animation (spring-like feel)
+    static let showDuration: TimeInterval = 0.25
+    
+    /// Duration for hide animation (quick fade)
+    static let hideDuration: TimeInterval = 0.15
+    
+    /// Vertical offset for slide-down animation
+    static let slideOffset: CGFloat = 12
+    
+    /// Timing function for show (ease out for spring-like deceleration)
+    static let showTimingFunction = CAMediaTimingFunction(controlPoints: 0.2, 0.9, 0.4, 1.0)
+    
+    /// Timing function for hide (ease in for quick exit)
+    static let hideTimingFunction = CAMediaTimingFunction(name: .easeIn)
+}
+
 // MARK: - DrawerPanelController
 
 @MainActor
@@ -23,6 +42,7 @@ final class DrawerPanelController: ObservableObject {
     private var panel: DrawerPanel?
     private var hostingView: NSHostingView<AnyView>?
     private var cancellables = Set<AnyCancellable>()
+    private var isAnimating: Bool = false
     
     // MARK: - Initialization
     
@@ -31,6 +51,8 @@ final class DrawerPanelController: ObservableObject {
     // MARK: - Panel Lifecycle
     
     func show<Content: View>(content: Content, alignedTo xPosition: CGFloat? = nil, on screen: NSScreen? = nil) {
+        guard !isAnimating else { return }
+        
         if panel == nil {
             createPanel(with: content)
         } else {
@@ -45,13 +67,70 @@ final class DrawerPanelController: ObservableObject {
             panel.position(on: screen)
         }
         
-        panel.orderFrontRegardless()
-        isVisible = true
+        animateShow(panel: panel)
     }
     
     func hide() {
-        panel?.orderOut(nil)
-        isVisible = false
+        guard !isAnimating, let panel = panel else {
+            panel?.orderOut(nil)
+            isVisible = false
+            return
+        }
+        
+        animateHide(panel: panel)
+    }
+    
+    // MARK: - Animations
+    
+    private func animateShow(panel: DrawerPanel) {
+        isAnimating = true
+        
+        // Store the target frame
+        let targetFrame = panel.frame
+        
+        // Start position: slightly above and invisible
+        var startFrame = targetFrame
+        startFrame.origin.y += DrawerAnimation.slideOffset
+        panel.setFrame(startFrame, display: false)
+        panel.alphaValue = 0
+        
+        // Show the panel (invisible initially)
+        panel.orderFrontRegardless()
+        
+        // Animate to final position
+        NSAnimationContext.runAnimationGroup({ context in
+            context.duration = DrawerAnimation.showDuration
+            context.timingFunction = DrawerAnimation.showTimingFunction
+            context.allowsImplicitAnimation = true
+            
+            panel.animator().setFrame(targetFrame, display: true)
+            panel.animator().alphaValue = 1
+        }, completionHandler: { [weak self] in
+            self?.isAnimating = false
+            self?.isVisible = true
+        })
+    }
+    
+    private func animateHide(panel: DrawerPanel) {
+        isAnimating = true
+        
+        // Animate fade out with slight upward movement
+        var endFrame = panel.frame
+        endFrame.origin.y += DrawerAnimation.slideOffset / 2
+        
+        NSAnimationContext.runAnimationGroup({ context in
+            context.duration = DrawerAnimation.hideDuration
+            context.timingFunction = DrawerAnimation.hideTimingFunction
+            context.allowsImplicitAnimation = true
+            
+            panel.animator().alphaValue = 0
+            panel.animator().setFrame(endFrame, display: true)
+        }, completionHandler: { [weak self] in
+            panel.orderOut(nil)
+            panel.alphaValue = 1 // Reset for next show
+            self?.isAnimating = false
+            self?.isVisible = false
+        })
     }
     
     func toggle<Content: View>(content: Content, alignedTo xPosition: CGFloat? = nil, on screen: NSScreen? = nil) {

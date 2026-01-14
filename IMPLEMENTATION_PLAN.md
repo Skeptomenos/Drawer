@@ -703,7 +703,7 @@ Show the Drawer when mouse enters the menu bar area (optional feature).
 
 ---
 
-### Task 3.1: Visual Materials (NSVisualEffectView)
+### Task 3.1: Visual Materials (NSVisualEffectView) ✅
 
 | Attribute | Value |
 |-----------|-------|
@@ -727,14 +727,23 @@ Apply native macOS materials to the Drawer for a polished look.
 **Visual Reference**: Check `specs/reference_images/icon-drawer.jpg`
 
 **Acceptance Criteria**:
-- [ ] Drawer has frosted glass appearance
-- [ ] Background content bleeds through elegantly
-- [ ] Works in both Light and Dark mode
-- [ ] Matches native macOS menu styling
+- [x] Drawer has frosted glass appearance
+- [x] Background content bleeds through elegantly
+- [x] Works in both Light and Dark mode
+- [x] Matches native macOS menu styling
+
+**Completed Implementation**:
+- `Drawer/UI/Panels/DrawerPanelController.swift`: Contains `DrawerBackgroundView` (NSViewRepresentable) with:
+  - `NSVisualEffectView` using `.hudWindow` material
+  - `.blendingMode = .behindWindow` for proper transparency
+  - `.state = .active` for consistent vibrancy
+  - Corner radius applied via layer
+- `DrawerContainerView`: Applies rim light (1pt gradient stroke @ 17.5% opacity) and shadow (12pt radius, 3pt Y offset, 30% opacity)
+- Design constants in `DrawerDesign` enum for consistency
 
 ---
 
-### Task 3.2: Animations
+### Task 3.2: Animations ✅
 
 | Attribute | Value |
 |-----------|-------|
@@ -758,10 +767,18 @@ Add smooth, spring-based animations for Drawer show/hide.
 4. Add subtle scale animation on icon hover
 
 **Acceptance Criteria**:
-- [ ] Drawer slides in smoothly from top
-- [ ] Drawer fades out when hiding
-- [ ] No visual glitches during capture
-- [ ] Animations feel "tactile" (spring physics)
+- [x] Drawer slides in smoothly from top
+- [x] Drawer fades out when hiding
+- [x] No visual glitches during capture
+- [x] Animations feel "tactile" (spring physics)
+
+**Completed Implementation**:
+- `Drawer/UI/Panels/DrawerPanelController.swift`: Added `DrawerAnimation` constants and animation methods:
+  - `animateShow()`: Slide-down (12pt) + fade-in with custom spring-like bezier timing (0.25s)
+  - `animateHide()`: Fade-out + slight upward movement with ease-in timing (0.15s)
+  - Animation guard (`isAnimating`) prevents overlapping animations
+- `Drawer/UI/Panels/DrawerContentView.swift`: Icon hover animation with `.spring(response: 0.2, dampingFraction: 0.6)` and 1.1x scale effect
+- Capture sequence shows drawer only after content is ready (no loading flicker)
 
 ---
 
