@@ -14,7 +14,6 @@ final class AppState: ObservableObject {
     @Published var isCollapsed: Bool = true
     @Published private(set) var isDrawerVisible: Bool = false
     @Published private(set) var hasRequiredPermissions: Bool = false
-    @Published private(set) var capturedIcons: [CapturedIcon] = []
     @Published private(set) var isCapturing: Bool = false
     @Published private(set) var captureError: CaptureError?
     
@@ -22,6 +21,7 @@ final class AppState: ObservableObject {
     let settings: SettingsManager
     let permissions: PermissionManager
     let drawerController: DrawerPanelController
+    let drawerManager: DrawerManager
     let iconCapturer: IconCapturer
     private var cancellables = Set<AnyCancellable>()
     
@@ -33,10 +33,12 @@ final class AppState: ObservableObject {
     init(
         settings: SettingsManager = .shared,
         permissions: PermissionManager = .shared,
+        drawerManager: DrawerManager = .shared,
         iconCapturer: IconCapturer = .shared
     ) {
         self.settings = settings
         self.permissions = permissions
+        self.drawerManager = drawerManager
         self.iconCapturer = iconCapturer
         self.menuBarManager = MenuBarManager(settings: settings)
         self.drawerController = DrawerPanelController()
@@ -81,12 +83,21 @@ final class AppState: ObservableObject {
     
     func hideDrawer() {
         drawerController.hide()
+        drawerManager.hide()
         isDrawerVisible = false
     }
     
     private func setupDrawerBindings() {
         drawerController.$isVisible
             .assign(to: &$isDrawerVisible)
+        
+        drawerManager.$isVisible
+            .sink { [weak self] visible in
+                if !visible {
+                    self?.drawerController.hide()
+                }
+            }
+            .store(in: &cancellables)
         
         menuBarManager.onShowDrawer = { [weak self] in
             self?.showDrawerWithCapture()
@@ -101,8 +112,11 @@ final class AppState: ObservableObject {
             .assign(to: &$captureError)
         
         iconCapturer.$lastCaptureResult
-            .compactMap { $0?.icons }
-            .assign(to: &$capturedIcons)
+            .compactMap { $0 }
+            .sink { [weak self] result in
+                self?.drawerManager.updateItems(from: result)
+            }
+            .store(in: &cancellables)
     }
     
     func showDrawerWithCapture() {
@@ -117,16 +131,37 @@ final class AppState: ObservableObject {
             return
         }
         
+        drawerManager.setLoading(true)
+        
         do {
             let result = try await iconCapturer.captureHiddenIcons(menuBarManager: menuBarManager)
-            capturedIcons = result.icons
+            drawerManager.updateItems(from: result)
+            drawerManager.setLoading(false)
             
-            let contentView = DrawerContentView(icons: capturedIcons)
+            let contentView = DrawerContentView(
+                items: drawerManager.items,
+                isLoading: false,
+                onItemTap: { [weak self] item in
+                    self?.handleItemTap(item)
+                }
+            )
             drawerController.show(content: contentView)
+            drawerManager.show()
         } catch {
+            drawerManager.setError(error)
+            drawerManager.setLoading(false)
             captureError = error as? CaptureError
-            let contentView = DrawerContentView(icons: [])
+            
+            let contentView = DrawerContentView(
+                items: [],
+                isLoading: false
+            )
             drawerController.show(content: contentView)
+            drawerManager.show()
         }
+    }
+    
+    private func handleItemTap(_ item: DrawerItem) {
+        hideDrawer()
     }
 }

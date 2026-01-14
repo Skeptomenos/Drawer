@@ -556,7 +556,7 @@ func testCaptureRequiresPermission() async {
 
 ---
 
-### Task 2.3: DrawerItem Model & Rendering
+### Task 2.3: DrawerItem Model & Rendering ✅
 
 | Attribute | Value |
 |-----------|-------|
@@ -592,10 +592,17 @@ Define the data model for drawer items and render them in the DrawerContentView.
 - Consistent icon spacing (4pt)
 
 **Acceptance Criteria**:
-- [ ] DrawerItem model captures all needed data
-- [ ] DrawerContentView renders items horizontally
-- [ ] Styling matches reference image
-- [ ] Empty state handled gracefully
+- [x] DrawerItem model captures all needed data
+- [x] DrawerContentView renders items horizontally
+- [x] Styling matches reference image
+- [x] Empty state handled gracefully
+
+**Completed Implementation**:
+- `Drawer/Models/DrawerItem.swift`: Model struct wrapping CapturedIcon with id, image, originalFrame, capturedAt, index
+- `Drawer/Core/Managers/DrawerManager.swift`: ObservableObject managing drawer state with items, isVisible, isLoading, lastError
+- `Drawer/UI/Panels/DrawerContentView.swift`: Complete rewrite with DrawerDesign constants (10pt icon spacing, 16pt horizontal padding, 7pt vertical padding, 11pt corner radius)
+- `Drawer/UI/Panels/DrawerPanelController.swift`: Added DrawerContainerView with rim light (1pt white @ 17.5% opacity gradient) and shadow (12pt radius, 3pt Y offset)
+- `Drawer/App/AppState.swift`: Integrated DrawerManager with capture flow
 
 ---
 

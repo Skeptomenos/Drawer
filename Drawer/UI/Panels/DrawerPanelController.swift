@@ -6,8 +6,8 @@
 //
 
 import AppKit
-import SwiftUI
 import Combine
+import SwiftUI
 
 // MARK: - DrawerPanelController
 
@@ -33,6 +33,8 @@ final class DrawerPanelController: ObservableObject {
     func show<Content: View>(content: Content, alignedTo xPosition: CGFloat? = nil, on screen: NSScreen? = nil) {
         if panel == nil {
             createPanel(with: content)
+        } else {
+            updateContent(content)
         }
         
         guard let panel = panel else { return }
@@ -65,14 +67,13 @@ final class DrawerPanelController: ObservableObject {
     private func createPanel<Content: View>(with content: Content) {
         let newPanel = DrawerPanel()
         
-        let wrappedContent = AnyView(
-            content
-                .frame(height: DrawerPanel.defaultHeight)
-                .background(DrawerBackgroundView())
-                .clipShape(RoundedRectangle(cornerRadius: DrawerPanel.cornerRadius, style: .continuous))
+        let styledContent = AnyView(
+            DrawerContainerView {
+                content
+            }
         )
         
-        let hosting = NSHostingView(rootView: wrappedContent)
+        let hosting = NSHostingView(rootView: styledContent)
         hosting.frame = newPanel.contentView?.bounds ?? .zero
         hosting.autoresizingMask = [.width, .height]
         
@@ -83,13 +84,12 @@ final class DrawerPanelController: ObservableObject {
     }
     
     func updateContent<Content: View>(_ content: Content) {
-        let wrappedContent = AnyView(
-            content
-                .frame(height: DrawerPanel.defaultHeight)
-                .background(DrawerBackgroundView())
-                .clipShape(RoundedRectangle(cornerRadius: DrawerPanel.cornerRadius, style: .continuous))
+        let styledContent = AnyView(
+            DrawerContainerView {
+                content
+            }
         )
-        hostingView?.rootView = wrappedContent
+        hostingView?.rootView = styledContent
     }
     
     func updateWidth(_ width: CGFloat) {
@@ -105,6 +105,46 @@ final class DrawerPanelController: ObservableObject {
     }
 }
 
+// MARK: - DrawerContainerView
+
+struct DrawerContainerView<Content: View>: View {
+    
+    let content: Content
+    
+    init(@ViewBuilder content: () -> Content) {
+        self.content = content()
+    }
+    
+    var body: some View {
+        content
+            .frame(height: DrawerDesign.drawerHeight)
+            .background(DrawerBackgroundView())
+            .clipShape(RoundedRectangle(cornerRadius: DrawerDesign.cornerRadius, style: .continuous))
+            .overlay(rimLight)
+            .shadow(
+                color: Color.black.opacity(DrawerDesign.shadowOpacity),
+                radius: DrawerDesign.shadowRadius,
+                x: 0,
+                y: DrawerDesign.shadowYOffset
+            )
+    }
+    
+    private var rimLight: some View {
+        RoundedRectangle(cornerRadius: DrawerDesign.cornerRadius, style: .continuous)
+            .strokeBorder(
+                LinearGradient(
+                    colors: [
+                        Color.white.opacity(DrawerDesign.rimLightOpacity),
+                        Color.white.opacity(DrawerDesign.rimLightOpacity * 0.5)
+                    ],
+                    startPoint: .top,
+                    endPoint: .bottom
+                ),
+                lineWidth: DrawerDesign.rimLightWidth
+            )
+    }
+}
+
 // MARK: - DrawerBackgroundView
 
 struct DrawerBackgroundView: NSViewRepresentable {
@@ -115,7 +155,7 @@ struct DrawerBackgroundView: NSViewRepresentable {
         view.blendingMode = .behindWindow
         view.state = .active
         view.wantsLayer = true
-        view.layer?.cornerRadius = DrawerPanel.cornerRadius
+        view.layer?.cornerRadius = DrawerDesign.cornerRadius
         view.layer?.masksToBounds = true
         return view
     }
