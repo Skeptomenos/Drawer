@@ -31,8 +31,8 @@ final class AppState: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
     var hasCompletedOnboarding: Bool {
-        get { UserDefaults.standard.bool(forKey: "hasCompletedOnboarding") }
-        set { UserDefaults.standard.set(newValue, forKey: "hasCompletedOnboarding") }
+        get { settings.hasCompletedOnboarding }
+        set { settings.hasCompletedOnboarding = newValue }
     }
     
     init(

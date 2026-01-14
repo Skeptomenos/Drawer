@@ -838,7 +838,7 @@ Create a comprehensive Settings window using SwiftUI.
 
 ---
 
-### Task 3.4: Onboarding & Icon Arrangement
+### Task 3.4: Onboarding & Icon Arrangement ✅
 
 | Attribute | Value |
 |-----------|-------|
@@ -865,10 +865,20 @@ Create first-launch onboarding explaining how to use the app.
 5. Show on first launch only
 
 **Acceptance Criteria**:
-- [ ] Onboarding shows on first launch
-- [ ] Permissions are requested with clear explanation
-- [ ] User understands ⌘+drag arrangement
-- [ ] Onboarding can be skipped
+- [x] Onboarding shows on first launch
+- [x] Permissions are requested with clear explanation
+- [x] User understands ⌘+drag arrangement
+- [x] Onboarding can be skipped
+
+**Implementation Notes** (2026-01-14):
+- Created `UI/Onboarding/OnboardingView.swift`: Multi-step flow with navigation (Welcome → Permissions → Tutorial → Completion)
+- Created `UI/Onboarding/WelcomeStepView.swift`: Welcome screen with app icon and 3 feature highlights
+- Created `UI/Onboarding/PermissionsStepView.swift`: Permission request UI integrating with PermissionManager
+- Created `UI/Onboarding/TutorialStepView.swift`: Tutorial explaining ⌘+drag for icon arrangement
+- Created `UI/Onboarding/CompletionStepView.swift`: Success screen with quick reference tips
+- Added `hasCompletedOnboarding` to SettingsManager with @AppStorage persistence
+- Updated AppDelegate with `showOnboardingIfNeeded()` method that shows onboarding window on first launch
+- Onboarding can be skipped via "Skip" button on any step
 
 ---
 

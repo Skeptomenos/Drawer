@@ -48,6 +48,8 @@ final class SettingsManager: ObservableObject {
         didSet { showOnHoverSubject.send(showOnHover) }
     }
     
+    @AppStorage("hasCompletedOnboarding") var hasCompletedOnboarding: Bool = false
+    
     let autoCollapseEnabledSubject = PassthroughSubject<Bool, Never>()
     let autoCollapseDelaySubject = PassthroughSubject<Double, Never>()
     let showOnHoverSubject = PassthroughSubject<Bool, Never>()
