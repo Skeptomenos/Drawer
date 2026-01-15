@@ -189,4 +189,30 @@ final class DrawerItemTests: XCTestCase {
         XCTAssertEqual(item1.originalFrame, item2.originalFrame, "DRI-007: Frames are same but items are not equal")
         XCTAssertEqual(item1.index, item2.index, "DRI-007: Indexes are same but items are not equal")
     }
+    
+    // MARK: - DRI-008: toDrawerItems extension converts correctly
+    
+    func testDRI008_ToDrawerItemsExtensionConvertsCorrectly() throws {
+        // Arrange
+        guard let icon1 = createCapturedIcon(frame: CGRect(x: 100, y: 0, width: 22, height: 24)),
+              let icon2 = createCapturedIcon(frame: CGRect(x: 126, y: 0, width: 22, height: 24)),
+              let icon3 = createCapturedIcon(frame: CGRect(x: 152, y: 0, width: 22, height: 24)) else {
+            throw XCTSkip("DRI-008: Could not create mock CapturedIcons")
+        }
+        let capturedIcons: [CapturedIcon] = [icon1, icon2, icon3]
+        
+        // Act
+        let drawerItems = capturedIcons.toDrawerItems()
+        
+        // Assert
+        XCTAssertEqual(drawerItems.count, 3, "DRI-008: Should convert all 3 icons to drawer items")
+        
+        for (index, item) in drawerItems.enumerated() {
+            let originalIcon = capturedIcons[index]
+            XCTAssertEqual(item.id, originalIcon.id, "DRI-008: Item \(index) id should match original icon id")
+            XCTAssertEqual(item.originalFrame, originalIcon.originalFrame, "DRI-008: Item \(index) frame should match original")
+            XCTAssertEqual(item.capturedAt, originalIcon.capturedAt, "DRI-008: Item \(index) capturedAt should match original")
+            XCTAssertEqual(item.index, index, "DRI-008: Item \(index) index should be \(index)")
+        }
+    }
 }
