@@ -165,6 +165,22 @@ final class DrawerManagerTests: XCTestCase {
         XCTAssertTrue(sut.isLoading, "DRM-010: setLoading(true) should set isLoading to true")
     }
     
+    // MARK: - DRM-011: setLoading(false) sets isLoading false
+    
+    func testDRM011_SetLoadingFalseSetsIsLoadingFalse() async throws {
+        // Arrange - Set loading to true first
+        sut.setLoading(true)
+        
+        // Precondition
+        XCTAssertTrue(sut.isLoading, "DRM-011: Precondition - isLoading should be true before setting to false")
+        
+        // Act
+        sut.setLoading(false)
+        
+        // Assert
+        XCTAssertFalse(sut.isLoading, "DRM-011: setLoading(false) should set isLoading to false")
+    }
+    
     // MARK: - Test Helpers
     
     private func createMockCapturedIcons(count: Int) -> [CapturedIcon] {
