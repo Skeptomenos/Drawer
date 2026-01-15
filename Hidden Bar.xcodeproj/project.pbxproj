@@ -19,6 +19,7 @@
 		DRAWERTEST00100000000010 /* MenuBarManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000011 /* MenuBarManagerTests.swift */; };
 		DRAWERTEST00100000000011 /* SettingsManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000012 /* SettingsManagerTests.swift */; };
 		DRAWERTEST00100000000012 /* DrawerManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000013 /* DrawerManagerTests.swift */; };
+		DRAWERTEST00100000000013 /* HoverManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000014 /* HoverManagerTests.swift */; };
 		DRAWER001000000000000001 /* DrawerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000001 /* DrawerApp.swift */; };
 		DRAWER001000000000000002 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000002 /* AppState.swift */; };
 		DRAWER001000000000000003 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000003 /* AppDelegate.swift */; };
@@ -123,6 +124,7 @@
 		DRAWERTEST00200000000011 /* MenuBarManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarManagerTests.swift; sourceTree = "<group>"; };
 		DRAWERTEST00200000000012 /* SettingsManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManagerTests.swift; sourceTree = "<group>"; };
 		DRAWERTEST00200000000013 /* DrawerManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerManagerTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000014 /* HoverManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoverManagerTests.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000001 /* DrawerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerApp.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000002 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000003 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -261,6 +263,7 @@
 				DRAWERTEST00200000000011 /* MenuBarManagerTests.swift */,
 				DRAWERTEST00200000000012 /* SettingsManagerTests.swift */,
 				DRAWERTEST00200000000013 /* DrawerManagerTests.swift */,
+				DRAWERTEST00200000000014 /* HoverManagerTests.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -764,6 +767,7 @@
 				DRAWERTEST00100000000010 /* MenuBarManagerTests.swift in Sources */,
 				DRAWERTEST00100000000011 /* SettingsManagerTests.swift in Sources */,
 				DRAWERTEST00100000000012 /* DrawerManagerTests.swift in Sources */,
+				DRAWERTEST00100000000013 /* HoverManagerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
