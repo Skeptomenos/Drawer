@@ -71,4 +71,22 @@ final class GlobalHotkeyConfigTests: XCTestCase {
         XCTAssertTrue(description.contains("⇧"), "GHK-002: Description should show ⇧ for shift modifier")
         XCTAssertEqual(description, "⇧A", "GHK-002: Description should be ⇧A for shift+A")
     }
+    
+    // MARK: - GHK-003: Description with option modifier
+    
+    func testGHK003_DescriptionWithOptionModifier() {
+        // Arrange
+        let config = createConfig(
+            keyCode: 0,
+            characters: "a",
+            option: true
+        )
+        
+        // Act
+        let description = config.description
+        
+        // Assert
+        XCTAssertTrue(description.contains("⌥"), "GHK-003: Description should show ⌥ for option modifier")
+        XCTAssertEqual(description, "⌥A", "GHK-003: Description should be ⌥A for option+A")
+    }
 }
