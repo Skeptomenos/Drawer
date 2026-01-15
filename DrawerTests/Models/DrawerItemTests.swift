@@ -248,4 +248,18 @@ final class DrawerItemTests: XCTestCase {
         let indices = drawerItems.map { $0.index }
         XCTAssertEqual(indices, [0, 1, 2, 3, 4], "DRI-009: Indices should be sequential starting from 0")
     }
+    
+    // MARK: - DRI-010: toDrawerItems empty array
+    
+    func testDRI010_ToDrawerItemsEmptyArray() {
+        // Arrange
+        let emptyCapturedIcons: [CapturedIcon] = []
+        
+        // Act
+        let drawerItems = emptyCapturedIcons.toDrawerItems()
+        
+        // Assert
+        XCTAssertTrue(drawerItems.isEmpty, "DRI-010: Empty array should return empty result")
+        XCTAssertEqual(drawerItems.count, 0, "DRI-010: Count should be 0 for empty input")
+    }
 }

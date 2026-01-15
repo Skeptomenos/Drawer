@@ -6,10 +6,10 @@
 |----------|----------|-------|------|-----------|----------|
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
 | P1 | Manager State Tests (CRITICAL) | 71 | 71 | 0 | 100% |
-| P2 | Pure Logic Tests | 35 | 9 | 26 | 26% |
+| P2 | Pure Logic Tests | 35 | 10 | 25 | 29% |
 | P3 | Integration Tests | 40 | 0 | 40 | 0% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **165** | **87** | **78** | **53%** |
+| **TOTAL** | | **165** | **88** | **77** | **53%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -226,7 +226,7 @@ DrawerTests/
 | [x] | DRI-007 | Equatable different IDs not equal | Two items with different IDs are not equal | LOW |
 | [x] | DRI-008 | toDrawerItems extension converts correctly | [CapturedIcon].toDrawerItems() converts correctly | LOW |
 | [x] | DRI-009 | toDrawerItems preserves order | Converted items maintain original order via index | LOW |
-| [ ] | DRI-010 | toDrawerItems empty array | Empty array returns empty result | LOW |
+| [x] | DRI-010 | toDrawerItems empty array | Empty array returns empty result | LOW |
 
 ### 2.2 GlobalHotkeyConfig (`Drawer/Models/GlobalHotkeyConfig.swift`)
 
