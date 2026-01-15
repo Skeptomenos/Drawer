@@ -100,6 +100,24 @@ final class DrawerManagerTests: XCTestCase {
         XCTAssertNil(sut.lastError, "DRM-006: lastError should be nil after successful update")
     }
     
+    // MARK: - DRM-007: updateItems clears lastError
+    
+    func testDRM007_UpdateItemsClearsLastError() async throws {
+        // Arrange - Set an error first
+        let testError = NSError(domain: "TestDomain", code: 1, userInfo: [NSLocalizedDescriptionKey: "Test error"])
+        sut.setError(testError)
+        
+        // Precondition
+        XCTAssertNotNil(sut.lastError, "DRM-007: Precondition - lastError should be set before update")
+        
+        // Act - Update items (should clear the error)
+        let mockIcons = createMockCapturedIcons(count: 2)
+        sut.updateItems(from: mockIcons)
+        
+        // Assert
+        XCTAssertNil(sut.lastError, "DRM-007: updateItems should clear lastError")
+    }
+    
     // MARK: - Test Helpers
     
     private func createMockCapturedIcons(count: Int) -> [CapturedIcon] {
