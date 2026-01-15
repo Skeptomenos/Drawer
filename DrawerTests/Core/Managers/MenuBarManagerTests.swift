@@ -149,4 +149,18 @@ final class MenuBarManagerTests: XCTestCase {
         sut.toggle()
         XCTAssertTrue(sut.isCollapsed, "Toggle after debounce should collapse (isCollapsed=true)")
     }
+    
+    // MARK: - MBM-008: Expand sets correct separator length
+    
+    func testMBM008_ExpandSetsCorrectSeparatorLength() async throws {
+        // Arrange
+        sut = MenuBarManager(settings: SettingsManager.shared)
+        XCTAssertTrue(sut.isCollapsed, "Precondition: should start collapsed")
+        
+        // Act
+        sut.toggle()
+        
+        // Assert
+        XCTAssertEqual(sut.currentSeparatorLength, 20, "MBM-008: Separator length should be 20 after expand")
+    }
 }

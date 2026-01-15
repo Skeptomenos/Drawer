@@ -7,6 +7,7 @@
 
 import AppKit
 import Combine
+import os.log
 
 // MARK: - MenuBarManager
 
@@ -28,6 +29,7 @@ final class MenuBarManager: ObservableObject {
     // MARK: - Dependencies
     
     private let settings: SettingsManager
+    private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "com.drawer", category: "MenuBarManager")
     private var cancellables = Set<AnyCancellable>()
     private var autoCollapseTask: Task<Void, Never>?
     
@@ -35,7 +37,14 @@ final class MenuBarManager: ObservableObject {
     
     private let separatorExpandedLength: CGFloat = 20
     private let separatorCollapsedLength: CGFloat = 10000
+    
+    /// Exposes the current separator length for testing purposes.
+    var currentSeparatorLength: CGFloat {
+        separatorItem.length
+    }
     private let debounceDelay: TimeInterval = 0.3
+    private let maxRetryAttempts = 3
+    private let retryDelayNanoseconds: UInt64 = 200_000_000  // 200ms
     
     // MARK: - RTL Support
     
@@ -58,28 +67,62 @@ final class MenuBarManager: ObservableObject {
     // MARK: - Images (RTL-aware)
     
     private var expandImage: NSImage? {
-        NSImage(named: isLTRLanguage ? "ic_expand" : "ic_collapse")
+        return NSImage(systemSymbolName: isLTRLanguage ? "chevron.left" : "chevron.right", accessibilityDescription: "Expand")
     }
     
     private var collapseImage: NSImage? {
-        NSImage(named: isLTRLanguage ? "ic_collapse" : "ic_expand")
+        return NSImage(systemSymbolName: isLTRLanguage ? "chevron.right" : "chevron.left", accessibilityDescription: "Collapse")
     }
     
-    private let separatorImage = NSImage(named: "ic_line")
+    private let separatorImage = NSImage(systemSymbolName: "circle.fill", accessibilityDescription: "Separator")
     
     // MARK: - Initialization
     
+    #if DEBUG
+    private var debugTimer: Timer?
+    #endif
+
     init(settings: SettingsManager = .shared) {
         self.settings = settings
         self.toggleItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        self.separatorItem = NSStatusBar.system.statusItem(withLength: 1)
+        self.separatorItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         
-        setupUI()
+        setupUI(attempt: 1)
         setupSettingsBindings()
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
-            self?.collapse()
+        logger.debug("Initialized. Toggle button: \(String(describing: self.toggleItem.button)), Separator button: \(String(describing: self.separatorItem.button))")
+        
+        #if DEBUG
+        // Debug Timer to monitor status items (DEBUG only)
+        debugTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { [weak self] _ in
+            Task { @MainActor in
+                guard let self = self else { return }
+                self.logger.debug("--- STATUS ITEM DEBUG ---")
+                if let toggleBtn = self.toggleItem.button {
+                    let frame = toggleBtn.window?.frame ?? .zero
+                    self.logger.debug("Toggle: Frame=\(NSStringFromRect(frame)), Alpha=\(toggleBtn.alphaValue), Hidden=\(toggleBtn.isHidden)")
+                } else {
+                    self.logger.debug("Toggle: NO BUTTON")
+                }
+                
+                if let sepBtn = self.separatorItem.button {
+                    let frame = sepBtn.window?.frame ?? .zero
+                    self.logger.debug("Separator: Frame=\(NSStringFromRect(frame)), Length=\(self.separatorItem.length), Alpha=\(sepBtn.alphaValue)")
+                } else {
+                    self.logger.debug("Separator: NO BUTTON")
+                }
+                self.logger.debug("-------------------------")
+            }
         }
+        #endif
+    }
+    
+    deinit {
+        #if DEBUG
+        debugTimer?.invalidate()
+        #endif
+        autoCollapseTask?.cancel()
+        cancellables.removeAll()
     }
     
     private func setupSettingsBindings() {
@@ -92,22 +135,62 @@ final class MenuBarManager: ObservableObject {
     
     // MARK: - Setup
     
-    private func setupUI() {
-        if let button = separatorItem.button {
-            button.image = separatorImage
+    private func setupUI(attempt: Int) {
+        guard let toggleButton = toggleItem.button else {
+            handleSetupFailure(component: "toggleItem.button", attempt: attempt)
+            return
         }
+        
+        guard let separatorButton = separatorItem.button else {
+            handleSetupFailure(component: "separatorItem.button", attempt: attempt)
+            return
+        }
+        
+        separatorButton.title = ""
+        separatorButton.image = separatorImage ?? NSImage(named: NSImage.touchBarHistoryTemplateName)
+        separatorButton.imagePosition = .imageOnly
+        separatorItem.length = separatorExpandedLength
         separatorItem.menu = createContextMenu()
+        separatorItem.autosaveName = "drawer_separator_v3"
         
-        if let button = toggleItem.button {
-            button.image = collapseImage
-            button.target = self
-            button.action = #selector(toggleButtonPressed)
-            button.sendAction(on: [.leftMouseUp, .rightMouseUp])
+        toggleButton.title = ""
+        toggleButton.image = collapseImage ?? NSImage(named: NSImage.touchBarGoForwardTemplateName)
+        toggleButton.target = self
+        toggleButton.action = #selector(toggleButtonPressed)
+        toggleButton.sendAction(on: [.leftMouseUp, .rightMouseUp])
+        toggleButton.imagePosition = .imageOnly
+        toggleItem.autosaveName = "drawer_toggle_v3"
+        
+        logger.info("Menu bar UI setup complete on attempt \(attempt)")
+        
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 100_000_000)
+            self.verifyVisibility()
         }
+    }
+    
+    private func handleSetupFailure(component: String, attempt: Int) {
+        if attempt < maxRetryAttempts {
+            logger.warning("\(component) is nil on attempt \(attempt)/\(self.maxRetryAttempts). Retrying...")
+            Task { @MainActor in
+                try? await Task.sleep(nanoseconds: retryDelayNanoseconds)
+                self.setupUI(attempt: attempt + 1)
+            }
+        } else {
+            logger.error("CRITICAL: \(component) is nil after \(self.maxRetryAttempts) attempts. Menu bar icons will not appear.")
+            NotificationCenter.default.post(name: .menuBarSetupFailed, object: nil)
+        }
+    }
+    
+    private func verifyVisibility() {
+        let toggleVisible = toggleItem.button?.window?.frame.width ?? 0 > 0
+        let separatorVisible = separatorItem.button?.window?.frame.width ?? 0 > 0
         
-        // Position persistence - using Hidden Bar names for migration compatibility
-        toggleItem.autosaveName = "hiddenbar_expandcollapse"
-        separatorItem.autosaveName = "hiddenbar_separate"
+        if toggleVisible && separatorVisible {
+            logger.info("Menu bar icons verified visible")
+        } else {
+            logger.warning("Menu bar visibility check failed. Toggle: \(toggleVisible), Separator: \(separatorVisible)")
+        }
     }
     
     private func createContextMenu() -> NSMenu {
@@ -151,6 +234,7 @@ final class MenuBarManager: ObservableObject {
     // MARK: - Actions
     
     @objc private func toggleButtonPressed(_ sender: NSStatusBarButton) {
+        logger.debug("Toggle Button Pressed")
         guard let event = NSApp.currentEvent else { return }
         
         let isOptionKeyPressed = event.modifierFlags.contains(.option)
@@ -161,16 +245,13 @@ final class MenuBarManager: ObservableObject {
     }
     
     @objc private func openPreferences() {
-        if #available(macOS 13.0, *) {
-            NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
-        } else {
-            NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil)
-        }
+        AppDelegate.shared?.openSettings()
     }
     
     // MARK: - Toggle Logic
     
     func toggle() {
+        logger.debug("toggle() called. isToggling: \(self.isToggling), isCollapsed: \(self.isCollapsed)")
         guard !isToggling else { return }
         isToggling = true
         
@@ -187,21 +268,28 @@ final class MenuBarManager: ObservableObject {
     
     func expand() {
         guard isCollapsed else { return }
+        logger.debug("Expanding...")
         
         separatorItem.length = separatorExpandedLength
         toggleItem.button?.image = collapseImage
         isCollapsed = false
         
         startAutoCollapseTimer()
+        logger.debug("Expanded. Separator Length: \(self.separatorItem.length)")
     }
     
     func collapse() {
-        guard isSeparatorValidPosition, !isCollapsed else { return }
+        guard isSeparatorValidPosition, !isCollapsed else {
+            logger.debug("Collapse aborted. ValidPos: \(self.isSeparatorValidPosition), IsCollapsed: \(self.isCollapsed)")
+            return
+        }
+        logger.debug("Collapsing...")
         
         cancelAutoCollapseTimer()
         separatorItem.length = separatorCollapsedLength
         toggleItem.button?.image = expandImage
         isCollapsed = true
+        logger.debug("Collapsed. Separator Length: \(self.separatorItem.length)")
     }
     
     // MARK: - Auto-Collapse Timer
