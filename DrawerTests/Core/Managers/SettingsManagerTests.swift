@@ -106,4 +106,12 @@ final class SettingsManagerTests: XCTestCase {
         // Assert
         XCTAssertFalse(sut.showOnHover, "SET-007: Default showOnHover should be false")
     }
+    
+    // MARK: - SET-008: Default hasCompletedOnboarding is false
+    
+    func testSET008_DefaultHasCompletedOnboardingIsFalse() async throws {
+        UserDefaults.standard.removeObject(forKey: "hasCompletedOnboarding")
+        
+        XCTAssertFalse(sut.hasCompletedOnboarding, "SET-008: Default hasCompletedOnboarding should be false")
+    }
 }

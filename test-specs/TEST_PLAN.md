@@ -5,11 +5,11 @@
 | Priority | Category | Total | Done | Remaining | Progress |
 |----------|----------|-------|------|-----------|----------|
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
-| P1 | Manager State Tests (CRITICAL) | 55 | 24 | 31 | 44% |
+| P1 | Manager State Tests (CRITICAL) | 55 | 25 | 30 | 45% |
 | P2 | Pure Logic Tests | 35 | 0 | 35 | 0% |
 | P3 | Integration Tests | 40 | 0 | 40 | 0% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **149** | **31** | **118** | **21%** |
+| **TOTAL** | | **149** | **32** | **117** | **21%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -136,7 +136,7 @@ DrawerTests/
 | [x] | SET-005 | Default alwaysHiddenEnabled is false | alwaysHiddenEnabled == false | CRITICAL |
 | [x] | SET-006 | Default useFullStatusBarOnExpand is false | useFullStatusBarOnExpand == false | CRITICAL |
 | [x] | SET-007 | Default showOnHover is false | showOnHover == false | CRITICAL |
-| [ ] | SET-008 | Default hasCompletedOnboarding is false | hasCompletedOnboarding == false | CRITICAL |
+| [x] | SET-008 | Default hasCompletedOnboarding is false | hasCompletedOnboarding == false | CRITICAL |
 | [ ] | SET-009 | resetToDefaults restores all settings | All settings reset to defaults | CRITICAL |
 | [ ] | SET-010 | autoCollapseEnabled subject fires on change | Subject fires on change | HIGH |
 | [ ] | SET-011 | autoCollapseDelay subject fires on change | Subject fires on change | HIGH |
