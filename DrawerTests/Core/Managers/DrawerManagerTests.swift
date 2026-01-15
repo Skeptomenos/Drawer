@@ -53,4 +53,13 @@ final class DrawerManagerTests: XCTestCase {
         // Assert
         XCTAssertFalse(sut.isLoading, "DRM-003: Initial state isLoading should be false")
     }
+    
+    // MARK: - DRM-004: Initial lastError is nil
+    
+    func testDRM004_InitialLastErrorIsNil() async throws {
+        // Arrange & Act - sut is already initialized in setUp
+        
+        // Assert
+        XCTAssertNil(sut.lastError, "DRM-004: Initial state lastError should be nil")
+    }
 }
