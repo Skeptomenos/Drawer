@@ -5,11 +5,11 @@
 | Priority | Category | Total | Done | Remaining | Progress |
 |----------|----------|-------|------|-----------|----------|
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
-| P1 | Manager State Tests (CRITICAL) | 55 | 20 | 35 | 36% |
+| P1 | Manager State Tests (CRITICAL) | 55 | 21 | 34 | 38% |
 | P2 | Pure Logic Tests | 35 | 0 | 35 | 0% |
 | P3 | Integration Tests | 40 | 0 | 40 | 0% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **149** | **27** | **122** | **18%** |
+| **TOTAL** | | **149** | **28** | **121** | **19%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -132,7 +132,7 @@ DrawerTests/
 | [x] | SET-001 | Default autoCollapseEnabled is true | autoCollapseEnabled == true | CRITICAL |
 | [x] | SET-002 | Default autoCollapseDelay is 10.0 | autoCollapseDelay == 10.0 | CRITICAL |
 | [x] | SET-003 | Default launchAtLogin is false | launchAtLogin == false | CRITICAL |
-| [ ] | SET-004 | Default hideSeparators is false | hideSeparators == false | CRITICAL |
+| [x] | SET-004 | Default hideSeparators is false | hideSeparators == false | CRITICAL |
 | [ ] | SET-005 | Default alwaysHiddenEnabled is false | alwaysHiddenEnabled == false | CRITICAL |
 | [ ] | SET-006 | Default useFullStatusBarOnExpand is false | useFullStatusBarOnExpand == false | CRITICAL |
 | [ ] | SET-007 | Default showOnHover is false | showOnHover == false | CRITICAL |

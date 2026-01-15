@@ -66,4 +66,14 @@ final class SettingsManagerTests: XCTestCase {
         // Assert
         XCTAssertFalse(sut.launchAtLogin, "SET-003: Default launchAtLogin should be false")
     }
+    
+    // MARK: - SET-004: Default hideSeparators is false
+    
+    func testSET004_DefaultHideSeparatorsIsFalse() async throws {
+        // Arrange - reset to defaults to ensure we're testing default values
+        sut.resetToDefaults()
+        
+        // Assert
+        XCTAssertFalse(sut.hideSeparators, "SET-004: Default hideSeparators should be false")
+    }
 }
