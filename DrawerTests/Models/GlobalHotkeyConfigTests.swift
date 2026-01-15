@@ -165,4 +165,29 @@ final class GlobalHotkeyConfigTests: XCTestCase {
         )
         XCTAssertEqual(returnOnlyConfig.description, "⏎", "GHK-006: Return key alone should show ⏎")
     }
+    
+    // MARK: - GHK-007: Description with delete key
+    
+    func testGHK007_DescriptionWithDeleteKey() {
+        // Arrange - keyCode 51 is the Delete key
+        let config = createConfig(
+            keyCode: 51,
+            characters: nil,
+            command: true
+        )
+        
+        // Act
+        let description = config.description
+        
+        // Assert
+        XCTAssertTrue(description.contains("⌫"), "GHK-007: Description should show ⌫ for delete key (keyCode 51)")
+        XCTAssertEqual(description, "⌘⌫", "GHK-007: Description should be ⌘⌫ for command+delete")
+        
+        // Also test delete key without modifiers
+        let deleteOnlyConfig = createConfig(
+            keyCode: 51,
+            characters: nil
+        )
+        XCTAssertEqual(deleteOnlyConfig.description, "⌫", "GHK-007: Delete key alone should show ⌫")
+    }
 }

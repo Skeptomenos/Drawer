@@ -6,10 +6,10 @@
 |----------|----------|-------|------|-----------|----------|
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
 | P1 | Manager State Tests (CRITICAL) | 71 | 71 | 0 | 100% |
-| P2 | Pure Logic Tests | 35 | 16 | 19 | 46% |
+| P2 | Pure Logic Tests | 35 | 17 | 18 | 49% |
 | P3 | Integration Tests | 40 | 0 | 40 | 0% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **165** | **94** | **71** | **57%** |
+| **TOTAL** | | **165** | **95** | **70** | **58%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -240,7 +240,7 @@ DrawerTests/
 | [x] | GHK-004 | Description with control modifier | Description shows ⌃ for control modifier | LOW |
 | [x] | GHK-005 | Description with multiple modifiers | Correct order: Fn⌃⌥⌘⇧⇪ | LOW |
 | [x] | GHK-006 | Description with return key | keyCode 36 shows ⏎ | LOW |
-| [ ] | GHK-007 | Description with delete key | keyCode 51 shows ⌫ | LOW |
+| [x] | GHK-007 | Description with delete key | keyCode 51 shows ⌫ | LOW |
 | [ ] | GHK-008 | Description with space key | keyCode 49 shows ⎵ | LOW |
 | [ ] | GHK-009 | Description with character | Characters are uppercased | LOW |
 | [ ] | GHK-010 | Encoding/decoding roundtrip | Codable roundtrip preserves all properties | LOW |
