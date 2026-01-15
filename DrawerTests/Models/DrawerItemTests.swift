@@ -109,4 +109,24 @@ final class DrawerItemTests: XCTestCase {
         XCTAssertEqual(clickTarget.y, expectedCenterY, "DRI-003: clickTarget.y should be frame center Y")
         XCTAssertEqual(clickTarget, CGPoint(x: 111, y: 22), "DRI-003: clickTarget should be CGPoint at frame center")
     }
+    
+    // MARK: - DRI-004: originalCenterX calculation
+    
+    func testDRI004_OriginalCenterXCalculation() throws {
+        // Arrange
+        guard let mockImage = createMockImage(width: 22, height: 24) else {
+            throw XCTSkip("DRI-004: Could not create mock CGImage")
+        }
+        let testFrame = CGRect(x: 100, y: 10, width: 40, height: 24)
+        let drawerItem = DrawerItem(image: mockImage, originalFrame: testFrame, index: 0)
+        
+        let expectedCenterX = testFrame.midX  // 100 + 40/2 = 120
+        
+        // Act
+        let originalCenterX = drawerItem.originalCenterX
+        
+        // Assert
+        XCTAssertEqual(originalCenterX, expectedCenterX, "DRI-004: originalCenterX should return frame.midX")
+        XCTAssertEqual(originalCenterX, 120, "DRI-004: originalCenterX should be 120 for frame at x=100 with width=40")
+    }
 }
