@@ -215,4 +215,37 @@ final class DrawerItemTests: XCTestCase {
             XCTAssertEqual(item.index, index, "DRI-008: Item \(index) index should be \(index)")
         }
     }
+    
+    // MARK: - DRI-009: toDrawerItems preserves order
+    
+    func testDRI009_ToDrawerItemsPreservesOrder() throws {
+        // Arrange
+        // Create icons with distinct frames to verify order preservation
+        guard let icon1 = createCapturedIcon(frame: CGRect(x: 100, y: 0, width: 22, height: 24)),
+              let icon2 = createCapturedIcon(frame: CGRect(x: 126, y: 0, width: 22, height: 24)),
+              let icon3 = createCapturedIcon(frame: CGRect(x: 152, y: 0, width: 22, height: 24)),
+              let icon4 = createCapturedIcon(frame: CGRect(x: 178, y: 0, width: 22, height: 24)),
+              let icon5 = createCapturedIcon(frame: CGRect(x: 204, y: 0, width: 22, height: 24)) else {
+            throw XCTSkip("DRI-009: Could not create mock CapturedIcons")
+        }
+        let capturedIcons: [CapturedIcon] = [icon1, icon2, icon3, icon4, icon5]
+        
+        // Act
+        let drawerItems = capturedIcons.toDrawerItems()
+        
+        // Assert
+        XCTAssertEqual(drawerItems.count, capturedIcons.count, "DRI-009: Should have same count as input")
+        
+        // Verify order is preserved by checking that each item's index matches its position
+        // and that the original icon data is preserved in the correct order
+        for (arrayIndex, item) in drawerItems.enumerated() {
+            XCTAssertEqual(item.index, arrayIndex, "DRI-009: Item at position \(arrayIndex) should have index \(arrayIndex)")
+            XCTAssertEqual(item.id, capturedIcons[arrayIndex].id, "DRI-009: Item at position \(arrayIndex) should have ID from original icon at same position")
+            XCTAssertEqual(item.originalFrame, capturedIcons[arrayIndex].originalFrame, "DRI-009: Item at position \(arrayIndex) should have frame from original icon at same position")
+        }
+        
+        // Additional verification: indices should be sequential starting from 0
+        let indices = drawerItems.map { $0.index }
+        XCTAssertEqual(indices, [0, 1, 2, 3, 4], "DRI-009: Indices should be sequential starting from 0")
+    }
 }
