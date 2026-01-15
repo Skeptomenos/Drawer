@@ -218,4 +218,35 @@ final class MenuBarManagerTests: XCTestCase {
             throw XCTSkip("MBM-010: Auto-collapse timer started but collapse blocked by isSeparatorValidPosition guard in test environment")
         }
     }
+    
+    // MARK: - MBM-011: Auto-collapse timer does not start when disabled
+    
+    func testMBM011_AutoCollapseTimerDoesNotStartWhenDisabled() async throws {
+        // Arrange
+        let settings = SettingsManager.shared
+        let originalEnabled = settings.autoCollapseEnabled
+        let originalDelay = settings.autoCollapseDelay
+        
+        // Disable auto-collapse
+        settings.autoCollapseEnabled = false
+        settings.autoCollapseDelay = 0.3  // Short delay to verify timer doesn't fire
+        
+        defer {
+            settings.autoCollapseEnabled = originalEnabled
+            settings.autoCollapseDelay = originalDelay
+        }
+        
+        sut = MenuBarManager(settings: settings)
+        XCTAssertTrue(sut.isCollapsed, "Precondition: should start collapsed")
+        
+        // Act
+        sut.toggle()
+        XCTAssertFalse(sut.isCollapsed, "Should be expanded after toggle")
+        
+        // Wait longer than the auto-collapse delay would be
+        try await Task.sleep(for: .milliseconds(500))
+        
+        // Assert - should still be expanded because auto-collapse is disabled
+        XCTAssertFalse(sut.isCollapsed, "MBM-011: No timer should start when autoCollapseEnabled=false - menu bar should remain expanded")
+    }
 }
