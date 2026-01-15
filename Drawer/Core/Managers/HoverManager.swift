@@ -17,7 +17,7 @@ final class HoverManager: ObservableObject {
     @Published private(set) var isMouseInDrawerArea: Bool = false
     @Published private(set) var isMonitoring: Bool = false
     
-    private let menuBarHeight: CGFloat = 24
+    private var menuBarHeight: CGFloat { MenuBarMetrics.height }
     private let debounceInterval: TimeInterval = 0.15
     private let hideDebounceInterval: TimeInterval = 0.3
     
@@ -33,6 +33,12 @@ final class HoverManager: ObservableObject {
     private var isDrawerVisible: Bool = false
     
     private init() {}
+    
+    deinit {
+        mouseMonitor?.stop()
+        showDebounceTimer?.invalidate()
+        hideDebounceTimer?.invalidate()
+    }
     
     func startMonitoring() {
         guard !isMonitoring else { return }
@@ -95,7 +101,7 @@ final class HoverManager: ObservableObject {
         }
     }
     
-    private func isInMenuBarTriggerZone(_ point: NSPoint) -> Bool {
+    func isInMenuBarTriggerZone(_ point: NSPoint) -> Bool {
         guard let screen = NSScreen.screens.first(where: { $0.frame.contains(point) }) else {
             return false
         }
@@ -107,7 +113,7 @@ final class HoverManager: ObservableObject {
         return point.y >= triggerZoneBottom && point.y <= triggerZoneTop
     }
     
-    private func isInDrawerArea(_ point: NSPoint) -> Bool {
+    func isInDrawerArea(_ point: NSPoint) -> Bool {
         guard !drawerFrame.isEmpty else { return false }
         
         let expandedFrame = drawerFrame.insetBy(dx: -10, dy: -10)

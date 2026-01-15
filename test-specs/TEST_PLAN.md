@@ -5,11 +5,11 @@
 | Priority | Category | Total | Done | Remaining | Progress |
 |----------|----------|-------|------|-----------|----------|
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
-| P1 | Manager State Tests (CRITICAL) | 71 | 62 | 9 | 87% |
+| P1 | Manager State Tests (CRITICAL) | 71 | 69 | 2 | 97% |
 | P2 | Pure Logic Tests | 35 | 0 | 35 | 0% |
 | P3 | Integration Tests | 40 | 0 | 40 | 0% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **165** | **69** | **96** | **42%** |
+| **TOTAL** | | **165** | **76** | **89** | **46%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -188,13 +188,13 @@ DrawerTests/
 | [x] | HVM-005 | stopMonitoring sets isMonitoring false | isMonitoring == false | MEDIUM |
 | [x] | HVM-006 | startMonitoring twice is no-op | No multiple monitors created | MEDIUM |
 | [x] | HVM-007 | updateDrawerFrame stores frame | Frame is stored | MEDIUM |
-| [ ] | HVM-008 | setDrawerVisible(true) works | Visibility set correctly | MEDIUM |
-| [ ] | HVM-009 | setDrawerVisible(false) clears mouse in drawer area | Mouse state cleared | MEDIUM |
-| [ ] | HVM-010 | isInMenuBarTriggerZone at top of screen | Point at screen top is in zone | MEDIUM |
-| [ ] | HVM-011 | isInMenuBarTriggerZone below menu bar | Point below menu bar is not in zone | MEDIUM |
-| [ ] | HVM-012 | isInDrawerArea inside frame | Point inside frame returns true | MEDIUM |
-| [ ] | HVM-013 | isInDrawerArea outside frame | Point outside frame returns false | MEDIUM |
-| [ ] | HVM-014 | isInDrawerArea with expanded hit area | 10px expansion works | MEDIUM |
+| [x] | HVM-008 | setDrawerVisible(true) works | Visibility set correctly | MEDIUM |
+| [x] | HVM-009 | setDrawerVisible(false) clears mouse in drawer area | Mouse state cleared | MEDIUM |
+| [x] | HVM-010 | isInMenuBarTriggerZone at top of screen | Point at screen top is in zone | MEDIUM |
+| [x] | HVM-011 | isInMenuBarTriggerZone below menu bar | Point below menu bar is not in zone | MEDIUM |
+| [x] | HVM-012 | isInDrawerArea inside frame | Point inside frame returns true | MEDIUM |
+| [x] | HVM-013 | isInDrawerArea outside frame | Point outside frame returns false | MEDIUM |
+| [x] | HVM-014 | isInDrawerArea with expanded hit area | 10px expansion works | MEDIUM |
 
 ### 1.5 LaunchAtLoginManager (`Drawer/Core/Managers/LaunchAtLoginManager.swift`)
 
