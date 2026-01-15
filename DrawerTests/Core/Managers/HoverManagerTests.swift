@@ -73,4 +73,23 @@ final class HoverManagerTests: XCTestCase {
         // Assert
         XCTAssertFalse(sut.isMonitoring, "HVM-005: stopMonitoring() should set isMonitoring to false")
     }
+    
+    // MARK: - HVM-006: startMonitoring twice is no-op
+    
+    func testHVM006_StartMonitoringTwiceIsNoOp() async throws {
+        XCTAssertFalse(sut.isMonitoring, "Precondition: isMonitoring should be false before starting")
+        
+        sut.startMonitoring()
+        XCTAssertTrue(sut.isMonitoring, "First startMonitoring() should set isMonitoring to true")
+        
+        sut.startMonitoring()
+        
+        XCTAssertTrue(sut.isMonitoring, "HVM-006: startMonitoring() twice should still have isMonitoring true (no-op)")
+        
+        sut.stopMonitoring()
+        XCTAssertFalse(sut.isMonitoring, "After stopMonitoring, isMonitoring should be false")
+        
+        sut.startMonitoring()
+        XCTAssertTrue(sut.isMonitoring, "After stop, startMonitoring should work again")
+    }
 }

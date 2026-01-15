@@ -5,11 +5,11 @@
 | Priority | Category | Total | Done | Remaining | Progress |
 |----------|----------|-------|------|-----------|----------|
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
-| P1 | Manager State Tests (CRITICAL) | 71 | 60 | 11 | 85% |
+| P1 | Manager State Tests (CRITICAL) | 71 | 61 | 10 | 86% |
 | P2 | Pure Logic Tests | 35 | 0 | 35 | 0% |
 | P3 | Integration Tests | 40 | 0 | 40 | 0% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **165** | **67** | **98** | **41%** |
+| **TOTAL** | | **165** | **68** | **97** | **41%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -186,7 +186,7 @@ DrawerTests/
 | [x] | HVM-003 | Initial isMouseInDrawerArea is false | isMouseInDrawerArea == false | MEDIUM |
 | [x] | HVM-004 | startMonitoring sets isMonitoring true | isMonitoring == true | MEDIUM |
 | [x] | HVM-005 | stopMonitoring sets isMonitoring false | isMonitoring == false | MEDIUM |
-| [ ] | HVM-006 | startMonitoring twice is no-op | No multiple monitors created | MEDIUM |
+| [x] | HVM-006 | startMonitoring twice is no-op | No multiple monitors created | MEDIUM |
 | [ ] | HVM-007 | updateDrawerFrame stores frame | Frame is stored | MEDIUM |
 | [ ] | HVM-008 | setDrawerVisible(true) works | Visibility set correctly | MEDIUM |
 | [ ] | HVM-009 | setDrawerVisible(false) clears mouse in drawer area | Mouse state cleared | MEDIUM |
