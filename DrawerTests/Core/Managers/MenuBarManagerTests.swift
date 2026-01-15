@@ -36,4 +36,14 @@ final class MenuBarManagerTests: XCTestCase {
         
         XCTAssertTrue(sut.isCollapsed, "MBM-001: Initial state isCollapsed should be true")
     }
+    
+    // MARK: - MBM-002: Initial State isToggling
+    
+    func testMBM002_InitialStateIsTogglingIsFalse() async throws {
+        // Arrange & Act
+        sut = MenuBarManager(settings: SettingsManager.shared)
+        
+        // Assert
+        XCTAssertFalse(sut.isToggling, "MBM-002: Initial state isToggling should be false")
+    }
 }
