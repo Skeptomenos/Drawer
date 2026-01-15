@@ -60,4 +60,25 @@ final class MenuBarManagerTests: XCTestCase {
         // Assert
         XCTAssertFalse(sut.isCollapsed, "MBM-003: toggle() when collapsed should set isCollapsed=false")
     }
+    
+    // MARK: - MBM-004: Toggle from expanded collapses
+    
+    func testMBM004_ToggleFromExpandedCollapses() async throws {
+        // Arrange
+        sut = MenuBarManager(settings: SettingsManager.shared)
+        
+        // First expand the menu bar
+        sut.toggle()
+        XCTAssertFalse(sut.isCollapsed, "Precondition: should be expanded after first toggle")
+        
+        // Wait for debounce to complete (isToggling resets after 0.3s)
+        try await Task.sleep(for: .milliseconds(350))
+        XCTAssertFalse(sut.isToggling, "Precondition: isToggling should be false after debounce")
+        
+        // Act
+        sut.toggle()
+        
+        // Assert
+        XCTAssertTrue(sut.isCollapsed, "MBM-004: toggle() when expanded should set isCollapsed=true")
+    }
 }
