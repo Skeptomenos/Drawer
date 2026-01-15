@@ -14,6 +14,8 @@
 		DRAWERTEST00100000000005 /* MockPermissionManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000006 /* MockPermissionManagerTests.swift */; };
 		DRAWERTEST00100000000006 /* MockMenuBarManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000007 /* MockMenuBarManager.swift */; };
 		DRAWERTEST00100000000007 /* MockMenuBarManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000008 /* MockMenuBarManagerTests.swift */; };
+		DRAWERTEST00100000000008 /* MockIconCapturer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000009 /* MockIconCapturer.swift */; };
+		DRAWERTEST00100000000009 /* MockIconCapturerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000010 /* MockIconCapturerTests.swift */; };
 		DRAWER001000000000000001 /* DrawerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000001 /* DrawerApp.swift */; };
 		DRAWER001000000000000002 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000002 /* AppState.swift */; };
 		DRAWER001000000000000003 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000003 /* AppDelegate.swift */; };
@@ -113,6 +115,8 @@
 		DRAWERTEST00200000000006 /* MockPermissionManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPermissionManagerTests.swift; sourceTree = "<group>"; };
 		DRAWERTEST00200000000007 /* MockMenuBarManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockMenuBarManager.swift; sourceTree = "<group>"; };
 		DRAWERTEST00200000000008 /* MockMenuBarManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockMenuBarManagerTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000009 /* MockIconCapturer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockIconCapturer.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000010 /* MockIconCapturerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockIconCapturerTests.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000001 /* DrawerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerApp.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000002 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000003 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -245,6 +249,8 @@
 				DRAWERTEST00200000000006 /* MockPermissionManagerTests.swift */,
 				DRAWERTEST00200000000007 /* MockMenuBarManager.swift */,
 				DRAWERTEST00200000000008 /* MockMenuBarManagerTests.swift */,
+				DRAWERTEST00200000000009 /* MockIconCapturer.swift */,
+				DRAWERTEST00200000000010 /* MockIconCapturerTests.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -728,6 +734,8 @@
 				DRAWERTEST00100000000005 /* MockPermissionManagerTests.swift in Sources */,
 				DRAWERTEST00100000000006 /* MockMenuBarManager.swift in Sources */,
 				DRAWERTEST00100000000007 /* MockMenuBarManagerTests.swift in Sources */,
+				DRAWERTEST00100000000008 /* MockIconCapturer.swift in Sources */,
+				DRAWERTEST00100000000009 /* MockIconCapturerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

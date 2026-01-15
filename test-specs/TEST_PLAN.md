@@ -4,12 +4,12 @@
 
 | Priority | Category | Total | Done | Remaining | Progress |
 |----------|----------|-------|------|-----------|----------|
-| P0 | Test Infrastructure | 8 | 6 | 2 | 75% |
+| P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
 | P1 | Manager State Tests (CRITICAL) | 55 | 0 | 55 | 0% |
 | P2 | Pure Logic Tests | 35 | 0 | 35 | 0% |
 | P3 | Integration Tests | 40 | 0 | 40 | 0% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **149** | **6** | **143** | **4%** |
+| **TOTAL** | | **149** | **7** | **142** | **5%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -83,7 +83,7 @@ DrawerTests/
 | [x] | SETUP-004 | Create MockSettingsManager | Mock compiles and can be instantiated | |
 | [x] | SETUP-005 | Create MockPermissionManager | Mock compiles and can be instantiated | |
 | [x] | SETUP-006 | Create MockMenuBarManager | Mock compiles and can be instantiated | |
-| [ ] | SETUP-007 | Create MockIconCapturer | Mock compiles and can be instantiated | |
+| [x] | SETUP-007 | Create MockIconCapturer | Mock compiles and can be instantiated | |
 
 ### 0.3 Test Verification
 
