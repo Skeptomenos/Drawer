@@ -116,4 +116,37 @@ final class MenuBarManagerTests: XCTestCase {
         // Assert - state should remain unchanged (still collapsed)
         XCTAssertTrue(sut.isCollapsed, "MBM-006: collapse() when isCollapsed should do nothing (remain collapsed)")
     }
+    
+    // MARK: - MBM-007: isToggling prevents double toggle
+    
+    func testMBM007_IsTogglingPreventsDoubleToggle() async throws {
+        // Arrange
+        sut = MenuBarManager(settings: SettingsManager.shared)
+        XCTAssertTrue(sut.isCollapsed, "Precondition: should start collapsed")
+        XCTAssertFalse(sut.isToggling, "Precondition: isToggling should be false")
+        
+        // Act - call toggle() twice rapidly (before debounce completes)
+        sut.toggle()
+        
+        // Verify first toggle took effect
+        XCTAssertFalse(sut.isCollapsed, "First toggle should expand (isCollapsed=false)")
+        XCTAssertTrue(sut.isToggling, "isToggling should be true during debounce period")
+        
+        // Immediately call toggle() again while isToggling is true
+        sut.toggle()
+        
+        // Assert - second toggle should be ignored (state unchanged)
+        XCTAssertFalse(sut.isCollapsed, "MBM-007: Rapid toggle() calls should be debounced - state should remain expanded")
+        XCTAssertTrue(sut.isToggling, "isToggling should still be true")
+        
+        // Wait for debounce to complete
+        try await Task.sleep(for: .milliseconds(350))
+        
+        // Verify debounce completed
+        XCTAssertFalse(sut.isToggling, "isToggling should be false after debounce period")
+        
+        // Now toggle should work again
+        sut.toggle()
+        XCTAssertTrue(sut.isCollapsed, "Toggle after debounce should collapse (isCollapsed=true)")
+    }
 }

@@ -5,11 +5,11 @@
 | Priority | Category | Total | Done | Remaining | Progress |
 |----------|----------|-------|------|-----------|----------|
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
-| P1 | Manager State Tests (CRITICAL) | 55 | 6 | 49 | 11% |
+| P1 | Manager State Tests (CRITICAL) | 55 | 7 | 48 | 13% |
 | P2 | Pure Logic Tests | 35 | 0 | 35 | 0% |
 | P3 | Integration Tests | 40 | 0 | 40 | 0% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **149** | **13** | **136** | **9%** |
+| **TOTAL** | | **149** | **14** | **135** | **9%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -111,7 +111,7 @@ DrawerTests/
 | [x] | MBM-004 | Toggle from expanded collapses | toggle() when expanded sets isCollapsed=true | CRITICAL |
 | [x] | MBM-005 | Expand when already expanded is no-op | expand() when !isCollapsed does nothing | CRITICAL |
 | [x] | MBM-006 | Collapse when already collapsed is no-op | collapse() when isCollapsed does nothing | CRITICAL |
-| [ ] | MBM-007 | isToggling prevents double toggle | Rapid toggle() calls are debounced | CRITICAL |
+| [x] | MBM-007 | isToggling prevents double toggle | Rapid toggle() calls are debounced | CRITICAL |
 | [ ] | MBM-008 | Expand sets correct separator length | Separator length is 20 after expand | HIGH |
 | [ ] | MBM-009 | Collapse sets correct separator length | Separator length is 10000 after collapse | HIGH |
 | [ ] | MBM-010 | Auto-collapse timer starts on expand | Timer starts when autoCollapseEnabled | HIGH |
