@@ -200,6 +200,23 @@ final class DrawerManagerTests: XCTestCase {
         XCTAssertEqual(storedError?.code, 42, "DRM-012: Stored error should have correct code")
     }
     
+    // MARK: - DRM-013: setError(nil) clears error
+    
+    func testDRM013_SetErrorNilClearsError() async throws {
+        // Arrange - Set an error first
+        let testError = NSError(domain: "TestDomain", code: 1, userInfo: [NSLocalizedDescriptionKey: "Test error"])
+        sut.setError(testError)
+        
+        // Precondition
+        XCTAssertNotNil(sut.lastError, "DRM-013: Precondition - lastError should be set before clearing")
+        
+        // Act
+        sut.setError(nil)
+        
+        // Assert
+        XCTAssertNil(sut.lastError, "DRM-013: setError(nil) should clear the error")
+    }
+    
     // MARK: - Test Helpers
     
     private func createMockCapturedIcons(count: Int) -> [CapturedIcon] {
