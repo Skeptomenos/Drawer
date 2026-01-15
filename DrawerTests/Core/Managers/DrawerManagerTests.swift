@@ -82,4 +82,42 @@ final class DrawerManagerTests: XCTestCase {
         XCTAssertEqual(sut.items.count, 3, "DRM-005: Items should be updated from MenuBarCaptureResult")
         XCTAssertNil(sut.lastError, "DRM-005: lastError should be nil after successful update")
     }
+    
+    // MARK: - DRM-006: updateItems from [CapturedIcon] array
+    
+    func testDRM006_UpdateItemsFromCapturedIconArray() async throws {
+        // Arrange
+        let mockIcons = createMockCapturedIcons(count: 5)
+        
+        // Precondition
+        XCTAssertTrue(sut.items.isEmpty, "DRM-006: Precondition - items should be empty before update")
+        
+        // Act
+        sut.updateItems(from: mockIcons)
+        
+        // Assert
+        XCTAssertEqual(sut.items.count, 5, "DRM-006: Items should be updated from [CapturedIcon] array")
+        XCTAssertNil(sut.lastError, "DRM-006: lastError should be nil after successful update")
+    }
+    
+    // MARK: - Test Helpers
+    
+    private func createMockCapturedIcons(count: Int) -> [CapturedIcon] {
+        var icons: [CapturedIcon] = []
+        let iconWidth: CGFloat = 22
+        let iconHeight: CGFloat = 24
+        let spacing: CGFloat = 4
+        
+        for i in 0..<count {
+            let x = CGFloat(i) * (iconWidth + spacing)
+            let frame = CGRect(x: x, y: 0, width: iconWidth, height: iconHeight)
+            
+            if let image = MockIconCapturer.createMockImage(width: Int(iconWidth), height: Int(iconHeight)) {
+                let icon = CapturedIcon(image: image, originalFrame: frame)
+                icons.append(icon)
+            }
+        }
+        
+        return icons
+    }
 }

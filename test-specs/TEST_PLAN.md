@@ -5,11 +5,11 @@
 | Priority | Category | Total | Done | Remaining | Progress |
 |----------|----------|-------|------|-----------|----------|
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
-| P1 | Manager State Tests (CRITICAL) | 55 | 37 | 18 | 67% |
+| P1 | Manager State Tests (CRITICAL) | 55 | 38 | 17 | 69% |
 | P2 | Pure Logic Tests | 35 | 0 | 35 | 0% |
 | P3 | Integration Tests | 40 | 0 | 40 | 0% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **149** | **44** | **105** | **30%** |
+| **TOTAL** | | **149** | **45** | **104** | **30%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -156,7 +156,7 @@ DrawerTests/
 | [x] | DRM-003 | Initial isLoading is false | isLoading == false on init | CRITICAL |
 | [x] | DRM-004 | Initial lastError is nil | lastError == nil on init | CRITICAL |
 | [x] | DRM-005 | updateItems from MenuBarCaptureResult | Items updated from MenuBarCaptureResult | CRITICAL |
-| [ ] | DRM-006 | updateItems from [CapturedIcon] array | Items updated from [CapturedIcon] | CRITICAL |
+| [x] | DRM-006 | updateItems from [CapturedIcon] array | Items updated from [CapturedIcon] | CRITICAL |
 | [ ] | DRM-007 | updateItems clears lastError | lastError set to nil on update | HIGH |
 | [ ] | DRM-008 | clearItems removes all | clearItems() empties items array | CRITICAL |
 | [ ] | DRM-009 | clearItems clears lastError | clearItems() sets lastError to nil | HIGH |
