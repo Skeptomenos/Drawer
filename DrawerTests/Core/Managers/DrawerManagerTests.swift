@@ -275,6 +275,20 @@ final class DrawerManagerTests: XCTestCase {
         XCTAssertFalse(sut.isVisible, "DRM-017: toggle() when visible should hide the drawer")
     }
     
+    // MARK: - DRM-018: hasItems true when not empty
+    
+    func testDRM018_HasItemsTrueWhenNotEmpty() async throws {
+        // Arrange - Add some items
+        let mockIcons = createMockCapturedIcons(count: 3)
+        sut.updateItems(from: mockIcons)
+        
+        // Precondition
+        XCTAssertEqual(sut.items.count, 3, "DRM-018: Precondition - items should have 3 items")
+        
+        // Act & Assert
+        XCTAssertTrue(sut.hasItems, "DRM-018: hasItems should return true when items is not empty")
+    }
+    
     // MARK: - Test Helpers
     
     private func createMockCapturedIcons(count: Int) -> [CapturedIcon] {
