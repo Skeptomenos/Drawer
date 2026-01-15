@@ -5,11 +5,11 @@
 | Priority | Category | Total | Done | Remaining | Progress |
 |----------|----------|-------|------|-----------|----------|
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
-| P1 | Manager State Tests (CRITICAL) | 55 | 46 | 9 | 84% |
+| P1 | Manager State Tests (CRITICAL) | 55 | 47 | 8 | 85% |
 | P2 | Pure Logic Tests | 35 | 0 | 35 | 0% |
 | P3 | Integration Tests | 40 | 0 | 40 | 0% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **149** | **53** | **96** | **36%** |
+| **TOTAL** | | **149** | **54** | **95** | **36%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -165,7 +165,7 @@ DrawerTests/
 | [x] | DRM-012 | setError stores error | Error is stored | HIGH |
 | [x] | DRM-013 | setError(nil) clears error | Error is cleared | HIGH |
 | [x] | DRM-014 | show() sets isVisible true | isVisible == true | CRITICAL |
-| [ ] | DRM-015 | hide() sets isVisible false | isVisible == false | CRITICAL |
+| [x] | DRM-015 | hide() sets isVisible false | isVisible == false | CRITICAL |
 | [ ] | DRM-016 | toggle() from hidden shows | toggle() when hidden shows | CRITICAL |
 | [ ] | DRM-017 | toggle() from visible hides | toggle() when visible hides | CRITICAL |
 | [ ] | DRM-018 | hasItems true when not empty | hasItems returns true with items | HIGH |

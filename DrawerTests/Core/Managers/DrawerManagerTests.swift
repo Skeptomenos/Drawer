@@ -230,6 +230,22 @@ final class DrawerManagerTests: XCTestCase {
         XCTAssertTrue(sut.isVisible, "DRM-014: show() should set isVisible to true")
     }
     
+    // MARK: - DRM-015: hide() sets isVisible false
+    
+    func testDRM015_HideSetsIsVisibleFalse() async throws {
+        // Arrange - Show the drawer first
+        sut.show()
+        
+        // Precondition
+        XCTAssertTrue(sut.isVisible, "DRM-015: Precondition - isVisible should be true before hide")
+        
+        // Act
+        sut.hide()
+        
+        // Assert
+        XCTAssertFalse(sut.isVisible, "DRM-015: hide() should set isVisible to false")
+    }
+    
     // MARK: - Test Helpers
     
     private func createMockCapturedIcons(count: Int) -> [CapturedIcon] {
