@@ -289,6 +289,16 @@ final class DrawerManagerTests: XCTestCase {
         XCTAssertTrue(sut.hasItems, "DRM-018: hasItems should return true when items is not empty")
     }
     
+    // MARK: - DRM-019: hasItems false when empty
+    
+    func testDRM019_HasItemsFalseWhenEmpty() async throws {
+        // Arrange & Precondition - sut is initialized with empty items
+        XCTAssertTrue(sut.items.isEmpty, "DRM-019: Precondition - items should be empty")
+        
+        // Act & Assert
+        XCTAssertFalse(sut.hasItems, "DRM-019: hasItems should return false when items is empty")
+    }
+    
     // MARK: - Test Helpers
     
     private func createMockCapturedIcons(count: Int) -> [CapturedIcon] {
