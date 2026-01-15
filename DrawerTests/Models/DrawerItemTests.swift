@@ -63,4 +63,28 @@ final class DrawerItemTests: XCTestCase {
         XCTAssertEqual(drawerItem.index, testIndex, "DRI-001: index should be set to provided value")
         XCTAssertNotNil(drawerItem.image, "DRI-001: image should be copied from CapturedIcon")
     }
+    
+    // MARK: - DRI-002: Init direct with image, frame, index
+    
+    func testDRI002_InitDirectWithImageFrameIndex() throws {
+        // Arrange
+        guard let mockImage = createMockImage(width: 22, height: 24) else {
+            throw XCTSkip("DRI-002: Could not create mock CGImage")
+        }
+        let testFrame = CGRect(x: 150, y: 5, width: 22, height: 24)
+        let testIndex = 3
+        
+        // Act
+        let drawerItem = DrawerItem(image: mockImage, originalFrame: testFrame, index: testIndex)
+        
+        // Assert
+        XCTAssertNotNil(drawerItem.id, "DRI-002: id should be auto-generated UUID")
+        XCTAssertEqual(drawerItem.originalFrame, testFrame, "DRI-002: originalFrame should match provided frame")
+        XCTAssertEqual(drawerItem.index, testIndex, "DRI-002: index should match provided value")
+        XCTAssertNotNil(drawerItem.capturedAt, "DRI-002: capturedAt should be auto-set to current date")
+        XCTAssertNotNil(drawerItem.image, "DRI-002: image should be set from provided CGImage")
+        
+        let timeDifference = Date().timeIntervalSince(drawerItem.capturedAt)
+        XCTAssertLessThan(timeDifference, 1.0, "DRI-002: capturedAt should be set to approximately current time")
+    }
 }
