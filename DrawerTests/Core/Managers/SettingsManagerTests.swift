@@ -46,4 +46,14 @@ final class SettingsManagerTests: XCTestCase {
         // Assert
         XCTAssertTrue(sut.autoCollapseEnabled, "SET-001: Default autoCollapseEnabled should be true")
     }
+    
+    // MARK: - SET-002: Default autoCollapseDelay is 10.0
+    
+    func testSET002_DefaultAutoCollapseDelayIsTen() async throws {
+        // Arrange - reset to defaults to ensure we're testing default values
+        sut.resetToDefaults()
+        
+        // Assert
+        XCTAssertEqual(sut.autoCollapseDelay, 10.0, accuracy: 0.001, "SET-002: Default autoCollapseDelay should be 10.0")
+    }
 }
