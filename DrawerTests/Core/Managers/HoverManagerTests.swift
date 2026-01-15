@@ -40,4 +40,10 @@ final class HoverManagerTests: XCTestCase {
     func testHVM002_InitialIsMouseInTriggerZoneIsFalse() async throws {
         XCTAssertFalse(sut.isMouseInTriggerZone, "HVM-002: Initial state isMouseInTriggerZone should be false")
     }
+    
+    // MARK: - HVM-003: Initial isMouseInDrawerArea is false
+    
+    func testHVM003_InitialIsMouseInDrawerAreaIsFalse() async throws {
+        XCTAssertFalse(sut.isMouseInDrawerArea, "HVM-003: Initial state isMouseInDrawerArea should be false")
+    }
 }
