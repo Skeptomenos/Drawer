@@ -6,10 +6,10 @@
 |----------|----------|-------|------|-----------|----------|
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
 | P1 | Manager State Tests (CRITICAL) | 71 | 71 | 0 | 100% |
-| P2 | Pure Logic Tests | 35 | 2 | 33 | 6% |
+| P2 | Pure Logic Tests | 35 | 3 | 32 | 9% |
 | P3 | Integration Tests | 40 | 0 | 40 | 0% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **165** | **80** | **85** | **48%** |
+| **TOTAL** | | **165** | **81** | **84** | **49%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -219,7 +219,7 @@ DrawerTests/
 |--------|---------|-----------|-----------------|-------|
 | [x] | DRI-001 | Init from CapturedIcon | DrawerItem correctly initializes from CapturedIcon | LOW |
 | [x] | DRI-002 | Init direct with image, frame, index | Direct initialization works | LOW |
-| [ ] | DRI-003 | clickTarget returns frame center | clickTarget returns CGPoint at frame center | LOW |
+| [x] | DRI-003 | clickTarget returns frame center | clickTarget returns CGPoint at frame center | LOW |
 | [ ] | DRI-004 | originalCenterX calculation | originalCenterX returns frame.midX | LOW |
 | [ ] | DRI-005 | originalCenterY calculation | originalCenterY returns frame.midY | LOW |
 | [ ] | DRI-006 | Equatable compares by ID | Two items with same ID are equal | LOW |

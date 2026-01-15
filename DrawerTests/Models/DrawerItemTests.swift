@@ -87,4 +87,26 @@ final class DrawerItemTests: XCTestCase {
         let timeDifference = Date().timeIntervalSince(drawerItem.capturedAt)
         XCTAssertLessThan(timeDifference, 1.0, "DRI-002: capturedAt should be set to approximately current time")
     }
+    
+    // MARK: - DRI-003: clickTarget returns frame center
+    
+    func testDRI003_ClickTargetReturnsFrameCenter() throws {
+        // Arrange
+        guard let mockImage = createMockImage(width: 22, height: 24) else {
+            throw XCTSkip("DRI-003: Could not create mock CGImage")
+        }
+        let testFrame = CGRect(x: 100, y: 10, width: 22, height: 24)
+        let drawerItem = DrawerItem(image: mockImage, originalFrame: testFrame, index: 0)
+        
+        let expectedCenterX = testFrame.midX
+        let expectedCenterY = testFrame.midY
+        
+        // Act
+        let clickTarget = drawerItem.clickTarget
+        
+        // Assert
+        XCTAssertEqual(clickTarget.x, expectedCenterX, "DRI-003: clickTarget.x should be frame center X")
+        XCTAssertEqual(clickTarget.y, expectedCenterY, "DRI-003: clickTarget.y should be frame center Y")
+        XCTAssertEqual(clickTarget, CGPoint(x: 111, y: 22), "DRI-003: clickTarget should be CGPoint at frame center")
+    }
 }
