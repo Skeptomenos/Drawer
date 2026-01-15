@@ -5,11 +5,11 @@
 | Priority | Category | Total | Done | Remaining | Progress |
 |----------|----------|-------|------|-----------|----------|
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
-| P1 | Manager State Tests (CRITICAL) | 55 | 22 | 33 | 40% |
+| P1 | Manager State Tests (CRITICAL) | 55 | 23 | 32 | 42% |
 | P2 | Pure Logic Tests | 35 | 0 | 35 | 0% |
 | P3 | Integration Tests | 40 | 0 | 40 | 0% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **149** | **29** | **120** | **19%** |
+| **TOTAL** | | **149** | **30** | **119** | **20%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -134,7 +134,7 @@ DrawerTests/
 | [x] | SET-003 | Default launchAtLogin is false | launchAtLogin == false | CRITICAL |
 | [x] | SET-004 | Default hideSeparators is false | hideSeparators == false | CRITICAL |
 | [x] | SET-005 | Default alwaysHiddenEnabled is false | alwaysHiddenEnabled == false | CRITICAL |
-| [ ] | SET-006 | Default useFullStatusBarOnExpand is false | useFullStatusBarOnExpand == false | CRITICAL |
+| [x] | SET-006 | Default useFullStatusBarOnExpand is false | useFullStatusBarOnExpand == false | CRITICAL |
 | [ ] | SET-007 | Default showOnHover is false | showOnHover == false | CRITICAL |
 | [ ] | SET-008 | Default hasCompletedOnboarding is false | hasCompletedOnboarding == false | CRITICAL |
 | [ ] | SET-009 | resetToDefaults restores all settings | All settings reset to defaults | CRITICAL |

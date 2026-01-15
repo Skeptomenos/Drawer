@@ -86,4 +86,14 @@ final class SettingsManagerTests: XCTestCase {
         // Assert
         XCTAssertFalse(sut.alwaysHiddenEnabled, "SET-005: Default alwaysHiddenEnabled should be false")
     }
+    
+    // MARK: - SET-006: Default useFullStatusBarOnExpand is false
+    
+    func testSET006_DefaultUseFullStatusBarOnExpandIsFalse() async throws {
+        // Arrange - reset to defaults to ensure we're testing default values
+        sut.resetToDefaults()
+        
+        // Assert
+        XCTAssertFalse(sut.useFullStatusBarOnExpand, "SET-006: Default useFullStatusBarOnExpand should be false")
+    }
 }
