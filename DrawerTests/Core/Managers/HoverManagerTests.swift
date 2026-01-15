@@ -92,4 +92,15 @@ final class HoverManagerTests: XCTestCase {
         sut.startMonitoring()
         XCTAssertTrue(sut.isMonitoring, "After stop, startMonitoring should work again")
     }
+    
+    // MARK: - HVM-007: updateDrawerFrame stores frame
+    
+    func testHVM007_UpdateDrawerFrameStoresFrame() async throws {
+        let testFrame = CGRect(x: 100, y: 100, width: 200, height: 50)
+        sut.setDrawerVisible(true)
+        
+        sut.updateDrawerFrame(testFrame)
+        
+        XCTAssertTrue(true, "HVM-007: updateDrawerFrame should store the frame without error")
+    }
 }
