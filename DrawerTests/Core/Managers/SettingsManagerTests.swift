@@ -229,4 +229,30 @@ final class SettingsManagerTests: XCTestCase {
         XCTAssertEqual(receivedValues.count, 1, "SET-012: Subject should fire exactly once")
         XCTAssertTrue(receivedValues.first ?? false, "SET-012: Subject should emit the new value (true)")
     }
+    
+    // MARK: - SET-013: autoCollapseSettingsChanged publisher fires
+    
+    func testSET013_AutoCollapseSettingsChangedPublisherFires() async throws {
+        // Arrange
+        var fireCount = 0
+        let expectation = XCTestExpectation(description: "Combined publisher should fire on either setting change")
+        expectation.expectedFulfillmentCount = 2
+        
+        sut.autoCollapseSettingsChanged
+            .sink { _ in
+                fireCount += 1
+                expectation.fulfill()
+            }
+            .store(in: &cancellables)
+        
+        // Act - change autoCollapseEnabled
+        sut.autoCollapseEnabled = false
+        
+        // Act - change autoCollapseDelay
+        sut.autoCollapseDelay = 15.0
+        
+        // Assert
+        await fulfillment(of: [expectation], timeout: 1.0)
+        XCTAssertEqual(fireCount, 2, "SET-013: Combined publisher should fire twice (once for each setting change)")
+    }
 }
