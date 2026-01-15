@@ -135,6 +135,23 @@ final class DrawerManagerTests: XCTestCase {
         XCTAssertTrue(sut.items.isEmpty, "DRM-008: clearItems() should empty the items array")
     }
     
+    // MARK: - DRM-009: clearItems clears lastError
+    
+    func testDRM009_ClearItemsClearsLastError() async throws {
+        // Arrange - Set an error first
+        let testError = NSError(domain: "TestDomain", code: 1, userInfo: [NSLocalizedDescriptionKey: "Test error"])
+        sut.setError(testError)
+        
+        // Precondition
+        XCTAssertNotNil(sut.lastError, "DRM-009: Precondition - lastError should be set before clearItems")
+        
+        // Act
+        sut.clearItems()
+        
+        // Assert
+        XCTAssertNil(sut.lastError, "DRM-009: clearItems() should set lastError to nil")
+    }
+    
     // MARK: - Test Helpers
     
     private func createMockCapturedIcons(count: Int) -> [CapturedIcon] {
