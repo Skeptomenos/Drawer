@@ -349,4 +349,16 @@ final class MenuBarManagerTests: XCTestCase {
             throw XCTSkip("MBM-013: Timer restart triggered but collapse blocked by isSeparatorValidPosition guard in test environment")
         }
     }
+    
+    // MARK: - MBM-014: Expand image is correct for LTR
+    
+    func testMBM014_ExpandImageIsCorrectForLTR() async throws {
+        sut = MenuBarManager(settings: SettingsManager.shared)
+        
+        guard sut.isLeftToRight else {
+            throw XCTSkip("MBM-014: Test requires LTR layout, but current layout is RTL")
+        }
+        
+        XCTAssertEqual(sut.expandImageSymbolName, "chevron.left", "MBM-014: Expand image should be chevron.left for LTR layout")
+    }
 }

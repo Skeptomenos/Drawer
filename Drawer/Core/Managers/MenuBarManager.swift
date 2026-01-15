@@ -42,6 +42,21 @@ final class MenuBarManager: ObservableObject {
     var currentSeparatorLength: CGFloat {
         separatorItem.length
     }
+    
+    /// Exposes the expected expand image symbol name for testing purposes.
+    var expandImageSymbolName: String {
+        isLTRLanguage ? "chevron.left" : "chevron.right"
+    }
+    
+    /// Exposes the expected collapse image symbol name for testing purposes.
+    var collapseImageSymbolName: String {
+        isLTRLanguage ? "chevron.right" : "chevron.left"
+    }
+    
+    /// Exposes whether the current layout is LTR for testing purposes.
+    var isLeftToRight: Bool {
+        isLTRLanguage
+    }
     private let debounceDelay: TimeInterval = 0.3
     private let maxRetryAttempts = 3
     private let retryDelayNanoseconds: UInt64 = 200_000_000  // 200ms
