@@ -59,4 +59,18 @@ final class HoverManagerTests: XCTestCase {
         // Assert
         XCTAssertTrue(sut.isMonitoring, "HVM-004: startMonitoring() should set isMonitoring to true")
     }
+    
+    // MARK: - HVM-005: stopMonitoring sets isMonitoring false
+    
+    func testHVM005_StopMonitoringSetsIsMonitoringFalse() async throws {
+        // Arrange
+        sut.startMonitoring()
+        XCTAssertTrue(sut.isMonitoring, "Precondition: isMonitoring should be true after starting")
+        
+        // Act
+        sut.stopMonitoring()
+        
+        // Assert
+        XCTAssertFalse(sut.isMonitoring, "HVM-005: stopMonitoring() should set isMonitoring to false")
+    }
 }
