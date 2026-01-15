@@ -5,11 +5,11 @@
 | Priority | Category | Total | Done | Remaining | Progress |
 |----------|----------|-------|------|-----------|----------|
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
-| P1 | Manager State Tests (CRITICAL) | 55 | 32 | 23 | 58% |
+| P1 | Manager State Tests (CRITICAL) | 55 | 33 | 22 | 60% |
 | P2 | Pure Logic Tests | 35 | 0 | 35 | 0% |
 | P3 | Integration Tests | 40 | 0 | 40 | 0% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **149** | **39** | **110** | **26%** |
+| **TOTAL** | | **149** | **40** | **109** | **27%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -151,7 +151,7 @@ DrawerTests/
 
 | Status | Test ID | Test Case | Expected Result | Notes |
 |--------|---------|-----------|-----------------|-------|
-| [ ] | DRM-001 | Initial items is empty | items.isEmpty == true on init | CRITICAL |
+| [x] | DRM-001 | Initial items is empty | items.isEmpty == true on init | CRITICAL |
 | [ ] | DRM-002 | Initial isVisible is false | isVisible == false on init | CRITICAL |
 | [ ] | DRM-003 | Initial isLoading is false | isLoading == false on init | CRITICAL |
 | [ ] | DRM-004 | Initial lastError is nil | lastError == nil on init | CRITICAL |
