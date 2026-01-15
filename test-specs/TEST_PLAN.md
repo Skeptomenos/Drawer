@@ -6,10 +6,10 @@
 |----------|----------|-------|------|-----------|----------|
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
 | P1 | Manager State Tests (CRITICAL) | 71 | 71 | 0 | 100% |
-| P2 | Pure Logic Tests | 35 | 14 | 21 | 40% |
+| P2 | Pure Logic Tests | 35 | 15 | 20 | 43% |
 | P3 | Integration Tests | 40 | 0 | 40 | 0% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **165** | **92** | **73** | **56%** |
+| **TOTAL** | | **165** | **93** | **72** | **56%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -238,7 +238,7 @@ DrawerTests/
 | [x] | GHK-002 | Description with shift modifier | Description shows ⇧ for shift modifier | LOW |
 | [x] | GHK-003 | Description with option modifier | Description shows ⌥ for option modifier | LOW |
 | [x] | GHK-004 | Description with control modifier | Description shows ⌃ for control modifier | LOW |
-| [ ] | GHK-005 | Description with multiple modifiers | Correct order: Fn⌃⌥⌘⇧⇪ | LOW |
+| [x] | GHK-005 | Description with multiple modifiers | Correct order: Fn⌃⌥⌘⇧⇪ | LOW |
 | [ ] | GHK-006 | Description with return key | keyCode 36 shows ⏎ | LOW |
 | [ ] | GHK-007 | Description with delete key | keyCode 51 shows ⌫ | LOW |
 | [ ] | GHK-008 | Description with space key | keyCode 49 shows ⎵ | LOW |

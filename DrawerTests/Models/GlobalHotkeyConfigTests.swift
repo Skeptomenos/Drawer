@@ -107,4 +107,37 @@ final class GlobalHotkeyConfigTests: XCTestCase {
         XCTAssertTrue(description.contains("⌃"), "GHK-004: Description should show ⌃ for control modifier")
         XCTAssertEqual(description, "⌃A", "GHK-004: Description should be ⌃A for control+A")
     }
+    
+    // MARK: - GHK-005: Description with multiple modifiers
+    
+    func testGHK005_DescriptionWithMultipleModifiers() {
+        // Arrange - Create config with all modifiers enabled
+        let config = createConfig(
+            keyCode: 0,
+            characters: "a",
+            function: true,
+            control: true,
+            command: true,
+            shift: true,
+            option: true,
+            capsLock: true
+        )
+        
+        // Act
+        let description = config.description
+        
+        // Assert - Correct order: Fn⌃⌥⌘⇧⇪
+        XCTAssertEqual(description, "Fn⌃⌥⌘⇧⇪A", "GHK-005: Description should show modifiers in correct order: Fn⌃⌥⌘⇧⇪")
+        
+        // Also verify partial combinations maintain order
+        let partialConfig = createConfig(
+            keyCode: 0,
+            characters: "b",
+            control: true,
+            command: true,
+            shift: true
+        )
+        let partialDescription = partialConfig.description
+        XCTAssertEqual(partialDescription, "⌃⌘⇧B", "GHK-005: Partial modifiers should maintain order: ⌃⌘⇧")
+    }
 }
