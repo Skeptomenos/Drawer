@@ -215,4 +215,45 @@ final class GlobalHotkeyConfigTests: XCTestCase {
         )
         XCTAssertEqual(spaceOnlyConfig.description, "⎵", "GHK-008: Space key alone should show ⎵")
     }
+    
+    // MARK: - GHK-009: Description with character
+    
+    func testGHK009_DescriptionWithCharacter() {
+        // Arrange - lowercase character should be uppercased in description
+        let lowercaseConfig = createConfig(
+            keyCode: 0,
+            characters: "a",
+            command: true
+        )
+        
+        // Act
+        let lowercaseDescription = lowercaseConfig.description
+        
+        // Assert - lowercase 'a' should become uppercase 'A'
+        XCTAssertEqual(lowercaseDescription, "⌘A", "GHK-009: Lowercase character 'a' should be uppercased to 'A'")
+        XCTAssertFalse(lowercaseDescription.contains("a"), "GHK-009: Description should not contain lowercase 'a'")
+        
+        // Test with already uppercase character
+        let uppercaseConfig = createConfig(
+            keyCode: 0,
+            characters: "B",
+            command: true
+        )
+        XCTAssertEqual(uppercaseConfig.description, "⌘B", "GHK-009: Uppercase character 'B' should remain 'B'")
+        
+        // Test with multiple characters (edge case)
+        let multiCharConfig = createConfig(
+            keyCode: 0,
+            characters: "abc",
+            option: true
+        )
+        XCTAssertEqual(multiCharConfig.description, "⌥ABC", "GHK-009: Multiple characters should all be uppercased")
+        
+        // Test character without modifiers
+        let noModifierConfig = createConfig(
+            keyCode: 0,
+            characters: "x"
+        )
+        XCTAssertEqual(noModifierConfig.description, "X", "GHK-009: Character alone should be uppercased")
+    }
 }

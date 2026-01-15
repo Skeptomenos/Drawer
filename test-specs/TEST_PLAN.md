@@ -6,10 +6,10 @@
 |----------|----------|-------|------|-----------|----------|
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
 | P1 | Manager State Tests (CRITICAL) | 71 | 71 | 0 | 100% |
-| P2 | Pure Logic Tests | 35 | 18 | 17 | 51% |
+| P2 | Pure Logic Tests | 35 | 19 | 16 | 54% |
 | P3 | Integration Tests | 40 | 0 | 40 | 0% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **165** | **96** | **69** | **58%** |
+| **TOTAL** | | **165** | **97** | **68** | **59%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -242,7 +242,7 @@ DrawerTests/
 | [x] | GHK-006 | Description with return key | keyCode 36 shows ⏎ | LOW |
 | [x] | GHK-007 | Description with delete key | keyCode 51 shows ⌫ | LOW |
 | [x] | GHK-008 | Description with space key | keyCode 49 shows ⎵ | LOW |
-| [ ] | GHK-009 | Description with character | Characters are uppercased | LOW |
+| [x] | GHK-009 | Description with character | Characters are uppercased | LOW |
 | [ ] | GHK-010 | Encoding/decoding roundtrip | Codable roundtrip preserves all properties | LOW |
 | [ ] | GHK-011 | fromLegacy valid data | Legacy format conversion works | LOW |
 | [ ] | GHK-012 | fromLegacy invalid data | Invalid data returns nil | LOW |
