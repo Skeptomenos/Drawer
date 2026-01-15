@@ -5,11 +5,11 @@
 | Priority | Category | Total | Done | Remaining | Progress |
 |----------|----------|-------|------|-----------|----------|
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
-| P1 | Manager State Tests (CRITICAL) | 55 | 14 | 41 | 25% |
+| P1 | Manager State Tests (CRITICAL) | 55 | 15 | 40 | 27% |
 | P2 | Pure Logic Tests | 35 | 0 | 35 | 0% |
 | P3 | Integration Tests | 40 | 0 | 40 | 0% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **149** | **21** | **128** | **14%** |
+| **TOTAL** | | **149** | **22** | **127** | **15%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -119,7 +119,7 @@ DrawerTests/
 | [x] | MBM-012 | Auto-collapse timer cancels on collapse | Timer cancelled on collapse | HIGH |
 | [x] | MBM-013 | Auto-collapse timer restarts on settings change | Timer restarts when delay changes | MEDIUM |
 | [x] | MBM-014 | Expand image is correct for LTR | chevron.left for LTR expand | MEDIUM |
-| [ ] | MBM-015 | Collapse image is correct for LTR | chevron.right for LTR collapse | MEDIUM |
+| [x] | MBM-015 | Collapse image is correct for LTR | chevron.right for LTR collapse | MEDIUM |
 | [ ] | MBM-016 | Expand image is correct for RTL | chevron.right for RTL expand | MEDIUM |
 | [ ] | MBM-017 | Collapse image is correct for RTL | chevron.left for RTL collapse | MEDIUM |
 
