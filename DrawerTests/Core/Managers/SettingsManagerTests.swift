@@ -289,4 +289,33 @@ final class SettingsManagerTests: XCTestCase {
         XCTAssertEqual(retrieved?.capsLock, config.capsLock, "SET-014: capsLock should match")
         XCTAssertEqual(retrieved, config, "SET-014: Full config should be equal via Equatable")
     }
+    
+    // MARK: - SET-015: globalHotkey set nil removes from defaults
+    
+    func testSET015_GlobalHotkeySetNilRemovesFromDefaults() async throws {
+        // Arrange - first set a hotkey config
+        let config = GlobalHotkeyConfig(
+            keyCode: 36,           // Return key
+            carbonFlags: 256,      // Command modifier
+            characters: nil,
+            function: false,
+            control: false,
+            command: true,
+            shift: false,
+            option: false,
+            capsLock: false
+        )
+        sut.globalHotkey = config
+        
+        // Verify the hotkey was set
+        XCTAssertNotNil(sut.globalHotkey, "SET-015: globalHotkey should be set before test")
+        XCTAssertNotNil(UserDefaults.standard.data(forKey: "globalHotkey"), "SET-015: UserDefaults should contain globalHotkey data")
+        
+        // Act - set globalHotkey to nil
+        sut.globalHotkey = nil
+        
+        // Assert - globalHotkey should be nil and removed from UserDefaults
+        XCTAssertNil(sut.globalHotkey, "SET-015: globalHotkey should be nil after setting to nil")
+        XCTAssertNil(UserDefaults.standard.data(forKey: "globalHotkey"), "SET-015: UserDefaults should not contain globalHotkey key after setting to nil")
+    }
 }
