@@ -5,11 +5,11 @@
 | Priority | Category | Total | Done | Remaining | Progress |
 |----------|----------|-------|------|-----------|----------|
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
-| P1 | Manager State Tests (CRITICAL) | 71 | 56 | 15 | 79% |
+| P1 | Manager State Tests (CRITICAL) | 71 | 57 | 14 | 80% |
 | P2 | Pure Logic Tests | 35 | 0 | 35 | 0% |
 | P3 | Integration Tests | 40 | 0 | 40 | 0% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **165** | **63** | **102** | **38%** |
+| **TOTAL** | | **165** | **64** | **101** | **39%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -182,7 +182,7 @@ DrawerTests/
 | Status | Test ID | Test Case | Expected Result | Notes |
 |--------|---------|-----------|-----------------|-------|
 | [x] | HVM-001 | Initial isMonitoring is false | isMonitoring == false on init | MEDIUM |
-| [ ] | HVM-002 | Initial isMouseInTriggerZone is false | isMouseInTriggerZone == false | MEDIUM |
+| [x] | HVM-002 | Initial isMouseInTriggerZone is false | isMouseInTriggerZone == false | MEDIUM |
 | [ ] | HVM-003 | Initial isMouseInDrawerArea is false | isMouseInDrawerArea == false | MEDIUM |
 | [ ] | HVM-004 | startMonitoring sets isMonitoring true | isMonitoring == true | MEDIUM |
 | [ ] | HVM-005 | stopMonitoring sets isMonitoring false | isMonitoring == false | MEDIUM |
