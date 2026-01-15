@@ -6,10 +6,10 @@
 |----------|----------|-------|------|-----------|----------|
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
 | P1 | Manager State Tests (CRITICAL) | 71 | 71 | 0 | 100% |
-| P2 | Pure Logic Tests | 35 | 4 | 31 | 11% |
+| P2 | Pure Logic Tests | 35 | 5 | 30 | 14% |
 | P3 | Integration Tests | 40 | 0 | 40 | 0% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **165** | **82** | **83** | **50%** |
+| **TOTAL** | | **165** | **83** | **82** | **50%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -221,7 +221,7 @@ DrawerTests/
 | [x] | DRI-002 | Init direct with image, frame, index | Direct initialization works | LOW |
 | [x] | DRI-003 | clickTarget returns frame center | clickTarget returns CGPoint at frame center | LOW |
 | [x] | DRI-004 | originalCenterX calculation | originalCenterX returns frame.midX | LOW |
-| [ ] | DRI-005 | originalCenterY calculation | originalCenterY returns frame.midY | LOW |
+| [x] | DRI-005 | originalCenterY calculation | originalCenterY returns frame.midY | LOW |
 | [ ] | DRI-006 | Equatable compares by ID | Two items with same ID are equal | LOW |
 | [ ] | DRI-007 | Equatable different IDs not equal | Two items with different IDs are not equal | LOW |
 | [ ] | DRI-008 | toDrawerItems extension converts correctly | [CapturedIcon].toDrawerItems() converts correctly | LOW |
