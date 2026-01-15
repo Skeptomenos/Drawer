@@ -46,4 +46,17 @@ final class HoverManagerTests: XCTestCase {
     func testHVM003_InitialIsMouseInDrawerAreaIsFalse() async throws {
         XCTAssertFalse(sut.isMouseInDrawerArea, "HVM-003: Initial state isMouseInDrawerArea should be false")
     }
+    
+    // MARK: - HVM-004: startMonitoring sets isMonitoring true
+    
+    func testHVM004_StartMonitoringSetsIsMonitoringTrue() async throws {
+        // Arrange
+        XCTAssertFalse(sut.isMonitoring, "Precondition: isMonitoring should be false before starting")
+        
+        // Act
+        sut.startMonitoring()
+        
+        // Assert
+        XCTAssertTrue(sut.isMonitoring, "HVM-004: startMonitoring() should set isMonitoring to true")
+    }
 }
