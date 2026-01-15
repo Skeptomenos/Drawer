@@ -149,4 +149,24 @@ final class DrawerItemTests: XCTestCase {
         XCTAssertEqual(originalCenterY, expectedCenterY, "DRI-005: originalCenterY should return frame.midY")
         XCTAssertEqual(originalCenterY, 30, "DRI-005: originalCenterY should be 30 for frame at y=10 with height=40")
     }
+    
+    // MARK: - DRI-006: Equatable compares by ID
+    
+    func testDRI006_EquatableComparesByID() throws {
+        // Arrange
+        guard let capturedIcon = createCapturedIcon(
+            frame: CGRect(x: 100, y: 0, width: 22, height: 24)
+        ) else {
+            throw XCTSkip("DRI-006: Could not create mock CapturedIcon")
+        }
+        
+        // Create two DrawerItems from the same CapturedIcon (same ID)
+        let item1 = DrawerItem(from: capturedIcon, index: 0)
+        let item2 = DrawerItem(from: capturedIcon, index: 5)  // Different index, same ID
+        
+        // Act & Assert
+        XCTAssertEqual(item1, item2, "DRI-006: Two items with same ID should be equal")
+        XCTAssertEqual(item1.id, item2.id, "DRI-006: IDs should match")
+        XCTAssertNotEqual(item1.index, item2.index, "DRI-006: Indexes are different but items are still equal")
+    }
 }
