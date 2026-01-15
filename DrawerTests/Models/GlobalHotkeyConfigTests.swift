@@ -190,4 +190,29 @@ final class GlobalHotkeyConfigTests: XCTestCase {
         )
         XCTAssertEqual(deleteOnlyConfig.description, "⌫", "GHK-007: Delete key alone should show ⌫")
     }
+    
+    // MARK: - GHK-008: Description with space key
+    
+    func testGHK008_DescriptionWithSpaceKey() {
+        // Arrange - keyCode 49 is the Space key
+        let config = createConfig(
+            keyCode: 49,
+            characters: nil,
+            command: true
+        )
+        
+        // Act
+        let description = config.description
+        
+        // Assert
+        XCTAssertTrue(description.contains("⎵"), "GHK-008: Description should show ⎵ for space key (keyCode 49)")
+        XCTAssertEqual(description, "⌘⎵", "GHK-008: Description should be ⌘⎵ for command+space")
+        
+        // Also test space key without modifiers
+        let spaceOnlyConfig = createConfig(
+            keyCode: 49,
+            characters: nil
+        )
+        XCTAssertEqual(spaceOnlyConfig.description, "⎵", "GHK-008: Space key alone should show ⎵")
+    }
 }
