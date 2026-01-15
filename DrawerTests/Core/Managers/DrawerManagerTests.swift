@@ -181,6 +181,25 @@ final class DrawerManagerTests: XCTestCase {
         XCTAssertFalse(sut.isLoading, "DRM-011: setLoading(false) should set isLoading to false")
     }
     
+    // MARK: - DRM-012: setError stores error
+    
+    func testDRM012_SetErrorStoresError() async throws {
+        // Arrange
+        let testError = NSError(domain: "TestDomain", code: 42, userInfo: [NSLocalizedDescriptionKey: "Test error message"])
+        
+        // Precondition
+        XCTAssertNil(sut.lastError, "DRM-012: Precondition - lastError should be nil initially")
+        
+        // Act
+        sut.setError(testError)
+        
+        // Assert
+        XCTAssertNotNil(sut.lastError, "DRM-012: setError should store the error")
+        let storedError = sut.lastError as NSError?
+        XCTAssertEqual(storedError?.domain, "TestDomain", "DRM-012: Stored error should have correct domain")
+        XCTAssertEqual(storedError?.code, 42, "DRM-012: Stored error should have correct code")
+    }
+    
     // MARK: - Test Helpers
     
     private func createMockCapturedIcons(count: Int) -> [CapturedIcon] {
