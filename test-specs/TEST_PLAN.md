@@ -5,11 +5,11 @@
 | Priority | Category | Total | Done | Remaining | Progress |
 |----------|----------|-------|------|-----------|----------|
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
-| P1 | Manager State Tests (CRITICAL) | 55 | 48 | 7 | 87% |
+| P1 | Manager State Tests (CRITICAL) | 55 | 49 | 6 | 89% |
 | P2 | Pure Logic Tests | 35 | 0 | 35 | 0% |
 | P3 | Integration Tests | 40 | 0 | 40 | 0% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **149** | **55** | **94** | **37%** |
+| **TOTAL** | | **149** | **56** | **93** | **38%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -167,7 +167,7 @@ DrawerTests/
 | [x] | DRM-014 | show() sets isVisible true | isVisible == true | CRITICAL |
 | [x] | DRM-015 | hide() sets isVisible false | isVisible == false | CRITICAL |
 | [x] | DRM-016 | toggle() from hidden shows | toggle() when hidden shows | CRITICAL |
-| [ ] | DRM-017 | toggle() from visible hides | toggle() when visible hides | CRITICAL |
+| [x] | DRM-017 | toggle() from visible hides | toggle() when visible hides | CRITICAL |
 | [ ] | DRM-018 | hasItems true when not empty | hasItems returns true with items | HIGH |
 | [ ] | DRM-019 | hasItems false when empty | hasItems returns false when empty | HIGH |
 | [ ] | DRM-020 | itemCount returns correct count | itemCount matches items.count | HIGH |
