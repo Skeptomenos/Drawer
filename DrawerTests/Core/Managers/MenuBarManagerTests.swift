@@ -102,4 +102,18 @@ final class MenuBarManagerTests: XCTestCase {
         // Assert - state should remain unchanged (still expanded)
         XCTAssertFalse(sut.isCollapsed, "MBM-005: expand() when !isCollapsed should do nothing (remain expanded)")
     }
+    
+    // MARK: - MBM-006: Collapse when already collapsed is no-op
+    
+    func testMBM006_CollapseWhenAlreadyCollapsedIsNoOp() async throws {
+        // Arrange
+        sut = MenuBarManager(settings: SettingsManager.shared)
+        XCTAssertTrue(sut.isCollapsed, "Precondition: should start collapsed")
+        
+        // Act - call collapse() when already collapsed
+        sut.collapse()
+        
+        // Assert - state should remain unchanged (still collapsed)
+        XCTAssertTrue(sut.isCollapsed, "MBM-006: collapse() when isCollapsed should do nothing (remain collapsed)")
+    }
 }
