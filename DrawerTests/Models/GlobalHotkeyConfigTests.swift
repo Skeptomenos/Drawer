@@ -140,4 +140,29 @@ final class GlobalHotkeyConfigTests: XCTestCase {
         let partialDescription = partialConfig.description
         XCTAssertEqual(partialDescription, "⌃⌘⇧B", "GHK-005: Partial modifiers should maintain order: ⌃⌘⇧")
     }
+    
+    // MARK: - GHK-006: Description with return key
+    
+    func testGHK006_DescriptionWithReturnKey() {
+        // Arrange - keyCode 36 is the Return key
+        let config = createConfig(
+            keyCode: 36,
+            characters: nil,
+            command: true
+        )
+        
+        // Act
+        let description = config.description
+        
+        // Assert
+        XCTAssertTrue(description.contains("⏎"), "GHK-006: Description should show ⏎ for return key (keyCode 36)")
+        XCTAssertEqual(description, "⌘⏎", "GHK-006: Description should be ⌘⏎ for command+return")
+        
+        // Also test return key without modifiers
+        let returnOnlyConfig = createConfig(
+            keyCode: 36,
+            characters: nil
+        )
+        XCTAssertEqual(returnOnlyConfig.description, "⏎", "GHK-006: Return key alone should show ⏎")
+    }
 }
