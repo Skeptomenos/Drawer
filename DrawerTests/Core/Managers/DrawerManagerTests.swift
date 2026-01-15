@@ -152,6 +152,19 @@ final class DrawerManagerTests: XCTestCase {
         XCTAssertNil(sut.lastError, "DRM-009: clearItems() should set lastError to nil")
     }
     
+    // MARK: - DRM-010: setLoading(true) sets isLoading true
+    
+    func testDRM010_SetLoadingTrueSetsIsLoadingTrue() async throws {
+        // Arrange & Precondition
+        XCTAssertFalse(sut.isLoading, "DRM-010: Precondition - isLoading should be false initially")
+        
+        // Act
+        sut.setLoading(true)
+        
+        // Assert
+        XCTAssertTrue(sut.isLoading, "DRM-010: setLoading(true) should set isLoading to true")
+    }
+    
     // MARK: - Test Helpers
     
     private func createMockCapturedIcons(count: Int) -> [CapturedIcon] {
