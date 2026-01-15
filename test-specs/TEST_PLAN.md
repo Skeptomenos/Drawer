@@ -4,12 +4,12 @@
 
 | Priority | Category | Total | Done | Remaining | Progress |
 |----------|----------|-------|------|-----------|----------|
-| P0 | Test Infrastructure | 8 | 0 | 8 | 0% |
+| P0 | Test Infrastructure | 8 | 2 | 6 | 25% |
 | P1 | Manager State Tests (CRITICAL) | 55 | 0 | 55 | 0% |
 | P2 | Pure Logic Tests | 35 | 0 | 35 | 0% |
 | P3 | Integration Tests | 40 | 0 | 40 | 0% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **149** | **0** | **149** | **0%** |
+| **TOTAL** | | **149** | **2** | **147** | **1%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -70,8 +70,8 @@ DrawerTests/
 
 | Status | Test ID | Test Case | Expected Result | Notes |
 |--------|---------|-----------|-----------------|-------|
-| [ ] | SETUP-001 | Create DrawerTests target in Xcode project | Target exists and builds | Required for all tests |
-| [ ] | SETUP-002 | Configure test scheme for DrawerTests | Tests can be run via xcodebuild | |
+| [x] | SETUP-001 | Create DrawerTests target in Xcode project | Target exists and builds | Required for all tests |
+| [x] | SETUP-002 | Configure test scheme for DrawerTests | Tests can be run via xcodebuild | |
 | [ ] | SETUP-003 | Create test directory structure | All directories from Test Structure exist | |
 
 ### 0.2 Mock Infrastructure
