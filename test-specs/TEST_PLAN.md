@@ -5,11 +5,11 @@
 | Priority | Category | Total | Done | Remaining | Progress |
 |----------|----------|-------|------|-----------|----------|
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
-| P1 | Manager State Tests (CRITICAL) | 71 | 69 | 2 | 97% |
+| P1 | Manager State Tests (CRITICAL) | 71 | 71 | 0 | 100% |
 | P2 | Pure Logic Tests | 35 | 0 | 35 | 0% |
 | P3 | Integration Tests | 40 | 0 | 40 | 0% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **165** | **76** | **89** | **46%** |
+| **TOTAL** | | **165** | **78** | **87** | **47%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -202,8 +202,8 @@ DrawerTests/
 
 | Status | Test ID | Test Case | Expected Result | Notes |
 |--------|---------|-----------|-----------------|-------|
-| [ ] | LAL-001 | Initial lastError is nil | lastError == nil on init | MEDIUM |
-| [ ] | LAL-002 | refreshStatus updates isEnabled | refreshStatus() updates state | MEDIUM |
+| [x] | LAL-001 | Initial lastError is nil | lastError == nil on init | MEDIUM |
+| [x] | LAL-002 | refreshStatus updates isEnabled | refreshStatus() updates state | MEDIUM |
 
 ---
 
