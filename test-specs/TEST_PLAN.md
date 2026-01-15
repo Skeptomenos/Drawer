@@ -5,11 +5,11 @@
 | Priority | Category | Total | Done | Remaining | Progress |
 |----------|----------|-------|------|-----------|----------|
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
-| P1 | Manager State Tests (CRITICAL) | 55 | 0 | 55 | 0% |
+| P1 | Manager State Tests (CRITICAL) | 55 | 1 | 54 | 2% |
 | P2 | Pure Logic Tests | 35 | 0 | 35 | 0% |
 | P3 | Integration Tests | 40 | 0 | 40 | 0% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **149** | **7** | **142** | **5%** |
+| **TOTAL** | | **149** | **8** | **141** | **5%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -105,7 +105,7 @@ DrawerTests/
 
 | Status | Test ID | Test Case | Expected Result | Notes |
 |--------|---------|-----------|-----------------|-------|
-| [ ] | MBM-001 | Initial state isCollapsed is true | isCollapsed == true on init | CRITICAL |
+| [x] | MBM-001 | Initial state isCollapsed is true | isCollapsed == true on init | CRITICAL |
 | [ ] | MBM-002 | Initial state isToggling is false | isToggling == false on init | CRITICAL |
 | [ ] | MBM-003 | Toggle from collapsed expands | toggle() when collapsed sets isCollapsed=false | CRITICAL |
 | [ ] | MBM-004 | Toggle from expanded collapses | toggle() when expanded sets isCollapsed=true | CRITICAL |
