@@ -183,4 +183,27 @@ final class SettingsManagerTests: XCTestCase {
         XCTAssertEqual(receivedValues.count, 1, "SET-010: Subject should fire exactly once")
         XCTAssertFalse(receivedValues.first ?? true, "SET-010: Subject should emit the new value (false)")
     }
+    
+    // MARK: - SET-011: autoCollapseDelay subject fires on change
+    
+    func testSET011_AutoCollapseDelaySubjectFiresOnChange() async throws {
+        // Arrange
+        var receivedValues: [Double] = []
+        let expectation = XCTestExpectation(description: "Subject should fire on change")
+        
+        sut.autoCollapseDelaySubject
+            .sink { value in
+                receivedValues.append(value)
+                expectation.fulfill()
+            }
+            .store(in: &cancellables)
+        
+        // Act - change the value
+        sut.autoCollapseDelay = 20.0
+        
+        // Assert
+        await fulfillment(of: [expectation], timeout: 1.0)
+        XCTAssertEqual(receivedValues.count, 1, "SET-011: Subject should fire exactly once")
+        XCTAssertEqual(receivedValues.first ?? 0.0, 20.0, accuracy: 0.001, "SET-011: Subject should emit the new value (20.0)")
+    }
 }

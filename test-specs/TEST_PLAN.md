@@ -5,11 +5,11 @@
 | Priority | Category | Total | Done | Remaining | Progress |
 |----------|----------|-------|------|-----------|----------|
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
-| P1 | Manager State Tests (CRITICAL) | 55 | 27 | 28 | 49% |
+| P1 | Manager State Tests (CRITICAL) | 55 | 28 | 27 | 51% |
 | P2 | Pure Logic Tests | 35 | 0 | 35 | 0% |
 | P3 | Integration Tests | 40 | 0 | 40 | 0% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **149** | **34** | **115** | **23%** |
+| **TOTAL** | | **149** | **35** | **114** | **23%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -139,7 +139,7 @@ DrawerTests/
 | [x] | SET-008 | Default hasCompletedOnboarding is false | hasCompletedOnboarding == false | CRITICAL |
 | [x] | SET-009 | resetToDefaults restores all settings | All settings reset to defaults | CRITICAL |
 | [x] | SET-010 | autoCollapseEnabled subject fires on change | Subject fires on change | HIGH |
-| [ ] | SET-011 | autoCollapseDelay subject fires on change | Subject fires on change | HIGH |
+| [x] | SET-011 | autoCollapseDelay subject fires on change | Subject fires on change | HIGH |
 | [ ] | SET-012 | showOnHover subject fires on change | Subject fires on change | HIGH |
 | [ ] | SET-013 | autoCollapseSettingsChanged publisher fires | Combined publisher fires | HIGH |
 | [ ] | SET-014 | globalHotkey get/set roundtrip | globalHotkey can be set and retrieved | MEDIUM |
