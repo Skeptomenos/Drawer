@@ -56,4 +56,14 @@ final class SettingsManagerTests: XCTestCase {
         // Assert
         XCTAssertEqual(sut.autoCollapseDelay, 10.0, accuracy: 0.001, "SET-002: Default autoCollapseDelay should be 10.0")
     }
+    
+    // MARK: - SET-003: Default launchAtLogin is false
+    
+    func testSET003_DefaultLaunchAtLoginIsFalse() async throws {
+        // Arrange - reset to defaults to ensure we're testing default values
+        sut.resetToDefaults()
+        
+        // Assert
+        XCTAssertFalse(sut.launchAtLogin, "SET-003: Default launchAtLogin should be false")
+    }
 }
