@@ -206,4 +206,27 @@ final class SettingsManagerTests: XCTestCase {
         XCTAssertEqual(receivedValues.count, 1, "SET-011: Subject should fire exactly once")
         XCTAssertEqual(receivedValues.first ?? 0.0, 20.0, accuracy: 0.001, "SET-011: Subject should emit the new value (20.0)")
     }
+    
+    // MARK: - SET-012: showOnHover subject fires on change
+    
+    func testSET012_ShowOnHoverSubjectFiresOnChange() async throws {
+        // Arrange
+        var receivedValues: [Bool] = []
+        let expectation = XCTestExpectation(description: "Subject should fire on change")
+        
+        sut.showOnHoverSubject
+            .sink { value in
+                receivedValues.append(value)
+                expectation.fulfill()
+            }
+            .store(in: &cancellables)
+        
+        // Act - change the value
+        sut.showOnHover = true
+        
+        // Assert
+        await fulfillment(of: [expectation], timeout: 1.0)
+        XCTAssertEqual(receivedValues.count, 1, "SET-012: Subject should fire exactly once")
+        XCTAssertTrue(receivedValues.first ?? false, "SET-012: Subject should emit the new value (true)")
+    }
 }
