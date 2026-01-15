@@ -6,10 +6,10 @@
 |----------|----------|-------|------|-----------|----------|
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
 | P1 | Manager State Tests (CRITICAL) | 71 | 71 | 0 | 100% |
-| P2 | Pure Logic Tests | 35 | 10 | 25 | 29% |
+| P2 | Pure Logic Tests | 35 | 11 | 24 | 31% |
 | P3 | Integration Tests | 40 | 0 | 40 | 0% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **165** | **88** | **77** | **53%** |
+| **TOTAL** | | **165** | **89** | **76** | **54%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -234,7 +234,7 @@ DrawerTests/
 
 | Status | Test ID | Test Case | Expected Result | Notes |
 |--------|---------|-----------|-----------------|-------|
-| [ ] | GHK-001 | Description with command modifier | Description shows ⌘ for command modifier | LOW |
+| [x] | GHK-001 | Description with command modifier | Description shows ⌘ for command modifier | LOW |
 | [ ] | GHK-002 | Description with shift modifier | Description shows ⇧ for shift modifier | LOW |
 | [ ] | GHK-003 | Description with option modifier | Description shows ⌥ for option modifier | LOW |
 | [ ] | GHK-004 | Description with control modifier | Description shows ⌃ for control modifier | LOW |

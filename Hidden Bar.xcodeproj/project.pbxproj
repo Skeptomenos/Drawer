@@ -22,6 +22,7 @@
 		DRAWERTEST00100000000013 /* HoverManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000014 /* HoverManagerTests.swift */; };
 		DRAWERTEST00100000000015 /* LaunchAtLoginManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000015 /* LaunchAtLoginManagerTests.swift */; };
 		DRAWERTEST00100000000016 /* DrawerItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000016 /* DrawerItemTests.swift */; };
+		DRAWERTEST00100000000017 /* GlobalHotkeyConfigTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000017 /* GlobalHotkeyConfigTests.swift */; };
 		DRAWER001000000000000001 /* DrawerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000001 /* DrawerApp.swift */; };
 		DRAWER001000000000000002 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000002 /* AppState.swift */; };
 		DRAWER001000000000000003 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000003 /* AppDelegate.swift */; };
@@ -129,6 +130,7 @@
 		DRAWERTEST00200000000014 /* HoverManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoverManagerTests.swift; sourceTree = "<group>"; };
 		DRAWERTEST00200000000015 /* LaunchAtLoginManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchAtLoginManagerTests.swift; sourceTree = "<group>"; };
 		DRAWERTEST00200000000016 /* DrawerItemTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerItemTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000017 /* GlobalHotkeyConfigTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalHotkeyConfigTests.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000001 /* DrawerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerApp.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000002 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000003 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -258,6 +260,7 @@
 			isa = PBXGroup;
 			children = (
 				DRAWERTEST00200000000016 /* DrawerItemTests.swift */,
+				DRAWERTEST00200000000017 /* GlobalHotkeyConfigTests.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -784,6 +787,7 @@
 				DRAWERTEST00100000000013 /* HoverManagerTests.swift in Sources */,
 				DRAWERTEST00100000000015 /* LaunchAtLoginManagerTests.swift in Sources */,
 				DRAWERTEST00100000000016 /* DrawerItemTests.swift in Sources */,
+				DRAWERTEST00100000000017 /* GlobalHotkeyConfigTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

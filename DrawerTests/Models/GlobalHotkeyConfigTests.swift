@@ -1,0 +1,56 @@
+//
+//  GlobalHotkeyConfigTests.swift
+//  DrawerTests
+//
+//  Copyright © 2026 Drawer. MIT License.
+//
+
+import XCTest
+@testable import Drawer
+
+final class GlobalHotkeyConfigTests: XCTestCase {
+    
+    // MARK: - Test Helpers
+    
+    private func createConfig(
+        keyCode: UInt32 = 0,
+        carbonFlags: UInt32 = 0,
+        characters: String? = "A",
+        function: Bool = false,
+        control: Bool = false,
+        command: Bool = false,
+        shift: Bool = false,
+        option: Bool = false,
+        capsLock: Bool = false
+    ) -> GlobalHotkeyConfig {
+        return GlobalHotkeyConfig(
+            keyCode: keyCode,
+            carbonFlags: carbonFlags,
+            characters: characters,
+            function: function,
+            control: control,
+            command: command,
+            shift: shift,
+            option: option,
+            capsLock: capsLock
+        )
+    }
+    
+    // MARK: - GHK-001: Description with command modifier
+    
+    func testGHK001_DescriptionWithCommandModifier() {
+        // Arrange
+        let config = createConfig(
+            keyCode: 0,
+            characters: "a",
+            command: true
+        )
+        
+        // Act
+        let description = config.description
+        
+        // Assert
+        XCTAssertTrue(description.contains("⌘"), "GHK-001: Description should show ⌘ for command modifier")
+        XCTAssertEqual(description, "⌘A", "GHK-001: Description should be ⌘A for command+A")
+    }
+}
