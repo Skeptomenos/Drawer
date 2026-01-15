@@ -217,6 +217,19 @@ final class DrawerManagerTests: XCTestCase {
         XCTAssertNil(sut.lastError, "DRM-013: setError(nil) should clear the error")
     }
     
+    // MARK: - DRM-014: show() sets isVisible true
+    
+    func testDRM014_ShowSetsIsVisibleTrue() async throws {
+        // Arrange & Precondition
+        XCTAssertFalse(sut.isVisible, "DRM-014: Precondition - isVisible should be false initially")
+        
+        // Act
+        sut.show()
+        
+        // Assert
+        XCTAssertTrue(sut.isVisible, "DRM-014: show() should set isVisible to true")
+    }
+    
     // MARK: - Test Helpers
     
     private func createMockCapturedIcons(count: Int) -> [CapturedIcon] {
