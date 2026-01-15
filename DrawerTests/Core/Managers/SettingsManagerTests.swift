@@ -76,4 +76,14 @@ final class SettingsManagerTests: XCTestCase {
         // Assert
         XCTAssertFalse(sut.hideSeparators, "SET-004: Default hideSeparators should be false")
     }
+    
+    // MARK: - SET-005: Default alwaysHiddenEnabled is false
+    
+    func testSET005_DefaultAlwaysHiddenEnabledIsFalse() async throws {
+        // Arrange - reset to defaults to ensure we're testing default values
+        sut.resetToDefaults()
+        
+        // Assert
+        XCTAssertFalse(sut.alwaysHiddenEnabled, "SET-005: Default alwaysHiddenEnabled should be false")
+    }
 }
