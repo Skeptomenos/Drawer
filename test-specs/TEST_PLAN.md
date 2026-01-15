@@ -5,11 +5,11 @@
 | Priority | Category | Total | Done | Remaining | Progress |
 |----------|----------|-------|------|-----------|----------|
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
-| P1 | Manager State Tests (CRITICAL) | 55 | 33 | 22 | 60% |
+| P1 | Manager State Tests (CRITICAL) | 55 | 34 | 21 | 62% |
 | P2 | Pure Logic Tests | 35 | 0 | 35 | 0% |
 | P3 | Integration Tests | 40 | 0 | 40 | 0% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **149** | **40** | **109** | **27%** |
+| **TOTAL** | | **149** | **41** | **108** | **28%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -152,7 +152,7 @@ DrawerTests/
 | Status | Test ID | Test Case | Expected Result | Notes |
 |--------|---------|-----------|-----------------|-------|
 | [x] | DRM-001 | Initial items is empty | items.isEmpty == true on init | CRITICAL |
-| [ ] | DRM-002 | Initial isVisible is false | isVisible == false on init | CRITICAL |
+| [x] | DRM-002 | Initial isVisible is false | isVisible == false on init | CRITICAL |
 | [ ] | DRM-003 | Initial isLoading is false | isLoading == false on init | CRITICAL |
 | [ ] | DRM-004 | Initial lastError is nil | lastError == nil on init | CRITICAL |
 | [ ] | DRM-005 | updateItems from MenuBarCaptureResult | Items updated from MenuBarCaptureResult | CRITICAL |
