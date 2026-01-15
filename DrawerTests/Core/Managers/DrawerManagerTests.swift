@@ -118,6 +118,23 @@ final class DrawerManagerTests: XCTestCase {
         XCTAssertNil(sut.lastError, "DRM-007: updateItems should clear lastError")
     }
     
+    // MARK: - DRM-008: clearItems removes all
+    
+    func testDRM008_ClearItemsRemovesAll() async throws {
+        // Arrange - Add some items first
+        let mockIcons = createMockCapturedIcons(count: 3)
+        sut.updateItems(from: mockIcons)
+        
+        // Precondition
+        XCTAssertEqual(sut.items.count, 3, "DRM-008: Precondition - items should have 3 items before clear")
+        
+        // Act
+        sut.clearItems()
+        
+        // Assert
+        XCTAssertTrue(sut.items.isEmpty, "DRM-008: clearItems() should empty the items array")
+    }
+    
     // MARK: - Test Helpers
     
     private func createMockCapturedIcons(count: Int) -> [CapturedIcon] {
