@@ -44,4 +44,13 @@ final class DrawerManagerTests: XCTestCase {
         // Assert
         XCTAssertFalse(sut.isVisible, "DRM-002: Initial state isVisible should be false")
     }
+    
+    // MARK: - DRM-003: Initial isLoading is false
+    
+    func testDRM003_InitialIsLoadingIsFalse() async throws {
+        // Arrange & Act - sut is already initialized in setUp
+        
+        // Assert
+        XCTAssertFalse(sut.isLoading, "DRM-003: Initial state isLoading should be false")
+    }
 }
