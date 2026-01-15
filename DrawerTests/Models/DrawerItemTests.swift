@@ -169,4 +169,24 @@ final class DrawerItemTests: XCTestCase {
         XCTAssertEqual(item1.id, item2.id, "DRI-006: IDs should match")
         XCTAssertNotEqual(item1.index, item2.index, "DRI-006: Indexes are different but items are still equal")
     }
+    
+    // MARK: - DRI-007: Equatable different IDs not equal
+    
+    func testDRI007_EquatableDifferentIDsNotEqual() throws {
+        // Arrange
+        guard let mockImage = createMockImage(width: 22, height: 24) else {
+            throw XCTSkip("DRI-007: Could not create mock CGImage")
+        }
+        let testFrame = CGRect(x: 100, y: 0, width: 22, height: 24)
+        
+        // Create two DrawerItems with direct init (each gets a unique UUID)
+        let item1 = DrawerItem(image: mockImage, originalFrame: testFrame, index: 0)
+        let item2 = DrawerItem(image: mockImage, originalFrame: testFrame, index: 0)
+        
+        // Act & Assert
+        XCTAssertNotEqual(item1, item2, "DRI-007: Two items with different IDs should not be equal")
+        XCTAssertNotEqual(item1.id, item2.id, "DRI-007: IDs should be different")
+        XCTAssertEqual(item1.originalFrame, item2.originalFrame, "DRI-007: Frames are same but items are not equal")
+        XCTAssertEqual(item1.index, item2.index, "DRI-007: Indexes are same but items are not equal")
+    }
 }
