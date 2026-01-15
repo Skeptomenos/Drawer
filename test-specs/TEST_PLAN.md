@@ -6,10 +6,10 @@
 |----------|----------|-------|------|-----------|----------|
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
 | P1 | Manager State Tests (CRITICAL) | 71 | 71 | 0 | 100% |
-| P2 | Pure Logic Tests | 35 | 0 | 35 | 0% |
+| P2 | Pure Logic Tests | 35 | 1 | 34 | 3% |
 | P3 | Integration Tests | 40 | 0 | 40 | 0% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **165** | **78** | **87** | **47%** |
+| **TOTAL** | | **165** | **79** | **86** | **48%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -217,7 +217,7 @@ DrawerTests/
 
 | Status | Test ID | Test Case | Expected Result | Notes |
 |--------|---------|-----------|-----------------|-------|
-| [ ] | DRI-001 | Init from CapturedIcon | DrawerItem correctly initializes from CapturedIcon | LOW |
+| [x] | DRI-001 | Init from CapturedIcon | DrawerItem correctly initializes from CapturedIcon | LOW |
 | [ ] | DRI-002 | Init direct with image, frame, index | Direct initialization works | LOW |
 | [ ] | DRI-003 | clickTarget returns frame center | clickTarget returns CGPoint at frame center | LOW |
 | [ ] | DRI-004 | originalCenterX calculation | originalCenterX returns frame.midX | LOW |
