@@ -96,4 +96,14 @@ final class SettingsManagerTests: XCTestCase {
         // Assert
         XCTAssertFalse(sut.useFullStatusBarOnExpand, "SET-006: Default useFullStatusBarOnExpand should be false")
     }
+    
+    // MARK: - SET-007: Default showOnHover is false
+    
+    func testSET007_DefaultShowOnHoverIsFalse() async throws {
+        // Arrange - reset to defaults to ensure we're testing default values
+        sut.resetToDefaults()
+        
+        // Assert
+        XCTAssertFalse(sut.showOnHover, "SET-007: Default showOnHover should be false")
+    }
 }
