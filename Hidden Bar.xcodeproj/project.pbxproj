@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		DRAWERTEST00100000000001 /* SetupVerificationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000001 /* SetupVerificationTests.swift */; };
+		DRAWERTEST00100000000002 /* MockSettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000003 /* MockSettingsManager.swift */; };
+		DRAWERTEST00100000000003 /* MockSettingsManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000004 /* MockSettingsManagerTests.swift */; };
 		DRAWER001000000000000001 /* DrawerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000001 /* DrawerApp.swift */; };
 		DRAWER001000000000000002 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000002 /* AppState.swift */; };
 		DRAWER001000000000000003 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000003 /* AppDelegate.swift */; };
@@ -101,6 +103,8 @@
 /* Begin PBXFileReference section */
 		DRAWERTEST00200000000001 /* SetupVerificationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupVerificationTests.swift; sourceTree = "<group>"; };
 		DRAWERTEST00200000000002 /* DrawerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DrawerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DRAWERTEST00200000000003 /* MockSettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockSettingsManager.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000004 /* MockSettingsManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockSettingsManagerTests.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000001 /* DrawerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerApp.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000002 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000003 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -218,9 +222,19 @@
 		DRAWERTEST00400000000001 /* DrawerTests */ = {
 			isa = PBXGroup;
 			children = (
+				DRAWERTEST00400000000002 /* Mocks */,
 				DRAWERTEST00200000000001 /* SetupVerificationTests.swift */,
 			);
 			path = DrawerTests;
+			sourceTree = "<group>";
+		};
+		DRAWERTEST00400000000002 /* Mocks */ = {
+			isa = PBXGroup;
+			children = (
+				DRAWERTEST00200000000003 /* MockSettingsManager.swift */,
+				DRAWERTEST00200000000004 /* MockSettingsManagerTests.swift */,
+			);
+			path = Mocks;
 			sourceTree = "<group>";
 		};
 		0842CDF923A9FDB900D14BD4 /* Models */ = {
@@ -696,6 +710,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				DRAWERTEST00100000000001 /* SetupVerificationTests.swift in Sources */,
+				DRAWERTEST00100000000002 /* MockSettingsManager.swift in Sources */,
+				DRAWERTEST00100000000003 /* MockSettingsManagerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -4,12 +4,12 @@
 
 | Priority | Category | Total | Done | Remaining | Progress |
 |----------|----------|-------|------|-----------|----------|
-| P0 | Test Infrastructure | 8 | 2 | 6 | 25% |
+| P0 | Test Infrastructure | 8 | 4 | 4 | 50% |
 | P1 | Manager State Tests (CRITICAL) | 55 | 0 | 55 | 0% |
 | P2 | Pure Logic Tests | 35 | 0 | 35 | 0% |
 | P3 | Integration Tests | 40 | 0 | 40 | 0% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **149** | **2** | **147** | **1%** |
+| **TOTAL** | | **149** | **4** | **145** | **3%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -72,7 +72,7 @@ DrawerTests/
 |--------|---------|-----------|-----------------|-------|
 | [x] | SETUP-001 | Create DrawerTests target in Xcode project | Target exists and builds | Required for all tests |
 | [x] | SETUP-002 | Configure test scheme for DrawerTests | Tests can be run via xcodebuild | |
-| [ ] | SETUP-003 | Create test directory structure | All directories from Test Structure exist | |
+| [x] | SETUP-003 | Create test directory structure | All directories from Test Structure exist | |
 
 ### 0.2 Mock Infrastructure
 
@@ -80,7 +80,7 @@ DrawerTests/
 
 | Status | Test ID | Test Case | Expected Result | Notes |
 |--------|---------|-----------|-----------------|-------|
-| [ ] | SETUP-004 | Create MockSettingsManager | Mock compiles and can be instantiated | |
+| [x] | SETUP-004 | Create MockSettingsManager | Mock compiles and can be instantiated | |
 | [ ] | SETUP-005 | Create MockPermissionManager | Mock compiles and can be instantiated | |
 | [ ] | SETUP-006 | Create MockMenuBarManager | Mock compiles and can be instantiated | |
 | [ ] | SETUP-007 | Create MockIconCapturer | Mock compiles and can be instantiated | |
@@ -91,7 +91,7 @@ DrawerTests/
 
 | Status | Test ID | Test Case | Expected Result | Notes |
 |--------|---------|-----------|-----------------|-------|
-| [ ] | SETUP-008 | Verify test target runs | Simple assertion passes (1+1=2) | Smoke test |
+| [x] | SETUP-008 | Verify test target runs | Simple assertion passes (1+1=2) | Smoke test |
 
 ---
 
