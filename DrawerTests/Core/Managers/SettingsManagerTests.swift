@@ -255,4 +255,38 @@ final class SettingsManagerTests: XCTestCase {
         await fulfillment(of: [expectation], timeout: 1.0)
         XCTAssertEqual(fireCount, 2, "SET-013: Combined publisher should fire twice (once for each setting change)")
     }
+    
+    // MARK: - SET-014: globalHotkey get/set roundtrip
+    
+    func testSET014_GlobalHotkeyGetSetRoundtrip() async throws {
+        // Arrange - create a hotkey config
+        let config = GlobalHotkeyConfig(
+            keyCode: 49,           // Space key
+            carbonFlags: 256,      // Command modifier
+            characters: " ",
+            function: false,
+            control: false,
+            command: true,
+            shift: false,
+            option: false,
+            capsLock: false
+        )
+        
+        // Act - set the hotkey
+        sut.globalHotkey = config
+        
+        // Assert - retrieve and verify roundtrip
+        let retrieved = sut.globalHotkey
+        XCTAssertNotNil(retrieved, "SET-014: globalHotkey should be retrievable after set")
+        XCTAssertEqual(retrieved?.keyCode, config.keyCode, "SET-014: keyCode should match")
+        XCTAssertEqual(retrieved?.carbonFlags, config.carbonFlags, "SET-014: carbonFlags should match")
+        XCTAssertEqual(retrieved?.characters, config.characters, "SET-014: characters should match")
+        XCTAssertEqual(retrieved?.function, config.function, "SET-014: function should match")
+        XCTAssertEqual(retrieved?.control, config.control, "SET-014: control should match")
+        XCTAssertEqual(retrieved?.command, config.command, "SET-014: command should match")
+        XCTAssertEqual(retrieved?.shift, config.shift, "SET-014: shift should match")
+        XCTAssertEqual(retrieved?.option, config.option, "SET-014: option should match")
+        XCTAssertEqual(retrieved?.capsLock, config.capsLock, "SET-014: capsLock should match")
+        XCTAssertEqual(retrieved, config, "SET-014: Full config should be equal via Equatable")
+    }
 }

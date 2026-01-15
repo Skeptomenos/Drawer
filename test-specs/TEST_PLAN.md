@@ -5,11 +5,11 @@
 | Priority | Category | Total | Done | Remaining | Progress |
 |----------|----------|-------|------|-----------|----------|
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
-| P1 | Manager State Tests (CRITICAL) | 55 | 30 | 25 | 55% |
+| P1 | Manager State Tests (CRITICAL) | 55 | 31 | 24 | 56% |
 | P2 | Pure Logic Tests | 35 | 0 | 35 | 0% |
 | P3 | Integration Tests | 40 | 0 | 40 | 0% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **149** | **37** | **112** | **25%** |
+| **TOTAL** | | **149** | **38** | **111** | **26%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -142,7 +142,7 @@ DrawerTests/
 | [x] | SET-011 | autoCollapseDelay subject fires on change | Subject fires on change | HIGH |
 | [x] | SET-012 | showOnHover subject fires on change | Subject fires on change | HIGH |
 | [x] | SET-013 | autoCollapseSettingsChanged publisher fires | Combined publisher fires | HIGH |
-| [ ] | SET-014 | globalHotkey get/set roundtrip | globalHotkey can be set and retrieved | MEDIUM |
+| [x] | SET-014 | globalHotkey get/set roundtrip | globalHotkey can be set and retrieved | MEDIUM |
 | [ ] | SET-015 | globalHotkey set nil removes from defaults | Setting nil removes key | MEDIUM |
 
 ### 1.3 DrawerManager (`Drawer/Core/Managers/DrawerManager.swift`)
