@@ -62,4 +62,24 @@ final class DrawerManagerTests: XCTestCase {
         // Assert
         XCTAssertNil(sut.lastError, "DRM-004: Initial state lastError should be nil")
     }
+    
+    // MARK: - DRM-005: updateItems from MenuBarCaptureResult
+    
+    func testDRM005_UpdateItemsFromMenuBarCaptureResult() async throws {
+        // Arrange
+        guard let mockResult = MockIconCapturer.createMockCaptureResult(iconCount: 3) else {
+            XCTFail("DRM-005: Failed to create mock capture result")
+            return
+        }
+        
+        // Precondition
+        XCTAssertTrue(sut.items.isEmpty, "DRM-005: Precondition - items should be empty before update")
+        
+        // Act
+        sut.updateItems(from: mockResult)
+        
+        // Assert
+        XCTAssertEqual(sut.items.count, 3, "DRM-005: Items should be updated from MenuBarCaptureResult")
+        XCTAssertNil(sut.lastError, "DRM-005: lastError should be nil after successful update")
+    }
 }
