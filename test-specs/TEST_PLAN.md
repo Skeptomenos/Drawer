@@ -5,11 +5,11 @@
 | Priority | Category | Total | Done | Remaining | Progress |
 |----------|----------|-------|------|-----------|----------|
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
-| P1 | Manager State Tests (CRITICAL) | 55 | 26 | 29 | 47% |
+| P1 | Manager State Tests (CRITICAL) | 55 | 27 | 28 | 49% |
 | P2 | Pure Logic Tests | 35 | 0 | 35 | 0% |
 | P3 | Integration Tests | 40 | 0 | 40 | 0% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **149** | **33** | **116** | **22%** |
+| **TOTAL** | | **149** | **34** | **115** | **23%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -138,7 +138,7 @@ DrawerTests/
 | [x] | SET-007 | Default showOnHover is false | showOnHover == false | CRITICAL |
 | [x] | SET-008 | Default hasCompletedOnboarding is false | hasCompletedOnboarding == false | CRITICAL |
 | [x] | SET-009 | resetToDefaults restores all settings | All settings reset to defaults | CRITICAL |
-| [ ] | SET-010 | autoCollapseEnabled subject fires on change | Subject fires on change | HIGH |
+| [x] | SET-010 | autoCollapseEnabled subject fires on change | Subject fires on change | HIGH |
 | [ ] | SET-011 | autoCollapseDelay subject fires on change | Subject fires on change | HIGH |
 | [ ] | SET-012 | showOnHover subject fires on change | Subject fires on change | HIGH |
 | [ ] | SET-013 | autoCollapseSettingsChanged publisher fires | Combined publisher fires | HIGH |

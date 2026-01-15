@@ -160,4 +160,27 @@ final class SettingsManagerTests: XCTestCase {
         XCTAssertFalse(sut.showOnHover, "SET-009: showOnHover should be reset to false")
         XCTAssertNil(sut.globalHotkey, "SET-009: globalHotkey should be reset to nil")
     }
+    
+    // MARK: - SET-010: autoCollapseEnabled subject fires on change
+    
+    func testSET010_AutoCollapseEnabledSubjectFiresOnChange() async throws {
+        // Arrange
+        var receivedValues: [Bool] = []
+        let expectation = XCTestExpectation(description: "Subject should fire on change")
+        
+        sut.autoCollapseEnabledSubject
+            .sink { value in
+                receivedValues.append(value)
+                expectation.fulfill()
+            }
+            .store(in: &cancellables)
+        
+        // Act - change the value
+        sut.autoCollapseEnabled = false
+        
+        // Assert
+        await fulfillment(of: [expectation], timeout: 1.0)
+        XCTAssertEqual(receivedValues.count, 1, "SET-010: Subject should fire exactly once")
+        XCTAssertFalse(receivedValues.first ?? true, "SET-010: Subject should emit the new value (false)")
+    }
 }
