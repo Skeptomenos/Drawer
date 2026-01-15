@@ -373,4 +373,34 @@ final class MenuBarManagerTests: XCTestCase {
         
         XCTAssertEqual(sut.collapseImageSymbolName, "chevron.right", "MBM-015: Collapse image should be chevron.right for LTR layout")
     }
+    
+    // MARK: - MBM-016: Expand image is correct for RTL
+    
+    func testMBM016_ExpandImageIsCorrectForRTL() async throws {
+        // Arrange
+        sut = MenuBarManager(settings: SettingsManager.shared)
+        
+        // Skip if not RTL layout
+        guard !sut.isLeftToRight else {
+            throw XCTSkip("MBM-016: Test requires RTL layout, but current layout is LTR")
+        }
+        
+        // Assert
+        XCTAssertEqual(sut.expandImageSymbolName, "chevron.right", "MBM-016: Expand image should be chevron.right for RTL layout")
+    }
+    
+    // MARK: - MBM-017: Collapse image is correct for RTL
+    
+    func testMBM017_CollapseImageIsCorrectForRTL() async throws {
+        // Arrange
+        sut = MenuBarManager(settings: SettingsManager.shared)
+        
+        // Skip if not RTL layout
+        guard !sut.isLeftToRight else {
+            throw XCTSkip("MBM-017: Test requires RTL layout, but current layout is LTR")
+        }
+        
+        // Assert
+        XCTAssertEqual(sut.collapseImageSymbolName, "chevron.left", "MBM-017: Collapse image should be chevron.left for RTL layout")
+    }
 }
