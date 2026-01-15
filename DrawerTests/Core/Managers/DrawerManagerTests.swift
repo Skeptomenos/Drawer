@@ -299,6 +299,61 @@ final class DrawerManagerTests: XCTestCase {
         XCTAssertFalse(sut.hasItems, "DRM-019: hasItems should return false when items is empty")
     }
     
+    // MARK: - DRM-020: itemCount returns correct count
+    
+    func testDRM020_ItemCountReturnsCorrectCount() async throws {
+        // Arrange - Start with empty items
+        XCTAssertEqual(sut.itemCount, 0, "DRM-020: Precondition - itemCount should be 0 initially")
+        
+        // Act - Add 5 items
+        let mockIcons = createMockCapturedIcons(count: 5)
+        sut.updateItems(from: mockIcons)
+        
+        // Assert
+        XCTAssertEqual(sut.itemCount, 5, "DRM-020: itemCount should match items.count")
+        XCTAssertEqual(sut.itemCount, sut.items.count, "DRM-020: itemCount should equal items.count")
+    }
+    
+    // MARK: - DRM-021: isEmpty true when no items and not loading
+    
+    func testDRM021_IsEmptyTrueWhenNoItemsAndNotLoading() async throws {
+        // Arrange & Precondition - sut is initialized with empty items and not loading
+        XCTAssertTrue(sut.items.isEmpty, "DRM-021: Precondition - items should be empty")
+        XCTAssertFalse(sut.isLoading, "DRM-021: Precondition - isLoading should be false")
+        
+        // Act & Assert
+        XCTAssertTrue(sut.isEmpty, "DRM-021: isEmpty should be true when no items and not loading")
+    }
+    
+    // MARK: - DRM-022: isEmpty false when loading
+    
+    func testDRM022_IsEmptyFalseWhenLoading() async throws {
+        // Arrange - Set loading state
+        sut.setLoading(true)
+        
+        // Precondition
+        XCTAssertTrue(sut.items.isEmpty, "DRM-022: Precondition - items should be empty")
+        XCTAssertTrue(sut.isLoading, "DRM-022: Precondition - isLoading should be true")
+        
+        // Act & Assert
+        XCTAssertFalse(sut.isEmpty, "DRM-022: isEmpty should be false when loading (even with no items)")
+    }
+    
+    // MARK: - DRM-023: isEmpty false when has items
+    
+    func testDRM023_IsEmptyFalseWhenHasItems() async throws {
+        // Arrange - Add some items
+        let mockIcons = createMockCapturedIcons(count: 3)
+        sut.updateItems(from: mockIcons)
+        
+        // Precondition
+        XCTAssertFalse(sut.items.isEmpty, "DRM-023: Precondition - items should not be empty")
+        XCTAssertFalse(sut.isLoading, "DRM-023: Precondition - isLoading should be false")
+        
+        // Act & Assert
+        XCTAssertFalse(sut.isEmpty, "DRM-023: isEmpty should be false when has items")
+    }
+    
     // MARK: - Test Helpers
     
     private func createMockCapturedIcons(count: Int) -> [CapturedIcon] {

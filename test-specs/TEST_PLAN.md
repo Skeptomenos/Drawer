@@ -5,11 +5,11 @@
 | Priority | Category | Total | Done | Remaining | Progress |
 |----------|----------|-------|------|-----------|----------|
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
-| P1 | Manager State Tests (CRITICAL) | 55 | 51 | 4 | 93% |
+| P1 | Manager State Tests (CRITICAL) | 55 | 55 | 0 | 100% |
 | P2 | Pure Logic Tests | 35 | 0 | 35 | 0% |
 | P3 | Integration Tests | 40 | 0 | 40 | 0% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **149** | **58** | **91** | **39%** |
+| **TOTAL** | | **149** | **62** | **87** | **42%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -170,10 +170,10 @@ DrawerTests/
 | [x] | DRM-017 | toggle() from visible hides | toggle() when visible hides | CRITICAL |
 | [x] | DRM-018 | hasItems true when not empty | hasItems returns true with items | HIGH |
 | [x] | DRM-019 | hasItems false when empty | hasItems returns false when empty | HIGH |
-| [ ] | DRM-020 | itemCount returns correct count | itemCount matches items.count | HIGH |
-| [ ] | DRM-021 | isEmpty true when no items and not loading | isEmpty logic correct | HIGH |
-| [ ] | DRM-022 | isEmpty false when loading | isEmpty false during loading | HIGH |
-| [ ] | DRM-023 | isEmpty false when has items | isEmpty false with items | HIGH |
+| [x] | DRM-020 | itemCount returns correct count | itemCount matches items.count | HIGH |
+| [x] | DRM-021 | isEmpty true when no items and not loading | isEmpty logic correct | HIGH |
+| [x] | DRM-022 | isEmpty false when loading | isEmpty false during loading | HIGH |
+| [x] | DRM-023 | isEmpty false when has items | isEmpty false with items | HIGH |
 
 ### 1.4 HoverManager (`Drawer/Core/Managers/HoverManager.swift`)
 
