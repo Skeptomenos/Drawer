@@ -256,4 +256,70 @@ final class GlobalHotkeyConfigTests: XCTestCase {
         )
         XCTAssertEqual(noModifierConfig.description, "X", "GHK-009: Character alone should be uppercased")
     }
+    
+    // MARK: - GHK-010: Encoding/decoding roundtrip
+    
+    func testGHK010_EncodingDecodingRoundtrip() throws {
+        // Arrange - Create a config with all properties set
+        let originalConfig = createConfig(
+            keyCode: 42,
+            carbonFlags: 256,
+            characters: "H",
+            function: true,
+            control: true,
+            command: true,
+            shift: true,
+            option: true,
+            capsLock: true
+        )
+        
+        // Act - Encode to JSON and decode back
+        let encoder = JSONEncoder()
+        let decoder = JSONDecoder()
+        
+        let encodedData = try encoder.encode(originalConfig)
+        let decodedConfig = try decoder.decode(GlobalHotkeyConfig.self, from: encodedData)
+        
+        // Assert - All properties should be preserved
+        XCTAssertEqual(decodedConfig.keyCode, originalConfig.keyCode, "GHK-010: keyCode should be preserved")
+        XCTAssertEqual(decodedConfig.carbonFlags, originalConfig.carbonFlags, "GHK-010: carbonFlags should be preserved")
+        XCTAssertEqual(decodedConfig.characters, originalConfig.characters, "GHK-010: characters should be preserved")
+        XCTAssertEqual(decodedConfig.function, originalConfig.function, "GHK-010: function should be preserved")
+        XCTAssertEqual(decodedConfig.control, originalConfig.control, "GHK-010: control should be preserved")
+        XCTAssertEqual(decodedConfig.command, originalConfig.command, "GHK-010: command should be preserved")
+        XCTAssertEqual(decodedConfig.shift, originalConfig.shift, "GHK-010: shift should be preserved")
+        XCTAssertEqual(decodedConfig.option, originalConfig.option, "GHK-010: option should be preserved")
+        XCTAssertEqual(decodedConfig.capsLock, originalConfig.capsLock, "GHK-010: capsLock should be preserved")
+        
+        // Also verify using Equatable
+        XCTAssertEqual(decodedConfig, originalConfig, "GHK-010: Decoded config should equal original")
+        
+        // Test with nil characters
+        let nilCharConfig = createConfig(
+            keyCode: 36,
+            carbonFlags: 0,
+            characters: nil,
+            command: true
+        )
+        let nilCharData = try encoder.encode(nilCharConfig)
+        let nilCharDecoded = try decoder.decode(GlobalHotkeyConfig.self, from: nilCharData)
+        XCTAssertNil(nilCharDecoded.characters, "GHK-010: nil characters should be preserved")
+        XCTAssertEqual(nilCharDecoded, nilCharConfig, "GHK-010: Config with nil characters should roundtrip correctly")
+        
+        // Test with minimal config (all booleans false)
+        let minimalConfig = createConfig(
+            keyCode: 0,
+            carbonFlags: 0,
+            characters: "A",
+            function: false,
+            control: false,
+            command: false,
+            shift: false,
+            option: false,
+            capsLock: false
+        )
+        let minimalData = try encoder.encode(minimalConfig)
+        let minimalDecoded = try decoder.decode(GlobalHotkeyConfig.self, from: minimalData)
+        XCTAssertEqual(minimalDecoded, minimalConfig, "GHK-010: Minimal config should roundtrip correctly")
+    }
 }
