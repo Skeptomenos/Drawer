@@ -7,9 +7,9 @@
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
 | P1 | Manager State Tests (CRITICAL) | 71 | 71 | 0 | 100% |
 | P2 | Pure Logic Tests | 41 | 41 | 0 | 100% |
-| P3 | Integration Tests | 40 | 13 | 27 | 33% |
+| P3 | Integration Tests | 40 | 14 | 26 | 35% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **171** | **132** | **39** | **77%** |
+| **TOTAL** | | **171** | **133** | **38** | **78%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -319,7 +319,7 @@ DrawerTests/
 |--------|---------|-----------|-----------------|-------|
 | [x] | ICN-001 | Initial isCapturing is false | isCapturing == false on init | HIGH |
 | [x] | ICN-002 | Initial lastCaptureResult is nil | lastCaptureResult == nil on init | HIGH |
-| [ ] | ICN-003 | Initial lastError is nil | lastError == nil on init | HIGH |
+| [x] | ICN-003 | Initial lastError is nil | lastError == nil on init | HIGH |
 | [ ] | ICN-004 | Capture without permission throws | permissionDenied error thrown | HIGH |
 | [ ] | ICN-005 | clearLastCapture resets state | Clears both result and error | HIGH |
 | [ ] | ICN-006 | sliceIconsUsingFixedWidth creates icons | Slicing algorithm creates icons | HIGH |
