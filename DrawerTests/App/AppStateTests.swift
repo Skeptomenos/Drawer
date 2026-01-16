@@ -79,4 +79,16 @@ final class AppStateTests: XCTestCase {
         // Assert
         XCTAssertFalse(sut.isCapturing, "APP-003: Initial state isCapturing should be false")
     }
+    
+    // MARK: - APP-004: toggleMenuBar delegates to manager
+    
+    func testAPP004_ToggleMenuBarDelegatesToManager() async throws {
+        sut = createSUT()
+        XCTAssertTrue(sut.isCollapsed, "Precondition: isCollapsed should be true initially")
+        
+        sut.toggleMenuBar()
+        try await Task.sleep(for: .milliseconds(350))
+        
+        XCTAssertFalse(sut.isCollapsed, "APP-004: toggleMenuBar should delegate to manager and change isCollapsed state")
+    }
 }
