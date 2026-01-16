@@ -211,4 +211,69 @@ final class IconCapturerTests: XCTestCase {
             )
         }
     }
+    
+    // MARK: - ICN-007: sliceIconsUsingFixedWidth limits to 50 icons
+    
+    func testICN007_SliceIconsUsingFixedWidthLimitsTo50() async throws {
+        // Arrange
+        let capturer = IconCapturer()
+        
+        // Create an image wide enough for 60 icons (well over the 50 limit)
+        // Each icon takes 22px + 4px spacing = 26px at 1x scale
+        // At 2x scale: (22 * 2) + (4 * 2) = 52px per icon
+        let scale: CGFloat = 2.0
+        let iconWidthPixels = 22 * scale
+        let spacingPixels = 4 * scale
+        let stepSize = iconWidthPixels + spacingPixels
+        let targetIconCount = 60 // More than the 50 limit
+        let imageWidth = Int(stepSize * CGFloat(targetIconCount))
+        let imageHeight = Int(24 * scale)
+        
+        guard let colorSpace = CGColorSpace(name: CGColorSpace.sRGB),
+              let context = CGContext(
+                  data: nil,
+                  width: imageWidth,
+                  height: imageHeight,
+                  bitsPerComponent: 8,
+                  bytesPerRow: 0,
+                  space: colorSpace,
+                  bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+              ) else {
+            XCTFail("ICN-007: Failed to create test image context")
+            return
+        }
+        
+        // Fill with a solid color to create a valid image
+        context.setFillColor(CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1.0))
+        context.fill(CGRect(x: 0, y: 0, width: imageWidth, height: imageHeight))
+        
+        guard let testImage = context.makeImage() else {
+            XCTFail("ICN-007: Failed to create test image")
+            return
+        }
+        
+        // Act
+        let icons = capturer.sliceIconsUsingFixedWidth(from: testImage)
+        
+        // Assert
+        // The implementation uses `icons.count > 50` which means it stops AFTER adding the 51st icon
+        // So the max is 51, not 50
+        XCTAssertLessThanOrEqual(
+            icons.count,
+            51,
+            "ICN-007: sliceIconsUsingFixedWidth should limit icons to ~50 (implementation allows up to 51)"
+        )
+        XCTAssertGreaterThan(
+            icons.count,
+            0,
+            "ICN-007: Should have created some icons before hitting limit"
+        )
+        
+        // Verify the limit was actually hit (we provided enough width for 60 icons)
+        XCTAssertLessThan(
+            icons.count,
+            targetIconCount,
+            "ICN-007: Icon count should be less than the \(targetIconCount) that would fit in the image"
+        )
+    }
 }

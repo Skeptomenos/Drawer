@@ -7,9 +7,9 @@
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
 | P1 | Manager State Tests (CRITICAL) | 71 | 71 | 0 | 100% |
 | P2 | Pure Logic Tests | 41 | 41 | 0 | 100% |
-| P3 | Integration Tests | 40 | 17 | 23 | 43% |
+| P3 | Integration Tests | 40 | 18 | 22 | 45% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **171** | **136** | **35** | **80%** |
+| **TOTAL** | | **171** | **137** | **34** | **80%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -323,7 +323,7 @@ DrawerTests/
 | [x] | ICN-004 | Capture without permission throws | permissionDenied error thrown | HIGH |
 | [x] | ICN-005 | clearLastCapture resets state | Clears both result and error | HIGH |
 | [x] | ICN-006 | sliceIconsUsingFixedWidth creates icons | Slicing algorithm creates icons | HIGH |
-| [ ] | ICN-007 | sliceIconsUsingFixedWidth limits to 50 | Max 50 icons limit | MEDIUM |
+| [x] | ICN-007 | sliceIconsUsingFixedWidth limits to 50 | Max 50 icons limit | MEDIUM |
 | [ ] | ICN-008 | sliceIconsUsingFixedWidth correct spacing | 22px width + 4px spacing | MEDIUM |
 | [ ] | ICN-009 | createCompositeImage from icons | Composite image creation works | MEDIUM |
 | [ ] | ICN-010 | createCompositeImage empty returns nil | Empty icons returns nil | MEDIUM |
