@@ -13,7 +13,7 @@ import Foundation
 /// SETUP-005: Mock implementation of PermissionManager for testing.
 /// Allows tests to control permission states without requiring actual system permissions.
 @MainActor
-final class MockPermissionManager: ObservableObject {
+final class MockPermissionManager: ObservableObject, PermissionProviding {
     
     // MARK: - Published State (mirrors PermissionManager)
     

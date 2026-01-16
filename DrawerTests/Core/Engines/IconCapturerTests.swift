@@ -80,4 +80,37 @@ final class IconCapturerTests: XCTestCase {
             "ICN-003: lastError should be nil on init"
         )
     }
+    
+    // MARK: - ICN-004: Capture without permission throws permissionDenied
+    
+    func testICN004_CaptureWithoutPermissionThrowsPermissionDenied() async throws {
+        // Arrange
+        let mockPermissionManager = MockPermissionManager()
+        mockPermissionManager.mockHasScreenRecording = false
+        
+        let capturer = IconCapturer(permissionManager: mockPermissionManager)
+        let menuBarManager = MenuBarManager()
+        
+        // Act & Assert
+        do {
+            _ = try await capturer.captureHiddenIcons(menuBarManager: menuBarManager)
+            XCTFail("ICN-004: Expected permissionDenied error to be thrown")
+        } catch let error as CaptureError {
+            switch error {
+            case .permissionDenied:
+                XCTAssertNotNil(
+                    capturer.lastError,
+                    "ICN-004: lastError should be set after permission denied"
+                )
+                if case .permissionDenied = capturer.lastError {
+                } else {
+                    XCTFail("ICN-004: lastError should be .permissionDenied")
+                }
+            default:
+                XCTFail("ICN-004: Expected .permissionDenied but got \(error)")
+            }
+        } catch {
+            XCTFail("ICN-004: Expected CaptureError.permissionDenied but got \(error)")
+        }
+    }
 }

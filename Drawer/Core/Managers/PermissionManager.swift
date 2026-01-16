@@ -10,6 +10,17 @@ import Combine
 import Foundation
 import os.log
 
+// MARK: - PermissionProviding Protocol
+
+/// Protocol for permission checking, enabling dependency injection for testing.
+@MainActor
+protocol PermissionProviding {
+    var hasAccessibility: Bool { get }
+    var hasScreenRecording: Bool { get }
+    var hasAllPermissions: Bool { get }
+    var isMissingPermissions: Bool { get }
+}
+
 // MARK: - PermissionType
 
 /// Types of system permissions required by Drawer
@@ -66,7 +77,7 @@ enum PermissionStatus: Equatable {
 /// - Note: Phase 1 only checks status; Phase 2 will require these permissions for
 ///   CGEvent simulation (click-through) and ScreenCaptureKit (icon capture).
 @MainActor
-final class PermissionManager: ObservableObject {
+final class PermissionManager: ObservableObject, PermissionProviding {
     
     // MARK: - Singleton
     
@@ -123,6 +134,14 @@ final class PermissionManager: ObservableObject {
     private init() {
         refreshAllStatuses()
         setupPolling()
+        
+        #if DEBUG
+        logger.debug("=== PERMISSION MANAGER INIT (B1.2) ===")
+        logger.debug("hasScreenRecording: \(self.hasScreenRecording)")
+        logger.debug("hasAccessibility: \(self.hasAccessibility)")
+        logger.debug("hasAllPermissions: \(self.hasAllPermissions)")
+        logger.debug("=== END PERMISSION DEBUG ===")
+        #endif
     }
     
     // MARK: - Status Refresh
@@ -149,18 +168,25 @@ final class PermissionManager: ObservableObject {
     
     // MARK: - Permission Requests
     
-    /// Requests Accessibility permission by prompting the user.
-    /// Opens System Settings to the Accessibility pane.
-    ///
-    /// - Note: Uses `kAXTrustedCheckOptionPrompt` to show the system prompt.
+    /// Requests Accessibility permission.
+    /// Calls AXIsProcessTrustedWithOptions to register the app in System Settings,
+    /// then opens the Accessibility pane for the user to enable it.
     func requestAccessibility() {
         logger.info("Requesting Accessibility permission")
         
-        // This will show the system prompt asking user to grant permission
-        let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue(): true] as CFDictionary
-        AXIsProcessTrustedWithOptions(options)
+        if AXIsProcessTrusted() {
+            logger.debug("Accessibility already granted")
+            refreshAccessibilityStatus()
+            return
+        }
         
-        // Refresh status after a short delay to allow user interaction
+        // This registers the app in the Accessibility list (even if prompt doesn't show)
+        let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue(): true] as CFDictionary
+        _ = AXIsProcessTrustedWithOptions(options)
+        
+        // Also open System Settings so user can toggle it on
+        openSystemSettings(for: .accessibility)
+        
         Task {
             try? await Task.sleep(for: .seconds(1))
             refreshAccessibilityStatus()
@@ -230,12 +256,18 @@ final class PermissionManager: ObservableObject {
     
     /// Sets up periodic polling to detect permission changes.
     /// This is necessary because there's no notification for TCC changes.
+    /// Polling stops automatically once all permissions are granted.
     private func setupPolling() {
         pollingTask = Task { [weak self] in
             while !Task.isCancelled {
                 try? await Task.sleep(for: .seconds(2))
-                guard !Task.isCancelled else { break }
-                self?.refreshAllStatuses()
+                guard let self = self, !Task.isCancelled else { break }
+                self.refreshAllStatuses()
+                
+                if self.hasAllPermissions {
+                    self.logger.debug("All permissions granted, stopping polling")
+                    break
+                }
             }
         }
     }
