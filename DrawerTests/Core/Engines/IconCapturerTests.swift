@@ -48,4 +48,20 @@ final class IconCapturerTests: XCTestCase {
             "ICN-001: isCapturing should be false on init"
         )
     }
+    
+    // MARK: - ICN-002: Initial lastCaptureResult is nil
+    
+    func testICN002_InitialLastCaptureResultIsNil() async throws {
+        // Arrange
+        let capturer = IconCapturer()
+        
+        // Act
+        let lastCaptureResult = capturer.lastCaptureResult
+        
+        // Assert
+        XCTAssertNil(
+            lastCaptureResult,
+            "ICN-002: lastCaptureResult should be nil on init"
+        )
+    }
 }
