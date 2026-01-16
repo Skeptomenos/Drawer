@@ -48,4 +48,21 @@ final class PermissionManagerTests: XCTestCase {
             "PRM-001: hasAccessibility should match AXIsProcessTrusted()"
         )
     }
+    
+    // MARK: - PRM-002: hasScreenRecording returns correct value
+    
+    func testPRM002_HasScreenRecordingReturnsCorrectValue() async throws {
+        // Arrange
+        let expectedValue = CGPreflightScreenCaptureAccess()
+        
+        // Act
+        let actualValue = sut.hasScreenRecording
+        
+        // Assert
+        XCTAssertEqual(
+            actualValue,
+            expectedValue,
+            "PRM-002: hasScreenRecording should match CGPreflightScreenCaptureAccess()"
+        )
+    }
 }
