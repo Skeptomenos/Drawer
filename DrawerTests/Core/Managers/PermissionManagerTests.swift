@@ -324,4 +324,85 @@ final class PermissionManagerTests: XCTestCase {
             "PRM-010: permissionStatusChanged should fire when status is refreshed"
         )
     }
+    
+    // MARK: - PRM-011: refreshAllStatuses updates published state
+    
+    func testPRM011_RefreshAllStatusesUpdatesPublishedState() async throws {
+        // Arrange
+        let expectedAccessibilityGranted = AXIsProcessTrusted()
+        let expectedScreenRecordingGranted = CGPreflightScreenCaptureAccess()
+        let expectedAccessibilityStatus: PermissionStatus = expectedAccessibilityGranted ? .granted : .denied
+        let expectedScreenRecordingStatus: PermissionStatus = expectedScreenRecordingGranted ? .granted : .denied
+        
+        var accessibilityStatusUpdates: [PermissionStatus] = []
+        var screenRecordingStatusUpdates: [PermissionStatus] = []
+        
+        let accessibilityExpectation = XCTestExpectation(description: "PRM-011: accessibilityStatus should be updated")
+        accessibilityExpectation.assertForOverFulfill = false
+        
+        let screenRecordingExpectation = XCTestExpectation(description: "PRM-011: screenRecordingStatus should be updated")
+        screenRecordingExpectation.assertForOverFulfill = false
+        
+        sut.$accessibilityStatus
+            .dropFirst() // Skip initial value
+            .sink { status in
+                accessibilityStatusUpdates.append(status)
+                accessibilityExpectation.fulfill()
+            }
+            .store(in: &cancellables)
+        
+        sut.$screenRecordingStatus
+            .dropFirst() // Skip initial value
+            .sink { status in
+                screenRecordingStatusUpdates.append(status)
+                screenRecordingExpectation.fulfill()
+            }
+            .store(in: &cancellables)
+        
+        // Act
+        sut.refreshAllStatuses()
+        
+        // Assert
+        await fulfillment(of: [accessibilityExpectation, screenRecordingExpectation], timeout: 2.0)
+        
+        // Verify accessibilityStatus was updated
+        XCTAssertGreaterThanOrEqual(
+            accessibilityStatusUpdates.count,
+            1,
+            "PRM-011: accessibilityStatus should receive at least one update from refreshAllStatuses()"
+        )
+        
+        // Verify screenRecordingStatus was updated
+        XCTAssertGreaterThanOrEqual(
+            screenRecordingStatusUpdates.count,
+            1,
+            "PRM-011: screenRecordingStatus should receive at least one update from refreshAllStatuses()"
+        )
+        
+        // Verify final state matches system permission state
+        XCTAssertEqual(
+            sut.accessibilityStatus,
+            expectedAccessibilityStatus,
+            "PRM-011: accessibilityStatus should reflect current AXIsProcessTrusted() value after refresh"
+        )
+        
+        XCTAssertEqual(
+            sut.screenRecordingStatus,
+            expectedScreenRecordingStatus,
+            "PRM-011: screenRecordingStatus should reflect current CGPreflightScreenCaptureAccess() value after refresh"
+        )
+        
+        // Verify the status values are not .unknown after refresh
+        XCTAssertNotEqual(
+            sut.accessibilityStatus,
+            .unknown,
+            "PRM-011: accessibilityStatus should not be .unknown after refreshAllStatuses()"
+        )
+        
+        XCTAssertNotEqual(
+            sut.screenRecordingStatus,
+            .unknown,
+            "PRM-011: screenRecordingStatus should not be .unknown after refreshAllStatuses()"
+        )
+    }
 }
