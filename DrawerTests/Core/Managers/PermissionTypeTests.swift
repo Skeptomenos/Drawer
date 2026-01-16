@@ -43,4 +43,21 @@ final class PermissionTypeTests: XCTestCase {
             "PRT-002: ScreenRecording displayName should be 'Screen Recording'"
         )
     }
+    
+    // MARK: - PRT-003: Accessibility description
+    
+    func testPRT003_AccessibilityDescription() {
+        // Arrange
+        let sut = PermissionType.accessibility
+        
+        // Act
+        let description = sut.description
+        
+        // Assert
+        XCTAssertEqual(
+            description,
+            "Required to simulate clicks on hidden menu bar icons",
+            "PRT-003: Accessibility description should explain click simulation requirement"
+        )
+    }
 }
