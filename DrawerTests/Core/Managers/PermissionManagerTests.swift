@@ -164,4 +164,39 @@ final class PermissionManagerTests: XCTestCase {
             )
         }
     }
+    
+    // MARK: - PRM-006: status for accessibility
+    
+    func testPRM006_StatusForAccessibilityReturnsCorrectStatus() async throws {
+        // Arrange
+        // Refresh to ensure status is up-to-date
+        sut.refreshAccessibilityStatus()
+        
+        let isAccessibilityGranted = AXIsProcessTrusted()
+        let expectedStatus: PermissionStatus = isAccessibilityGranted ? .granted : .denied
+        
+        // Act
+        let actualStatus = sut.status(for: .accessibility)
+        
+        // Assert
+        XCTAssertEqual(
+            actualStatus,
+            expectedStatus,
+            "PRM-006: status(for: .accessibility) should return \(expectedStatus) when AXIsProcessTrusted() is \(isAccessibilityGranted)"
+        )
+        
+        // Additional verification: status should match the published accessibilityStatus property
+        XCTAssertEqual(
+            actualStatus,
+            sut.accessibilityStatus,
+            "PRM-006: status(for: .accessibility) should match accessibilityStatus property"
+        )
+        
+        // Verify isGranted helper on the status
+        XCTAssertEqual(
+            actualStatus.isGranted,
+            isAccessibilityGranted,
+            "PRM-006: status.isGranted should match AXIsProcessTrusted()"
+        )
+    }
 }
