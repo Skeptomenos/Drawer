@@ -44,4 +44,36 @@ final class EventSimulatorTests: XCTestCase {
             "EVS-001: hasAccessibilityPermission should match AXIsProcessTrusted()"
         )
     }
+    
+    // MARK: - EVS-002: simulateClick without permission throws accessibilityNotGranted error
+    
+    func testEVS002_SimulateClickWithoutPermissionThrowsAccessibilityNotGrantedError() async throws {
+        let hasPermission = AXIsProcessTrusted()
+        let testPoint = CGPoint(x: 100, y: 100)
+        
+        if !hasPermission {
+            do {
+                try await sut.simulateClick(at: testPoint)
+                XCTFail("EVS-002: simulateClick should throw when accessibility permission is not granted")
+            } catch let error as EventSimulatorError {
+                XCTAssertEqual(
+                    error,
+                    .accessibilityNotGranted,
+                    "EVS-002: Error should be accessibilityNotGranted when permission is denied"
+                )
+                XCTAssertEqual(
+                    error.errorDescription,
+                    "Accessibility permission is required to simulate clicks",
+                    "EVS-002: Error description should match expected message"
+                )
+            } catch {
+                XCTFail("EVS-002: Unexpected error type: \(error)")
+            }
+        } else {
+            XCTAssertTrue(
+                sut.hasAccessibilityPermission,
+                "EVS-002: Permission is granted in this environment - denied path cannot be tested directly"
+            )
+        }
+    }
 }

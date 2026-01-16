@@ -7,9 +7,9 @@
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
 | P1 | Manager State Tests (CRITICAL) | 71 | 71 | 0 | 100% |
 | P2 | Pure Logic Tests | 41 | 41 | 0 | 100% |
-| P3 | Integration Tests | 40 | 23 | 17 | 58% |
+| P3 | Integration Tests | 40 | 24 | 16 | 60% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **171** | **142** | **29** | **83%** |
+| **TOTAL** | | **171** | **143** | **28** | **84%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -336,7 +336,7 @@ DrawerTests/
 | Status | Test ID | Test Case | Expected Result | Notes |
 |--------|---------|-----------|-----------------|-------|
 | [x] | EVS-001 | hasAccessibilityPermission returns correct value | Permission check works | HIGH |
-| [ ] | EVS-002 | simulateClick without permission throws | accessibilityNotGranted error | HIGH |
+| [x] | EVS-002 | simulateClick without permission throws | accessibilityNotGranted error | HIGH |
 | [ ] | EVS-003 | simulateClick with invalid coordinates throws | invalidCoordinates error | HIGH |
 | [ ] | EVS-004 | isValidScreenPoint inside screen | Point inside screen returns true | HIGH |
 | [ ] | EVS-005 | isValidScreenPoint outside all screens | Point outside returns false | HIGH |
