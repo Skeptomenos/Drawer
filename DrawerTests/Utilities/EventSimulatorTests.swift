@@ -172,4 +172,41 @@ final class EventSimulatorTests: XCTestCase {
             XCTFail("EVS-005: Expected invalidCoordinates error, but got: \(error)")
         }
     }
+    
+    // MARK: - EVS-006: isValidScreenPoint in menu bar area
+    
+    func testEVS006_IsValidScreenPointInMenuBarAreaIsValid() async throws {
+        // Skip if no accessibility permission (would throw accessibilityNotGranted first)
+        guard AXIsProcessTrusted() else {
+            throw XCTSkip("EVS-006: Accessibility permission required to test coordinate validation")
+        }
+        
+        // Arrange - get a point in the menu bar area
+        guard let mainScreen = NSScreen.main else {
+            throw XCTSkip("EVS-006: No main screen available")
+        }
+        
+        // Calculate the menu bar region using the same logic as EventSimulator
+        let menuBarHeight = MenuBarMetrics.height
+        
+        // Point in the center of the menu bar horizontally, vertically in the menu bar
+        // Menu bar is at the top of the screen (maxY - menuBarHeight to maxY)
+        let menuBarPoint = CGPoint(
+            x: mainScreen.frame.midX,
+            y: mainScreen.frame.maxY - (menuBarHeight / 2)
+        )
+        
+        // Act & Assert
+        // If isValidScreenPoint correctly identifies menu bar area as valid,
+        // simulateClick should NOT throw invalidCoordinates
+        do {
+            try await sut.simulateClick(at: menuBarPoint)
+            // Success - point in menu bar area was valid and click was simulated
+        } catch EventSimulatorError.invalidCoordinates {
+            XCTFail("EVS-006: Point in menu bar area should be valid, but got invalidCoordinates error")
+        } catch {
+            // Other errors (eventCreationFailed, eventPostingFailed) are acceptable
+            // They indicate the point was valid but something else failed
+        }
+    }
 }
