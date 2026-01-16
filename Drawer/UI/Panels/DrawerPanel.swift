@@ -6,6 +6,7 @@
 //
 
 import AppKit
+import os.log
 
 // MARK: - DrawerPanel
 
@@ -22,8 +23,8 @@ final class DrawerPanel: NSPanel {
     
     // MARK: - Constants
     
-    /// Height of the macOS menu bar (standard is 24pt, but can vary with notch)
-    private static let menuBarHeight: CGFloat = 24
+    private static var menuBarHeight: CGFloat { MenuBarMetrics.height }
+    private static let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "com.drawer", category: "DrawerPanel")
     
     /// Gap between menu bar and drawer panel
     private static let menuBarGap: CGFloat = 4
@@ -84,33 +85,33 @@ final class DrawerPanel: NSPanel {
     
     // MARK: - Positioning
     
-    /// Positions the panel below the menu bar on the specified screen.
-    /// - Parameter screen: The screen to position on. Defaults to main screen.
     func position(on screen: NSScreen? = nil) {
         guard let targetScreen = screen ?? NSScreen.main else { return }
         
-        // Get the visible frame (excludes menu bar and dock)
         let visibleFrame = targetScreen.visibleFrame
         let fullFrame = targetScreen.frame
         
-        // Calculate menu bar height for this screen (accounts for notch on newer Macs)
         let menuBarHeight = fullFrame.maxY - visibleFrame.maxY
         
-        // Position panel just below menu bar, centered horizontally
         let panelWidth = frame.width
         let panelHeight = frame.height
         
         let x = fullFrame.midX - (panelWidth / 2)
         let y = fullFrame.maxY - menuBarHeight - Self.menuBarGap - panelHeight
         
+        #if DEBUG
+        Self.logger.debug("=== DRAWER PANEL POSITION (B2.2) ===")
+        Self.logger.debug("Screen: \(targetScreen.localizedName)")
+        Self.logger.debug("Full frame: x=\(fullFrame.origin.x), y=\(fullFrame.origin.y), w=\(fullFrame.width), h=\(fullFrame.height)")
+        Self.logger.debug("Visible frame: x=\(visibleFrame.origin.x), y=\(visibleFrame.origin.y), w=\(visibleFrame.width), h=\(visibleFrame.height)")
+        Self.logger.debug("Menu bar height: \(menuBarHeight)")
+        Self.logger.debug("Panel position: x=\(x), y=\(y)")
+        Self.logger.debug("Panel size: w=\(panelWidth), h=\(panelHeight)")
+        #endif
+        
         setFrameOrigin(NSPoint(x: x, y: y))
     }
     
-    /// Positions the panel below the menu bar, aligned to a specific X coordinate.
-    /// Useful for aligning with the toggle button position.
-    /// - Parameters:
-    ///   - xPosition: The X coordinate to align the panel's leading edge to.
-    ///   - screen: The screen to position on. Defaults to main screen.
     func position(alignedTo xPosition: CGFloat, on screen: NSScreen? = nil) {
         guard let targetScreen = screen ?? NSScreen.main else { return }
         
@@ -120,11 +121,16 @@ final class DrawerPanel: NSPanel {
         let menuBarHeight = fullFrame.maxY - visibleFrame.maxY
         let panelHeight = frame.height
         
-        // Clamp X position to keep panel on screen
         let maxX = fullFrame.maxX - frame.width
         let clampedX = min(max(xPosition, fullFrame.minX), maxX)
         
         let y = fullFrame.maxY - menuBarHeight - Self.menuBarGap - panelHeight
+        
+        #if DEBUG
+        Self.logger.debug("=== DRAWER PANEL POSITION ALIGNED (B2.2) ===")
+        Self.logger.debug("Requested X: \(xPosition), Clamped X: \(clampedX)")
+        Self.logger.debug("Panel position: x=\(clampedX), y=\(y)")
+        #endif
         
         setFrameOrigin(NSPoint(x: clampedX, y: y))
     }

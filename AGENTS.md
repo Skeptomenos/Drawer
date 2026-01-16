@@ -1,147 +1,293 @@
 # Drawer Agent Operational Guide (AGENTS.md)
 
 ## 1. Project Overview
+
 **Drawer** is a high-performance macOS menu bar utility (forked from Hidden Bar) that declutters the system menu bar by hiding icons into a secondary, collapsible "Drawer" (NSPanel).
 
-**Goal**: Create a high-performance, native macOS menu bar utility that equals or surpasses Bartender in aesthetics and functionality.
+**Goal**: Create a native macOS menu bar utility that equals or surpasses Bartender in aesthetics and functionality.
 
-- **Target OS**: macOS 14.0+
-- **Language**: Swift 5.9+
-- **Frameworks**: SwiftUI (Primary UI), AppKit (Windowing/StatusItems), ScreenCaptureKit (Icon Capture).
-- **Architecture**: MVVM (Model-View-ViewModel).
+| Attribute | Value |
+|-----------|-------|
+| Target OS | macOS 14.0+ |
+| Language | Swift 5.9+ |
+| Frameworks | SwiftUI (UI), AppKit (Windowing/StatusItems), ScreenCaptureKit (Icon Capture) |
+| Architecture | MVVM |
+| License | MIT |
 
 ---
 
-## 2. Build, Lint, & Test Commands
+## 2. Build, Lint & Test Commands
 
 ### Build
-- **Standard**: `xcodebuild -scheme Drawer -configuration Debug build`
-- **SwiftPM**: `swift build` (if applicable)
+```bash
+# Debug build
+xcodebuild -scheme Drawer -configuration Debug build
 
-### Linting & Formatting
-- **Tool**: `swiftlint`
-- **Command**: `swiftlint lint`
-- **Auto-fix**: `swiftlint --fix`
-- **Style**: Adhere to the `.swiftlint.yml` rules (if present). Use 4-space indentation.
+# Release build
+xcodebuild -scheme Drawer -configuration Release build
+
+# Clean build
+xcodebuild -scheme Drawer clean build
+```
+
+### Linting
+```bash
+# Lint all files
+swiftlint lint
+
+# Auto-fix issues
+swiftlint --fix
+
+# Lint specific file
+swiftlint lint --path Drawer/Core/Managers/MenuBarManager.swift
+```
 
 ### Testing
-- **Unit Tests**: `xcodebuild test -scheme DrawerTests`
-- **SwiftPM Tests**: `swift test`
+```bash
+# Run all tests
+xcodebuild test -scheme Drawer -destination 'platform=macOS'
+
+# Run single test class
+xcodebuild test -scheme Drawer -destination 'platform=macOS' \
+  -only-testing:DrawerTests/MenuBarManagerTests
+
+# Run single test method
+xcodebuild test -scheme Drawer -destination 'platform=macOS' \
+  -only-testing:DrawerTests/MenuBarManagerTests/testToggle
+```
+
+**Note**: No test target exists yet. When creating tests, add a `DrawerTests` target to the Xcode project.
 
 ---
 
-## 3. Code Style & Architecture Guidelines
+## 3. Code Style Guidelines
 
-### Architecture: MVVM
-- **Models**: Plain structs for data (e.g., `MenuBarItem`, `Settings`).
-- **Views**: Pure SwiftUI views. Use `NSViewRepresentable` only when wrapping legacy AppKit components.
-- **ViewModels**: `ObservableObject` classes that handle business logic and state. Use `@Published` for UI-bound properties.
+### File Header
+```swift
+//
+//  FileName.swift
+//  Drawer
+//
+//  Copyright © 2026 Drawer. MIT License.
+//
+```
 
-### UI Principles
-- **SwiftUI First**: Avoid Storyboards, XIBs, and Cocoa Bindings.
-- **Native Look**: Use system materials (`NSVisualEffectView` materials like `.menu` or `.hudWindow`).
-- **Animations**: Use spring-based animations for a tactile feel.
+### Imports (Alphabetical, Grouped)
+```swift
+import AppKit          // 1. Apple frameworks
+import Combine
+import Foundation
+import os.log
+import ScreenCaptureKit
+import SwiftUI
+
+import HotKey          // 2. Third-party dependencies
+```
 
 ### Naming Conventions
-- **Variables/Functions**: `camelCase` (e.g., `isDrawerVisible`, `toggleDrawer()`).
-- **Classes/Structs/Enums**: `PascalCase` (e.g., `MenuBarManager`, `DrawerPanel`).
-- **Protocols**: `PascalCase`, usually ending in `-ing` or `-able` (e.g., `IconCapturing`).
+| Type | Convention | Example |
+|------|------------|---------|
+| Variables/Functions | camelCase | `isDrawerVisible`, `toggleDrawer()` |
+| Classes/Structs/Enums | PascalCase | `MenuBarManager`, `DrawerPanel` |
+| Protocols | PascalCase + -ing/-able | `IconCapturing`, `Configurable` |
+| Constants | camelCase | `separatorCollapsedLength` |
 
-### Imports
-Group imports alphabetically:
-1.  Standard Libraries (e.g., `Foundation`)
-2.  Apple Frameworks (e.g., `SwiftUI`, `AppKit`, `ScreenCaptureKit`)
-3.  Third-party Dependencies
-4.  Local Project Files
+### MARK Comments
+```swift
+// MARK: - Section Name
+// MARK: Published State
+// MARK: Private Methods
+```
+
+### Error Handling
+```swift
+// Define domain-specific errors with LocalizedError
+enum CaptureError: Error, LocalizedError {
+    case permissionDenied
+    case menuBarNotFound
+    case systemError(Error)
+    
+    var errorDescription: String? {
+        switch self {
+        case .permissionDenied:
+            return "Screen Recording permission is required"
+        case .menuBarNotFound:
+            return "Could not locate the menu bar window"
+        case .systemError(let error):
+            return "System error: \(error.localizedDescription)"
+        }
+    }
+}
+```
+
+### Concurrency
+- Use `@MainActor` for all UI-related classes
+- Use `async/await` for asynchronous operations
+- Use `Task { }` for fire-and-forget async work
+- Avoid `DispatchQueue` unless interfacing with legacy APIs
+
+### Memory Management
+- Use `[weak self]` in closures that capture `self`
+- Use `assign(to: &$property)` for Combine bindings (no retain cycle)
+- Cancel Combine subscriptions in `deinit`
 
 ---
 
 ## 4. Project Structure
+
 ```
 Drawer/
-├── App/            # App entry point, AppDelegate/SceneDelegate logic
-├── Core/           # Business logic, Managers, Engines
-│   ├── Managers/   # MenuBarManager, PermissionManager, SettingsManager
-│   └── Engines/    # IconCapturer (ScreenCaptureKit logic)
-├── UI/             # SwiftUI Views and ViewModifiers
-│   ├── Components/ # Reusable UI elements
-│   ├── Panels/     # NSPanel wrappers (DrawerPanel)
-│   └── Settings/   # Settings/Preferences views
-├── Models/         # Data structures and Enums
-└── Utilities/      # Extensions, Helpers, Constants
+├── App/                    # App entry point
+│   ├── DrawerApp.swift     # @main SwiftUI App
+│   ├── AppDelegate.swift   # NSApplicationDelegate
+│   └── AppState.swift      # Global state coordinator
+├── Core/
+│   ├── Managers/           # Business logic singletons
+│   │   ├── MenuBarManager.swift    # CRITICAL: 10k pixel hack
+│   │   ├── DrawerManager.swift
+│   │   ├── PermissionManager.swift
+│   │   ├── SettingsManager.swift
+│   │   ├── HoverManager.swift
+│   │   └── LaunchAtLoginManager.swift
+│   └── Engines/
+│       └── IconCapturer.swift      # ScreenCaptureKit logic
+├── UI/
+│   ├── Panels/             # NSPanel wrappers
+│   ├── Settings/           # Preferences views
+│   ├── Onboarding/         # First-run experience
+│   └── Components/         # Reusable UI elements
+├── Models/                 # Data structures
+├── Utilities/              # Extensions, helpers
+└── Bridging/               # Private API shims
 ```
 
 ---
 
 ## 5. Critical Infrastructure
-These components are the "heart" of the application. Modify with extreme caution:
 
 | Component | Responsibility | Risk Level |
 |-----------|----------------|------------|
-| `MenuBarManager` | Manages `NSStatusItem` positions and the "10k pixel hack". | **CRITICAL** |
-| `IconCapturer` | Uses `ScreenCaptureKit` to take "ghost" images of hidden icons. | **HIGH** |
-| `PermissionManager` | Handles TCC (Accessibility) and Screen Recording permissions. | **HIGH** |
-| `DrawerPanel` | Custom `NSPanel` that hosts the secondary bar. | MEDIUM |
+| `MenuBarManager` | 10k pixel hack, NSStatusItem positions | **CRITICAL** |
+| `IconCapturer` | ScreenCaptureKit menu bar capture | **HIGH** |
+| `PermissionManager` | TCC (Accessibility/Screen Recording) | **HIGH** |
+| `DrawerPanel` | NSPanel hosting secondary bar | MEDIUM |
+| `EventSimulator` | Click-through simulation | MEDIUM |
+
+**Modify with extreme caution. Always verify menu bar behavior after changes.**
 
 ---
 
-## 6. Workflow & Constraints
+## 6. Forbidden Patterns
 
-### Task Execution
-- Follow the `Phase 1/2/3` roadmap defined in `PRD.md` and `specs/`.
-- **Phase 1**: Foundation & Core Hiding.
-- **Phase 2**: The Drawer Engine (Capture & Interaction).
-- **Phase 3**: Polish & UI/UX.
-
-### Forbidden Patterns
-- **NO Storyboards**: All UI must be code-based (SwiftUI).
-- **NO Cocoa Bindings**: Use Combine or `@Published` state management.
-- **NO Manual Memory Management**: Leverage ARC and avoid retain cycles in closures (use `[weak self]`).
-
-### Licensing
-- **License**: MIT (Inherited from Hidden Bar reference).
-- **Attribution**: Maintain original copyright headers for ported logic from Hidden Bar.
+| Pattern | Reason |
+|---------|--------|
+| Storyboards/XIBs | All UI must be code-based (SwiftUI) |
+| Cocoa Bindings | Use Combine or `@Published` |
+| `DispatchQueue.main` | Use `@MainActor` instead |
+| Force unwrapping (`!`) | Use `guard let` or `if let` |
+| Empty catch blocks | Always handle or log errors |
+| Bypassing TCC programmatically | Use `PermissionManager` flow |
 
 ---
 
-## 7. AI Agent Instructions
-- **Context**: Always read `PRD.md` and `specs/` before starting a new task.
-- **Verification**: After modifying logic in `MenuBarManager`, verify that menu bar icons still respond to system events (Command+Drag).
-- **Safety**: Do not attempt to bypass TCC permissions programmatically; always use the `PermissionManager` flow.
-
----
-
-## 8. Testing & Verification Strategy
-
-### Unit Tests
-- LLMs MUST write XCTest cases for all business logic (Managers, Engines). Run `xcodebuild test` to verify.
-
-### UI Verification
-- Use Xcode Previews for all Views. Create 'Preview Content' assets to mock data.
-
-### Manual Verification
-- For system interactions (Menu Bar clicks, Screen Capture), provide a 'Verification Plan' in the output.
-- **Example**: "1. Build app. 2. Click toggle. 3. Verify spacer expands."
-
----
-
-## 9. UI/UX Design System (The 'Beautiful' Standard)
+## 7. UI/UX Design System
 
 ### Materials
-- Use `NSVisualEffectView` bridged to SwiftUI. Default material: `.menu` or `.popover`.
+- Use `NSVisualEffectView` bridged to SwiftUI
+- Default material: `.menu` or `.popover`
 
 ### Animations
-- Use `.spring(response: 0.3, dampingFraction: 0.7)` for drawer toggles. Avoid linear animations.
+```swift
+// Standard drawer animation
+.animation(.spring(response: 0.3, dampingFraction: 0.7), value: isVisible)
+```
 
 ### Typography
-- Use standard macOS fonts (`.system(size: 13)`). Match menu bar text weight.
+- Use system fonts: `.system(size: 13)`
+- Match menu bar text weight
 
 ### Iconography
-- Use SF Symbols. Ensure consistent stroke width (usually `.medium`).
+- Use SF Symbols with `.medium` stroke weight
 
-### Borders/Shadows
-- Add 0.5px inner border (`Color.white.opacity(0.2)`) and `Shadow(radius: 5)` for depth.
+### Visual Polish
+- 0.5px inner border: `Color.white.opacity(0.2)`
+- Shadow: `Shadow(radius: 5)`
 
-### Visual References
-- **Location**: Store reference screenshots (Bartender UI, mockups, native macOS examples) in `specs/reference_images/`.
-- **Agent Instruction**: Before implementing any View, agents MUST check this folder. If images exist, use the `look_at` tool to analyze layout, padding, font hierarchy, and materials, then replicate them in SwiftUI.
+### Reference Images
+Check `specs/reference_images/` before implementing Views. Use `look_at` tool to analyze layout, padding, and materials.
+
+---
+
+## 8. Testing Strategy
+
+### Unit Tests (Required for Managers/Engines)
+```swift
+import XCTest
+@testable import Drawer
+
+final class MenuBarManagerTests: XCTestCase {
+    @MainActor
+    func testToggle() async {
+        let manager = MenuBarManager()
+        XCTAssertTrue(manager.isCollapsed)
+        manager.toggle()
+        XCTAssertFalse(manager.isCollapsed)
+    }
+}
+```
+
+### UI Verification
+- Use Xcode Previews for all Views
+- Create Preview Content assets for mock data
+
+### Manual Verification Plan
+For system interactions, document verification steps:
+```
+1. Build and run app
+2. Click toggle icon in menu bar
+3. Verify separator expands/collapses
+4. Verify icons shift position correctly
+```
+
+---
+
+## 9. Agent Instructions
+
+### Before Starting Work
+1. Read `PRD.md` for product context
+2. Check `specs/` for phase-specific requirements
+3. Review `specs/reference_images/` for UI work
+
+### After Modifying Critical Components
+1. Verify menu bar icons respond to Command+Drag
+2. Test toggle behavior in both LTR and RTL layouts
+3. Confirm no memory leaks with Instruments
+
+### Permission Handling
+- Never bypass TCC permissions programmatically
+- Always use `PermissionManager` for permission flows
+- Test with permissions both granted and denied
+
+### Commit Guidelines
+- Maintain MIT license headers
+- Preserve original Hidden Bar attribution where applicable
+- Run `swiftlint` before committing
+
+---
+
+## 10. Quick Reference
+
+### Key Files to Understand First
+1. `AppState.swift` - Central state coordinator
+2. `MenuBarManager.swift` - Core hiding mechanism
+3. `IconCapturer.swift` - Screen capture logic
+4. `DrawerPanelController.swift` - Panel presentation
+
+### Common Tasks
+| Task | Location |
+|------|----------|
+| Add new setting | `SettingsManager.swift` |
+| Modify hiding behavior | `MenuBarManager.swift` |
+| Change drawer appearance | `DrawerContentView.swift` |
+| Add permission check | `PermissionManager.swift` |
+| Handle global events | `GlobalEventMonitor.swift` |

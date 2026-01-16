@@ -53,6 +53,10 @@ final class DrawerManager: ObservableObject {
         logger.debug("DrawerManager initialized")
     }
     
+    deinit {
+        cancellables.removeAll()
+    }
+    
     // MARK: - Public API
     
     /// Updates the drawer items from a capture result

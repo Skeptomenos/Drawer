@@ -5,8 +5,9 @@
 //  Copyright © 2026 Drawer. MIT License.
 //
 
-import Foundation
+import AppKit
 import CoreGraphics
+import Foundation
 
 // MARK: - DrawerItem
 
@@ -81,7 +82,9 @@ extension DrawerItem {
         originalFrame.midY
     }
     
-    /// The click target point for this icon (center of original frame)
+    /// The click target point for this icon in CGEvent coordinates (top-left origin).
+    /// Note: `originalFrame` from CGWindowList is already in Quartz display coordinates
+    /// (top-left origin), so no conversion is needed for CGEvent usage.
     var clickTarget: CGPoint {
         CGPoint(x: originalCenterX, y: originalCenterY)
     }

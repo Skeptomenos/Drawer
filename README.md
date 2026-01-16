@@ -1,75 +1,160 @@
 <p align="center">
-	<img width="200" height="200" margin-right="100%" src="https://github.com/dwarvesf/hidden/blob/develop/img/icon_512%402x.png?raw=true">
-</p>
-<p align="center">
-	<a href="https://webuild.community">
-		<img src="https://raw.githubusercontent.com/webuild-community/badge/master/svg/love.svg" />
-	</a>
-	<a href="https://github.com/dwarvesf/hidden/releases/latest">
- 		<img src="https://img.shields.io/badge/download-latest-brightgreen.svg" alt="download">
-	</a>
-	<a href="https://img.shields.io/badge/platform-macOS-lightgrey.svg">
- 		<img src="https://img.shields.io/badge/platform-macOS-lightgrey.svg" alt="platform">
-	</a>
-	<a href="https://img.shields.io/badge/requirements-macOS High Sierra+-ff69b4.svg">
- 		<img src="https://img.shields.io/badge/requirements-macOS High Sierra+-ff69b4.svg" alt="systemrequirements">
-	</a>
+	<img width="200" height="200" src="https://github.com/dwarvesf/hidden/blob/develop/img/icon_512%402x.png?raw=true">
 </p>
 
-## Hidden Bar
-Hidden Bar lets you hide menu bar items to give your Mac a cleaner look.
+<h1 align="center">Drawer</h1>
 
 <p align="center">
-	<img width="400" src="img/screen1.png">
-	<img width="400" src="img/screen2.png">
+	A modern macOS menu bar utility that declutters your menu bar by hiding icons into a collapsible drawer.
 </p>
 
-## 🚀 Install
+<p align="center">
+	<img src="https://img.shields.io/badge/platform-macOS%2014.0+-blue.svg" alt="platform">
+	<img src="https://img.shields.io/badge/swift-5.9+-orange.svg" alt="swift">
+	<img src="https://img.shields.io/badge/license-MIT-green.svg" alt="license">
+</p>
 
-###  App Store
+---
 
-[![AppStore](img/appstore.svg)](https://itunes.apple.com/app/hidden-bar/id1452453066)
+## What is Drawer?
 
-### Others
-
-The Hidden Bar is notarized before distributed out side App Store. It's safe to use 👍
-
-#### Using Homebrew
+Drawer is a high-performance macOS menu bar utility (forked from [Hidden Bar](https://github.com/dwarvesf/hidden)) that hides menu bar icons into a secondary, collapsible section. When you need them, they're just a click, hover, or swipe away.
 
 ```
-brew install --cask hiddenbar
+[Hidden Icons] ● < [Visible Icons] [System Icons]
+               ↑ ↑
+               │ └── Toggle (click to show/hide)
+               └──── Separator (⌘+drag icons relative to this)
 ```
 
-#### Manual download
+## Features
 
-- [Download latest version](https://github.com/dwarvesf/hidden/releases/latest)
-- Open and drag the app to the Applications folder.
-- Launch Hidden and drag the icon in your menu bar (hold CMD) to the right so it is between some other icons.
-
-## 🕹 Usage
-
-* `⌘` + drag to move the Hidden icons around in the menu bar.
-* Click the Arrow icon to hide menu bar items.
-
-<p align="center">
-	<img src="img/tutorial.gif">
-</p>
-
-## ✨<a href="https://github.com/dwarvesf/hidden/graphs/contributors">Contributors</a>
-
-This project exists thanks to all the people who contribute. Thank you guys so much 👏
-
-[![](https://sourcerer.io/fame/phucledien/dwarvesf/hidden/images/0)](https://sourcerer.io/fame/phucledien/dwarvesf/hidden/links/0)[![](https://sourcerer.io/fame/phucledien/dwarvesf/hidden/images/1)](https://sourcerer.io/fame/phucledien/dwarvesf/hidden/links/1)[![](https://sourcerer.io/fame/phucledien/dwarvesf/hidden/images/2)](https://sourcerer.io/fame/phucledien/dwarvesf/hidden/links/2)[![](https://sourcerer.io/fame/phucledien/dwarvesf/hidden/images/3)](https://sourcerer.io/fame/phucledien/dwarvesf/hidden/links/3)[![](https://sourcerer.io/fame/phucledien/dwarvesf/hidden/images/4)](https://sourcerer.io/fame/phucledien/dwarvesf/hidden/links/4)[![](https://sourcerer.io/fame/phucledien/dwarvesf/hidden/images/5)](https://sourcerer.io/fame/phucledien/dwarvesf/hidden/links/5)[![](https://sourcerer.io/fame/phucledien/dwarvesf/hidden/images/6)](https://sourcerer.io/fame/phucledien/dwarvesf/hidden/links/6)[![](https://sourcerer.io/fame/phucledien/dwarvesf/hidden/images/7)](https://sourcerer.io/fame/phucledien/dwarvesf/hidden/links/7)
-
-Please read [this](CONTRIBUTING.md) before you make a contribution.
+- **One-Click Toggle**: Click to expand/collapse hidden icons
+- **Gesture Controls**: Swipe down in the menu bar to reveal the drawer, swipe up to hide
+- **Show on Hover**: Automatically reveal icons when your mouse enters the menu bar
+- **Click-Through**: Click icons in the drawer panel - actions forward to the real items
+- **Customizable Triggers**: Configure which gestures show/hide the drawer
+- **Native Experience**: Built with SwiftUI and AppKit for a seamless macOS feel
+- **Lightweight**: Minimal CPU and memory footprint
+- **Open Source**: MIT licensed, contributions welcome
 
 ## Requirements
-macOS version >= 10.13
 
-## You may also like
-- [Blurred](https://github.com/dwarvesf/Blurred) - A macOS utility that helps reduce distraction by dimming your inactive noise
-- [Micro Sniff](https://github.com/dwarvesf/micro-sniff) - An ultra-light macOS utility that notify whenever your micro-device is being used
-- [VimMotion](https://github.com/dwarvesf/VimMotionPublic) Vim style shortcut for MacOS
+- macOS 14.0 (Sonoma) or later
+- Screen Recording permission (for icon capture)
+- Accessibility permission (for click forwarding and gesture detection)
+
+## Installation
+
+### Manual Download
+
+1. Download the latest release from [Releases](https://github.com/Skeptomenos/Drawer/releases)
+2. Drag `Drawer.app` to your Applications folder
+3. Launch Drawer
+4. Grant the required permissions when prompted
+
+### Build from Source
+
+```bash
+git clone https://github.com/Skeptomenos/Drawer.git
+cd Drawer
+xcodebuild -scheme Drawer -configuration Release build
+```
+
+## Usage
+
+### Quick Start
+
+1. **Launch Drawer** - Two icons appear in your menu bar: `●` (separator) and `<`/`>` (toggle)
+2. **Hide icons** - Hold `⌘` and drag any icon to the left of the separator
+3. **Toggle visibility** - Click the `<`/`>` button, hover, or swipe down to show/hide
+
+### Gesture Controls
+
+| Gesture | Action |
+|---------|--------|
+| Swipe down (two-finger) in menu bar | Show drawer |
+| Swipe up (two-finger) | Hide drawer |
+| Click outside drawer | Hide drawer |
+| Hover over menu bar | Show drawer (if enabled) |
+
+All gestures are configurable in Preferences.
+
+### Keyboard Shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| `⌘ + Drag` | Reposition menu bar icons |
+| `⌘,` | Open Preferences |
+| `⌘Q` | Quit Drawer |
+
+### Context Menu
+
+Right-click the separator (`●`) for options:
+- Show Drawer
+- Preferences...
+- Quit Drawer
+
+## How It Works
+
+Drawer uses a clever technique called the **"10k Pixel Hack"**:
+
+1. A separator `NSStatusItem` sits between hidden and visible icons
+2. When collapsed, the separator expands to 10,000 pixels wide
+3. This pushes hidden icons off the left edge of the screen
+4. When expanded, the separator shrinks to 20 pixels, revealing all icons
+
+For displaying hidden icons in a floating panel, Drawer uses **ScreenCaptureKit** to capture the menu bar region and slice it into individual icons.
+
+## Project Structure
+
+```
+Drawer/
+├── App/                    # App entry point
+├── Core/
+│   ├── Managers/           # Business logic (MenuBarManager, HoverManager, etc.)
+│   └── Engines/            # Icon capture engine
+├── UI/
+│   ├── Panels/             # Drawer panel
+│   ├── Settings/           # Preferences
+│   └── Onboarding/         # First-run experience
+├── Models/                 # Data structures
+├── Utilities/              # Helpers (EventSimulator, GlobalEventMonitor, etc.)
+└── specs/                  # Feature specifications and PRDs
+```
+
+## Development
+
+### Setup
+
+1. Clone the repository
+2. Open `Hidden Bar.xcodeproj` in Xcode
+3. Select the `Drawer` scheme
+4. Build and run
+
+### Code Style
+
+- Swift 5.9+
+- SwiftUI for UI, AppKit for system integration
+- `@MainActor` for UI-related classes
+- See [AGENTS.md](AGENTS.md) for detailed guidelines
+
+### Running Tests
+
+```bash
+xcodebuild test -scheme Drawer -destination 'platform=macOS'
+```
+
+## Credits
+
+Drawer is forked from [Hidden Bar](https://github.com/dwarvesf/hidden) by [Dwarves Foundation](https://github.com/dwarvesf). We're grateful for their original work that made this project possible.
+
 ## License
 
-MIT &copy; [Dwarves Foundation](https://github.com/dwarvesf)
+MIT License - see [LICENSE](LICENSE) for details.
+
+---
+
+<p align="center">
+	Made with care for a cleaner Mac experience.
+</p>

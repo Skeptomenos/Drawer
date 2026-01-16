@@ -7,6 +7,7 @@
 
 import AppKit
 import Combine
+import os.log
 import SwiftUI
 
 // MARK: - Animation Constants
@@ -43,6 +44,7 @@ final class DrawerPanelController: ObservableObject {
     private var hostingView: NSHostingView<AnyView>?
     private var cancellables = Set<AnyCancellable>()
     private var isAnimating: Bool = false
+    private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "com.drawer", category: "DrawerPanelController")
     
     // MARK: - Initialization
     
@@ -85,19 +87,21 @@ final class DrawerPanelController: ObservableObject {
     private func animateShow(panel: DrawerPanel) {
         isAnimating = true
         
-        // Store the target frame
         let targetFrame = panel.frame
         
-        // Start position: slightly above and invisible
+        #if DEBUG
+        logger.debug("=== DRAWER PANEL SHOW (B2.2) ===")
+        logger.debug("Target frame: x=\(targetFrame.origin.x), y=\(targetFrame.origin.y), w=\(targetFrame.width), h=\(targetFrame.height)")
+        logger.debug("Screen: \(NSScreen.main?.localizedName ?? "unknown")")
+        #endif
+        
         var startFrame = targetFrame
         startFrame.origin.y += DrawerAnimation.slideOffset
         panel.setFrame(startFrame, display: false)
         panel.alphaValue = 0
         
-        // Show the panel (invisible initially)
         panel.orderFrontRegardless()
         
-        // Animate to final position
         NSAnimationContext.runAnimationGroup({ context in
             context.duration = DrawerAnimation.showDuration
             context.timingFunction = DrawerAnimation.showTimingFunction
@@ -108,13 +112,19 @@ final class DrawerPanelController: ObservableObject {
         }, completionHandler: { [weak self] in
             self?.isAnimating = false
             self?.isVisible = true
+            #if DEBUG
+            self?.logger.debug("Drawer panel show animation complete")
+            #endif
         })
     }
     
     private func animateHide(panel: DrawerPanel) {
         isAnimating = true
         
-        // Animate fade out with slight upward movement
+        #if DEBUG
+        logger.debug("=== DRAWER PANEL HIDE (B2.2) ===")
+        #endif
+        
         var endFrame = panel.frame
         endFrame.origin.y += DrawerAnimation.slideOffset / 2
         
@@ -127,9 +137,12 @@ final class DrawerPanelController: ObservableObject {
             panel.animator().setFrame(endFrame, display: true)
         }, completionHandler: { [weak self] in
             panel.orderOut(nil)
-            panel.alphaValue = 1 // Reset for next show
+            panel.alphaValue = 1
             self?.isAnimating = false
             self?.isVisible = false
+            #if DEBUG
+            self?.logger.debug("Drawer panel hide animation complete")
+            #endif
         })
     }
     

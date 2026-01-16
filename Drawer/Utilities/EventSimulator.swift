@@ -164,7 +164,7 @@ final class EventSimulator {
         }
         
         if let mainScreen = NSScreen.main {
-            let menuBarHeight: CGFloat = 24
+            let menuBarHeight = MenuBarMetrics.height
             let menuBarRect = CGRect(
                 x: mainScreen.frame.minX,
                 y: mainScreen.frame.maxY - menuBarHeight,

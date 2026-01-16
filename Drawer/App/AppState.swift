@@ -27,6 +27,8 @@ final class AppState: ObservableObject {
     let eventSimulator: EventSimulator
     let hoverManager: HoverManager
     
+    static let shared = AppState()
+    
     private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "com.drawer", category: "AppState")
     private var cancellables = Set<AnyCancellable>()
     
@@ -52,6 +54,8 @@ final class AppState: ObservableObject {
         self.menuBarManager = MenuBarManager(settings: settings)
         self.drawerController = DrawerPanelController()
         
+        // Using assign(to:) with &$ is safe - no retain cycle created
+        // See: https://developer.apple.com/documentation/combine/publisher/assign(to:)
         menuBarManager.$isCollapsed
             .assign(to: &$isCollapsed)
         
@@ -59,6 +63,17 @@ final class AppState: ObservableObject {
         setupDrawerBindings()
         setupCapturerBindings()
         setupHoverBindings()
+        setupMenuBarFailureObserver()
+    }
+    
+    private func setupMenuBarFailureObserver() {
+        NotificationCenter.default.addObserver(
+            forName: .menuBarSetupFailed,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            self?.logger.error("Menu bar setup failed after all retry attempts")
+        }
     }
     
     private func setupPermissionBindings() {
@@ -162,6 +177,10 @@ final class AppState: ObservableObject {
         }
     }
     
+    deinit {
+        cancellables.removeAll()
+    }
+    
     func showDrawerWithCapture() {
         Task {
             await captureAndShowDrawer()
@@ -169,7 +188,13 @@ final class AppState: ObservableObject {
     }
     
     func captureAndShowDrawer() async {
+        #if DEBUG
+        logger.debug("=== CAPTURE AND SHOW DRAWER (B2.3) ===")
+        logger.debug("hasScreenRecording: \(self.permissions.hasScreenRecording)")
+        #endif
+        
         guard permissions.hasScreenRecording else {
+            logger.warning("Screen recording permission not granted, requesting...")
             permissions.requestScreenRecording()
             return
         }
@@ -177,7 +202,16 @@ final class AppState: ObservableObject {
         drawerManager.setLoading(true)
         
         do {
+            #if DEBUG
+            logger.debug("Starting icon capture...")
+            #endif
+            
             let result = try await iconCapturer.captureHiddenIcons(menuBarManager: menuBarManager)
+            
+            #if DEBUG
+            logger.debug("Capture succeeded: \(result.icons.count) icons")
+            #endif
+            
             drawerManager.updateItems(from: result)
             drawerManager.setLoading(false)
             
@@ -188,16 +222,27 @@ final class AppState: ObservableObject {
                     self?.handleItemTap(item)
                 }
             )
+            
+            #if DEBUG
+            logger.debug("Showing drawer panel with \(self.drawerManager.items.count) items")
+            #endif
+            
             drawerController.show(content: contentView)
             drawerManager.show()
+            
+            #if DEBUG
+            logger.debug("=== END CAPTURE AND SHOW DRAWER ===")
+            #endif
         } catch {
+            logger.error("Capture failed: \(error.localizedDescription)")
             drawerManager.setError(error)
             drawerManager.setLoading(false)
             captureError = error as? CaptureError
             
             let contentView = DrawerContentView(
                 items: [],
-                isLoading: false
+                isLoading: false,
+                error: error
             )
             drawerController.show(content: contentView)
             drawerManager.show()
