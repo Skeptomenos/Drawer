@@ -180,4 +180,27 @@ final class AppStateTests: XCTestCase {
         XCTAssertTrue(sut.hasCompletedOnboarding, "APP-008: completeOnboarding() should set hasCompletedOnboarding to true")
         XCTAssertTrue(sut.settings.hasCompletedOnboarding, "APP-008: settings.hasCompletedOnboarding should also be true (backing store)")
     }
+    
+    // MARK: - APP-009: hasCompletedOnboarding reads from settings
+    
+    func testAPP009_HasCompletedOnboardingReadsFromSettings() async throws {
+        // Arrange
+        sut = createSUT()
+        
+        // Ensure we start with a known state
+        sut.settings.hasCompletedOnboarding = false
+        
+        // Assert initial state reads from settings
+        XCTAssertFalse(sut.hasCompletedOnboarding, "APP-009: hasCompletedOnboarding should read false from settings")
+        
+        // Act - modify settings directly (not through AppState)
+        sut.settings.hasCompletedOnboarding = true
+        
+        // Assert - AppState should reflect the settings change
+        XCTAssertTrue(sut.hasCompletedOnboarding, "APP-009: hasCompletedOnboarding should read true from settings after direct modification")
+        
+        // Verify bidirectional binding - setting through AppState updates settings
+        sut.hasCompletedOnboarding = false
+        XCTAssertFalse(sut.settings.hasCompletedOnboarding, "APP-009: Setting hasCompletedOnboarding on AppState should update settings")
+    }
 }

@@ -8,8 +8,8 @@
 | P1 | Manager State Tests (CRITICAL) | 71 | 71 | 0 | 100% |
 | P2 | Pure Logic Tests | 41 | 41 | 0 | 100% |
 | P3 | Integration Tests | 40 | 40 | 0 | 100% |
-| P4 | App Coordination Tests | 11 | 8 | 3 | 73% |
-| **TOTAL** | | **171** | **167** | **4** | **98%** |
+| P4 | App Coordination Tests | 11 | 9 | 2 | 82% |
+| **TOTAL** | | **171** | **168** | **3** | **98%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -407,7 +407,7 @@ DrawerTests/
 | [x] | APP-006 | toggleDrawer hides when visible | Toggle logic correct | HIGH |
 | [x] | APP-007 | hideDrawer updates all state | Hide updates controller, manager, and flag | HIGH |
 | [x] | APP-008 | completeOnboarding sets flag | Onboarding completion works | MEDIUM |
-| [ ] | APP-009 | hasCompletedOnboarding reads from settings | Settings integration works | MEDIUM |
+| [x] | APP-009 | hasCompletedOnboarding reads from settings | Settings integration works | MEDIUM |
 | [ ] | APP-010 | Permission bindings update state | Permission status syncs | MEDIUM |
 | [ ] | APP-011 | Hover bindings configured | Hover callbacks set up | MEDIUM |
 
