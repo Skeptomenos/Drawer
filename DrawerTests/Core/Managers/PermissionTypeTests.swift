@@ -26,4 +26,21 @@ final class PermissionTypeTests: XCTestCase {
             "PRT-001: Accessibility displayName should be 'Accessibility'"
         )
     }
+    
+    // MARK: - PRT-002: ScreenRecording displayName
+    
+    func testPRT002_ScreenRecordingDisplayName() {
+        // Arrange
+        let sut = PermissionType.screenRecording
+        
+        // Act
+        let displayName = sut.displayName
+        
+        // Assert
+        XCTAssertEqual(
+            displayName,
+            "Screen Recording",
+            "PRT-002: ScreenRecording displayName should be 'Screen Recording'"
+        )
+    }
 }
