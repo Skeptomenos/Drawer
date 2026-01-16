@@ -76,4 +76,35 @@ final class EventSimulatorTests: XCTestCase {
             )
         }
     }
+    
+    // MARK: - EVS-003: simulateClick with invalid coordinates throws invalidCoordinates error
+    
+    func testEVS003_SimulateClickWithInvalidCoordinatesThrowsInvalidCoordinatesError() async throws {
+        // Skip if no accessibility permission (would throw accessibilityNotGranted first)
+        guard AXIsProcessTrusted() else {
+            throw XCTSkip("EVS-003: Accessibility permission required to test coordinate validation")
+        }
+        
+        // Arrange - coordinates far outside any possible screen
+        let invalidPoint = CGPoint(x: -99999, y: -99999)
+        
+        // Act & Assert
+        do {
+            try await sut.simulateClick(at: invalidPoint)
+            XCTFail("EVS-003: simulateClick should throw when coordinates are invalid")
+        } catch let error as EventSimulatorError {
+            XCTAssertEqual(
+                error,
+                .invalidCoordinates,
+                "EVS-003: Error should be invalidCoordinates for out-of-bounds point"
+            )
+            XCTAssertEqual(
+                error.errorDescription,
+                "Invalid screen coordinates",
+                "EVS-003: Error description should match expected message"
+            )
+        } catch {
+            XCTFail("EVS-003: Unexpected error type: \(error)")
+        }
+    }
 }
