@@ -7,9 +7,9 @@
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
 | P1 | Manager State Tests (CRITICAL) | 71 | 71 | 0 | 100% |
 | P2 | Pure Logic Tests | 41 | 41 | 0 | 100% |
-| P3 | Integration Tests | 40 | 31 | 9 | 78% |
+| P3 | Integration Tests | 40 | 37 | 3 | 93% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **171** | **150** | **21** | **88%** |
+| **TOTAL** | | **171** | **156** | **15** | **91%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -351,11 +351,11 @@ DrawerTests/
 | Status | Test ID | Test Case | Expected Result | Notes |
 |--------|---------|-----------|-----------------|-------|
 | [x] | GEM-001 | Initial isRunning is false | isRunning == false on init | LOW |
-| [ ] | GEM-002 | start sets isRunning true | start() sets isRunning=true | LOW |
-| [ ] | GEM-003 | stop sets isRunning false | stop() sets isRunning=false | LOW |
-| [ ] | GEM-004 | start twice is no-op | Double start doesn't create multiple monitors | LOW |
-| [ ] | GEM-005 | stop when not running is no-op | Stop when not running is safe | LOW |
-| [ ] | GEM-006 | deinit stops monitor | deinit calls stop | LOW |
+| [x] | GEM-002 | start sets isRunning true | start() sets isRunning=true | LOW |
+| [x] | GEM-003 | stop sets isRunning false | stop() sets isRunning=false | LOW |
+| [x] | GEM-004 | start twice is no-op | Double start doesn't create multiple monitors | LOW |
+| [x] | GEM-005 | stop when not running is no-op | Stop when not running is safe | LOW |
+| [x] | GEM-006 | deinit stops monitor | deinit calls stop | LOW |
 
 ### 3.5 LocalEventMonitor (`Drawer/Utilities/GlobalEventMonitor.swift`)
 
@@ -363,7 +363,7 @@ DrawerTests/
 
 | Status | Test ID | Test Case | Expected Result | Notes |
 |--------|---------|-----------|-----------------|-------|
-| [ ] | LEM-001 | Initial isRunning is false | isRunning == false on init | LOW |
+| [x] | LEM-001 | Initial isRunning is false | isRunning == false on init | LOW |
 | [ ] | LEM-002 | start sets isRunning true | start() sets isRunning=true | LOW |
 | [ ] | LEM-003 | stop sets isRunning false | stop() sets isRunning=false | LOW |
 
