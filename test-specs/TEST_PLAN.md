@@ -6,10 +6,10 @@
 |----------|----------|-------|------|-----------|----------|
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
 | P1 | Manager State Tests (CRITICAL) | 71 | 71 | 0 | 100% |
-| P2 | Pure Logic Tests | 35 | 30 | 5 | 86% |
+| P2 | Pure Logic Tests | 35 | 34 | 1 | 97% |
 | P3 | Integration Tests | 40 | 0 | 40 | 0% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **165** | **108** | **57** | **65%** |
+| **TOTAL** | | **165** | **112** | **53** | **68%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -268,10 +268,10 @@ DrawerTests/
 
 | Status | Test ID | Test Case | Expected Result | Notes |
 |--------|---------|-----------|-----------------|-------|
-| [ ] | ESE-001 | accessibilityNotGranted description | Error description correct | LOW |
-| [ ] | ESE-002 | eventCreationFailed description | Error description correct | LOW |
-| [ ] | ESE-003 | eventPostingFailed description | Error description correct | LOW |
-| [ ] | ESE-004 | invalidCoordinates description | Error description correct | LOW |
+| [x] | ESE-001 | accessibilityNotGranted description | Error description correct | LOW |
+| [x] | ESE-002 | eventCreationFailed description | Error description correct | LOW |
+| [x] | ESE-003 | eventPostingFailed description | Error description correct | LOW |
+| [x] | ESE-004 | invalidCoordinates description | Error description correct | LOW |
 
 ### 2.5 PermissionType (`Drawer/Core/Managers/PermissionManager.swift`)
 

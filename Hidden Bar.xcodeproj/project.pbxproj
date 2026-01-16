@@ -24,6 +24,7 @@
 		DRAWERTEST00100000000016 /* DrawerItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000016 /* DrawerItemTests.swift */; };
 		DRAWERTEST00100000000017 /* GlobalHotkeyConfigTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000017 /* GlobalHotkeyConfigTests.swift */; };
 		DRAWERTEST00100000000018 /* CaptureErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000018 /* CaptureErrorTests.swift */; };
+		DRAWERTEST00100000000019 /* EventSimulatorErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000019 /* EventSimulatorErrorTests.swift */; };
 		DRAWER001000000000000001 /* DrawerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000001 /* DrawerApp.swift */; };
 		DRAWER001000000000000002 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000002 /* AppState.swift */; };
 		DRAWER001000000000000003 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000003 /* AppDelegate.swift */; };
@@ -133,6 +134,7 @@
 		DRAWERTEST00200000000016 /* DrawerItemTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerItemTests.swift; sourceTree = "<group>"; };
 		DRAWERTEST00200000000017 /* GlobalHotkeyConfigTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalHotkeyConfigTests.swift; sourceTree = "<group>"; };
 		DRAWERTEST00200000000018 /* CaptureErrorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureErrorTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000019 /* EventSimulatorErrorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventSimulatorErrorTests.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000001 /* DrawerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerApp.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000002 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000003 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -252,10 +254,19 @@
 			children = (
 				DRAWERTEST00400000000003 /* Core */,
 				DRAWERTEST00400000000005 /* Models */,
+				DRAWERTEST00400000000007 /* Utilities */,
 				DRAWERTEST00400000000002 /* Mocks */,
 				DRAWERTEST00200000000001 /* SetupVerificationTests.swift */,
 			);
 			path = DrawerTests;
+			sourceTree = "<group>";
+		};
+		DRAWERTEST00400000000007 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				DRAWERTEST00200000000019 /* EventSimulatorErrorTests.swift */,
+			);
+			path = Utilities;
 			sourceTree = "<group>";
 		};
 		DRAWERTEST00400000000005 /* Models */ = {
@@ -800,6 +811,7 @@
 				DRAWERTEST00100000000016 /* DrawerItemTests.swift in Sources */,
 				DRAWERTEST00100000000017 /* GlobalHotkeyConfigTests.swift in Sources */,
 				DRAWERTEST00100000000018 /* CaptureErrorTests.swift in Sources */,
+				DRAWERTEST00100000000019 /* EventSimulatorErrorTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
