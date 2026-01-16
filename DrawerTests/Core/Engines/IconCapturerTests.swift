@@ -276,4 +276,113 @@ final class IconCapturerTests: XCTestCase {
             "ICN-007: Icon count should be less than the \(targetIconCount) that would fit in the image"
         )
     }
+    
+    // MARK: - ICN-008: sliceIconsUsingFixedWidth correct spacing
+    
+    func testICN008_SliceIconsUsingFixedWidthCorrectSpacing() async throws {
+        // Arrange
+        let capturer = IconCapturer()
+        
+        // Create an image with exact dimensions for 3 icons
+        // Each icon: 22px width + 4px spacing = 26px step size
+        // At 2x scale: (22 * 2) + (4 * 2) = 52px per icon step
+        let scale: CGFloat = 2.0
+        let standardIconWidth: CGFloat = 22
+        let iconSpacing: CGFloat = 4
+        let iconWidthPixels = standardIconWidth * scale
+        let spacingPixels = iconSpacing * scale
+        let stepSize = iconWidthPixels + spacingPixels
+        let expectedIconCount = 3
+        let imageWidth = Int(stepSize * CGFloat(expectedIconCount))
+        let imageHeight = Int(24 * scale)
+        
+        guard let colorSpace = CGColorSpace(name: CGColorSpace.sRGB),
+              let context = CGContext(
+                  data: nil,
+                  width: imageWidth,
+                  height: imageHeight,
+                  bitsPerComponent: 8,
+                  bytesPerRow: 0,
+                  space: colorSpace,
+                  bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+              ) else {
+            XCTFail("ICN-008: Failed to create test image context")
+            return
+        }
+        
+        // Fill with a solid color to create a valid image
+        context.setFillColor(CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1.0))
+        context.fill(CGRect(x: 0, y: 0, width: imageWidth, height: imageHeight))
+        
+        guard let testImage = context.makeImage() else {
+            XCTFail("ICN-008: Failed to create test image")
+            return
+        }
+        
+        // Act
+        let icons = capturer.sliceIconsUsingFixedWidth(from: testImage)
+        
+        // Assert
+        XCTAssertEqual(
+            icons.count,
+            expectedIconCount,
+            "ICN-008: Should create exactly \(expectedIconCount) icons"
+        )
+        
+        // Verify each icon has correct width (22px in logical coordinates)
+        for (index, icon) in icons.enumerated() {
+            XCTAssertEqual(
+                icon.originalFrame.width,
+                standardIconWidth,
+                accuracy: 0.01,
+                "ICN-008: Icon \(index) should have width of \(standardIconWidth)px"
+            )
+        }
+        
+        // Verify spacing between icons (4px gap between consecutive icons)
+        // The originalFrame.x values should be at 0, 26, 52 (in logical coordinates)
+        // which means step size of 26px (22px icon + 4px spacing)
+        let expectedStepSize = standardIconWidth + iconSpacing
+        
+        for i in 1..<icons.count {
+            let previousIconX = icons[i - 1].originalFrame.origin.x
+            let currentIconX = icons[i].originalFrame.origin.x
+            let actualStepSize = currentIconX - previousIconX
+            
+            XCTAssertEqual(
+                actualStepSize,
+                expectedStepSize,
+                accuracy: 0.01,
+                "ICN-008: Step size between icon \(i - 1) and \(i) should be \(expectedStepSize)px (22px width + 4px spacing)"
+            )
+        }
+        
+        // Verify first icon starts at x=0
+        XCTAssertEqual(
+            icons[0].originalFrame.origin.x,
+            0,
+            accuracy: 0.01,
+            "ICN-008: First icon should start at x=0"
+        )
+        
+        // Verify second icon starts at x=26 (22 + 4)
+        if icons.count > 1 {
+            XCTAssertEqual(
+                icons[1].originalFrame.origin.x,
+                expectedStepSize,
+                accuracy: 0.01,
+                "ICN-008: Second icon should start at x=\(expectedStepSize)"
+            )
+        }
+        
+        // Verify third icon starts at x=52 (2 * 26)
+        if icons.count > 2 {
+            XCTAssertEqual(
+                icons[2].originalFrame.origin.x,
+                expectedStepSize * 2,
+                accuracy: 0.01,
+                "ICN-008: Third icon should start at x=\(expectedStepSize * 2)"
+            )
+        }
+    }
 }
