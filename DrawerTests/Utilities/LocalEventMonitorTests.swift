@@ -44,4 +44,37 @@ final class LocalEventMonitorTests: XCTestCase {
             "LEM-001: isRunning should be false on init before start() is called"
         )
     }
+    
+    // MARK: - LEM-002: start sets isRunning true
+    
+    func testLEM002_StartSetsIsRunningTrue() {
+        // Arrange
+        XCTAssertFalse(sut.isRunning, "Precondition: isRunning should be false before start")
+        
+        // Act
+        sut.start()
+        
+        // Assert
+        XCTAssertTrue(
+            sut.isRunning,
+            "LEM-002: isRunning should be true after start() is called"
+        )
+    }
+    
+    // MARK: - LEM-003: stop sets isRunning false
+    
+    func testLEM003_StopSetsIsRunningFalse() {
+        // Arrange
+        sut.start()
+        XCTAssertTrue(sut.isRunning, "Precondition: isRunning should be true after start")
+        
+        // Act
+        sut.stop()
+        
+        // Assert
+        XCTAssertFalse(
+            sut.isRunning,
+            "LEM-003: isRunning should be false after stop() is called"
+        )
+    }
 }

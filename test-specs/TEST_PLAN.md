@@ -7,9 +7,9 @@
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
 | P1 | Manager State Tests (CRITICAL) | 71 | 71 | 0 | 100% |
 | P2 | Pure Logic Tests | 41 | 41 | 0 | 100% |
-| P3 | Integration Tests | 40 | 37 | 3 | 93% |
+| P3 | Integration Tests | 40 | 39 | 1 | 98% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **171** | **156** | **15** | **91%** |
+| **TOTAL** | | **171** | **158** | **13** | **92%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -364,8 +364,8 @@ DrawerTests/
 | Status | Test ID | Test Case | Expected Result | Notes |
 |--------|---------|-----------|-----------------|-------|
 | [x] | LEM-001 | Initial isRunning is false | isRunning == false on init | LOW |
-| [ ] | LEM-002 | start sets isRunning true | start() sets isRunning=true | LOW |
-| [ ] | LEM-003 | stop sets isRunning false | stop() sets isRunning=false | LOW |
+| [x] | LEM-002 | start sets isRunning true | start() sets isRunning=true | LOW |
+| [x] | LEM-003 | stop sets isRunning false | stop() sets isRunning=false | LOW |
 
 ### 3.6 WindowInfo (`Drawer/Utilities/WindowInfo.swift`)
 
