@@ -209,4 +209,43 @@ final class EventSimulatorTests: XCTestCase {
             // They indicate the point was valid but something else failed
         }
     }
+    
+    // MARK: - EVS-007: saveCursorPosition returns current location
+    
+    func testEVS007_SaveCursorPositionReturnsCurrentLocation() {
+        // Arrange
+        // Get the current mouse location directly from NSEvent for comparison
+        let expectedLocation = NSEvent.mouseLocation
+        
+        // Act
+        let savedPosition = sut.saveCursorPosition()
+        
+        // Assert
+        // The saved position should match NSEvent.mouseLocation
+        // Allow small tolerance for timing differences (mouse could move slightly between calls)
+        let tolerance: CGFloat = 1.0
+        
+        XCTAssertEqual(
+            savedPosition.x,
+            expectedLocation.x,
+            accuracy: tolerance,
+            "EVS-007: saveCursorPosition x-coordinate should match NSEvent.mouseLocation.x"
+        )
+        XCTAssertEqual(
+            savedPosition.y,
+            expectedLocation.y,
+            accuracy: tolerance,
+            "EVS-007: saveCursorPosition y-coordinate should match NSEvent.mouseLocation.y"
+        )
+        
+        // Verify the point is a valid screen coordinate (not NaN or infinity)
+        XCTAssertFalse(
+            savedPosition.x.isNaN || savedPosition.x.isInfinite,
+            "EVS-007: saveCursorPosition x-coordinate should be a valid number"
+        )
+        XCTAssertFalse(
+            savedPosition.y.isNaN || savedPosition.y.isInfinite,
+            "EVS-007: saveCursorPosition y-coordinate should be a valid number"
+        )
+    }
 }
