@@ -127,4 +127,41 @@ final class PermissionManagerTests: XCTestCase {
             )
         }
     }
+    
+    // MARK: - PRM-005: isMissingPermissions is inverse of hasAllPermissions
+    
+    func testPRM005_IsMissingPermissionsIsInverseOfHasAllPermissions() async throws {
+        // Arrange
+        let hasAllPermissions = sut.hasAllPermissions
+        
+        // Act
+        let isMissingPermissions = sut.isMissingPermissions
+        
+        // Assert
+        XCTAssertEqual(
+            isMissingPermissions,
+            !hasAllPermissions,
+            "PRM-005: isMissingPermissions should be the inverse of hasAllPermissions"
+        )
+        
+        // Additional verification: both properties should never have the same value
+        XCTAssertNotEqual(
+            isMissingPermissions,
+            hasAllPermissions,
+            "PRM-005: isMissingPermissions and hasAllPermissions should always be opposite"
+        )
+        
+        // Verify the relationship holds: isMissingPermissions == !hasAllPermissions
+        if hasAllPermissions {
+            XCTAssertFalse(
+                isMissingPermissions,
+                "PRM-005: isMissingPermissions should be false when hasAllPermissions is true"
+            )
+        } else {
+            XCTAssertTrue(
+                isMissingPermissions,
+                "PRM-005: isMissingPermissions should be true when hasAllPermissions is false"
+            )
+        }
+    }
 }
