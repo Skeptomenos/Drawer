@@ -151,4 +151,64 @@ final class IconCapturerTests: XCTestCase {
             "ICN-005: lastError should be nil after clearLastCapture"
         )
     }
+    
+    // MARK: - ICN-006: sliceIconsUsingFixedWidth creates icons
+    
+    func testICN006_SliceIconsUsingFixedWidthCreatesIcons() async throws {
+        let capturer = IconCapturer()
+        
+        let scale: CGFloat = 2.0
+        let iconWidthPixels = 22 * scale
+        let spacingPixels = 4 * scale
+        let stepSize = iconWidthPixels + spacingPixels
+        let expectedIconCount = 5
+        let imageWidth = Int(stepSize * CGFloat(expectedIconCount))
+        let imageHeight = Int(24 * scale)
+        
+        guard let colorSpace = CGColorSpace(name: CGColorSpace.sRGB),
+              let context = CGContext(
+                  data: nil,
+                  width: imageWidth,
+                  height: imageHeight,
+                  bitsPerComponent: 8,
+                  bytesPerRow: 0,
+                  space: colorSpace,
+                  bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+              ) else {
+            XCTFail("ICN-006: Failed to create test image context")
+            return
+        }
+        
+        context.setFillColor(CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1.0))
+        context.fill(CGRect(x: 0, y: 0, width: imageWidth, height: imageHeight))
+        
+        guard let testImage = context.makeImage() else {
+            XCTFail("ICN-006: Failed to create test image")
+            return
+        }
+        
+        let icons = capturer.sliceIconsUsingFixedWidth(from: testImage)
+        
+        XCTAssertFalse(
+            icons.isEmpty,
+            "ICN-006: sliceIconsUsingFixedWidth should create icons from valid image"
+        )
+        XCTAssertEqual(
+            icons.count,
+            expectedIconCount,
+            "ICN-006: Should create \(expectedIconCount) icons from \(imageWidth)px wide image"
+        )
+        
+        for (index, icon) in icons.enumerated() {
+            XCTAssertEqual(
+                icon.originalFrame.width,
+                22,
+                "ICN-006: Icon \(index) should have width of 22 (standardIconWidth)"
+            )
+            XCTAssertNotNil(
+                icon.id,
+                "ICN-006: Icon \(index) should have a valid ID"
+            )
+        }
+    }
 }
