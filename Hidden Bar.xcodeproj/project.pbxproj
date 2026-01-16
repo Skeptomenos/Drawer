@@ -26,6 +26,7 @@
 		DRAWERTEST00100000000018 /* CaptureErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000018 /* CaptureErrorTests.swift */; };
 		DRAWERTEST00100000000019 /* EventSimulatorErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000019 /* EventSimulatorErrorTests.swift */; };
 		DRAWERTEST00100000000020 /* PermissionTypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000020 /* PermissionTypeTests.swift */; };
+		DRAWERTEST00100000000021 /* PermissionManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000021 /* PermissionManagerTests.swift */; };
 		DRAWER001000000000000001 /* DrawerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000001 /* DrawerApp.swift */; };
 		DRAWER001000000000000002 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000002 /* AppState.swift */; };
 		DRAWER001000000000000003 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000003 /* AppDelegate.swift */; };
@@ -137,6 +138,7 @@
 		DRAWERTEST00200000000018 /* CaptureErrorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureErrorTests.swift; sourceTree = "<group>"; };
 		DRAWERTEST00200000000019 /* EventSimulatorErrorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventSimulatorErrorTests.swift; sourceTree = "<group>"; };
 		DRAWERTEST00200000000020 /* PermissionTypeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionTypeTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000021 /* PermissionManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionManagerTests.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000001 /* DrawerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerApp.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000002 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000003 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -306,6 +308,7 @@
 				DRAWERTEST00200000000014 /* HoverManagerTests.swift */,
 				DRAWERTEST00200000000015 /* LaunchAtLoginManagerTests.swift */,
 				DRAWERTEST00200000000020 /* PermissionTypeTests.swift */,
+				DRAWERTEST00200000000021 /* PermissionManagerTests.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -816,6 +819,7 @@
 				DRAWERTEST00100000000018 /* CaptureErrorTests.swift in Sources */,
 				DRAWERTEST00100000000019 /* EventSimulatorErrorTests.swift in Sources */,
 				DRAWERTEST00100000000020 /* PermissionTypeTests.swift in Sources */,
+				DRAWERTEST00100000000021 /* PermissionManagerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
