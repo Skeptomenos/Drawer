@@ -203,4 +203,80 @@ final class AppStateTests: XCTestCase {
         sut.hasCompletedOnboarding = false
         XCTAssertFalse(sut.settings.hasCompletedOnboarding, "APP-009: Setting hasCompletedOnboarding on AppState should update settings")
     }
+    
+    // MARK: - APP-010: Permission bindings update state
+    
+    func testAPP010_PermissionBindingsUpdateState() async throws {
+        sut = createSUT()
+        
+        let initialPermissionState = sut.permissions.hasAllPermissions
+        
+        XCTAssertEqual(
+            sut.hasRequiredPermissions,
+            initialPermissionState,
+            "APP-010: hasRequiredPermissions should be initialized from permissions.hasAllPermissions"
+        )
+        
+        let expectation = XCTestExpectation(description: "Permission status changed")
+        
+        var receivedUpdate = false
+        sut.permissions.permissionStatusChanged
+            .sink { [weak self] in
+                receivedUpdate = true
+                expectation.fulfill()
+                XCTAssertEqual(
+                    self?.sut.hasRequiredPermissions,
+                    self?.sut.permissions.hasAllPermissions,
+                    "APP-010: hasRequiredPermissions should sync when permissionStatusChanged fires"
+                )
+            }
+            .store(in: &cancellables)
+        
+        sut.permissions.refreshAllStatuses()
+        
+        await fulfillment(of: [expectation], timeout: 2.0)
+        
+        XCTAssertTrue(receivedUpdate, "APP-010: permissionStatusChanged publisher should have fired")
+    }
+    
+    // MARK: - APP-011: Hover bindings configured
+    
+    func testAPP011_HoverBindingsConfigured() async throws {
+        sut = createSUT()
+        
+        XCTAssertNotNil(
+            sut.hoverManager.onShouldShowDrawer,
+            "APP-011: onShouldShowDrawer callback should be configured"
+        )
+        XCTAssertNotNil(
+            sut.hoverManager.onShouldHideDrawer,
+            "APP-011: onShouldHideDrawer callback should be configured"
+        )
+        
+        let initialShowOnHover = sut.settings.showOnHover
+        
+        if initialShowOnHover {
+            XCTAssertTrue(
+                sut.hoverManager.isMonitoring,
+                "APP-011: HoverManager should be monitoring when showOnHover is true"
+            )
+        }
+        
+        sut.settings.showOnHover = true
+        try await Task.sleep(for: .milliseconds(100))
+        
+        XCTAssertTrue(
+            sut.hoverManager.isMonitoring,
+            "APP-011: HoverManager should start monitoring when showOnHover becomes true"
+        )
+        
+        sut.drawerManager.show()
+        sut.drawerController.show(content: DrawerContentView(items: [], isLoading: false))
+        try await Task.sleep(for: .milliseconds(400))
+        
+        XCTAssertTrue(sut.isDrawerVisible, "APP-011: isDrawerVisible should be true after showing drawer")
+        
+        sut.settings.showOnHover = false
+        try await Task.sleep(for: .milliseconds(100))
+    }
 }
