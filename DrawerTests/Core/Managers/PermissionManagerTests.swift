@@ -296,4 +296,32 @@ final class PermissionManagerTests: XCTestCase {
             "PRM-009: isGranted(.screenRecording) should be consistent with status(for: .screenRecording).isGranted"
         )
     }
+    
+    // MARK: - PRM-010: permissionStatusChanged publisher fires on status change
+    
+    func testPRM010_PermissionStatusChangedPublisherFiresOnStatusChange() async throws {
+        // Arrange
+        var receivedEvents: [Void] = []
+        let expectation = XCTestExpectation(description: "PRM-010: Publisher should fire on status change")
+        expectation.assertForOverFulfill = false
+        
+        sut.permissionStatusChanged
+            .sink { _ in
+                receivedEvents.append(())
+                expectation.fulfill()
+            }
+            .store(in: &cancellables)
+        
+        // Act
+        sut.refreshAccessibilityStatus()
+        
+        // Assert
+        await fulfillment(of: [expectation], timeout: 2.0)
+        
+        XCTAssertGreaterThanOrEqual(
+            receivedEvents.count,
+            1,
+            "PRM-010: permissionStatusChanged should fire when status is refreshed"
+        )
+    }
 }

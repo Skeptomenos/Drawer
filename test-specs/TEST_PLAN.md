@@ -7,9 +7,9 @@
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
 | P1 | Manager State Tests (CRITICAL) | 71 | 71 | 0 | 100% |
 | P2 | Pure Logic Tests | 41 | 41 | 0 | 100% |
-| P3 | Integration Tests | 40 | 9 | 31 | 23% |
+| P3 | Integration Tests | 40 | 10 | 30 | 25% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **171** | **128** | **43** | **75%** |
+| **TOTAL** | | **171** | **129** | **42** | **75%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -308,7 +308,7 @@ DrawerTests/
 | [x] | PRM-007 | status for screenRecording | status(for: .screenRecording) returns correct status | HIGH |
 | [x] | PRM-008 | isGranted accessibility | isGranted(.accessibility) works | HIGH |
 | [x] | PRM-009 | isGranted screenRecording | isGranted(.screenRecording) works | HIGH |
-| [ ] | PRM-010 | permissionStatusChanged publisher | Publisher fires on status change | MEDIUM |
+| [x] | PRM-010 | permissionStatusChanged publisher | Publisher fires on status change | MEDIUM |
 | [ ] | PRM-011 | refreshAllStatuses updates published state | Refresh updates @Published properties | MEDIUM |
 
 ### 3.2 IconCapturer (`Drawer/Core/Engines/IconCapturer.swift`)
