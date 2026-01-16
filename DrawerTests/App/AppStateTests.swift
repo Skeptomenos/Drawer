@@ -131,4 +131,35 @@ final class AppStateTests: XCTestCase {
         XCTAssertFalse(sut.drawerManager.isVisible, "APP-006: drawerManager.isVisible should be false after hide")
         XCTAssertFalse(sut.isDrawerVisible, "APP-006: isDrawerVisible should be false after hide")
     }
+    
+    // MARK: - APP-007: hideDrawer updates all state
+    
+    func testAPP007_HideDrawerUpdatesAllState() async throws {
+        // Arrange
+        sut = createSUT()
+        
+        // Show the drawer first to establish visible state
+        sut.drawerManager.show()
+        sut.drawerController.show(content: DrawerContentView(items: [], isLoading: false))
+        try await Task.sleep(for: .milliseconds(400))
+        
+        // Verify preconditions - all three should be visible/true
+        XCTAssertTrue(sut.drawerManager.isVisible, "Precondition: drawerManager should be visible")
+        XCTAssertTrue(sut.drawerController.isVisible, "Precondition: drawerController should be visible")
+        XCTAssertTrue(sut.isDrawerVisible, "Precondition: isDrawerVisible flag should be true")
+        
+        // Act
+        sut.hideDrawer()
+        try await Task.sleep(for: .milliseconds(250))
+        
+        // Assert - verify ALL three state updates from hideDrawer()
+        // 1. drawerController.hide() was called
+        XCTAssertFalse(sut.drawerController.isVisible, "APP-007: drawerController should be hidden after hideDrawer()")
+        
+        // 2. drawerManager.hide() was called
+        XCTAssertFalse(sut.drawerManager.isVisible, "APP-007: drawerManager should be hidden after hideDrawer()")
+        
+        // 3. isDrawerVisible flag was set to false
+        XCTAssertFalse(sut.isDrawerVisible, "APP-007: isDrawerVisible flag should be false after hideDrawer()")
+    }
 }
