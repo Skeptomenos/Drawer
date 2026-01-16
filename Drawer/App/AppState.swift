@@ -229,6 +229,7 @@ final class AppState: ObservableObject {
             
             drawerController.show(content: contentView)
             drawerManager.show()
+            hoverManager.updateDrawerFrame(drawerController.panelFrame)
             
             #if DEBUG
             logger.debug("=== END CAPTURE AND SHOW DRAWER ===")

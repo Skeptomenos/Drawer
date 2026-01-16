@@ -41,6 +41,10 @@ final class DrawerPanelController: ObservableObject {
     // MARK: - Properties
     
     private var panel: DrawerPanel?
+    
+    var panelFrame: CGRect {
+        panel?.frame ?? .zero
+    }
     private var hostingView: NSHostingView<AnyView>?
     private var cancellables = Set<AnyCancellable>()
     private var isAnimating: Bool = false
