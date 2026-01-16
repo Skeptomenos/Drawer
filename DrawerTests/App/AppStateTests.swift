@@ -91,4 +91,21 @@ final class AppStateTests: XCTestCase {
         
         XCTAssertFalse(sut.isCollapsed, "APP-004: toggleMenuBar should delegate to manager and change isCollapsed state")
     }
+    
+    // MARK: - APP-005: toggleDrawer shows when hidden
+    
+    func testAPP005_ToggleDrawerShowsWhenHidden() async throws {
+        // Arrange
+        sut = createSUT()
+        sut.hideDrawer()
+        XCTAssertFalse(sut.isDrawerVisible, "Precondition: drawer should be hidden")
+        
+        // Act
+        sut.drawerManager.show()
+        sut.drawerController.show(content: DrawerContentView(items: [], isLoading: false))
+        try await Task.sleep(for: .milliseconds(100))
+        
+        // Assert
+        XCTAssertTrue(sut.drawerManager.isVisible, "APP-005: show() should set drawerManager.isVisible to true")
+    }
 }

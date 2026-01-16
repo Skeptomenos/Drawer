@@ -8,8 +8,8 @@
 | P1 | Manager State Tests (CRITICAL) | 71 | 71 | 0 | 100% |
 | P2 | Pure Logic Tests | 41 | 41 | 0 | 100% |
 | P3 | Integration Tests | 40 | 40 | 0 | 100% |
-| P4 | App Coordination Tests | 11 | 4 | 7 | 36% |
-| **TOTAL** | | **171** | **163** | **8** | **95%** |
+| P4 | App Coordination Tests | 11 | 5 | 6 | 45% |
+| **TOTAL** | | **171** | **164** | **7** | **96%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -403,7 +403,7 @@ DrawerTests/
 | [x] | APP-002 | Initial isDrawerVisible is false | Initial state correct | HIGH |
 | [x] | APP-003 | Initial isCapturing is false | Initial state correct | HIGH |
 | [x] | APP-004 | toggleMenuBar delegates to manager | Delegation works | HIGH |
-| [ ] | APP-005 | toggleDrawer shows when hidden | Toggle logic correct | HIGH |
+| [x] | APP-005 | toggleDrawer shows when hidden | Toggle logic correct | HIGH |
 | [ ] | APP-006 | toggleDrawer hides when visible | Toggle logic correct | HIGH |
 | [ ] | APP-007 | hideDrawer updates all state | Hide updates controller, manager, and flag | HIGH |
 | [ ] | APP-008 | completeOnboarding sets flag | Onboarding completion works | MEDIUM |
