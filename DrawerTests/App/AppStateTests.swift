@@ -69,4 +69,14 @@ final class AppStateTests: XCTestCase {
         // Assert
         XCTAssertFalse(sut.isDrawerVisible, "APP-002: Initial state isDrawerVisible should be false")
     }
+    
+    // MARK: - APP-003: Initial isCapturing is false
+    
+    func testAPP003_InitialIsCapturingIsFalse() async throws {
+        // Arrange & Act
+        sut = createSUT()
+        
+        // Assert
+        XCTAssertFalse(sut.isCapturing, "APP-003: Initial state isCapturing should be false")
+    }
 }
