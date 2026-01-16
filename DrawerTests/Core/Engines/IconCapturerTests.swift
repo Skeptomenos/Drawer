@@ -113,4 +113,42 @@ final class IconCapturerTests: XCTestCase {
             XCTFail("ICN-004: Expected CaptureError.permissionDenied but got \(error)")
         }
     }
+    
+    // MARK: - ICN-005: clearLastCapture resets state
+    
+    func testICN005_ClearLastCaptureResetsState() async throws {
+        // Arrange
+        // First, trigger an error to set lastError
+        let mockPermissionManager = MockPermissionManager()
+        mockPermissionManager.mockHasScreenRecording = false
+        
+        let capturer = IconCapturer(permissionManager: mockPermissionManager)
+        let menuBarManager = MenuBarManager()
+        
+        // Trigger capture to set lastError
+        do {
+            _ = try await capturer.captureHiddenIcons(menuBarManager: menuBarManager)
+        } catch {
+            // Expected to throw permissionDenied
+        }
+        
+        // Verify lastError is set before clearing
+        XCTAssertNotNil(
+            capturer.lastError,
+            "ICN-005: lastError should be set before clearing"
+        )
+        
+        // Act
+        capturer.clearLastCapture()
+        
+        // Assert
+        XCTAssertNil(
+            capturer.lastCaptureResult,
+            "ICN-005: lastCaptureResult should be nil after clearLastCapture"
+        )
+        XCTAssertNil(
+            capturer.lastError,
+            "ICN-005: lastError should be nil after clearLastCapture"
+        )
+    }
 }
