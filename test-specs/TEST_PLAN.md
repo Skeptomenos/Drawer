@@ -7,9 +7,9 @@
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
 | P1 | Manager State Tests (CRITICAL) | 71 | 71 | 0 | 100% |
 | P2 | Pure Logic Tests | 41 | 41 | 0 | 100% |
-| P3 | Integration Tests | 40 | 30 | 10 | 75% |
+| P3 | Integration Tests | 40 | 31 | 9 | 78% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **171** | **149** | **22** | **87%** |
+| **TOTAL** | | **171** | **150** | **21** | **88%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -350,7 +350,7 @@ DrawerTests/
 
 | Status | Test ID | Test Case | Expected Result | Notes |
 |--------|---------|-----------|-----------------|-------|
-| [ ] | GEM-001 | Initial isRunning is false | isRunning == false on init | LOW |
+| [x] | GEM-001 | Initial isRunning is false | isRunning == false on init | LOW |
 | [ ] | GEM-002 | start sets isRunning true | start() sets isRunning=true | LOW |
 | [ ] | GEM-003 | stop sets isRunning false | stop() sets isRunning=false | LOW |
 | [ ] | GEM-004 | start twice is no-op | Double start doesn't create multiple monitors | LOW |
