@@ -508,4 +508,45 @@ final class IconCapturerTests: XCTestCase {
             "ICN-010: createCompositeImage should return nil for empty icons array"
         )
     }
+    
+    // MARK: - ICN-011: Capture already in progress skips
+    
+    func testICN011_CaptureAlreadyInProgressSkips() async throws {
+        // Arrange
+        let mockPermissionManager = MockPermissionManager()
+        mockPermissionManager.mockHasScreenRecording = true
+        
+        let capturer = IconCapturer(permissionManager: mockPermissionManager)
+        let menuBarManager = MenuBarManager()
+        
+        capturer.setIsCapturingForTesting(true)
+        
+        // Act & Assert
+        do {
+            _ = try await capturer.captureHiddenIcons(menuBarManager: menuBarManager)
+            XCTFail("ICN-011: Should throw when capture is already in progress")
+        } catch let error as CaptureError {
+            switch error {
+            case .systemError(let nsError as NSError):
+                XCTAssertTrue(
+                    nsError.localizedDescription.contains("Capture already in progress"),
+                    "ICN-011: Error message should indicate capture in progress, got: \(nsError.localizedDescription)"
+                )
+                XCTAssertEqual(
+                    nsError.domain,
+                    "IconCapturer",
+                    "ICN-011: Error domain should be IconCapturer"
+                )
+                XCTAssertEqual(
+                    nsError.code,
+                    -1,
+                    "ICN-011: Error code should be -1"
+                )
+            default:
+                XCTFail("ICN-011: Expected systemError, got: \(error)")
+            }
+        }
+        
+        capturer.setIsCapturingForTesting(false)
+    }
 }

@@ -92,6 +92,12 @@ final class IconCapturer: ObservableObject {
         self.permissionManager = permissionManager
     }
     
+    #if DEBUG
+    func setIsCapturingForTesting(_ value: Bool) {
+        isCapturing = value
+    }
+    #endif
+    
     // MARK: - Public API
     
     func captureHiddenIcons(menuBarManager: MenuBarManager) async throws -> MenuBarCaptureResult {
