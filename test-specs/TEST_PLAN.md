@@ -7,9 +7,9 @@
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
 | P1 | Manager State Tests (CRITICAL) | 71 | 71 | 0 | 100% |
 | P2 | Pure Logic Tests | 41 | 41 | 0 | 100% |
-| P3 | Integration Tests | 40 | 39 | 1 | 98% |
+| P3 | Integration Tests | 40 | 40 | 0 | 100% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **171** | **158** | **13** | **92%** |
+| **TOTAL** | | **171** | **162** | **9** | **95%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -373,10 +373,10 @@ DrawerTests/
 
 | Status | Test ID | Test Case | Expected Result | Notes |
 |--------|---------|-----------|-----------------|-------|
-| [ ] | WIN-001 | isMenuBarItem with status window level | Layer check works | LOW |
-| [ ] | WIN-002 | isMenuBarItem with other level | Non-status window returns false | LOW |
-| [ ] | WIN-003 | init from dictionary valid data | Initialization from CFDictionary works | LOW |
-| [ ] | WIN-004 | init from dictionary invalid data | nil returned for invalid data | LOW |
+| [x] | WIN-001 | isMenuBarItem with status window level | Layer check works | LOW |
+| [x] | WIN-002 | isMenuBarItem with other level | Non-status window returns false | LOW |
+| [x] | WIN-003 | init from dictionary valid data | Initialization from CFDictionary works | LOW |
+| [x] | WIN-004 | init from dictionary invalid data | nil returned for invalid data | LOW |
 
 ### 3.7 MenuBarMetrics (`Drawer/Utilities/MenuBarMetrics.swift`)
 
