@@ -115,4 +115,34 @@ final class PermissionTypeTests: XCTestCase {
             "PRT-006: ScreenRecording systemSettingsURL should point to Privacy_ScreenCapture pane"
         )
     }
+    
+    // MARK: - PRT-007: allCases includes both cases
+    
+    func testPRT007_AllCasesIncludesBothCases() {
+        // Arrange
+        let expectedCases: Set<PermissionType> = [.accessibility, .screenRecording]
+        
+        // Act
+        let allCases = Set(PermissionType.allCases)
+        
+        // Assert
+        XCTAssertEqual(
+            allCases.count,
+            2,
+            "PRT-007: allCases should contain exactly 2 cases"
+        )
+        XCTAssertEqual(
+            allCases,
+            expectedCases,
+            "PRT-007: allCases should include both .accessibility and .screenRecording"
+        )
+        XCTAssertTrue(
+            PermissionType.allCases.contains(.accessibility),
+            "PRT-007: allCases should contain .accessibility"
+        )
+        XCTAssertTrue(
+            PermissionType.allCases.contains(.screenRecording),
+            "PRT-007: allCases should contain .screenRecording"
+        )
+    }
 }
