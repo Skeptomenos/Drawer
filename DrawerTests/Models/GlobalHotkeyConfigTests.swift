@@ -424,4 +424,120 @@ final class GlobalHotkeyConfigTests: XCTestCase {
         let config6 = GlobalHotkeyConfig.fromLegacy(data: arrayData)
         XCTAssertNil(config6, "GHK-012: JSON array should return nil")
     }
+    
+    // MARK: - GHK-013: Equatable
+    
+    func testGHK013_Equatable() {
+        // Arrange - Create two identical configs
+        let config1 = createConfig(
+            keyCode: 42,
+            carbonFlags: 256,
+            characters: "H",
+            function: true,
+            control: true,
+            command: true,
+            shift: true,
+            option: true,
+            capsLock: true
+        )
+        
+        let config2 = createConfig(
+            keyCode: 42,
+            carbonFlags: 256,
+            characters: "H",
+            function: true,
+            control: true,
+            command: true,
+            shift: true,
+            option: true,
+            capsLock: true
+        )
+        
+        // Act & Assert - Two identical configs should be equal
+        XCTAssertEqual(config1, config2, "GHK-013: Two identical configs should be equal")
+        
+        // Test with different keyCode - should NOT be equal
+        let differentKeyCode = createConfig(
+            keyCode: 99,
+            carbonFlags: 256,
+            characters: "H",
+            function: true,
+            control: true,
+            command: true,
+            shift: true,
+            option: true,
+            capsLock: true
+        )
+        XCTAssertNotEqual(config1, differentKeyCode, "GHK-013: Configs with different keyCode should not be equal")
+        
+        // Test with different carbonFlags - should NOT be equal
+        let differentCarbonFlags = createConfig(
+            keyCode: 42,
+            carbonFlags: 512,
+            characters: "H",
+            function: true,
+            control: true,
+            command: true,
+            shift: true,
+            option: true,
+            capsLock: true
+        )
+        XCTAssertNotEqual(config1, differentCarbonFlags, "GHK-013: Configs with different carbonFlags should not be equal")
+        
+        // Test with different characters - should NOT be equal
+        let differentCharacters = createConfig(
+            keyCode: 42,
+            carbonFlags: 256,
+            characters: "X",
+            function: true,
+            control: true,
+            command: true,
+            shift: true,
+            option: true,
+            capsLock: true
+        )
+        XCTAssertNotEqual(config1, differentCharacters, "GHK-013: Configs with different characters should not be equal")
+        
+        // Test with different modifier (command) - should NOT be equal
+        let differentModifier = createConfig(
+            keyCode: 42,
+            carbonFlags: 256,
+            characters: "H",
+            function: true,
+            control: true,
+            command: false,
+            shift: true,
+            option: true,
+            capsLock: true
+        )
+        XCTAssertNotEqual(config1, differentModifier, "GHK-013: Configs with different modifiers should not be equal")
+        
+        // Test with nil vs non-nil characters - should NOT be equal
+        let nilCharacters = createConfig(
+            keyCode: 42,
+            carbonFlags: 256,
+            characters: nil,
+            function: true,
+            control: true,
+            command: true,
+            shift: true,
+            option: true,
+            capsLock: true
+        )
+        XCTAssertNotEqual(config1, nilCharacters, "GHK-013: Config with nil characters should not equal config with non-nil characters")
+        
+        // Test two configs with nil characters - should be equal
+        let nilCharacters2 = createConfig(
+            keyCode: 42,
+            carbonFlags: 256,
+            characters: nil,
+            function: true,
+            control: true,
+            command: true,
+            shift: true,
+            option: true,
+            capsLock: true
+        )
+        XCTAssertEqual(nilCharacters, nilCharacters2, "GHK-013: Two configs with nil characters should be equal")
+    }
 }
