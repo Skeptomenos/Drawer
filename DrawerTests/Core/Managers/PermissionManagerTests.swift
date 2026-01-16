@@ -199,4 +199,39 @@ final class PermissionManagerTests: XCTestCase {
             "PRM-006: status.isGranted should match AXIsProcessTrusted()"
         )
     }
+    
+    // MARK: - PRM-007: status for screenRecording
+    
+    func testPRM007_StatusForScreenRecordingReturnsCorrectStatus() async throws {
+        // Arrange
+        // Refresh to ensure status is up-to-date
+        sut.refreshScreenRecordingStatus()
+        
+        let isScreenRecordingGranted = CGPreflightScreenCaptureAccess()
+        let expectedStatus: PermissionStatus = isScreenRecordingGranted ? .granted : .denied
+        
+        // Act
+        let actualStatus = sut.status(for: .screenRecording)
+        
+        // Assert
+        XCTAssertEqual(
+            actualStatus,
+            expectedStatus,
+            "PRM-007: status(for: .screenRecording) should return \(expectedStatus) when CGPreflightScreenCaptureAccess() is \(isScreenRecordingGranted)"
+        )
+        
+        // Additional verification: status should match the published screenRecordingStatus property
+        XCTAssertEqual(
+            actualStatus,
+            sut.screenRecordingStatus,
+            "PRM-007: status(for: .screenRecording) should match screenRecordingStatus property"
+        )
+        
+        // Verify isGranted helper on the status
+        XCTAssertEqual(
+            actualStatus.isGranted,
+            isScreenRecordingGranted,
+            "PRM-007: status.isGranted should match CGPreflightScreenCaptureAccess()"
+        )
+    }
 }
