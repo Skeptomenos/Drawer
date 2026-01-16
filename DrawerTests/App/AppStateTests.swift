@@ -59,4 +59,14 @@ final class AppStateTests: XCTestCase {
         // Assert
         XCTAssertTrue(sut.isCollapsed, "APP-001: Initial state isCollapsed should be true")
     }
+    
+    // MARK: - APP-002: Initial isDrawerVisible is false
+    
+    func testAPP002_InitialIsDrawerVisibleIsFalse() async throws {
+        // Arrange & Act
+        sut = createSUT()
+        
+        // Assert
+        XCTAssertFalse(sut.isDrawerVisible, "APP-002: Initial state isDrawerVisible should be false")
+    }
 }

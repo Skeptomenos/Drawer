@@ -8,8 +8,8 @@
 | P1 | Manager State Tests (CRITICAL) | 71 | 71 | 0 | 100% |
 | P2 | Pure Logic Tests | 41 | 41 | 0 | 100% |
 | P3 | Integration Tests | 40 | 40 | 0 | 100% |
-| P4 | App Coordination Tests | 11 | 1 | 10 | 9% |
-| **TOTAL** | | **171** | **160** | **11** | **94%** |
+| P4 | App Coordination Tests | 11 | 2 | 9 | 18% |
+| **TOTAL** | | **171** | **161** | **10** | **94%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -400,7 +400,7 @@ DrawerTests/
 | Status | Test ID | Test Case | Expected Result | Notes |
 |--------|---------|-----------|-----------------|-------|
 | [x] | APP-001 | Initial isCollapsed is true | Initial state correct | HIGH |
-| [ ] | APP-002 | Initial isDrawerVisible is false | Initial state correct | HIGH |
+| [x] | APP-002 | Initial isDrawerVisible is false | Initial state correct | HIGH |
 | [ ] | APP-003 | Initial isCapturing is false | Initial state correct | HIGH |
 | [ ] | APP-004 | toggleMenuBar delegates to manager | Delegation works | HIGH |
 | [ ] | APP-005 | toggleDrawer shows when hidden | Toggle logic correct | HIGH |
