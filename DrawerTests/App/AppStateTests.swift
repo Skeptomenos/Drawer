@@ -162,4 +162,22 @@ final class AppStateTests: XCTestCase {
         // 3. isDrawerVisible flag was set to false
         XCTAssertFalse(sut.isDrawerVisible, "APP-007: isDrawerVisible flag should be false after hideDrawer()")
     }
+    
+    // MARK: - APP-008: completeOnboarding sets flag
+    
+    func testAPP008_CompleteOnboardingSetsFlag() async throws {
+        // Arrange
+        sut = createSUT()
+        
+        // Reset the flag to ensure we're testing from a known state
+        sut.settings.hasCompletedOnboarding = false
+        XCTAssertFalse(sut.hasCompletedOnboarding, "Precondition: hasCompletedOnboarding should be false")
+        
+        // Act
+        sut.completeOnboarding()
+        
+        // Assert
+        XCTAssertTrue(sut.hasCompletedOnboarding, "APP-008: completeOnboarding() should set hasCompletedOnboarding to true")
+        XCTAssertTrue(sut.settings.hasCompletedOnboarding, "APP-008: settings.hasCompletedOnboarding should also be true (backing store)")
+    }
 }
