@@ -18,7 +18,7 @@
 
 ## What is Drawer?
 
-Drawer is a high-performance macOS menu bar utility (forked from [Hidden Bar](https://github.com/dwarvesf/hidden)) that hides menu bar icons into a secondary, collapsible section. When you need them, they're just a click, hover, or swipe away.
+Drawer is a high-performance macOS menu bar utility (forked from [Hidden Bar](https://github.com/dwarvesf/hidden)) that hides menu bar icons into a secondary, collapsible section. When you need them, they're just a click or hover away.
 
 ```
 [Hidden Icons] ● < [Visible Icons] [System Icons]
@@ -30,10 +30,9 @@ Drawer is a high-performance macOS menu bar utility (forked from [Hidden Bar](ht
 ## Features
 
 - **One-Click Toggle**: Click to expand/collapse hidden icons
-- **Gesture Controls**: Swipe down in the menu bar to reveal the drawer, swipe up to hide
 - **Show on Hover**: Automatically reveal icons when your mouse enters the menu bar
+- **Drawer Panel**: View and click hidden icons in a floating panel
 - **Click-Through**: Click icons in the drawer panel - actions forward to the real items
-- **Customizable Triggers**: Configure which gestures show/hide the drawer
 - **Native Experience**: Built with SwiftUI and AppKit for a seamless macOS feel
 - **Lightweight**: Minimal CPU and memory footprint
 - **Open Source**: MIT licensed, contributions welcome
@@ -42,7 +41,7 @@ Drawer is a high-performance macOS menu bar utility (forked from [Hidden Bar](ht
 
 - macOS 14.0 (Sonoma) or later
 - Screen Recording permission (for icon capture)
-- Accessibility permission (for click forwarding and gesture detection)
+- Accessibility permission (for click forwarding)
 
 ## Installation
 
@@ -67,18 +66,7 @@ xcodebuild -scheme Drawer -configuration Release build
 
 1. **Launch Drawer** - Two icons appear in your menu bar: `●` (separator) and `<`/`>` (toggle)
 2. **Hide icons** - Hold `⌘` and drag any icon to the left of the separator
-3. **Toggle visibility** - Click the `<`/`>` button, hover, or swipe down to show/hide
-
-### Gesture Controls
-
-| Gesture | Action |
-|---------|--------|
-| Swipe down (two-finger) in menu bar | Show drawer |
-| Swipe up (two-finger) | Hide drawer |
-| Click outside drawer | Hide drawer |
-| Hover over menu bar | Show drawer (if enabled) |
-
-All gestures are configurable in Preferences.
+3. **Toggle visibility** - Click the `<`/`>` button or hover to show/hide
 
 ### Keyboard Shortcuts
 
