@@ -92,4 +92,39 @@ final class PermissionManagerTests: XCTestCase {
             )
         }
     }
+    
+    // MARK: - PRM-004: hasAllPermissions when one missing
+    
+    func testPRM004_HasAllPermissionsWhenOneMissing() async throws {
+        // Arrange
+        let hasAccessibility = AXIsProcessTrusted()
+        let hasScreenRecording = CGPreflightScreenCaptureAccess()
+        
+        // Act
+        let actualValue = sut.hasAllPermissions
+        
+        // Assert
+        // Verify the logical AND behavior: if either permission is missing, hasAllPermissions must be false
+        if !hasAccessibility || !hasScreenRecording {
+            XCTAssertFalse(
+                actualValue,
+                "PRM-004: hasAllPermissions should be false when at least one permission is missing"
+            )
+        }
+        
+        // Verify the inverse relationship: hasAllPermissions == (hasAccessibility && hasScreenRecording)
+        XCTAssertEqual(
+            actualValue,
+            hasAccessibility && hasScreenRecording,
+            "PRM-004: hasAllPermissions should equal (hasAccessibility && hasScreenRecording)"
+        )
+        
+        // Additional verification: if only one is granted, hasAllPermissions must be false
+        if hasAccessibility != hasScreenRecording {
+            XCTAssertFalse(
+                actualValue,
+                "PRM-004: hasAllPermissions should be false when permissions differ"
+            )
+        }
+    }
 }
