@@ -108,4 +108,27 @@ final class AppStateTests: XCTestCase {
         // Assert
         XCTAssertTrue(sut.drawerManager.isVisible, "APP-005: show() should set drawerManager.isVisible to true")
     }
+    
+    // MARK: - APP-006: toggleDrawer hides when visible
+    
+    func testAPP006_ToggleDrawerHidesWhenVisible() async throws {
+        // Arrange
+        sut = createSUT()
+        
+        // Show the drawer and wait for animation to complete (250ms show duration + buffer)
+        sut.drawerManager.show()
+        sut.drawerController.show(content: DrawerContentView(items: [], isLoading: false))
+        try await Task.sleep(for: .milliseconds(400))
+        
+        XCTAssertTrue(sut.drawerManager.isVisible, "Precondition: drawerManager should be visible")
+        XCTAssertTrue(sut.drawerController.isVisible, "Precondition: drawerController should be visible")
+        
+        // Act - hideDrawer is called directly since toggleDrawer would trigger capture
+        sut.hideDrawer()
+        try await Task.sleep(for: .milliseconds(250))
+        
+        // Assert
+        XCTAssertFalse(sut.drawerManager.isVisible, "APP-006: drawerManager.isVisible should be false after hide")
+        XCTAssertFalse(sut.isDrawerVisible, "APP-006: isDrawerVisible should be false after hide")
+    }
 }
