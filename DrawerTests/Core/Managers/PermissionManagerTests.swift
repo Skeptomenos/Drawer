@@ -65,4 +65,31 @@ final class PermissionManagerTests: XCTestCase {
             "PRM-002: hasScreenRecording should match CGPreflightScreenCaptureAccess()"
         )
     }
+    
+    // MARK: - PRM-003: hasAllPermissions when both granted
+    
+    func testPRM003_HasAllPermissionsWhenBothGranted() async throws {
+        // Arrange
+        let hasAccessibility = AXIsProcessTrusted()
+        let hasScreenRecording = CGPreflightScreenCaptureAccess()
+        let expectedValue = hasAccessibility && hasScreenRecording
+        
+        // Act
+        let actualValue = sut.hasAllPermissions
+        
+        // Assert
+        XCTAssertEqual(
+            actualValue,
+            expectedValue,
+            "PRM-003: hasAllPermissions should be true only when both permissions are granted"
+        )
+        
+        // Additional verification: if both are granted, hasAllPermissions must be true
+        if hasAccessibility && hasScreenRecording {
+            XCTAssertTrue(
+                actualValue,
+                "PRM-003: hasAllPermissions should be true when both permissions are granted"
+            )
+        }
+    }
 }

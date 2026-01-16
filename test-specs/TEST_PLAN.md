@@ -7,9 +7,9 @@
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
 | P1 | Manager State Tests (CRITICAL) | 71 | 71 | 0 | 100% |
 | P2 | Pure Logic Tests | 41 | 41 | 0 | 100% |
-| P3 | Integration Tests | 40 | 2 | 38 | 5% |
+| P3 | Integration Tests | 40 | 3 | 37 | 8% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **171** | **121** | **50** | **71%** |
+| **TOTAL** | | **171** | **122** | **49** | **71%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -301,7 +301,7 @@ DrawerTests/
 |--------|---------|-----------|-----------------|-------|
 | [x] | PRM-001 | hasAccessibility returns correct value | Matches AXIsProcessTrusted | HIGH |
 | [x] | PRM-002 | hasScreenRecording returns correct value | Matches CGPreflightScreenCaptureAccess | HIGH |
-| [ ] | PRM-003 | hasAllPermissions when both granted | hasAllPermissions logic correct | HIGH |
+| [x] | PRM-003 | hasAllPermissions when both granted | hasAllPermissions logic correct | HIGH |
 | [ ] | PRM-004 | hasAllPermissions when one missing | hasAllPermissions returns false | HIGH |
 | [ ] | PRM-005 | isMissingPermissions is inverse | isMissingPermissions is inverse of hasAllPermissions | HIGH |
 | [ ] | PRM-006 | status for accessibility | status(for: .accessibility) returns correct status | HIGH |
