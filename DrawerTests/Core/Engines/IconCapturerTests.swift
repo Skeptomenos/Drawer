@@ -480,4 +480,32 @@ final class IconCapturerTests: XCTestCase {
             "ICN-009: Composite image height should be \(expectedHeight) pixels"
         )
     }
+    
+    // MARK: - ICN-010: createCompositeImage empty returns nil
+    
+    func testICN010_CreateCompositeImageEmptyReturnsNil() async throws {
+        // Arrange
+        let capturer = IconCapturer()
+        
+        guard let screen = NSScreen.main else {
+            XCTFail("ICN-010: No main screen available for test")
+            return
+        }
+        
+        let emptyIcons: [CapturedIcon] = []
+        let unionFrame = CGRect(x: 0, y: 0, width: 100, height: 24)
+        
+        // Act
+        let compositeImage = capturer.createCompositeImage(
+            from: emptyIcons,
+            unionFrame: unionFrame,
+            screen: screen
+        )
+        
+        // Assert
+        XCTAssertNil(
+            compositeImage,
+            "ICN-010: createCompositeImage should return nil for empty icons array"
+        )
+    }
 }
