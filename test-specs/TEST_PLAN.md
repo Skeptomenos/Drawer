@@ -6,10 +6,10 @@
 |----------|----------|-------|------|-----------|----------|
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
 | P1 | Manager State Tests (CRITICAL) | 71 | 71 | 0 | 100% |
-| P2 | Pure Logic Tests | 35 | 21 | 14 | 60% |
+| P2 | Pure Logic Tests | 35 | 22 | 13 | 63% |
 | P3 | Integration Tests | 40 | 0 | 40 | 0% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **165** | **99** | **66** | **60%** |
+| **TOTAL** | | **165** | **100** | **65** | **61%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -245,7 +245,7 @@ DrawerTests/
 | [x] | GHK-009 | Description with character | Characters are uppercased | LOW |
 | [x] | GHK-010 | Encoding/decoding roundtrip | Codable roundtrip preserves all properties | LOW |
 | [x] | GHK-011 | fromLegacy valid data | Legacy format conversion works | LOW |
-| [ ] | GHK-012 | fromLegacy invalid data | Invalid data returns nil | LOW |
+| [x] | GHK-012 | fromLegacy invalid data | Invalid data returns nil | LOW |
 | [ ] | GHK-013 | Equatable | Two identical configs are equal | LOW |
 
 ### 2.3 CaptureError (`Drawer/Core/Engines/IconCapturer.swift`)

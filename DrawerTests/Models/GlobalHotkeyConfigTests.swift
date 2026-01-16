@@ -373,4 +373,55 @@ final class GlobalHotkeyConfigTests: XCTestCase {
         XCTAssertNil(configNilChars?.characters, "GHK-011: characters should be nil when not in legacy data")
         XCTAssertEqual(configNilChars?.keyCode, 36, "GHK-011: keyCode should be 36 (return key)")
     }
+    
+    // MARK: - GHK-012: fromLegacy invalid data
+    
+    func testGHK012_FromLegacyInvalidData() {
+        // Arrange - Various forms of invalid data
+        
+        // Test 1: Completely invalid JSON (not even valid JSON)
+        let invalidJSONData = "not valid json at all".data(using: .utf8)!
+        let config1 = GlobalHotkeyConfig.fromLegacy(data: invalidJSONData)
+        XCTAssertNil(config1, "GHK-012: Invalid JSON should return nil")
+        
+        // Test 2: Valid JSON but missing required fields
+        let missingFieldsJSON: [String: Any] = [
+            "keyCode": 0
+            // Missing all other required fields
+        ]
+        let missingFieldsData = try! JSONSerialization.data(withJSONObject: missingFieldsJSON)
+        let config2 = GlobalHotkeyConfig.fromLegacy(data: missingFieldsData)
+        XCTAssertNil(config2, "GHK-012: JSON missing required fields should return nil")
+        
+        // Test 3: Valid JSON but wrong types
+        let wrongTypesJSON: [String: Any] = [
+            "keyCode": "not a number",  // Should be UInt32
+            "carbonFlags": 0,
+            "characters": "A",
+            "function": false,
+            "control": false,
+            "command": true,
+            "shift": false,
+            "option": false,
+            "capsLock": false
+        ]
+        let wrongTypesData = try! JSONSerialization.data(withJSONObject: wrongTypesJSON)
+        let config3 = GlobalHotkeyConfig.fromLegacy(data: wrongTypesData)
+        XCTAssertNil(config3, "GHK-012: JSON with wrong types should return nil")
+        
+        // Test 4: Empty data
+        let emptyData = Data()
+        let config4 = GlobalHotkeyConfig.fromLegacy(data: emptyData)
+        XCTAssertNil(config4, "GHK-012: Empty data should return nil")
+        
+        // Test 5: Empty JSON object
+        let emptyObjectData = "{}".data(using: .utf8)!
+        let config5 = GlobalHotkeyConfig.fromLegacy(data: emptyObjectData)
+        XCTAssertNil(config5, "GHK-012: Empty JSON object should return nil")
+        
+        // Test 6: JSON array instead of object
+        let arrayData = "[]".data(using: .utf8)!
+        let config6 = GlobalHotkeyConfig.fromLegacy(data: arrayData)
+        XCTAssertNil(config6, "GHK-012: JSON array should return nil")
+    }
 }
