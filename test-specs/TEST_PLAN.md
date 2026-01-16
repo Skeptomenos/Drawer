@@ -6,10 +6,10 @@
 |----------|----------|-------|------|-----------|----------|
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
 | P1 | Manager State Tests (CRITICAL) | 71 | 71 | 0 | 100% |
-| P2 | Pure Logic Tests | 35 | 34 | 1 | 97% |
+| P2 | Pure Logic Tests | 35 | 35 | 0 | 100% |
 | P3 | Integration Tests | 40 | 0 | 40 | 0% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **165** | **112** | **53** | **68%** |
+| **TOTAL** | | **165** | **113** | **52** | **68%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -279,7 +279,7 @@ DrawerTests/
 
 | Status | Test ID | Test Case | Expected Result | Notes |
 |--------|---------|-----------|-----------------|-------|
-| [ ] | PRT-001 | Accessibility displayName | displayName is "Accessibility" | LOW |
+| [x] | PRT-001 | Accessibility displayName | displayName is "Accessibility" | LOW |
 | [ ] | PRT-002 | ScreenRecording displayName | displayName is "Screen Recording" | LOW |
 | [ ] | PRT-003 | Accessibility description | Description text correct | LOW |
 | [ ] | PRT-004 | ScreenRecording description | Description text correct | LOW |
