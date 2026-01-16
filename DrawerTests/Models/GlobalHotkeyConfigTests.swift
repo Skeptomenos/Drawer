@@ -322,4 +322,55 @@ final class GlobalHotkeyConfigTests: XCTestCase {
         let minimalDecoded = try decoder.decode(GlobalHotkeyConfig.self, from: minimalData)
         XCTAssertEqual(minimalDecoded, minimalConfig, "GHK-010: Minimal config should roundtrip correctly")
     }
+    
+    // MARK: - GHK-011: fromLegacy valid data
+    
+    func testGHK011_FromLegacyValidData() throws {
+        // Arrange - Create valid legacy format JSON data
+        let legacyJSON: [String: Any] = [
+            "keyCode": 0,
+            "carbonFlags": 256,
+            "characters": "H",
+            "function": false,
+            "control": true,
+            "command": true,
+            "shift": false,
+            "option": false,
+            "capsLock": false
+        ]
+        let legacyData = try JSONSerialization.data(withJSONObject: legacyJSON)
+        
+        // Act
+        let config = GlobalHotkeyConfig.fromLegacy(data: legacyData)
+        
+        // Assert
+        XCTAssertNotNil(config, "GHK-011: fromLegacy should return a config for valid data")
+        XCTAssertEqual(config?.keyCode, 0, "GHK-011: keyCode should be preserved")
+        XCTAssertEqual(config?.carbonFlags, 256, "GHK-011: carbonFlags should be preserved")
+        XCTAssertEqual(config?.characters, "H", "GHK-011: characters should be preserved")
+        XCTAssertEqual(config?.function, false, "GHK-011: function should be preserved")
+        XCTAssertEqual(config?.control, true, "GHK-011: control should be preserved")
+        XCTAssertEqual(config?.command, true, "GHK-011: command should be preserved")
+        XCTAssertEqual(config?.shift, false, "GHK-011: shift should be preserved")
+        XCTAssertEqual(config?.option, false, "GHK-011: option should be preserved")
+        XCTAssertEqual(config?.capsLock, false, "GHK-011: capsLock should be preserved")
+        
+        // Test with nil characters
+        let legacyJSONNilChars: [String: Any] = [
+            "keyCode": 36,
+            "carbonFlags": 0,
+            "function": false,
+            "control": false,
+            "command": true,
+            "shift": false,
+            "option": false,
+            "capsLock": false
+        ]
+        let legacyDataNilChars = try JSONSerialization.data(withJSONObject: legacyJSONNilChars)
+        let configNilChars = GlobalHotkeyConfig.fromLegacy(data: legacyDataNilChars)
+        
+        XCTAssertNotNil(configNilChars, "GHK-011: fromLegacy should handle nil characters")
+        XCTAssertNil(configNilChars?.characters, "GHK-011: characters should be nil when not in legacy data")
+        XCTAssertEqual(configNilChars?.keyCode, 36, "GHK-011: keyCode should be 36 (return key)")
+    }
 }

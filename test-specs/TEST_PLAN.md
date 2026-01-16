@@ -6,10 +6,10 @@
 |----------|----------|-------|------|-----------|----------|
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
 | P1 | Manager State Tests (CRITICAL) | 71 | 71 | 0 | 100% |
-| P2 | Pure Logic Tests | 35 | 20 | 15 | 57% |
+| P2 | Pure Logic Tests | 35 | 21 | 14 | 60% |
 | P3 | Integration Tests | 40 | 0 | 40 | 0% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **165** | **98** | **67** | **59%** |
+| **TOTAL** | | **165** | **99** | **66** | **60%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -244,7 +244,7 @@ DrawerTests/
 | [x] | GHK-008 | Description with space key | keyCode 49 shows ⎵ | LOW |
 | [x] | GHK-009 | Description with character | Characters are uppercased | LOW |
 | [x] | GHK-010 | Encoding/decoding roundtrip | Codable roundtrip preserves all properties | LOW |
-| [ ] | GHK-011 | fromLegacy valid data | Legacy format conversion works | LOW |
+| [x] | GHK-011 | fromLegacy valid data | Legacy format conversion works | LOW |
 | [ ] | GHK-012 | fromLegacy invalid data | Invalid data returns nil | LOW |
 | [ ] | GHK-013 | Equatable | Two identical configs are equal | LOW |
 
