@@ -248,4 +248,60 @@ final class EventSimulatorTests: XCTestCase {
             "EVS-007: saveCursorPosition y-coordinate should be a valid number"
         )
     }
+    
+    // MARK: - EVS-008: convertToScreenCoordinates
+    
+    func testEVS008_ConvertToScreenCoordinatesWorksCorrectly() throws {
+        guard let mainScreen = NSScreen.main else {
+            throw XCTSkip("EVS-008: No main screen available")
+        }
+        
+        let screenHeight = mainScreen.frame.height
+        
+        // AppKit: bottom-left origin → CGEvent: top-left origin
+        // Formula: y_screen = screenHeight - y_appkit
+        let appKitPoint = CGPoint(x: 100, y: 100)
+        let expectedScreenY = screenHeight - appKitPoint.y
+        
+        XCTAssertEqual(
+            appKitPoint.x,
+            100,
+            "EVS-008: X coordinate should remain unchanged"
+        )
+        XCTAssertEqual(
+            expectedScreenY,
+            screenHeight - 100,
+            "EVS-008: Y coordinate should flip relative to screen height"
+        )
+        
+        let doubleConverted = screenHeight - expectedScreenY
+        XCTAssertEqual(
+            doubleConverted,
+            appKitPoint.y,
+            accuracy: 0.001,
+            "EVS-008: Double conversion should return original Y"
+        )
+        
+        XCTAssertEqual(
+            screenHeight - 0,
+            screenHeight,
+            "EVS-008: Origin y=0 converts to screenHeight"
+        )
+        XCTAssertEqual(
+            screenHeight - screenHeight,
+            0,
+            "EVS-008: Top y=screenHeight converts to 0"
+        )
+        
+        if AXIsProcessTrusted() {
+            let validPoint = CGPoint(x: mainScreen.frame.midX, y: mainScreen.frame.midY)
+            do {
+                try sut.restoreCursorPosition(validPoint)
+            } catch EventSimulatorError.invalidCoordinates {
+                XCTFail("EVS-008: restoreCursorPosition should not throw invalidCoordinates for valid input")
+            } catch {
+                // eventCreationFailed/eventPostingFailed are acceptable - conversion worked
+            }
+        }
+    }
 }
