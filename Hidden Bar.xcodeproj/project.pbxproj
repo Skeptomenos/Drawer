@@ -32,6 +32,7 @@
 		DRAWERTEST00100000000024 /* GlobalEventMonitorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000024 /* GlobalEventMonitorTests.swift */; };
 		DRAWERTEST00100000000025 /* LocalEventMonitorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000025 /* LocalEventMonitorTests.swift */; };
 		DRAWERTEST00100000000026 /* WindowInfoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000026 /* WindowInfoTests.swift */; };
+		DRAWERTEST00100000000027 /* MenuBarMetricsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000027 /* MenuBarMetricsTests.swift */; };
 		DRAWER001000000000000001 /* DrawerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000001 /* DrawerApp.swift */; };
 		DRAWER001000000000000002 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000002 /* AppState.swift */; };
 		DRAWER001000000000000003 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000003 /* AppDelegate.swift */; };
@@ -149,6 +150,7 @@
 		DRAWERTEST00200000000024 /* GlobalEventMonitorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalEventMonitorTests.swift; sourceTree = "<group>"; };
 		DRAWERTEST00200000000025 /* LocalEventMonitorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalEventMonitorTests.swift; sourceTree = "<group>"; };
 		DRAWERTEST00200000000026 /* WindowInfoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowInfoTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000027 /* MenuBarMetricsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarMetricsTests.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000001 /* DrawerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerApp.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000002 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000003 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -283,6 +285,7 @@
 				DRAWERTEST00200000000024 /* GlobalEventMonitorTests.swift */,
 				DRAWERTEST00200000000025 /* LocalEventMonitorTests.swift */,
 				DRAWERTEST00200000000026 /* WindowInfoTests.swift */,
+				DRAWERTEST00200000000027 /* MenuBarMetricsTests.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -840,6 +843,7 @@
 				DRAWERTEST00100000000024 /* GlobalEventMonitorTests.swift in Sources */,
 				DRAWERTEST00100000000025 /* LocalEventMonitorTests.swift in Sources */,
 				DRAWERTEST00100000000026 /* WindowInfoTests.swift in Sources */,
+				DRAWERTEST00100000000027 /* MenuBarMetricsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

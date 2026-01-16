@@ -7,9 +7,9 @@
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
 | P1 | Manager State Tests (CRITICAL) | 71 | 71 | 0 | 100% |
 | P2 | Pure Logic Tests | 41 | 41 | 0 | 100% |
-| P3 | Integration Tests | 40 | 40 | 0 | 100% |
+| P3 | Integration Tests | 40 | 39 | 1 | 98% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **171** | **162** | **9** | **95%** |
+| **TOTAL** | | **171** | **158** | **13** | **92%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -384,7 +384,7 @@ DrawerTests/
 
 | Status | Test ID | Test Case | Expected Result | Notes |
 |--------|---------|-----------|-----------------|-------|
-| [ ] | MBR-001 | fallbackHeight is 24 | fallbackHeight constant is 24 | LOW |
+| [x] | MBR-001 | fallbackHeight is 24 | fallbackHeight constant is 24 | LOW |
 | [ ] | MBR-002 | height calculation | Height calculation from screen works | LOW |
 
 ---
