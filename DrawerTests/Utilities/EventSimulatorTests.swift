@@ -140,4 +140,36 @@ final class EventSimulatorTests: XCTestCase {
             // They indicate the point was valid but something else failed
         }
     }
+    
+    // MARK: - EVS-005: isValidScreenPoint outside all screens returns false
+    
+    func testEVS005_IsValidScreenPointOutsideAllScreensReturnsFalse() async throws {
+        // Skip if no accessibility permission (would throw accessibilityNotGranted first)
+        guard AXIsProcessTrusted() else {
+            throw XCTSkip("EVS-005: Accessibility permission required to test coordinate validation")
+        }
+        
+        // Arrange - find a point that is definitely outside ALL screens
+        // Calculate the bounding box of all screens and go beyond it
+        let allScreensUnion = NSScreen.screens.reduce(CGRect.null) { result, screen in
+            result.union(screen.frame)
+        }
+        
+        // Use a point far to the right and below all screens
+        let outsidePoint = CGPoint(
+            x: allScreensUnion.maxX + 10000,
+            y: allScreensUnion.maxY + 10000
+        )
+        
+        // Act & Assert
+        // isValidScreenPoint should return false, causing simulateClick to throw invalidCoordinates
+        do {
+            try await sut.simulateClick(at: outsidePoint)
+            XCTFail("EVS-005: simulateClick should throw invalidCoordinates for point outside all screens")
+        } catch EventSimulatorError.invalidCoordinates {
+            // Expected - point was correctly identified as invalid
+        } catch {
+            XCTFail("EVS-005: Expected invalidCoordinates error, but got: \(error)")
+        }
+    }
 }
