@@ -385,4 +385,99 @@ final class IconCapturerTests: XCTestCase {
             )
         }
     }
+    
+    // MARK: - ICN-009: createCompositeImage from icons
+    
+    func testICN009_CreateCompositeImageFromIcons() async throws {
+        let capturer = IconCapturer()
+        
+        guard let screen = NSScreen.main else {
+            XCTFail("ICN-009: No main screen available for test")
+            return
+        }
+        
+        let scale = screen.backingScaleFactor
+        let iconWidth: CGFloat = 22
+        let iconHeight: CGFloat = 24
+        let iconSpacing: CGFloat = 4
+        let stepSize = iconWidth + iconSpacing
+        
+        var testIcons: [CapturedIcon] = []
+        let iconColors: [CGColor] = [
+            CGColor(red: 1.0, green: 0.0, blue: 0.0, alpha: 1.0),
+            CGColor(red: 0.0, green: 1.0, blue: 0.0, alpha: 1.0),
+            CGColor(red: 0.0, green: 0.0, blue: 1.0, alpha: 1.0)
+        ]
+        
+        for i in 0..<3 {
+            let imageWidth = Int(iconWidth * scale)
+            let imageHeight = Int(iconHeight * scale)
+            
+            guard let colorSpace = CGColorSpace(name: CGColorSpace.sRGB),
+                  let context = CGContext(
+                      data: nil,
+                      width: imageWidth,
+                      height: imageHeight,
+                      bitsPerComponent: 8,
+                      bytesPerRow: 0,
+                      space: colorSpace,
+                      bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+                  ) else {
+                XCTFail("ICN-009: Failed to create test image context for icon \(i)")
+                return
+            }
+            
+            context.setFillColor(iconColors[i])
+            context.fill(CGRect(x: 0, y: 0, width: imageWidth, height: imageHeight))
+            
+            guard let testImage = context.makeImage() else {
+                XCTFail("ICN-009: Failed to create test image for icon \(i)")
+                return
+            }
+            
+            let originalFrame = CGRect(
+                x: CGFloat(i) * stepSize,
+                y: 0,
+                width: iconWidth,
+                height: iconHeight
+            )
+            
+            let icon = CapturedIcon(image: testImage, originalFrame: originalFrame)
+            testIcons.append(icon)
+        }
+        
+        let unionFrame = CGRect(
+            x: 0,
+            y: 0,
+            width: stepSize * 2 + iconWidth,
+            height: iconHeight
+        )
+        
+        let compositeImage = capturer.createCompositeImage(
+            from: testIcons,
+            unionFrame: unionFrame,
+            screen: screen
+        )
+        
+        XCTAssertNotNil(
+            compositeImage,
+            "ICN-009: createCompositeImage should return a valid image"
+        )
+        
+        guard let image = compositeImage else { return }
+        
+        let expectedWidth = Int(unionFrame.width * scale)
+        let expectedHeight = Int(unionFrame.height * scale)
+        
+        XCTAssertEqual(
+            image.width,
+            expectedWidth,
+            "ICN-009: Composite image width should be \(expectedWidth) pixels"
+        )
+        XCTAssertEqual(
+            image.height,
+            expectedHeight,
+            "ICN-009: Composite image height should be \(expectedHeight) pixels"
+        )
+    }
 }

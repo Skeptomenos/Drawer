@@ -238,7 +238,7 @@ final class IconCapturer: ObservableObject {
         )
     }
     
-    private func createCompositeImage(from icons: [CapturedIcon], unionFrame: CGRect, screen: NSScreen) -> CGImage? {
+    func createCompositeImage(from icons: [CapturedIcon], unionFrame: CGRect, screen: NSScreen) -> CGImage? {
         guard !icons.isEmpty else { return nil }
         
         let scale = screen.backingScaleFactor
