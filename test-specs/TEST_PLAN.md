@@ -6,10 +6,10 @@
 |----------|----------|-------|------|-----------|----------|
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
 | P1 | Manager State Tests (CRITICAL) | 71 | 71 | 0 | 100% |
-| P2 | Pure Logic Tests | 35 | 23 | 12 | 66% |
+| P2 | Pure Logic Tests | 35 | 30 | 5 | 86% |
 | P3 | Integration Tests | 40 | 0 | 40 | 0% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **165** | **101** | **64** | **61%** |
+| **TOTAL** | | **165** | **108** | **57** | **65%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -254,13 +254,13 @@ DrawerTests/
 
 | Status | Test ID | Test Case | Expected Result | Notes |
 |--------|---------|-----------|-----------------|-------|
-| [ ] | CAP-001 | permissionDenied description | Error description correct | LOW |
-| [ ] | CAP-002 | menuBarNotFound description | Error description correct | LOW |
-| [ ] | CAP-003 | captureFailedNoImage description | Error description correct | LOW |
-| [ ] | CAP-004 | screenNotFound description | Error description correct | LOW |
-| [ ] | CAP-005 | invalidRegion description | Error description correct | LOW |
-| [ ] | CAP-006 | noMenuBarItems description | Error description correct | LOW |
-| [ ] | CAP-007 | systemError description includes wrapped error | Error description includes wrapped error | LOW |
+| [x] | CAP-001 | permissionDenied description | Error description correct | LOW |
+| [x] | CAP-002 | menuBarNotFound description | Error description correct | LOW |
+| [x] | CAP-003 | captureFailedNoImage description | Error description correct | LOW |
+| [x] | CAP-004 | screenNotFound description | Error description correct | LOW |
+| [x] | CAP-005 | invalidRegion description | Error description correct | LOW |
+| [x] | CAP-006 | noMenuBarItems description | Error description correct | LOW |
+| [x] | CAP-007 | systemError description includes wrapped error | Error description includes wrapped error | LOW |
 
 ### 2.4 EventSimulatorError (`Drawer/Utilities/EventSimulator.swift`)
 
