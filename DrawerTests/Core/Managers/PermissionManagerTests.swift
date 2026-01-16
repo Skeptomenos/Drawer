@@ -265,4 +265,35 @@ final class PermissionManagerTests: XCTestCase {
             "PRM-008: isGranted(.accessibility) should be consistent with status(for: .accessibility).isGranted"
         )
     }
+    
+    // MARK: - PRM-009: isGranted screenRecording
+    
+    func testPRM009_IsGrantedScreenRecordingWorks() async throws {
+        // Arrange
+        let expectedValue = CGPreflightScreenCaptureAccess()
+        
+        // Act
+        let actualValue = sut.isGranted(.screenRecording)
+        
+        // Assert
+        XCTAssertEqual(
+            actualValue,
+            expectedValue,
+            "PRM-009: isGranted(.screenRecording) should match CGPreflightScreenCaptureAccess()"
+        )
+        
+        // Additional verification: isGranted should match hasScreenRecording property
+        XCTAssertEqual(
+            actualValue,
+            sut.hasScreenRecording,
+            "PRM-009: isGranted(.screenRecording) should match hasScreenRecording property"
+        )
+        
+        // Verify consistency with status(for:).isGranted
+        XCTAssertEqual(
+            actualValue,
+            sut.status(for: .screenRecording).isGranted,
+            "PRM-009: isGranted(.screenRecording) should be consistent with status(for: .screenRecording).isGranted"
+        )
+    }
 }

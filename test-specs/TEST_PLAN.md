@@ -7,9 +7,9 @@
 | P0 | Test Infrastructure | 8 | 7 | 1 | 88% |
 | P1 | Manager State Tests (CRITICAL) | 71 | 71 | 0 | 100% |
 | P2 | Pure Logic Tests | 41 | 41 | 0 | 100% |
-| P3 | Integration Tests | 40 | 8 | 32 | 20% |
+| P3 | Integration Tests | 40 | 9 | 31 | 23% |
 | P4 | App Coordination Tests | 11 | 0 | 11 | 0% |
-| **TOTAL** | | **171** | **127** | **44** | **74%** |
+| **TOTAL** | | **171** | **128** | **43** | **75%** |
 
 ### Status Legend
 - `[ ]` - Not started
@@ -307,7 +307,7 @@ DrawerTests/
 | [x] | PRM-006 | status for accessibility | status(for: .accessibility) returns correct status | HIGH |
 | [x] | PRM-007 | status for screenRecording | status(for: .screenRecording) returns correct status | HIGH |
 | [x] | PRM-008 | isGranted accessibility | isGranted(.accessibility) works | HIGH |
-| [ ] | PRM-009 | isGranted screenRecording | isGranted(.screenRecording) works | HIGH |
+| [x] | PRM-009 | isGranted screenRecording | isGranted(.screenRecording) works | HIGH |
 | [ ] | PRM-010 | permissionStatusChanged publisher | Publisher fires on status change | MEDIUM |
 | [ ] | PRM-011 | refreshAllStatuses updates published state | Refresh updates @Published properties | MEDIUM |
 
