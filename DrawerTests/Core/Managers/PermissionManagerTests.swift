@@ -234,4 +234,35 @@ final class PermissionManagerTests: XCTestCase {
             "PRM-007: status.isGranted should match CGPreflightScreenCaptureAccess()"
         )
     }
+    
+    // MARK: - PRM-008: isGranted accessibility
+    
+    func testPRM008_IsGrantedAccessibilityWorks() async throws {
+        // Arrange
+        let expectedValue = AXIsProcessTrusted()
+        
+        // Act
+        let actualValue = sut.isGranted(.accessibility)
+        
+        // Assert
+        XCTAssertEqual(
+            actualValue,
+            expectedValue,
+            "PRM-008: isGranted(.accessibility) should match AXIsProcessTrusted()"
+        )
+        
+        // Additional verification: isGranted should match hasAccessibility property
+        XCTAssertEqual(
+            actualValue,
+            sut.hasAccessibility,
+            "PRM-008: isGranted(.accessibility) should match hasAccessibility property"
+        )
+        
+        // Verify consistency with status(for:).isGranted
+        XCTAssertEqual(
+            actualValue,
+            sut.status(for: .accessibility).isGranted,
+            "PRM-008: isGranted(.accessibility) should be consistent with status(for: .accessibility).isGranted"
+        )
+    }
 }
