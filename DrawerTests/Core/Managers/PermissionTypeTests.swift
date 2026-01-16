@@ -96,4 +96,23 @@ final class PermissionTypeTests: XCTestCase {
             "PRT-005: Accessibility systemSettingsURL should point to Privacy_Accessibility pane"
         )
     }
+    
+    // MARK: - PRT-006: ScreenRecording systemSettingsURL
+    
+    func testPRT006_ScreenRecordingSystemSettingsURL() {
+        // Arrange
+        let sut = PermissionType.screenRecording
+        let expectedURL = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture")
+        
+        // Act
+        let url = sut.systemSettingsURL
+        
+        // Assert
+        XCTAssertNotNil(url, "PRT-006: ScreenRecording systemSettingsURL should not be nil")
+        XCTAssertEqual(
+            url,
+            expectedURL,
+            "PRT-006: ScreenRecording systemSettingsURL should point to Privacy_ScreenCapture pane"
+        )
+    }
 }
