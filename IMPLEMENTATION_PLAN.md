@@ -55,7 +55,7 @@ Drawer is a macOS menu bar utility (forked from Hidden Bar) in **mature developm
 | Permissions | Complete | Screen Recording + Accessibility flows |
 | Settings UI | Partial | Missing gesture trigger options |
 | Hover-to-Show | Complete | HoverManager with debouncing |
-| Gesture Controls | **In Progress** | Task 1.1-1.2 complete, remaining tasks pending |
+| Gesture Controls | **In Progress** | Task 1.1-1.2, 2.2 complete, remaining tasks pending |
 | Test Suite | Complete | 26 test files covering all managers |
 
 ### Known Issues
@@ -132,24 +132,28 @@ hoverManager.updateDrawerFrame(drawerController.panelFrame)
 **Effort**: ~45 min
 **Description**: Extend HoverManager to detect scroll gestures in the menu bar zone.
 
-**Changes**:
-- Add `scrollMonitor: GlobalEventMonitor?` property
-- Add `accumulatedScrollDelta: CGFloat` for threshold tracking
-- Add `scrollThreshold: CGFloat = 30` constant
-- Implement `handleScrollEvent(_ event: NSEvent)`:
-  - Check if mouse is in menu bar trigger zone
-  - Account for `event.isDirectionInvertedFromDevice` (natural scrolling)
-  - Accumulate `event.scrollingDeltaY`
-  - Trigger show/hide when threshold exceeded
-  - Reset on direction change or `event.phase == .ended`
+**Implementation** (v0.3.7):
+- Added `scrollMonitor: GlobalEventMonitor?` property
+- Added `accumulatedScrollDelta: CGFloat` for threshold tracking
+- Added `scrollThreshold: CGFloat = 30` constant
+- Added `lastScrollDirection: ScrollDirection` enum for direction change detection
+- Implemented `handleScrollEvent(_ event: NSEvent)`:
+  - Checks if mouse is in menu bar trigger zone or drawer area
+  - Accounts for `event.isDirectionInvertedFromDevice` (natural scrolling)
+  - Accumulates `event.scrollingDeltaY` with direction-aware reset
+  - Triggers show/hide when threshold exceeded
+  - Resets on direction change or `event.phase == .ended/.cancelled`
+- Wired scroll monitor into `startMonitoring()`/`stopMonitoring()`
 
 **Acceptance Criteria**:
-- [ ] Scroll down in menu bar area triggers `onShouldShowDrawer`
-- [ ] Scroll up (when drawer visible) triggers `onShouldHideDrawer`
-- [ ] Works with both trackpad and mouse wheel
-- [ ] Respects natural scrolling preference
-- [ ] Threshold prevents accidental triggers
-- [ ] Unit tests added
+- [x] Scroll down in menu bar area triggers `onShouldShowDrawer`
+- [x] Scroll up (when drawer visible) triggers `onShouldHideDrawer`
+- [x] Works with both trackpad and mouse wheel
+- [x] Respects natural scrolling preference
+- [x] Threshold prevents accidental triggers
+- [ ] Unit tests added (Task 5.1)
+
+**Status**: ✅ COMPLETE (v0.3.7) - Implementation done, unit tests pending Task 5.1
 
 ---
 

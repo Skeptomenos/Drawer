@@ -22,9 +22,25 @@ final class HoverManager: ObservableObject {
     private let hideDebounceInterval: TimeInterval = 0.3
     
     private var mouseMonitor: GlobalEventMonitor?
+    private var scrollMonitor: GlobalEventMonitor?
     private var showDebounceTimer: Timer?
     private var hideDebounceTimer: Timer?
     private var cancellables = Set<AnyCancellable>()
+    
+    // MARK: - Scroll Gesture Properties
+    
+    /// Accumulated scroll delta for threshold detection
+    private var accumulatedScrollDelta: CGFloat = 0
+    
+    /// Threshold in points before scroll triggers action (prevents accidental triggers)
+    private let scrollThreshold: CGFloat = 30
+    
+    /// Track last scroll direction to reset on direction change
+    private var lastScrollDirection: ScrollDirection = .none
+    
+    private enum ScrollDirection {
+        case none, up, down
+    }
     
     var onShouldShowDrawer: (() -> Void)?
     var onShouldHideDrawer: (() -> Void)?
@@ -36,6 +52,7 @@ final class HoverManager: ObservableObject {
     
     deinit {
         mouseMonitor?.stop()
+        scrollMonitor?.stop()
         showDebounceTimer?.invalidate()
         hideDebounceTimer?.invalidate()
     }
@@ -49,16 +66,27 @@ final class HoverManager: ObservableObject {
             }
         }
         mouseMonitor?.start()
+        
+        scrollMonitor = GlobalEventMonitor(mask: .scrollWheel) { [weak self] event in
+            Task { @MainActor in
+                self?.handleScrollEvent(event)
+            }
+        }
+        scrollMonitor?.start()
+        
         isMonitoring = true
     }
     
     func stopMonitoring() {
         mouseMonitor?.stop()
         mouseMonitor = nil
+        scrollMonitor?.stop()
+        scrollMonitor = nil
         showDebounceTimer?.invalidate()
         showDebounceTimer = nil
         hideDebounceTimer?.invalidate()
         hideDebounceTimer = nil
+        resetScrollState()
         isMonitoring = false
         isMouseInTriggerZone = false
         isMouseInDrawerArea = false
@@ -151,5 +179,74 @@ final class HoverManager: ObservableObject {
     private func cancelHideDrawer() {
         hideDebounceTimer?.invalidate()
         hideDebounceTimer = nil
+    }
+    
+    // MARK: - Scroll Gesture Handling
+    
+    /// Handles scroll wheel events for gesture-based drawer control.
+    /// Respects natural scrolling preference and accumulates delta until threshold is met.
+    private func handleScrollEvent(_ event: NSEvent?) {
+        guard let event = event else { return }
+        
+        let mouseLocation = NSEvent.mouseLocation
+        
+        // Only process scroll events in the menu bar trigger zone or drawer area
+        let isInTriggerZone = isInMenuBarTriggerZone(mouseLocation)
+        let isInDrawer = isDrawerVisible && isInDrawerArea(mouseLocation)
+        
+        guard isInTriggerZone || isInDrawer else {
+            resetScrollState()
+            return
+        }
+        
+        // Get scroll delta, accounting for natural scrolling preference.
+        // scrollingDeltaY is positive for scroll-up gesture (content moves down).
+        // With natural scrolling inverted, the physical gesture direction is reversed.
+        var deltaY = event.scrollingDeltaY
+        
+        // If natural scrolling is enabled, the delta is already inverted by the system.
+        // We want physical gesture direction: swipe down = show, swipe up = hide.
+        // With natural scrolling OFF: swipe down = negative deltaY, swipe up = positive deltaY
+        // With natural scrolling ON: swipe down = positive deltaY, swipe up = negative deltaY
+        // We normalize so that negative = physical down, positive = physical up
+        if event.isDirectionInvertedFromDevice {
+            deltaY = -deltaY
+        }
+        
+        // Determine current scroll direction
+        let currentDirection: ScrollDirection = deltaY > 0 ? .up : (deltaY < 0 ? .down : .none)
+        
+        // Reset accumulated delta if direction changed
+        if currentDirection != lastScrollDirection && currentDirection != .none {
+            accumulatedScrollDelta = 0
+            lastScrollDirection = currentDirection
+        }
+        
+        // Accumulate scroll delta
+        accumulatedScrollDelta += abs(deltaY)
+        
+        // Check if we've reached the threshold
+        if accumulatedScrollDelta >= scrollThreshold {
+            if currentDirection == .down && !isDrawerVisible {
+                // Scroll down gesture to show drawer
+                onShouldShowDrawer?()
+                resetScrollState()
+            } else if currentDirection == .up && isDrawerVisible {
+                // Scroll up gesture to hide drawer
+                onShouldHideDrawer?()
+                resetScrollState()
+            }
+        }
+        
+        // Reset on gesture end
+        if event.phase == .ended || event.phase == .cancelled {
+            resetScrollState()
+        }
+    }
+    
+    /// Resets scroll tracking state
+    private func resetScrollState() {
+        accumulatedScrollDelta = 0
+        lastScrollDirection = .none
     }
 }
