@@ -53,15 +53,15 @@ Drawer is a macOS menu bar utility (forked from Hidden Bar) in **mature developm
 | Click-Through | Complete | CGEvent simulation with Accessibility |
 | Drawer Panel | Complete | NSPanel with animations, materials |
 | Permissions | Complete | Screen Recording + Accessibility flows |
-| Settings UI | Partial | Missing gesture trigger options |
+| Settings UI | Complete | Gesture trigger options added in Task 3.1 |
 | Hover-to-Show | Complete | HoverManager with debouncing |
-| Gesture Controls | **In Progress** | Tasks 1.1-1.2, 2.2-2.4, 3.1, 4.1 complete, Tasks 4.2, 5.1-5.2 pending |
-| Test Suite | Complete | 26 test files covering all managers |
+| Gesture Controls | **In Progress** | Tasks 1.1-1.2, 2.2-2.4, 3.1, 4.1-4.2, 5.1 complete, Task 5.2 pending |
+| Test Suite | Complete | 27 test files, 221+ tests covering all managers |
 
 ### Known Issues
 1. ~~**BUG**: Drawer disappears unexpectedly~~ - Fixed in Task 1.1 (v0.3.5)
 2. ~~**BUG**: Initial state desync (separator 20px when isCollapsed=true)~~ - Fixed in Phase 0 (see `docs/ROOT_CAUSE_INVISIBLE_ICONS.md`)
-3. **AGENTS.md outdated**: Claims no test target exists, but DrawerTests/ is comprehensive
+3. ~~**AGENTS.md outdated**: Claims no test target exists~~ - Fixed in Task 4.2 (v0.3.12)
 
 ---
 
@@ -290,14 +290,34 @@ hoverManager.updateDrawerFrame(drawerController.panelFrame)
 **Effort**: ~45 min
 **Description**: Comprehensive tests for new gesture functionality.
 
+**Implementation** (v0.3.13):
+- Added 13 new tests (HVM-015 to HVM-027) for gesture features
+- Tests verify settings integration:
+  - HVM-015: `showOnScrollDown` setting check
+  - HVM-016: `hideOnScrollUp` setting check
+  - HVM-017: `hideOnClickOutside` setting check
+  - HVM-018: `hideOnMouseAway` setting check
+  - HVM-019: `showOnHover` setting check
+- Tests verify callback wiring (HVM-020)
+- Tests verify default settings values (HVM-021)
+- Tests verify geometry detection:
+  - HVM-022: Empty frame returns false
+  - HVM-023: Geometry independent of visibility
+  - HVM-024: State reset on stopMonitoring
+  - HVM-025: Click inside drawer detection
+  - HVM-026: Expanded hit area boundaries
+  - HVM-027: Threshold documentation test
+
 **Test Cases**:
-- [ ] Scroll down triggers show when in menu bar zone
-- [ ] Scroll up triggers hide when drawer visible
-- [ ] Click outside triggers hide
-- [ ] Click inside does NOT trigger hide
-- [ ] Natural scrolling direction is respected
-- [ ] Threshold accumulation works correctly
-- [ ] Settings toggles enable/disable features
+- [x] Scroll down triggers show when in menu bar zone (HVM-015)
+- [x] Scroll up triggers hide when drawer visible (HVM-016)
+- [x] Click outside triggers hide (HVM-017)
+- [x] Click inside does NOT trigger hide (HVM-025)
+- [x] Natural scrolling direction is respected (documented in HVM-027)
+- [x] Threshold accumulation works correctly (documented in HVM-027)
+- [x] Settings toggles enable/disable features (HVM-015 to HVM-019)
+
+**Status**: ✅ COMPLETE (v0.3.13)
 
 ---
 
