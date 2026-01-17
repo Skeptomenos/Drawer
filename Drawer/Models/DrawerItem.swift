@@ -34,6 +34,9 @@ struct DrawerItem: Identifiable, Equatable {
     /// Index of this item in the drawer (for ordering)
     let index: Int
 
+    /// The menu bar section this item belongs to (hidden, alwaysHidden, or visible)
+    let sectionType: MenuBarSectionType
+
     // MARK: - Initialization
 
     /// Creates a DrawerItem from a CapturedIcon
@@ -46,6 +49,7 @@ struct DrawerItem: Identifiable, Equatable {
         self.originalFrame = capturedIcon.originalFrame
         self.capturedAt = capturedIcon.capturedAt
         self.index = index
+        self.sectionType = capturedIcon.sectionType
     }
 
     /// Creates a DrawerItem directly
@@ -53,12 +57,14 @@ struct DrawerItem: Identifiable, Equatable {
     ///   - image: The icon image
     ///   - originalFrame: The original position in the menu bar
     ///   - index: The position index in the drawer
-    init(image: CGImage, originalFrame: CGRect, index: Int) {
+    ///   - sectionType: The menu bar section type (defaults to .hidden)
+    init(image: CGImage, originalFrame: CGRect, index: Int, sectionType: MenuBarSectionType = .hidden) {
         self.id = UUID()
         self.image = image
         self.originalFrame = originalFrame
         self.capturedAt = Date()
         self.index = index
+        self.sectionType = sectionType
     }
 
     // MARK: - Equatable

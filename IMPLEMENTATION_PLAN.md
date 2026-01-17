@@ -27,7 +27,7 @@ Drawer is a macOS menu bar utility (forked from Hidden Bar) in **mature developm
 | `phase2a-core-models.md` | Not Started | P3 - Future | P1 - High |
 | `phase2b-section-architecture.md` | Not Started | P3 - Future | P1-P2 |
 | `phase2c-unit-tests.md` | Partial (26 tests exist) | P3 - Future | P2 |
-| `phase3-always-hidden-section.md` | Partial (setting exists) | P3 - Future | P2 |
+| `phase3-always-hidden-section.md` | **Complete** (v0.3.19) | P3 - Future | P2 |
 | `phase4a-overlay-panel-infrastructure.md` | Not Started | P4 - Future | P3 |
 | `phase4b-overlay-mode-integration.md` | Not Started | P4 - Future | P3 |
 
@@ -57,6 +57,7 @@ Drawer is a macOS menu bar utility (forked from Hidden Bar) in **mature developm
 | Hover-to-Show | Complete | HoverManager with debouncing |
 | Gesture Controls | **Complete** | All tasks complete (v0.3.14): scroll, click-outside, app-deactivation, settings UI |
 | Test Suite | Complete | 31 test files, 277 tests covering all managers and models |
+| Always Hidden Section | **Complete** | v0.3.19: third separator, section detection, drawer headers |
 
 ### Known Issues
 1. ~~**BUG**: Drawer disappears unexpectedly~~ - Fixed in Task 1.1 (v0.3.5)
@@ -547,30 +548,44 @@ The following specs define architecture improvements that would provide a cleane
 ## Future Work: Always Hidden Section
 
 ### Spec: phase3-always-hidden-section.md
-**Status:** Partial | **Priority:** P3 | **Effort:** ~45 min | **Depends on:** Phase 2B
+**Status:** ✅ COMPLETE (v0.3.19) | **Priority:** P3 | **Effort:** ~45 min | **Depends on:** Phase 2B
 
 **Goal:** Add a third menu bar section for icons that are NEVER visible in the menu bar, only in the Drawer panel.
 
-**Current State:**
-- `alwaysHiddenEnabled` setting EXISTS in SettingsManager (line 42)
-- Third separator NOT implemented
-- Section headers in Drawer NOT implemented
-- Settings UI toggle NOT implemented
+**Implementation (v0.3.19):**
+- Added `alwaysHiddenSectionEnabled` setting with Combine subject to SettingsManager
+- Created `alwaysHiddenSection: MenuBarSection?` in MenuBarManager
+- Added `setupAlwaysHiddenSection()` method with reactive binding to settings
+- Third separator uses distinct icon (`line.3.horizontal`)
+- Third separator stays at 10k length (never expands)
+- Added section detection in IconCapturer via `determineSectionType()` method
+- Added `sectionType: MenuBarSectionType` property to CapturedIcon and DrawerItem
+- Added section headers to DrawerContentView with "Always Hidden" and "Hidden" labels
+- Added toggle in GeneralSettingsView under "Advanced" section
 
-**Tasks:**
-- [ ] Create third separator with distinct icon (`line.3.horizontal`)
-- [ ] Third separator never expands (always 10k length)
-- [ ] Add section detection in IconCapturer based on X position
-- [ ] Add `sectionType` property to DrawerItem
-- [ ] Add section headers to DrawerContentView
-- [ ] Add toggle in GeneralSettingsView "Advanced" section
+**Acceptance Criteria:**
+- [x] `alwaysHiddenSectionEnabled` setting in SettingsManager
+- [x] Toggle in General Settings UI (Advanced section)
+- [x] Third separator appears when enabled
+- [x] Third separator uses distinct icon (`line.3.horizontal`)
+- [x] Third separator never expands (always at 10k)
+- [x] Icons captured correctly identify their section
+- [x] Drawer panel shows section headers when applicable
+- [x] Disabling removes the separator cleanly
+- [x] Setting persists across app restarts
+- [x] Build succeeds (Debug)
+- [x] All 277 tests pass (0 failures, 8 skipped)
 
-**Files:**
+**Files Modified:**
+- `Drawer/Core/Managers/SettingsManager.swift`
 - `Drawer/Core/Managers/MenuBarManager.swift`
 - `Drawer/Core/Engines/IconCapturer.swift`
 - `Drawer/Models/DrawerItem.swift`
 - `Drawer/UI/Panels/DrawerContentView.swift`
 - `Drawer/UI/Settings/GeneralSettingsView.swift`
+- `Drawer/UI/Settings/AppearanceSettingsView.swift`
+- `DrawerTests/Core/Managers/SettingsManagerTests.swift`
+- `DrawerTests/Mocks/MockSettingsManager.swift`
 
 ---
 

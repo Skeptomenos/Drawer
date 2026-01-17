@@ -50,13 +50,21 @@ struct CapturedIcon: Identifiable {
     let originalFrame: CGRect
     let capturedAt: Date
     let itemInfo: MenuBarItemInfo?
+    /// The menu bar section this icon belongs to (hidden, alwaysHidden, or visible)
+    let sectionType: MenuBarSectionType
 
-    init(image: CGImage, originalFrame: CGRect, itemInfo: MenuBarItemInfo? = nil) {
+    init(
+        image: CGImage,
+        originalFrame: CGRect,
+        itemInfo: MenuBarItemInfo? = nil,
+        sectionType: MenuBarSectionType = .hidden
+    ) {
         self.id = UUID()
         self.image = image
         self.originalFrame = originalFrame
         self.capturedAt = Date()
         self.itemInfo = itemInfo
+        self.sectionType = sectionType
     }
 }
 
@@ -129,9 +137,16 @@ final class IconCapturer: ObservableObject {
         logger.debug("Waiting for menu bar to render")
         try await Task.sleep(nanoseconds: renderWaitTime)
 
+        // Get separator positions for section type detection
+        let hiddenSeparatorX = menuBarManager.hiddenSection.controlItem.button?.window?.frame.origin.x ?? 0
+        let alwaysHiddenSeparatorX: CGFloat? = menuBarManager.alwaysHiddenSection?.controlItem.button?.window?.frame.origin.x
+
         let captureResult: MenuBarCaptureResult
         do {
-            captureResult = try await performWindowBasedCapture()
+            captureResult = try await performWindowBasedCapture(
+                hiddenSeparatorX: hiddenSeparatorX,
+                alwaysHiddenSeparatorX: alwaysHiddenSeparatorX
+            )
             logger.info("Capture successful: \(captureResult.icons.count) icons captured using window-based detection")
 
             #if DEBUG
@@ -172,7 +187,10 @@ final class IconCapturer: ObservableObject {
 
     // MARK: - Window-Based Capture (New Implementation)
 
-    private func performWindowBasedCapture() async throws -> MenuBarCaptureResult {
+    private func performWindowBasedCapture(
+        hiddenSeparatorX: CGFloat,
+        alwaysHiddenSeparatorX: CGFloat?
+    ) async throws -> MenuBarCaptureResult {
         guard let screen = NSScreen.main else {
             throw CaptureError.screenNotFound
         }
@@ -218,10 +236,16 @@ final class IconCapturer: ObservableObject {
 
         for item in menuBarItems {
             if let image = imagesByInfo[item.info] {
+                let sectionType = determineSectionType(
+                    for: item.frame,
+                    hiddenSeparatorX: hiddenSeparatorX,
+                    alwaysHiddenSeparatorX: alwaysHiddenSeparatorX
+                )
                 let icon = CapturedIcon(
                     image: image,
                     originalFrame: item.frame,
-                    itemInfo: item.info
+                    itemInfo: item.info,
+                    sectionType: sectionType
                 )
                 icons.append(icon)
                 unionFrame = unionFrame.union(item.frame)
@@ -404,5 +428,34 @@ final class IconCapturer: ObservableObject {
     func clearLastCapture() {
         lastCaptureResult = nil
         lastError = nil
+    }
+
+    // MARK: - Section Type Detection
+
+    /// Determines which menu bar section an icon belongs to based on its X position
+    /// relative to the separator positions.
+    /// - Parameters:
+    ///   - frame: The icon's frame in screen coordinates
+    ///   - hiddenSeparatorX: X position of the hidden section separator
+    ///   - alwaysHiddenSeparatorX: X position of the always-hidden separator (nil if disabled)
+    /// - Returns: The section type this icon belongs to
+    func determineSectionType(
+        for frame: CGRect,
+        hiddenSeparatorX: CGFloat,
+        alwaysHiddenSeparatorX: CGFloat?
+    ) -> MenuBarSectionType {
+        let iconCenterX = frame.midX
+
+        // If always-hidden section exists and icon is to its left
+        if let alwaysHiddenX = alwaysHiddenSeparatorX, iconCenterX < alwaysHiddenX {
+            return .alwaysHidden
+        }
+
+        // If icon is to the left of the hidden separator
+        if iconCenterX < hiddenSeparatorX {
+            return .hidden
+        }
+
+        return .visible
     }
 }

@@ -18,7 +18,7 @@ struct AppearanceSettingsView: View {
             }
 
             Section {
-                Toggle("Always-hidden section", isOn: $settings.alwaysHiddenEnabled)
+                Toggle("Always-hidden section", isOn: $settings.alwaysHiddenSectionEnabled)
                     .help("Enable a second separator for icons that never show")
             }
 

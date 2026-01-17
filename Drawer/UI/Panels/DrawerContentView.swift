@@ -50,6 +50,7 @@ enum DrawerDesign {
 
 /// The main content view displayed inside the Drawer panel.
 /// Renders captured menu bar icons in a horizontal layout with proper styling.
+/// Supports section headers for "Always Hidden" and "Hidden" sections.
 struct DrawerContentView: View {
 
     // MARK: - Properties
@@ -65,6 +66,23 @@ struct DrawerContentView: View {
 
     /// Optional action when an item is tapped
     var onItemTap: ((DrawerItem) -> Void)?
+
+    // MARK: - Computed Properties
+
+    /// Items in the always-hidden section
+    private var alwaysHiddenItems: [DrawerItem] {
+        items.filter { $0.sectionType == .alwaysHidden }
+    }
+
+    /// Items in the hidden section
+    private var hiddenItems: [DrawerItem] {
+        items.filter { $0.sectionType == .hidden }
+    }
+
+    /// Whether to show section headers (only when always-hidden section has items)
+    private var showSectionHeaders: Bool {
+        !alwaysHiddenItems.isEmpty
+    }
 
     // MARK: - Initialization
 
@@ -109,13 +127,43 @@ struct DrawerContentView: View {
         }
         .padding(.horizontal, DrawerDesign.horizontalPadding)
         .padding(.vertical, DrawerDesign.verticalPadding)
-        .frame(height: DrawerDesign.drawerHeight)
+        .frame(minHeight: DrawerDesign.drawerHeight)
     }
 
     // MARK: - Subviews
 
-    /// Renders the actual drawer items
+    /// Renders the actual drawer items, grouped by section when applicable
+    @ViewBuilder
     private var itemsView: some View {
+        if showSectionHeaders {
+            sectionedItemsView
+        } else {
+            flatItemsView
+        }
+    }
+
+    /// Renders items with section headers
+    private var sectionedItemsView: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            // Always Hidden section
+            if !alwaysHiddenItems.isEmpty {
+                SectionHeader(title: "Always Hidden")
+                IconRow(items: alwaysHiddenItems, onItemTap: onItemTap)
+            }
+
+            // Hidden section
+            if !hiddenItems.isEmpty {
+                if !alwaysHiddenItems.isEmpty {
+                    Divider()
+                }
+                SectionHeader(title: "Hidden")
+                IconRow(items: hiddenItems, onItemTap: onItemTap)
+            }
+        }
+    }
+
+    /// Renders items without section headers (flat layout)
+    private var flatItemsView: some View {
         ForEach(items) { item in
             DrawerItemView(item: item)
                 .onTapGesture {
@@ -197,6 +245,39 @@ struct DrawerItemView: View {
             .contentShape(Rectangle())
             .accessibilityLabel("Menu bar icon \(item.index + 1)")
             .accessibilityHint("Double tap to activate")
+    }
+}
+
+// MARK: - SectionHeader
+
+/// Header label for a section in the drawer
+struct SectionHeader: View {
+    let title: String
+
+    var body: some View {
+        Text(title)
+            .font(.system(size: 11, weight: .medium))
+            .foregroundColor(.secondary)
+            .padding(.horizontal, 8)
+    }
+}
+
+// MARK: - IconRow
+
+/// Horizontal row of icons for a section
+struct IconRow: View {
+    let items: [DrawerItem]
+    var onItemTap: ((DrawerItem) -> Void)?
+
+    var body: some View {
+        HStack(spacing: DrawerDesign.iconSpacing) {
+            ForEach(items) { item in
+                DrawerItemView(item: item)
+                    .onTapGesture {
+                        onItemTap?(item)
+                    }
+            }
+        }
     }
 }
 

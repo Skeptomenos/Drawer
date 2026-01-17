@@ -68,6 +68,13 @@ struct GeneralSettingsView: View {
                 }
             }
 
+            // MARK: - Advanced Section
+
+            Section("Advanced") {
+                Toggle("Enable \"Always Hidden\" section", isOn: $settings.alwaysHiddenSectionEnabled)
+                    .help("Add a third separator for icons that should never appear in the menu bar, only in the Drawer")
+            }
+
             Section {
                 HStack {
                     Text("Global Hotkey:")
@@ -101,5 +108,5 @@ struct GeneralSettingsView: View {
 
 #Preview {
     GeneralSettingsView()
-        .frame(width: 450, height: 480)
+        .frame(width: 450, height: 550)
 }

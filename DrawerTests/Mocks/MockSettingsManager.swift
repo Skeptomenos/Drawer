@@ -21,7 +21,7 @@ final class MockSettingsManager: ObservableObject {
     @Published var autoCollapseDelay: Double = 10.0
     @Published var launchAtLogin: Bool = false
     @Published var hideSeparators: Bool = false
-    @Published var alwaysHiddenEnabled: Bool = false
+    @Published var alwaysHiddenSectionEnabled: Bool = false
     @Published var useFullStatusBarOnExpand: Bool = false
     @Published var showOnHover: Bool = false
     @Published var hasCompletedOnboarding: Bool = false
@@ -60,7 +60,7 @@ final class MockSettingsManager: ObservableObject {
         autoCollapseDelay = 10.0
         launchAtLogin = false
         hideSeparators = false
-        alwaysHiddenEnabled = false
+        alwaysHiddenSectionEnabled = false
         useFullStatusBarOnExpand = false
         showOnHover = false
         hasCompletedOnboarding = false

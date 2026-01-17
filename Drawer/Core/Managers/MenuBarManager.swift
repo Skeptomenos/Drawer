@@ -26,15 +26,19 @@ final class MenuBarManager: ObservableObject {
 
     // MARK: - Sections
 
+    /// The always-hidden section (optional, user-enabled)
+    /// Icons in this section are never shown in the menu bar - only in the Drawer panel.
+    private(set) var alwaysHiddenSection: MenuBarSection?
+
     /// The hidden section (separator that expands to hide icons)
     private(set) var hiddenSection: MenuBarSection!
 
     /// The visible section (toggle button)
     private(set) var visibleSection: MenuBarSection!
 
-    /// All active sections
+    /// All active sections including optional always-hidden
     private var sections: [MenuBarSection] {
-        [hiddenSection, visibleSection].compactMap { $0 }
+        [alwaysHiddenSection, hiddenSection, visibleSection].compactMap { $0 }
     }
 
     // MARK: - Legacy Accessors (for backward compatibility)
@@ -120,6 +124,7 @@ final class MenuBarManager: ObservableObject {
     }
 
     private let separatorImage: ControlItemImage = .sfSymbol("circle.fill", weight: .regular)
+    private let alwaysHiddenSeparatorImage: ControlItemImage = .sfSymbol("line.3.horizontal", weight: .regular)
 
     // MARK: - Callbacks
 
@@ -135,6 +140,7 @@ final class MenuBarManager: ObservableObject {
         self.settings = settings
 
         setupSections(attempt: 1)
+        setupAlwaysHiddenSection()
         setupSettingsBindings()
         setupStateBindings()
 
@@ -212,6 +218,48 @@ final class MenuBarManager: ObservableObject {
         }
     }
 
+    /// Sets up or tears down the always-hidden section based on settings.
+    /// The always-hidden section stays at 10k pixels permanently - icons to its left
+    /// are only visible in the Drawer panel.
+    private func setupAlwaysHiddenSection() {
+        guard settings.alwaysHiddenSectionEnabled else {
+            // Remove section if disabled
+            if alwaysHiddenSection != nil {
+                alwaysHiddenSection?.isEnabled = false
+                alwaysHiddenSection = nil
+                logger.info("Always Hidden section disabled")
+            }
+            return
+        }
+
+        guard alwaysHiddenSection == nil else { return }
+
+        // Create always-hidden control item
+        let alwaysHiddenControl = ControlItem(
+            expandedLength: separatorExpandedLength,
+            collapsedLength: separatorCollapsedLength,
+            initialState: .collapsed  // Always stays collapsed (10k pixels)
+        )
+
+        guard alwaysHiddenControl.button != nil else {
+            logger.error("Failed to create always-hidden section: button is nil")
+            return
+        }
+
+        alwaysHiddenControl.image = alwaysHiddenSeparatorImage
+        alwaysHiddenControl.autosaveName = "drawer_always_hidden_v1"
+        alwaysHiddenControl.setMenu(createContextMenu())
+
+        alwaysHiddenSection = MenuBarSection(
+            type: .alwaysHidden,
+            controlItem: alwaysHiddenControl,
+            isExpanded: false,  // Never expands
+            isEnabled: true
+        )
+
+        logger.info("Always Hidden section enabled")
+    }
+
     private func handleSetupFailure(component: String, attempt: Int) {
         if attempt < maxRetryAttempts {
             logger.warning("\(component) is nil on attempt \(attempt)/\(self.maxRetryAttempts). Retrying...")
@@ -231,6 +279,12 @@ final class MenuBarManager: ObservableObject {
                 self?.restartAutoCollapseTimerIfNeeded()
             }
             .store(in: &cancellables)
+
+        settings.alwaysHiddenSettingsChanged
+            .sink { [weak self] in
+                self?.setupAlwaysHiddenSection()
+            }
+            .store(in: &cancellables)
     }
 
     /// Reactive binding: changes to `isCollapsed` automatically update section state and toggle image.
@@ -243,6 +297,7 @@ final class MenuBarManager: ObservableObject {
                 guard let self = self else { return }
                 // Update hidden section's expanded state
                 self.hiddenSection.isExpanded = !collapsed
+                // Note: alwaysHiddenSection stays collapsed (never expands) - no update needed
                 // Update toggle button image
                 self.visibleSection.controlItem.image = collapsed
                     ? self.expandImage

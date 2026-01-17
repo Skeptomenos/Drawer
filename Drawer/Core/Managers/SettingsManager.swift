@@ -39,7 +39,9 @@ final class SettingsManager: ObservableObject {
     @AppStorage("hideSeparators") var hideSeparators: Bool = false
 
     /// Whether the "always hidden" section is enabled
-    @AppStorage("alwaysHiddenEnabled") var alwaysHiddenEnabled: Bool = false
+    @AppStorage("alwaysHiddenSectionEnabled") var alwaysHiddenSectionEnabled: Bool = false {
+        didSet { alwaysHiddenSectionEnabledSubject.send(alwaysHiddenSectionEnabled) }
+    }
 
     /// Whether to use full status bar width when expanded
     @AppStorage("useFullStatusBarOnExpand") var useFullStatusBarOnExpand: Bool = false
@@ -84,6 +86,9 @@ final class SettingsManager: ObservableObject {
     let hideOnClickOutsideSubject = PassthroughSubject<Bool, Never>()
     let hideOnMouseAwaySubject = PassthroughSubject<Bool, Never>()
 
+    // Always Hidden section subject
+    let alwaysHiddenSectionEnabledSubject = PassthroughSubject<Bool, Never>()
+
     /// Combined publisher for any auto-collapse setting change
     var autoCollapseSettingsChanged: AnyPublisher<Void, Never> {
         Publishers.Merge(
@@ -91,6 +96,13 @@ final class SettingsManager: ObservableObject {
             autoCollapseDelaySubject.map { _ in () }
         )
         .eraseToAnyPublisher()
+    }
+
+    /// Publisher for always-hidden section setting changes
+    var alwaysHiddenSettingsChanged: AnyPublisher<Void, Never> {
+        alwaysHiddenSectionEnabledSubject
+            .map { _ in () }
+            .eraseToAnyPublisher()
     }
 
     // MARK: - Global Hotkey (Codable, stored as Data)
@@ -135,7 +147,7 @@ final class SettingsManager: ObservableObject {
             "autoCollapseDelay": 10.0,
             "launchAtLogin": false,
             "hideSeparators": false,
-            "alwaysHiddenEnabled": false,
+            "alwaysHiddenSectionEnabled": false,
             "useFullStatusBarOnExpand": false,
             "showOnHover": false,
             // Gesture trigger defaults
@@ -154,7 +166,7 @@ final class SettingsManager: ObservableObject {
         autoCollapseDelay = 10.0
         launchAtLogin = false
         hideSeparators = false
-        alwaysHiddenEnabled = false
+        alwaysHiddenSectionEnabled = false
         useFullStatusBarOnExpand = false
         showOnHover = false
         globalHotkey = nil

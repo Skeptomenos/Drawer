@@ -77,14 +77,14 @@ final class SettingsManagerTests: XCTestCase {
         XCTAssertFalse(sut.hideSeparators, "SET-004: Default hideSeparators should be false")
     }
 
-    // MARK: - SET-005: Default alwaysHiddenEnabled is false
+    // MARK: - SET-005: Default alwaysHiddenSectionEnabled is false
 
     func testSET005_DefaultAlwaysHiddenEnabledIsFalse() async throws {
         // Arrange - reset to defaults to ensure we're testing default values
         sut.resetToDefaults()
 
         // Assert
-        XCTAssertFalse(sut.alwaysHiddenEnabled, "SET-005: Default alwaysHiddenEnabled should be false")
+        XCTAssertFalse(sut.alwaysHiddenSectionEnabled, "SET-005: Default alwaysHiddenSectionEnabled should be false")
     }
 
     // MARK: - SET-006: Default useFullStatusBarOnExpand is false
@@ -123,7 +123,7 @@ final class SettingsManagerTests: XCTestCase {
         sut.autoCollapseDelay = 30.0
         sut.launchAtLogin = true
         sut.hideSeparators = true
-        sut.alwaysHiddenEnabled = true
+        sut.alwaysHiddenSectionEnabled = true
         sut.useFullStatusBarOnExpand = true
         sut.showOnHover = true
         sut.globalHotkey = GlobalHotkeyConfig(
@@ -142,7 +142,7 @@ final class SettingsManagerTests: XCTestCase {
         XCTAssertFalse(sut.autoCollapseEnabled)
         XCTAssertEqual(sut.autoCollapseDelay, 30.0, accuracy: 0.001)
         XCTAssertTrue(sut.hideSeparators)
-        XCTAssertTrue(sut.alwaysHiddenEnabled)
+        XCTAssertTrue(sut.alwaysHiddenSectionEnabled)
         XCTAssertTrue(sut.useFullStatusBarOnExpand)
         XCTAssertTrue(sut.showOnHover)
         XCTAssertNotNil(sut.globalHotkey)
@@ -155,7 +155,7 @@ final class SettingsManagerTests: XCTestCase {
         XCTAssertEqual(sut.autoCollapseDelay, 10.0, accuracy: 0.001, "SET-009: autoCollapseDelay should be reset to 10.0")
         XCTAssertFalse(sut.launchAtLogin, "SET-009: launchAtLogin should be reset to false")
         XCTAssertFalse(sut.hideSeparators, "SET-009: hideSeparators should be reset to false")
-        XCTAssertFalse(sut.alwaysHiddenEnabled, "SET-009: alwaysHiddenEnabled should be reset to false")
+        XCTAssertFalse(sut.alwaysHiddenSectionEnabled, "SET-009: alwaysHiddenSectionEnabled should be reset to false")
         XCTAssertFalse(sut.useFullStatusBarOnExpand, "SET-009: useFullStatusBarOnExpand should be reset to false")
         XCTAssertFalse(sut.showOnHover, "SET-009: showOnHover should be reset to false")
         XCTAssertNil(sut.globalHotkey, "SET-009: globalHotkey should be reset to nil")
