@@ -56,7 +56,7 @@ xcodebuild test -scheme Drawer -destination 'platform=macOS' \
   -only-testing:DrawerTests/MenuBarManagerTests/testToggle
 ```
 
-**Note**: No test target exists yet. When creating tests, add a `DrawerTests` target to the Xcode project.
+**Test Suite**: The `DrawerTests/` target contains 27 test files covering all managers, engines, and utilities. Run `xcodebuild test` to execute the full suite.
 
 ---
 

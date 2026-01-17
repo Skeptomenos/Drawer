@@ -270,9 +270,16 @@ hoverManager.updateDrawerFrame(drawerController.panelFrame)
 **Effort**: ~10 min
 **Description**: Fix outdated documentation about test suite.
 
-**Changes**:
-- Update "Note: No test target exists yet" to reflect actual test suite
-- Add reference to DrawerTests/ directory
+**Implementation** (v0.3.12):
+- Updated line 59 in AGENTS.md from "Note: No test target exists yet" to accurate documentation
+- Now reads: "Test Suite: The DrawerTests/ target contains 27 test files covering all managers, engines, and utilities"
+
+**Acceptance Criteria**:
+- [x] AGENTS.md accurately reflects test suite existence
+- [x] Build passes (DEBUG build succeeded)
+- [x] All tests pass (211 tests, 0 failures)
+
+**Status**: ✅ COMPLETE (v0.3.12)
 
 ---
 
