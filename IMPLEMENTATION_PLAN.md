@@ -56,7 +56,7 @@ Drawer is a macOS menu bar utility (forked from Hidden Bar) in **mature developm
 | Settings UI | Complete | Gesture trigger options added in Task 3.1 |
 | Hover-to-Show | Complete | HoverManager with debouncing |
 | Gesture Controls | **Complete** | All tasks complete (v0.3.14): scroll, click-outside, app-deactivation, settings UI |
-| Test Suite | Complete | 31 test files, 277 tests covering all managers and models |
+| Test Suite | Complete | 31 test files, 278 tests covering all managers and models |
 | Always Hidden Section | **Complete** | v0.3.19: third separator, section detection, drawer headers |
 
 ### Known Issues
@@ -122,9 +122,16 @@ hoverManager.updateDrawerFrame(drawerController.panelFrame)
 **Effort**: ~10 min
 **Description**: The existing `GlobalEventMonitor` already supports any `NSEvent.EventTypeMask`. No code changes needed - just document that `.scrollWheel` is supported.
 
+**Implementation** (v0.3.22):
+- Verified `GlobalEventMonitor` accepts `.scrollWheel` mask without modification
+- Added `testGEM007_ScrollWheelMaskIsSupported()` test case to `GlobalEventMonitorTests.swift`
+- Test confirms monitor starts/stops successfully with `.scrollWheel` mask
+
 **Verification**:
-- [ ] Confirm `GlobalEventMonitor(mask: .scrollWheel, handler:)` works
-- [ ] Add test case in `GlobalEventMonitorTests.swift`
+- [x] Confirm `GlobalEventMonitor(mask: .scrollWheel, handler:)` works
+- [x] Add test case in `GlobalEventMonitorTests.swift`
+
+**Status**: ✅ COMPLETE (v0.3.22)
 
 ---
 

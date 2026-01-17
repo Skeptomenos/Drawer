@@ -127,4 +127,38 @@ final class GlobalEventMonitorTests: XCTestCase {
         // but the test passing without crash confirms deinit worked correctly
         XCTAssertNil(localMonitor, "GEM-006: Monitor should be deallocated after setting to nil")
     }
+
+    // MARK: - GEM-007: scrollWheel mask is supported
+
+    /// Verifies that GlobalEventMonitor supports `.scrollWheel` mask.
+    /// This is essential for gesture controls (scroll-to-show/hide drawer).
+    /// See: specs/prd-gesture-controls.md and Task 2.1 in IMPLEMENTATION_PLAN.md
+    func testGEM007_ScrollWheelMaskIsSupported() {
+        // Arrange
+        var handlerCalled = false
+        let scrollMonitor = GlobalEventMonitor(mask: .scrollWheel) { _ in
+            handlerCalled = true
+        }
+
+        // Act - start and verify the monitor can be created and started
+        scrollMonitor.start()
+
+        // Assert
+        XCTAssertTrue(
+            scrollMonitor.isRunning,
+            "GEM-007: GlobalEventMonitor should support .scrollWheel mask and start successfully"
+        )
+
+        // Cleanup
+        scrollMonitor.stop()
+        XCTAssertFalse(
+            scrollMonitor.isRunning,
+            "GEM-007: Monitor should stop cleanly after scroll wheel test"
+        )
+
+        // Note: We cannot programmatically trigger scroll events in unit tests
+        // The handler would only be called during interactive testing.
+        // This test confirms the mask is accepted without errors.
+        _ = handlerCalled  // Silence unused variable warning
+    }
 }
