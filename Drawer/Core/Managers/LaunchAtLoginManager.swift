@@ -16,36 +16,36 @@ import ServiceManagement
 /// Replaces the deprecated SMLoginItemSetEnabled and eliminates the need for a helper app.
 @MainActor
 final class LaunchAtLoginManager: ObservableObject {
-    
+
     // MARK: - Singleton
-    
+
     static let shared = LaunchAtLoginManager()
-    
+
     // MARK: - Logger
-    
+
     private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "com.drawer", category: "LaunchAtLogin")
-    
+
     // MARK: - Published State
-    
+
     /// Whether launch at login is currently enabled
     @Published private(set) var isEnabled: Bool = false
-    
+
     /// Last error message if registration/unregistration failed
     @Published private(set) var lastError: String?
-    
+
     // MARK: - Initialization
-    
+
     private init() {
         refreshStatus()
     }
-    
+
     // MARK: - Public API
-    
+
     /// Enables or disables launch at login
     /// - Parameter enabled: Whether to enable launch at login
     func setEnabled(_ enabled: Bool) {
         lastError = nil
-        
+
         do {
             if enabled {
                 try SMAppService.mainApp.register()
@@ -61,12 +61,12 @@ final class LaunchAtLoginManager: ObservableObject {
             refreshStatus()
         }
     }
-    
+
     /// Refreshes the current status from the system
     func refreshStatus() {
         let status = SMAppService.mainApp.status
         isEnabled = (status == .enabled)
-        
+
         switch status {
         case .enabled:
             logger.debug("Launch at login status: enabled")
@@ -80,7 +80,7 @@ final class LaunchAtLoginManager: ObservableObject {
             logger.debug("Launch at login status: unknown")
         }
     }
-    
+
     /// Opens System Settings to the Login Items section for manual management
     func openSystemSettings() {
         if let url = URL(string: "x-apple.systempreferences:com.apple.LoginItems-Settings.extension") {

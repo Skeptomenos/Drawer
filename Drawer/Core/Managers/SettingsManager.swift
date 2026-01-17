@@ -14,76 +14,76 @@ import SwiftUI
 /// Centralized settings management using @AppStorage for persistence.
 @MainActor
 final class SettingsManager: ObservableObject {
-    
+
     // MARK: - Singleton
-    
+
     static let shared = SettingsManager()
-    
+
     // MARK: - Published Settings (backed by @AppStorage)
-    
+
     /// Whether auto-collapse is enabled (hides icons after delay)
     @AppStorage("autoCollapseEnabled") var autoCollapseEnabled: Bool = true {
         didSet { autoCollapseEnabledSubject.send(autoCollapseEnabled) }
     }
-    
+
     /// Delay in seconds before auto-collapse triggers
     @AppStorage("autoCollapseDelay") var autoCollapseDelay: Double = 10.0 {
         didSet { autoCollapseDelaySubject.send(autoCollapseDelay) }
     }
-    
+
     @AppStorage("launchAtLogin") var launchAtLogin: Bool = false {
         didSet { LaunchAtLoginManager.shared.setEnabled(launchAtLogin) }
     }
-    
+
     /// Whether to hide the separator icons in the menu bar
     @AppStorage("hideSeparators") var hideSeparators: Bool = false
-    
+
     /// Whether the "always hidden" section is enabled
     @AppStorage("alwaysHiddenEnabled") var alwaysHiddenEnabled: Bool = false
-    
+
     /// Whether to use full status bar width when expanded
     @AppStorage("useFullStatusBarOnExpand") var useFullStatusBarOnExpand: Bool = false
-    
+
     @AppStorage("showOnHover") var showOnHover: Bool = false {
         didSet { showOnHoverSubject.send(showOnHover) }
     }
-    
+
     @AppStorage("hasCompletedOnboarding") var hasCompletedOnboarding: Bool = false
-    
+
     // MARK: - Gesture Trigger Settings
-    
+
     /// Whether scrolling down in the menu bar area shows the drawer
     @AppStorage("showOnScrollDown") var showOnScrollDown: Bool = true {
         didSet { showOnScrollDownSubject.send(showOnScrollDown) }
     }
-    
+
     /// Whether scrolling up while drawer is visible hides it
     @AppStorage("hideOnScrollUp") var hideOnScrollUp: Bool = true {
         didSet { hideOnScrollUpSubject.send(hideOnScrollUp) }
     }
-    
+
     /// Whether clicking outside the drawer or switching apps hides it
     @AppStorage("hideOnClickOutside") var hideOnClickOutside: Bool = true {
         didSet { hideOnClickOutsideSubject.send(hideOnClickOutside) }
     }
-    
+
     /// Whether moving the mouse away from the drawer hides it
     @AppStorage("hideOnMouseAway") var hideOnMouseAway: Bool = true {
         didSet { hideOnMouseAwaySubject.send(hideOnMouseAway) }
     }
-    
+
     // MARK: - Combine Subjects
-    
+
     let autoCollapseEnabledSubject = PassthroughSubject<Bool, Never>()
     let autoCollapseDelaySubject = PassthroughSubject<Double, Never>()
     let showOnHoverSubject = PassthroughSubject<Bool, Never>()
-    
+
     // Gesture trigger subjects
     let showOnScrollDownSubject = PassthroughSubject<Bool, Never>()
     let hideOnScrollUpSubject = PassthroughSubject<Bool, Never>()
     let hideOnClickOutsideSubject = PassthroughSubject<Bool, Never>()
     let hideOnMouseAwaySubject = PassthroughSubject<Bool, Never>()
-    
+
     /// Combined publisher for any auto-collapse setting change
     var autoCollapseSettingsChanged: AnyPublisher<Void, Never> {
         Publishers.Merge(
@@ -92,9 +92,9 @@ final class SettingsManager: ObservableObject {
         )
         .eraseToAnyPublisher()
     }
-    
+
     // MARK: - Global Hotkey (Codable, stored as Data)
-    
+
     /// Global hotkey configuration for toggle action
     var globalHotkey: GlobalHotkeyConfig? {
         get {
@@ -111,23 +111,23 @@ final class SettingsManager: ObservableObject {
             objectWillChange.send()
         }
     }
-    
+
     // MARK: - Initialization
-    
+
     private init() {
         registerDefaults()
         syncLaunchAtLoginWithSystem()
     }
-    
+
     private func syncLaunchAtLoginWithSystem() {
         let systemState = LaunchAtLoginManager.shared.isEnabled
         if launchAtLogin != systemState {
             launchAtLogin = systemState
         }
     }
-    
+
     // MARK: - Default Registration
-    
+
     /// Registers default values for first-launch experience
     private func registerDefaults() {
         UserDefaults.standard.register(defaults: [
@@ -145,9 +145,9 @@ final class SettingsManager: ObservableObject {
             "hideOnMouseAway": true
         ])
     }
-    
+
     // MARK: - Reset
-    
+
     /// Resets all settings to defaults
     func resetToDefaults() {
         autoCollapseEnabled = true
@@ -173,7 +173,7 @@ struct GlobalHotkeyConfig: Codable, Equatable, CustomStringConvertible {
     let keyCode: UInt32
     let carbonFlags: UInt32
     let characters: String?
-    
+
     // Modifier flags
     let function: Bool
     let control: Bool
@@ -181,7 +181,7 @@ struct GlobalHotkeyConfig: Codable, Equatable, CustomStringConvertible {
     let shift: Bool
     let option: Bool
     let capsLock: Bool
-    
+
     var description: String {
         var result = ""
         if function { result += "Fn" }
@@ -190,7 +190,7 @@ struct GlobalHotkeyConfig: Codable, Equatable, CustomStringConvertible {
         if command { result += "⌘" }
         if shift { result += "⇧" }
         if capsLock { result += "⇪" }
-        
+
         // Special keys
         switch keyCode {
         case 36: result += "⏎"  // Return
@@ -201,10 +201,10 @@ struct GlobalHotkeyConfig: Codable, Equatable, CustomStringConvertible {
                 result += characters.uppercased()
             }
         }
-        
+
         return result
     }
-    
+
     static func fromLegacy(data: Data) -> GlobalHotkeyConfig? {
         struct LegacyFormat: Codable {
             let function: Bool
@@ -217,11 +217,11 @@ struct GlobalHotkeyConfig: Codable, Equatable, CustomStringConvertible {
             let characters: String?
             let keyCode: UInt32
         }
-        
+
         guard let legacy = try? JSONDecoder().decode(LegacyFormat.self, from: data) else {
             return nil
         }
-        
+
         return GlobalHotkeyConfig(
             keyCode: legacy.keyCode,
             carbonFlags: legacy.carbonFlags,

@@ -28,13 +28,13 @@ typealias CGSSpaceID = UInt64
 /// Result code for CGS operations.
 struct CGSError: RawRepresentable, Equatable {
     let rawValue: Int32
-    
+
     init(rawValue: Int32) {
         self.rawValue = rawValue
     }
-    
+
     static let success = CGSError(rawValue: 0)
-    
+
     var logString: String {
         "CGSError(\(rawValue))"
     }

@@ -9,16 +9,16 @@ import XCTest
 @testable import Drawer
 
 final class CaptureErrorTests: XCTestCase {
-    
+
     // MARK: - CAP-001: permissionDenied description
-    
+
     func testCAP001_PermissionDeniedDescription() {
         // Arrange
         let error = CaptureError.permissionDenied
-        
+
         // Act
         let description = error.errorDescription
-        
+
         // Assert
         XCTAssertNotNil(description, "CAP-001: Error description should not be nil")
         XCTAssertEqual(
@@ -27,16 +27,16 @@ final class CaptureErrorTests: XCTestCase {
             "CAP-001: permissionDenied description should be correct"
         )
     }
-    
+
     // MARK: - CAP-002: menuBarNotFound description
-    
+
     func testCAP002_MenuBarNotFoundDescription() {
         // Arrange
         let error = CaptureError.menuBarNotFound
-        
+
         // Act
         let description = error.errorDescription
-        
+
         // Assert
         XCTAssertNotNil(description, "CAP-002: Error description should not be nil")
         XCTAssertEqual(
@@ -45,16 +45,16 @@ final class CaptureErrorTests: XCTestCase {
             "CAP-002: menuBarNotFound description should be correct"
         )
     }
-    
+
     // MARK: - CAP-003: captureFailedNoImage description
-    
+
     func testCAP003_CaptureFailedNoImageDescription() {
         // Arrange
         let error = CaptureError.captureFailedNoImage
-        
+
         // Act
         let description = error.errorDescription
-        
+
         // Assert
         XCTAssertNotNil(description, "CAP-003: Error description should not be nil")
         XCTAssertEqual(
@@ -63,16 +63,16 @@ final class CaptureErrorTests: XCTestCase {
             "CAP-003: captureFailedNoImage description should be correct"
         )
     }
-    
+
     // MARK: - CAP-004: screenNotFound description
-    
+
     func testCAP004_ScreenNotFoundDescription() {
         // Arrange
         let error = CaptureError.screenNotFound
-        
+
         // Act
         let description = error.errorDescription
-        
+
         // Assert
         XCTAssertNotNil(description, "CAP-004: Error description should not be nil")
         XCTAssertEqual(
@@ -81,16 +81,16 @@ final class CaptureErrorTests: XCTestCase {
             "CAP-004: screenNotFound description should be correct"
         )
     }
-    
+
     // MARK: - CAP-005: invalidRegion description
-    
+
     func testCAP005_InvalidRegionDescription() {
         // Arrange
         let error = CaptureError.invalidRegion
-        
+
         // Act
         let description = error.errorDescription
-        
+
         // Assert
         XCTAssertNotNil(description, "CAP-005: Error description should not be nil")
         XCTAssertEqual(
@@ -99,16 +99,16 @@ final class CaptureErrorTests: XCTestCase {
             "CAP-005: invalidRegion description should be correct"
         )
     }
-    
+
     // MARK: - CAP-006: noMenuBarItems description
-    
+
     func testCAP006_NoMenuBarItemsDescription() {
         // Arrange
         let error = CaptureError.noMenuBarItems
-        
+
         // Act
         let description = error.errorDescription
-        
+
         // Assert
         XCTAssertNotNil(description, "CAP-006: Error description should not be nil")
         XCTAssertEqual(
@@ -117,9 +117,9 @@ final class CaptureErrorTests: XCTestCase {
             "CAP-006: noMenuBarItems description should be correct"
         )
     }
-    
+
     // MARK: - CAP-007: systemError description includes wrapped error
-    
+
     func testCAP007_SystemErrorDescriptionIncludesWrappedError() {
         // Arrange
         let underlyingError = NSError(
@@ -128,10 +128,10 @@ final class CaptureErrorTests: XCTestCase {
             userInfo: [NSLocalizedDescriptionKey: "Test underlying error message"]
         )
         let error = CaptureError.systemError(underlyingError)
-        
+
         // Act
         let description = error.errorDescription
-        
+
         // Assert
         XCTAssertNotNil(description, "CAP-007: Error description should not be nil")
         XCTAssertTrue(
@@ -147,7 +147,7 @@ final class CaptureErrorTests: XCTestCase {
             "System error: Test underlying error message",
             "CAP-007: systemError description should be formatted correctly"
         )
-        
+
         // Test with a different underlying error
         let anotherError = NSError(
             domain: "AnotherDomain",

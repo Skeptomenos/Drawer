@@ -13,19 +13,19 @@ import SwiftUI
 /// Uses native macOS Settings scene for proper integration with ⌘, shortcut.
 struct SettingsView: View {
     @EnvironmentObject private var appState: AppState
-    
+
     var body: some View {
         TabView {
             GeneralSettingsView()
                 .tabItem {
                     Label("General", systemImage: "gearshape")
                 }
-            
+
             AppearanceSettingsView()
                 .tabItem {
                     Label("Appearance", systemImage: "paintbrush")
                 }
-            
+
             AboutView()
                 .tabItem {
                     Label("About", systemImage: "info.circle")

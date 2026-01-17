@@ -11,16 +11,16 @@ import SwiftUI
 
 struct PermissionStatusView: View {
     @StateObject private var permissionManager = PermissionManager.shared
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Permissions")
                 .font(.headline)
-            
+
             Text("Drawer needs these permissions to show and interact with hidden menu bar icons.")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
-            
+
             VStack(spacing: 12) {
                 ForEach(PermissionType.allCases) { permission in
                     PermissionRow(
@@ -32,7 +32,7 @@ struct PermissionStatusView: View {
                 }
             }
             .padding(.top, 8)
-            
+
             if permissionManager.hasAllPermissions {
                 HStack {
                     Image(systemName: "checkmark.circle.fill")
@@ -56,22 +56,22 @@ struct PermissionRow: View {
     let status: PermissionStatus
     let onRequest: () -> Void
     let onOpenSettings: () -> Void
-    
+
     var body: some View {
         HStack(spacing: 12) {
             statusIcon
-            
+
             VStack(alignment: .leading, spacing: 2) {
                 Text(permission.displayName)
                     .font(.body)
-                
+
                 Text(permission.description)
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
-            
+
             Spacer()
-            
+
             actionButton
         }
         .padding(12)
@@ -80,7 +80,7 @@ struct PermissionRow: View {
                 .fill(Color(nsColor: .controlBackgroundColor))
         )
     }
-    
+
     @ViewBuilder
     private var statusIcon: some View {
         switch status {
@@ -98,7 +98,7 @@ struct PermissionRow: View {
                 .foregroundStyle(.orange)
         }
     }
-    
+
     @ViewBuilder
     private var actionButton: some View {
         switch status {
@@ -128,7 +128,7 @@ struct PermissionRow: View {
 
 struct PermissionBadge: View {
     @StateObject private var permissionManager = PermissionManager.shared
-    
+
     var body: some View {
         HStack(spacing: 4) {
             if permissionManager.hasAllPermissions {
@@ -138,7 +138,7 @@ struct PermissionBadge: View {
                 Image(systemName: "exclamationmark.shield.fill")
                     .foregroundStyle(.orange)
             }
-            
+
             Text(permissionManager.hasAllPermissions ? "Ready" : "Setup Required")
                 .font(.caption)
         }

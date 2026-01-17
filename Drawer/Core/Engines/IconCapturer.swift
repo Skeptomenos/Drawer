@@ -21,7 +21,7 @@ enum CaptureError: Error, LocalizedError {
     case invalidRegion
     case noMenuBarItems
     case systemError(Error)
-    
+
     var errorDescription: String? {
         switch self {
         case .permissionDenied:
@@ -50,7 +50,7 @@ struct CapturedIcon: Identifiable {
     let originalFrame: CGRect
     let capturedAt: Date
     let itemInfo: MenuBarItemInfo?
-    
+
     init(image: CGImage, originalFrame: CGRect, itemInfo: MenuBarItemInfo? = nil) {
         self.id = UUID()
         self.image = image
@@ -74,72 +74,72 @@ struct MenuBarCaptureResult {
 
 @MainActor
 final class IconCapturer: ObservableObject {
-    
+
     static let shared = IconCapturer()
-    
+
     private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "com.drawer", category: "IconCapturer")
-    
+
     private let permissionManager: any PermissionProviding
-    
+
     @Published private(set) var isCapturing: Bool = false
     @Published private(set) var lastCaptureResult: MenuBarCaptureResult?
     @Published private(set) var lastError: CaptureError?
-    
+
     private var menuBarHeight: CGFloat { MenuBarMetrics.height }
     private let renderWaitTime: UInt64 = 50_000_000
-    
+
     init(permissionManager: any PermissionProviding = PermissionManager.shared) {
         self.permissionManager = permissionManager
     }
-    
+
     #if DEBUG
     func setIsCapturingForTesting(_ value: Bool) {
         isCapturing = value
     }
     #endif
-    
+
     // MARK: - Public API
-    
+
     func captureHiddenIcons(menuBarManager: MenuBarManager) async throws -> MenuBarCaptureResult {
         guard !isCapturing else {
             logger.warning("Capture already in progress, skipping")
             throw CaptureError.systemError(NSError(domain: "IconCapturer", code: -1, userInfo: [NSLocalizedDescriptionKey: "Capture already in progress"]))
         }
-        
+
         isCapturing = true
         lastError = nil
-        
+
         defer {
             isCapturing = false
         }
-        
+
         guard permissionManager.hasScreenRecording else {
             logger.error("Screen Recording permission denied")
             let error = CaptureError.permissionDenied
             lastError = error
             throw error
         }
-        
+
         logger.debug("Expanding menu bar for capture")
         let wasCollapsed = menuBarManager.isCollapsed
         if wasCollapsed {
             menuBarManager.expand()
         }
-        
+
         logger.debug("Waiting for menu bar to render")
         try await Task.sleep(nanoseconds: renderWaitTime)
-        
+
         let captureResult: MenuBarCaptureResult
         do {
             captureResult = try await performWindowBasedCapture()
             logger.info("Capture successful: \(captureResult.icons.count) icons captured using window-based detection")
-            
+
             #if DEBUG
             logger.debug("=== CAPTURE RESULT DEBUG (B1.1) ===")
             logger.debug("Total icons: \(captureResult.icons.count)")
             logger.debug("Captured region: x=\(captureResult.capturedRegion.origin.x), y=\(captureResult.capturedRegion.origin.y), w=\(captureResult.capturedRegion.width), h=\(captureResult.capturedRegion.height)")
             logger.debug("Menu bar items found: \(captureResult.menuBarItems.count)")
-            
+
             for (index, icon) in captureResult.icons.enumerated() {
                 let f = icon.originalFrame
                 logger.debug("Icon \(index): frame=(\(f.origin.x),\(f.origin.y),\(f.width),\(f.height)), image=\(icon.image.width)x\(icon.image.height), owner=\(icon.itemInfo?.ownerName ?? "unknown")")
@@ -152,38 +152,38 @@ final class IconCapturer: ObservableObject {
             }
             throw error
         }
-        
+
         if wasCollapsed {
             logger.debug("Collapsing menu bar after capture")
             menuBarManager.collapse()
         }
-        
+
         lastCaptureResult = captureResult
         return captureResult
     }
-    
+
     func captureMenuBarRegion() async throws -> CGImage {
         guard permissionManager.hasScreenRecording else {
             throw CaptureError.permissionDenied
         }
-        
+
         return try await captureUsingScreenCaptureKit()
     }
-    
+
     // MARK: - Window-Based Capture (New Implementation)
-    
+
     private func performWindowBasedCapture() async throws -> MenuBarCaptureResult {
         guard let screen = NSScreen.main else {
             throw CaptureError.screenNotFound
         }
-        
+
         #if DEBUG
         logger.debug("=== WINDOW-BASED CAPTURE DEBUG (B1.1) ===")
         logger.debug("Screen: \(screen.localizedName), displayID: \(screen.displayID)")
         #endif
-        
+
         let menuBarItems = MenuBarItem.getMenuBarItemsForDisplay(screen.displayID)
-        
+
         #if DEBUG
         logger.debug("MenuBarItem.getMenuBarItemsForDisplay returned \(menuBarItems.count) items")
         for (index, item) in menuBarItems.enumerated() {
@@ -191,31 +191,31 @@ final class IconCapturer: ObservableObject {
             logger.debug("  [\(index)] windowID=\(item.windowID), owner=\(item.ownerName ?? "nil"), frame=(\(f.origin.x),\(f.origin.y),\(f.width),\(f.height))")
         }
         #endif
-        
+
         guard !menuBarItems.isEmpty else {
             logger.warning("No menu bar items found, falling back to ScreenCaptureKit")
             return try await performLegacyCapture()
         }
-        
+
         logger.debug("Found \(menuBarItems.count) menu bar item windows")
-        
+
         let imagesByInfo = ScreenCapture.captureMenuBarItems(menuBarItems, on: screen)
-        
+
         #if DEBUG
         logger.debug("ScreenCapture.captureMenuBarItems returned \(imagesByInfo.count) images")
         for (info, image) in imagesByInfo {
             logger.debug("  Captured: owner=\(info.ownerName ?? "nil"), windowID=\(info.windowID), size=\(image.width)x\(image.height)")
         }
         #endif
-        
+
         guard !imagesByInfo.isEmpty else {
             logger.warning("Window-based capture returned no images, falling back to ScreenCaptureKit")
             return try await performLegacyCapture()
         }
-        
+
         var icons: [CapturedIcon] = []
         var unionFrame = CGRect.null
-        
+
         for item in menuBarItems {
             if let image = imagesByInfo[item.info] {
                 let icon = CapturedIcon(
@@ -227,14 +227,14 @@ final class IconCapturer: ObservableObject {
                 unionFrame = unionFrame.union(item.frame)
             }
         }
-        
+
         let fullImage: CGImage
         if let compositeImage = createCompositeImage(from: icons, unionFrame: unionFrame, screen: screen) {
             fullImage = compositeImage
         } else {
             fullImage = try await captureUsingScreenCaptureKit()
         }
-        
+
         return MenuBarCaptureResult(
             fullImage: fullImage,
             icons: icons,
@@ -243,16 +243,16 @@ final class IconCapturer: ObservableObject {
             menuBarItems: menuBarItems
         )
     }
-    
+
     func createCompositeImage(from icons: [CapturedIcon], unionFrame: CGRect, screen: NSScreen) -> CGImage? {
         guard !icons.isEmpty else { return nil }
-        
+
         let scale = screen.backingScaleFactor
         let width = Int(unionFrame.width * scale)
         let height = Int(unionFrame.height * scale)
-        
+
         guard width > 0, height > 0 else { return nil }
-        
+
         guard let context = CGContext(
             data: nil,
             width: width,
@@ -264,7 +264,7 @@ final class IconCapturer: ObservableObject {
         ) else {
             return nil
         }
-        
+
         for icon in icons {
             let drawRect = CGRect(
                 x: (icon.originalFrame.origin.x - unionFrame.origin.x) * scale,
@@ -274,28 +274,28 @@ final class IconCapturer: ObservableObject {
             )
             context.draw(icon.image, in: drawRect)
         }
-        
+
         return context.makeImage()
     }
-    
+
     // MARK: - Legacy Capture (Fallback)
-    
+
     private func performLegacyCapture() async throws -> MenuBarCaptureResult {
         let image = try await captureUsingScreenCaptureKit()
-        
+
         guard let screen = NSScreen.main else {
             throw CaptureError.screenNotFound
         }
-        
+
         let capturedRegion = CGRect(
             x: 0,
             y: screen.frame.height - menuBarHeight,
             width: screen.frame.width,
             height: menuBarHeight
         )
-        
+
         let icons = sliceIconsUsingFixedWidth(from: image)
-        
+
         return MenuBarCaptureResult(
             fullImage: image,
             icons: icons,
@@ -304,10 +304,10 @@ final class IconCapturer: ObservableObject {
             menuBarItems: []
         )
     }
-    
+
     private func captureUsingScreenCaptureKit() async throws -> CGImage {
         logger.debug("Capturing using ScreenCaptureKit")
-        
+
         let content: SCShareableContent
         do {
             content = try await SCShareableContent.excludingDesktopWindows(false, onScreenWindowsOnly: true)
@@ -315,12 +315,12 @@ final class IconCapturer: ObservableObject {
             logger.error("Failed to get shareable content: \(error.localizedDescription)")
             throw CaptureError.systemError(error)
         }
-        
+
         guard let display = content.displays.first(where: { $0.displayID == CGMainDisplayID() }) else {
             logger.error("Could not find main display")
             throw CaptureError.screenNotFound
         }
-        
+
         let scale = NSScreen.main?.backingScaleFactor ?? 2.0
         let menuBarRect = CGRect(
             x: 0,
@@ -328,9 +328,9 @@ final class IconCapturer: ObservableObject {
             width: CGFloat(display.width),
             height: menuBarHeight * scale
         )
-        
+
         let filter = SCContentFilter(display: display, excludingWindows: [])
-        
+
         let config = SCStreamConfiguration()
         config.width = Int(menuBarRect.width)
         config.height = Int(menuBarRect.height)
@@ -338,7 +338,7 @@ final class IconCapturer: ObservableObject {
         config.scalesToFit = false
         config.showsCursor = false
         config.captureResolution = .best
-        
+
         do {
             let image = try await SCScreenshotManager.captureImage(
                 contentFilter: filter,
@@ -351,23 +351,23 @@ final class IconCapturer: ObservableObject {
             throw CaptureError.systemError(error)
         }
     }
-    
+
     // MARK: - Fixed-Width Slicing (Legacy Fallback)
-    
+
     let standardIconWidth: CGFloat = 22
     let iconSpacing: CGFloat = 4
-    
+
     func sliceIconsUsingFixedWidth(from image: CGImage) -> [CapturedIcon] {
         var icons: [CapturedIcon] = []
-        
+
         let imageWidth = CGFloat(image.width)
         let imageHeight = CGFloat(image.height)
         let scale = NSScreen.main?.backingScaleFactor ?? 2.0
-        
+
         let iconWidthPixels = standardIconWidth * scale
         let spacingPixels = iconSpacing * scale
         let stepSize = iconWidthPixels + spacingPixels
-        
+
         var currentX: CGFloat = 0
         while currentX + iconWidthPixels <= imageWidth {
             let cropRect = CGRect(
@@ -376,7 +376,7 @@ final class IconCapturer: ObservableObject {
                 width: iconWidthPixels,
                 height: imageHeight
             )
-            
+
             if let croppedImage = image.cropping(to: cropRect) {
                 let originalFrame = CGRect(
                     x: currentX / scale,
@@ -384,23 +384,23 @@ final class IconCapturer: ObservableObject {
                     width: standardIconWidth,
                     height: imageHeight / scale
                 )
-                
+
                 let icon = CapturedIcon(image: croppedImage, originalFrame: originalFrame)
                 icons.append(icon)
             }
-            
+
             currentX += stepSize
-            
+
             if icons.count > 50 {
                 logger.warning("Hit icon limit (50), stopping slice")
                 break
             }
         }
-        
+
         logger.debug("Sliced \(icons.count) icons using fixed-width fallback")
         return icons
     }
-    
+
     func clearLastCapture() {
         lastCaptureResult = nil
         lastError = nil

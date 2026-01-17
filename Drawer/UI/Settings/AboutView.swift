@@ -11,43 +11,43 @@ struct AboutView: View {
     private var appVersion: String {
         Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
     }
-    
+
     private var buildNumber: String {
         Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
     }
-    
+
     var body: some View {
         VStack(spacing: 20) {
             Spacer()
-            
+
             Image(nsImage: NSApp.applicationIconImage)
                 .resizable()
                 .frame(width: 96, height: 96)
-            
+
             Text("Drawer")
                 .font(.title)
                 .fontWeight(.semibold)
-            
+
             Text("Version \(appVersion) (\(buildNumber))")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
-            
+
             Text("A beautiful menu bar organizer for macOS")
                 .font(.body)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
-            
+
             Spacer()
-            
+
             VStack(spacing: 8) {
                 Link("View on GitHub", destination: URL(string: "https://github.com/dwarvesf/hidden")!)
                     .font(.callout)
-                
+
                 Text("Based on Hidden Bar by Dwarves Foundation")
                     .font(.caption)
                     .foregroundStyle(.tertiary)
             }
-            
+
             Spacer()
                 .frame(height: 20)
         }

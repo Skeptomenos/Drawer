@@ -14,34 +14,34 @@ import SwiftUI
 enum DrawerDesign {
     /// Horizontal spacing between icons (10pt)
     static let iconSpacing: CGFloat = 10
-    
+
     /// Horizontal padding at leading/trailing edges (16pt)
     static let horizontalPadding: CGFloat = 16
-    
+
     /// Vertical padding at top/bottom (7pt - midpoint of 6-8pt range)
     static let verticalPadding: CGFloat = 7
-    
+
     /// Standard icon size (22pt x 22pt)
     static let iconSize: CGFloat = 22
-    
+
     /// Corner radius for the drawer container (11pt - midpoint of 10-12pt range)
     static let cornerRadius: CGFloat = 11
-    
+
     /// Rim light border width (1pt)
     static let rimLightWidth: CGFloat = 1
-    
+
     /// Rim light opacity (17.5% - midpoint of 15-20% range)
     static let rimLightOpacity: Double = 0.175
-    
+
     /// Shadow radius (12pt - midpoint of 10-15pt range)
     static let shadowRadius: CGFloat = 12
-    
+
     /// Shadow Y offset (3pt - midpoint of 2-4pt range)
     static let shadowYOffset: CGFloat = 3
-    
+
     /// Shadow opacity
     static let shadowOpacity: Double = 0.3
-    
+
     /// Overall drawer height (34pt - midpoint of 32-36pt range)
     static let drawerHeight: CGFloat = 34
 }
@@ -51,23 +51,23 @@ enum DrawerDesign {
 /// The main content view displayed inside the Drawer panel.
 /// Renders captured menu bar icons in a horizontal layout with proper styling.
 struct DrawerContentView: View {
-    
+
     // MARK: - Properties
-    
+
     /// The drawer items to display
     let items: [DrawerItem]
-    
+
     /// Whether items are currently being loaded
     let isLoading: Bool
-    
+
     /// Error that occurred during capture, if any
     let error: Error?
-    
+
     /// Optional action when an item is tapped
     var onItemTap: ((DrawerItem) -> Void)?
-    
+
     // MARK: - Initialization
-    
+
     init(
         items: [DrawerItem] = [],
         isLoading: Bool = false,
@@ -79,7 +79,7 @@ struct DrawerContentView: View {
         self.error = error
         self.onItemTap = onItemTap
     }
-    
+
     /// Convenience initializer from CapturedIcons
     init(
         icons: [CapturedIcon],
@@ -92,9 +92,9 @@ struct DrawerContentView: View {
         self.error = error
         self.onItemTap = onItemTap
     }
-    
+
     // MARK: - Body
-    
+
     var body: some View {
         HStack(spacing: DrawerDesign.iconSpacing) {
             if isLoading {
@@ -111,9 +111,9 @@ struct DrawerContentView: View {
         .padding(.vertical, DrawerDesign.verticalPadding)
         .frame(height: DrawerDesign.drawerHeight)
     }
-    
+
     // MARK: - Subviews
-    
+
     /// Renders the actual drawer items
     private var itemsView: some View {
         ForEach(items) { item in
@@ -123,33 +123,33 @@ struct DrawerContentView: View {
                 }
         }
     }
-    
+
     /// Loading indicator while capturing icons
     private var loadingView: some View {
         HStack(spacing: DrawerDesign.iconSpacing) {
             ProgressView()
                 .scaleEffect(0.7)
                 .frame(width: DrawerDesign.iconSize, height: DrawerDesign.iconSize)
-            
+
             Text("Capturing...")
                 .font(.system(size: 11, weight: .medium))
                 .foregroundColor(.secondary)
         }
     }
-    
+
     /// Error state when capture fails
     private func errorView(_ error: Error) -> some View {
         HStack(spacing: DrawerDesign.iconSpacing) {
             Image(systemName: "exclamationmark.triangle")
                 .font(.system(size: 14, weight: .medium))
                 .foregroundColor(.orange)
-            
+
             Text("Capture failed")
                 .font(.system(size: 11, weight: .medium))
                 .foregroundColor(.secondary)
         }
     }
-    
+
     /// Empty state when no icons are available
     private var emptyStateView: some View {
         HStack(spacing: DrawerDesign.iconSpacing) {
@@ -158,12 +158,12 @@ struct DrawerContentView: View {
             }
         }
     }
-    
+
     /// Creates a placeholder icon for empty state
     private func placeholderIcon(for index: Int) -> some View {
         let iconNames = ["wifi", "battery.100", "speaker.wave.2", "clock", "gear"]
         let iconName = iconNames[index % iconNames.count]
-        
+
         return Circle()
             .fill(Color.white.opacity(0.15))
             .frame(width: DrawerDesign.iconSize - 4, height: DrawerDesign.iconSize - 4)
@@ -179,11 +179,11 @@ struct DrawerContentView: View {
 
 /// Renders a single drawer item (captured icon)
 struct DrawerItemView: View {
-    
+
     let item: DrawerItem
-    
+
     @State private var isHovered: Bool = false
-    
+
     var body: some View {
         Image(decorative: item.image, scale: NSScreen.main?.backingScaleFactor ?? 2.0)
             .resizable()
@@ -258,7 +258,7 @@ struct DrawerItemView: View {
 
 /// Helpers for creating mock data in Xcode Previews
 enum PreviewHelpers {
-    
+
     /// Creates a solid color CGImage for testing
     /// - Parameters:
     ///   - color: The fill color
@@ -268,7 +268,7 @@ enum PreviewHelpers {
         let scale: CGFloat = 2.0
         let pixelWidth = Int(size.width * scale)
         let pixelHeight = Int(size.height * scale)
-        
+
         guard let context = CGContext(
             data: nil,
             width: pixelWidth,
@@ -280,16 +280,16 @@ enum PreviewHelpers {
         ) else {
             return nil
         }
-        
+
         // Fill with color
         context.setFillColor(color.cgColor)
         context.fill(CGRect(x: 0, y: 0, width: pixelWidth, height: pixelHeight))
-        
+
         // Draw a simple icon shape (circle with inner detail)
         let centerX = CGFloat(pixelWidth) / 2
         let centerY = CGFloat(pixelHeight) / 2
         let radius = min(centerX, centerY) * 0.8
-        
+
         // Outer circle
         context.setFillColor(NSColor.white.withAlphaComponent(0.9).cgColor)
         context.fillEllipse(in: CGRect(
@@ -298,7 +298,7 @@ enum PreviewHelpers {
             width: radius * 2,
             height: radius * 2
         ))
-        
+
         // Inner detail
         let innerRadius = radius * 0.4
         context.setFillColor(NSColor.gray.cgColor)
@@ -308,10 +308,10 @@ enum PreviewHelpers {
             width: innerRadius * 2,
             height: innerRadius * 2
         ))
-        
+
         return context.makeImage()
     }
-    
+
     /// Creates an array of mock DrawerItems for preview
     /// - Parameter count: Number of items to create
     /// - Returns: Array of DrawerItems with test images
@@ -321,11 +321,11 @@ enum PreviewHelpers {
             .systemPurple, .systemRed, .systemTeal, .systemYellow,
             .systemIndigo, .systemBrown
         ]
-        
+
         return (0..<count).compactMap { index in
             let color = colors[index % colors.count]
             guard let image = createTestImage(color: color) else { return nil }
-            
+
             return DrawerItem(
                 image: image,
                 originalFrame: CGRect(

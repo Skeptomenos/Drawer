@@ -12,7 +12,7 @@ enum OnboardingStep: Int, CaseIterable {
     case permissions = 1
     case tutorial = 2
     case completion = 3
-    
+
     var canSkip: Bool {
         switch self {
         case .welcome, .completion:
@@ -27,16 +27,16 @@ struct OnboardingView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var permissionManager = PermissionManager.shared
     @State private var currentStep: OnboardingStep = .welcome
-    
+
     let onComplete: () -> Void
-    
+
     var body: some View {
         VStack(spacing: 0) {
             stepContent
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-            
+
             Divider()
-            
+
             navigationBar
                 .padding(.horizontal, 24)
                 .padding(.vertical, 16)
@@ -44,7 +44,7 @@ struct OnboardingView: View {
         .frame(width: 520, height: 480)
         .background(Color(nsColor: .windowBackgroundColor))
     }
-    
+
     @ViewBuilder
     private var stepContent: some View {
         switch currentStep {
@@ -58,7 +58,7 @@ struct OnboardingView: View {
             CompletionStepView()
         }
     }
-    
+
     private var navigationBar: some View {
         HStack {
             if currentStep.canSkip {
@@ -68,13 +68,13 @@ struct OnboardingView: View {
                 .buttonStyle(.plain)
                 .foregroundStyle(.secondary)
             }
-            
+
             Spacer()
-            
+
             stepIndicator
-            
+
             Spacer()
-            
+
             if currentStep == .completion {
                 Button("Get Started") {
                     completeOnboarding()
@@ -91,7 +91,7 @@ struct OnboardingView: View {
             }
         }
     }
-    
+
     private var stepIndicator: some View {
         HStack(spacing: 8) {
             ForEach(OnboardingStep.allCases, id: \.rawValue) { step in
@@ -101,7 +101,7 @@ struct OnboardingView: View {
             }
         }
     }
-    
+
     private var nextButtonTitle: String {
         switch currentStep {
         case .welcome:
@@ -114,11 +114,11 @@ struct OnboardingView: View {
             return "Get Started"
         }
     }
-    
+
     private var canAdvance: Bool {
         true
     }
-    
+
     private func advanceToNextStep() {
         withAnimation(.easeInOut(duration: 0.2)) {
             if let nextStep = OnboardingStep(rawValue: currentStep.rawValue + 1) {
@@ -126,7 +126,7 @@ struct OnboardingView: View {
             }
         }
     }
-    
+
     private func completeOnboarding() {
         onComplete()
         dismiss()
