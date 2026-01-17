@@ -412,8 +412,9 @@ final class MenuBarManagerTests: XCTestCase {
 
         // Assert
         // Initial state is isCollapsed=true
-        // Should show "Expand" image (chevron.left)
-        XCTAssertEqual(sut.currentToggleImageDescription, "Expand", "MBM-018: Initial image should be 'Expand' (chevron.left)")
+        // Should show "Expand" image (chevron.left for LTR)
+        // Note: With ControlItemImage.sfSymbol(), the accessibilityDescription is the SF Symbol name
+        XCTAssertEqual(sut.currentToggleImageDescription, sut.expandImageSymbolName, "MBM-018: Initial image should be expand symbol (\(sut.expandImageSymbolName))")
     }
 
     // MARK: - MBM-019: Toggle updates image
@@ -421,13 +422,14 @@ final class MenuBarManagerTests: XCTestCase {
     func testMBM019_ToggleUpdatesImage() async throws {
         // Arrange
         sut = MenuBarManager(settings: SettingsManager.shared)
-        XCTAssertEqual(sut.currentToggleImageDescription, "Expand", "Precondition: Start with Expand image")
+        // Note: With ControlItemImage.sfSymbol(), the accessibilityDescription is the SF Symbol name
+        XCTAssertEqual(sut.currentToggleImageDescription, sut.expandImageSymbolName, "Precondition: Start with expand symbol")
 
         // Act - Expand
         sut.toggle()
 
         // Assert
-        XCTAssertEqual(sut.currentToggleImageDescription, "Collapse", "MBM-019: After toggle (expand), image should be 'Collapse' (chevron.right)")
+        XCTAssertEqual(sut.currentToggleImageDescription, sut.collapseImageSymbolName, "MBM-019: After toggle (expand), image should be collapse symbol (\(sut.collapseImageSymbolName))")
 
         // Wait for debounce
         try await Task.sleep(for: .milliseconds(350))
@@ -437,7 +439,7 @@ final class MenuBarManagerTests: XCTestCase {
 
         // Assert
         if sut.isCollapsed {
-            XCTAssertEqual(sut.currentToggleImageDescription, "Expand", "MBM-019: After toggle (collapse), image should be 'Expand'")
+            XCTAssertEqual(sut.currentToggleImageDescription, sut.expandImageSymbolName, "MBM-019: After toggle (collapse), image should be expand symbol")
         }
     }
 

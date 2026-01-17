@@ -478,21 +478,35 @@ The following specs define architecture improvements that would provide a cleane
 ---
 
 ### Spec: phase2b-section-architecture.md
-**Status:** Not Started | **Priority:** P3 | **Effort:** ~40 min | **Depends on:** Phase 2A
+**Status:** ✅ COMPLETE (v0.3.17) | **Priority:** P3 | **Effort:** ~40 min | **Depends on:** Phase 2A
 
 **Goal:** Create `MenuBarSection` model and refactor `MenuBarManager` to use section-based architecture.
 
-**Current State:** `MenuBarManager` uses raw `toggleItem`/`separatorItem` NSStatusItem properties.
+**Implementation (v0.3.17):**
+- Created `MenuBarSection.swift` with `MenuBarSectionType` enum (`visible`, `hidden`, `alwaysHidden`)
+- `MenuBarSection` class wraps `ControlItem` with `isExpanded` and `isEnabled` state properties
+- Refactored `MenuBarManager` to use `hiddenSection` and `visibleSection` properties
+- Implemented `setupSections()` method with retry logic for robust initialization
+- State bindings sync `isCollapsed` with section expanded state
+- Legacy accessors (`separatorControlItem`, `toggleControlItem`) provide backward compatibility
+- Fixed test assertions to use `expandImageSymbolName`/`collapseImageSymbolName` instead of hardcoded strings
 
-**Tasks:**
-- [ ] Create `MenuBarSection.swift` with `MenuBarSectionType` enum (`visible`, `hidden`, `alwaysHidden`)
-- [ ] Refactor `MenuBarManager` to use `hiddenSection` and `visibleSection` properties
-- [ ] Implement `setupSections()` method
-- [ ] Add section-based state bindings
+**Acceptance Criteria:**
+- [x] `MenuBarSection` class with `type`, `controlItem`, `isExpanded`, `isEnabled`
+- [x] `MenuBarSectionType` enum with `visible`, `hidden`, `alwaysHidden` cases
+- [x] `MenuBarManager` uses `hiddenSection` and `visibleSection`
+- [x] `setupSections()` creates sections with proper initial state
+- [x] `setupStateBindings()` syncs `isCollapsed` with section state
+- [x] All existing functionality preserved (toggle, expand, collapse, auto-collapse)
+- [x] RTL support works
+- [x] Context menu works
+- [x] Build succeeds (Debug)
+- [x] All 224 tests pass (0 failures, 8 skipped)
 
 **Files:**
-- Create: `Drawer/Core/Models/MenuBarSection.swift`
-- Modify: `Drawer/Core/Managers/MenuBarManager.swift`
+- Created: `Drawer/Core/Models/MenuBarSection.swift`
+- Modified: `Drawer/Core/Managers/MenuBarManager.swift`
+- Modified: `DrawerTests/Core/Managers/MenuBarManagerTests.swift` (test assertions updated)
 
 ---
 
