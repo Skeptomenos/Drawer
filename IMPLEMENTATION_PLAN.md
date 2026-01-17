@@ -56,7 +56,7 @@ Drawer is a macOS menu bar utility (forked from Hidden Bar) in **mature developm
 | Settings UI | Complete | Gesture trigger options added in Task 3.1 |
 | Hover-to-Show | Complete | HoverManager with debouncing |
 | Gesture Controls | **Complete** | All tasks complete (v0.3.14): scroll, click-outside, app-deactivation, settings UI |
-| Test Suite | Complete | 27 test files, 224 tests covering all managers |
+| Test Suite | Complete | 31 test files, 277 tests covering all managers and models |
 
 ### Known Issues
 1. ~~**BUG**: Drawer disappears unexpectedly~~ - Fixed in Task 1.1 (v0.3.5)
@@ -511,20 +511,32 @@ The following specs define architecture improvements that would provide a cleane
 ---
 
 ### Spec: phase2c-unit-tests.md
-**Status:** Partial | **Priority:** P3 | **Effort:** ~30 min | **Depends on:** Phase 2A, 2B
+**Status:** ✅ COMPLETE (v0.3.18) | **Priority:** P3 | **Effort:** ~30 min | **Depends on:** Phase 2A, 2B
 
 **Goal:** Create unit tests for new architecture models.
 
-**Current State:** 26 test files exist. Missing model tests for ControlItem/MenuBarSection.
+**Implementation (v0.3.18):**
+- Created `ControlItemStateTests.swift` with 6 tests (CIS-001 to CIS-006)
+- Created `ControlItemImageTests.swift` with 11 tests (CII-001 to CII-011)
+- Created `ControlItemTests.swift` with 15 tests (CI-001 to CI-015)
+- Created `MenuBarSectionTests.swift` with 19 tests (MBS-001 to MBS-019)
+- Added Phase 0 regression test (MBM-021) and section architecture test (MBM-022)
+- All tests follow project conventions (ID prefix, Arrange-Act-Assert, MARK comments)
 
 **Tasks:**
-- [ ] Create `ControlItemStateTests.swift`
-- [ ] Create `ControlItemImageTests.swift`
-- [ ] Create `ControlItemTests.swift`
-- [ ] Create `MenuBarSectionTests.swift`
-- [ ] Add Phase 0 regression test for initial separator length
+- [x] Create `ControlItemStateTests.swift`
+- [x] Create `ControlItemImageTests.swift`
+- [x] Create `ControlItemTests.swift`
+- [x] Create `MenuBarSectionTests.swift`
+- [x] Add Phase 0 regression test for initial separator length (MBM-021)
 
-**Files to Create:**
+**Acceptance Criteria:**
+- [x] All 4 test files created in `DrawerTests/Models/`
+- [x] Files added to Xcode project (DrawerTests target)
+- [x] All 277 tests pass (0 failures, 8 skipped)
+- [x] Phase 0 regression test verifies separator=10000 when isCollapsed=true
+
+**Files Created:**
 - `DrawerTests/Models/ControlItemStateTests.swift`
 - `DrawerTests/Models/ControlItemImageTests.swift`
 - `DrawerTests/Models/ControlItemTests.swift`

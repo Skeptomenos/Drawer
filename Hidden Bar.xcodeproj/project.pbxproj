@@ -34,6 +34,10 @@
 		DRAWERTEST00100000000026 /* WindowInfoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000026 /* WindowInfoTests.swift */; };
 		DRAWERTEST00100000000027 /* MenuBarMetricsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000027 /* MenuBarMetricsTests.swift */; };
 		DRAWERTEST00100000000028 /* AppStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000028 /* AppStateTests.swift */; };
+		DRAWERTEST00100000000029 /* ControlItemStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000029 /* ControlItemStateTests.swift */; };
+		DRAWERTEST00100000000030 /* ControlItemImageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000030 /* ControlItemImageTests.swift */; };
+		DRAWERTEST00100000000031 /* ControlItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000031 /* ControlItemTests.swift */; };
+		DRAWERTEST00100000000032 /* MenuBarSectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000032 /* MenuBarSectionTests.swift */; };
 		DRAWER001000000000000001 /* DrawerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000001 /* DrawerApp.swift */; };
 		DRAWER001000000000000002 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000002 /* AppState.swift */; };
 		DRAWER001000000000000003 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000003 /* AppDelegate.swift */; };
@@ -157,6 +161,10 @@
 		DRAWERTEST00200000000026 /* WindowInfoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowInfoTests.swift; sourceTree = "<group>"; };
 		DRAWERTEST00200000000027 /* MenuBarMetricsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarMetricsTests.swift; sourceTree = "<group>"; };
 		DRAWERTEST00200000000028 /* AppStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStateTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000029 /* ControlItemStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlItemStateTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000030 /* ControlItemImageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlItemImageTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000031 /* ControlItemTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlItemTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000032 /* MenuBarSectionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarSectionTests.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000001 /* DrawerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerApp.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000002 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000003 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -312,8 +320,12 @@
 		DRAWERTEST00400000000005 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				DRAWERTEST00200000000029 /* ControlItemStateTests.swift */,
+				DRAWERTEST00200000000030 /* ControlItemImageTests.swift */,
+				DRAWERTEST00200000000031 /* ControlItemTests.swift */,
 				DRAWERTEST00200000000016 /* DrawerItemTests.swift */,
 				DRAWERTEST00200000000017 /* GlobalHotkeyConfigTests.swift */,
+				DRAWERTEST00200000000032 /* MenuBarSectionTests.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -880,6 +892,10 @@
 				DRAWERTEST00100000000026 /* WindowInfoTests.swift in Sources */,
 				DRAWERTEST00100000000027 /* MenuBarMetricsTests.swift in Sources */,
 				DRAWERTEST00100000000028 /* AppStateTests.swift in Sources */,
+				DRAWERTEST00100000000029 /* ControlItemStateTests.swift in Sources */,
+				DRAWERTEST00100000000030 /* ControlItemImageTests.swift in Sources */,
+				DRAWERTEST00100000000031 /* ControlItemTests.swift in Sources */,
+				DRAWERTEST00100000000032 /* MenuBarSectionTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

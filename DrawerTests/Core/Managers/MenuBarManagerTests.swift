@@ -455,4 +455,48 @@ final class MenuBarManagerTests: XCTestCase {
         // NOTE: This test might fail if setupUI sets it to 20 (Expanded)
         XCTAssertEqual(sut.currentSeparatorLength, 10000, "MBM-020: Initial separator length should be 10000 (Collapsed)")
     }
+
+    // MARK: - MBM-021: Phase 0 Regression - Initial Separator Length Matches isCollapsed
+
+    /// Phase 0 Bug Fix Regression Test
+    /// Bug: Separator was initialized to 20px (expanded) even when isCollapsed=true
+    /// Fix: setupUI() now respects initial isCollapsed state
+    /// See: docs/ROOT_CAUSE_INVISIBLE_ICONS.md
+    func testMBM021_Phase0Regression_InitialSeparatorLengthMatchesCollapsedState() async throws {
+        // Arrange
+        // Create manager - it should start with isCollapsed=true by default
+        sut = MenuBarManager(settings: SettingsManager.shared)
+
+        // Assert - CRITICAL REGRESSION TEST
+        // Before the Phase 0 fix, this assertion would fail because:
+        // - isCollapsed was initialized to true
+        // - BUT separator length was set to 20 (expanded) in setupUI
+        // This caused a state desync where icons were invisible
+        XCTAssertTrue(sut.isCollapsed, "MBM-021: Manager should start with isCollapsed=true")
+        XCTAssertEqual(
+            sut.currentSeparatorLength,
+            10000,
+            "MBM-021 PHASE 0 REGRESSION: When isCollapsed=true, separator MUST be 10000. " +
+            "If this fails, the invisible icons bug has regressed! " +
+            "See docs/ROOT_CAUSE_INVISIBLE_ICONS.md"
+        )
+    }
+
+    // MARK: - MBM-022: Section-based architecture syncs with isCollapsed
+
+    func testMBM022_HiddenSectionSyncsWithIsCollapsed() async throws {
+        // Arrange
+        sut = MenuBarManager(settings: SettingsManager.shared)
+        XCTAssertTrue(sut.isCollapsed, "Precondition: should start collapsed")
+
+        // Assert initial sync
+        XCTAssertFalse(sut.hiddenSection?.isExpanded ?? true, "MBM-022: hiddenSection.isExpanded should be false when isCollapsed=true")
+
+        // Act - expand
+        sut.toggle()
+
+        // Assert sync after toggle
+        XCTAssertFalse(sut.isCollapsed, "Should be expanded after toggle")
+        XCTAssertTrue(sut.hiddenSection?.isExpanded ?? false, "MBM-022: hiddenSection.isExpanded should be true when isCollapsed=false")
+    }
 }

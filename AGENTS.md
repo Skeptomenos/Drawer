@@ -33,13 +33,13 @@ xcodebuild -scheme Drawer clean build
 ### Linting
 ```bash
 # Lint all files
-swiftlint lint
+swiftlint lint Drawer/
 
 # Auto-fix issues
-swiftlint --fix
+swiftlint --fix Drawer/
 
 # Lint specific file
-swiftlint lint --path Drawer/Core/Managers/MenuBarManager.swift
+swiftlint lint Drawer/Core/Managers/MenuBarManager.swift
 ```
 
 ### Testing
@@ -56,7 +56,7 @@ xcodebuild test -scheme Drawer -destination 'platform=macOS' \
   -only-testing:DrawerTests/MenuBarManagerTests/testToggle
 ```
 
-**Test Suite**: The `DrawerTests/` target contains 27 test files covering all managers, engines, and utilities. Run `xcodebuild test` to execute the full suite.
+**Test Suite**: The `DrawerTests/` target contains 31 test files with 277 tests covering all managers, engines, models, and utilities. Run `xcodebuild test` to execute the full suite.
 
 ---
 
