@@ -10,8 +10,8 @@
 | **Branch** | main |
 | **Base** | main |
 | **Total Files** | 31 |
-| **Reviewed** | 1 |
-| **Findings** | 0 (0 critical, 0 high, 1 info) |
+| **Reviewed** | 2 |
+| **Findings** | 0 (0 critical, 0 high, 2 info) |
 | **Status** | In Progress |
 
 ## Project Context
@@ -30,7 +30,7 @@
 | Status | File | Focus Areas | Findings |
 |--------|------|-------------|----------|
 | [x] | `Drawer/Core/Managers/PermissionManager.swift` | TCC permission flow, AXIsProcessTrusted validation, permission polling | 0 (1 info) |
-| [ ] | `Drawer/Utilities/EventSimulator.swift` | CGEvent injection, coordinate validation, permission gating | - |
+| [x] | `Drawer/Utilities/EventSimulator.swift` | CGEvent injection, coordinate validation, permission gating | 0 (1 info) |
 | [ ] | `Drawer/Core/Engines/IconCapturer.swift` | Screen recording permission check, SCStreamConfiguration security | - |
 | [ ] | `Drawer/Utilities/ScreenCapture.swift` | CGWindowListCreateImage usage, permission gating | - |
 | [ ] | `Drawer/Bridging/Shims/Private.swift` | Private API declarations, @_silgen_name usage, App Store compliance | - |
@@ -108,3 +108,4 @@ From AGENTS.md and project documentation:
 | Date | File | Reviewer | Result |
 |------|------|----------|--------|
 | 2026-01-17 | `Drawer/Core/Managers/PermissionManager.swift` | Ralphus | PASSED (0 critical, 0 high, 1 info) |
+| 2026-01-17 | `Drawer/Utilities/EventSimulator.swift` | Ralphus | PASSED (0 critical, 0 high, 1 info) |
