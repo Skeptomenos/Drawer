@@ -592,28 +592,41 @@ The following specs define architecture improvements that would provide a cleane
 ## Future Work: Overlay Mode
 
 ### Spec: phase4a-overlay-panel-infrastructure.md
-**Status:** Not Started | **Priority:** P4 | **Effort:** ~40 min
+**Status:** ✅ COMPLETE (v0.3.20) | **Priority:** P4 | **Effort:** ~40 min
 
 **Goal:** Create infrastructure for "Overlay Mode" - floating NSPanel at menu bar level as alternative to expand mode. Solves MacBook Notch problem.
 
-**Current State:** `UI/Overlay/` directory does not exist. No overlay components implemented.
+**Implementation (v0.3.20):**
+- Created `Drawer/UI/Overlay/` directory
+- Created `OverlayPanel.swift` - NSPanel with `.statusBar` level, borderless, non-activating
+- Created `OverlayContentView.swift` - SwiftUI HStack with `OverlayIconView`, `OverlayIconButtonStyle`, `OverlayBackground` using `NSVisualEffectView`
+- Created `OverlayPanelController.swift` - ObservableObject managing panel lifecycle with show/hide/toggle animations
+- Added `overlayModeEnabled` setting to SettingsManager with Combine subject
 
-**Tasks:**
-- [ ] Create `Drawer/UI/Overlay/` directory
-- [ ] Create `OverlayPanel.swift` - NSPanel at menu bar level
-- [ ] Create `OverlayContentView.swift` - Horizontal icon strip (SwiftUI)
-- [ ] Create `OverlayPanelController.swift` - Lifecycle management
-- [ ] Add `overlayModeEnabled` setting to SettingsManager
+**Acceptance Criteria:**
+- [x] `OverlayPanel` created with menu-bar-level positioning
+- [x] `OverlayContentView` renders icons horizontally
+- [x] `OverlayPanelController` manages panel lifecycle
+- [x] Panel appears at menu bar Y-coordinate (via `positionAtMenuBar`)
+- [x] Panel styled with NSVisualEffectView (`.menu` material)
+- [x] Hover states work on icons (via `OverlayIconButtonStyle`)
+- [x] `overlayModeEnabled` setting added
+- [x] All files compile without errors (Build succeeded)
+- [x] All 277 tests pass (0 failures, 8 skipped)
+- [x] Panel doesn't steal focus (`canBecomeKey = false`, `canBecomeMain = false`)
 
-**Files to Create:**
+**Files Created:**
 - `Drawer/UI/Overlay/OverlayPanel.swift`
 - `Drawer/UI/Overlay/OverlayContentView.swift`
 - `Drawer/UI/Overlay/OverlayPanelController.swift`
 
+**Files Modified:**
+- `Drawer/Core/Managers/SettingsManager.swift`
+
 ---
 
 ### Spec: phase4b-overlay-mode-integration.md
-**Status:** Not Started | **Priority:** P4 | **Effort:** ~45 min | **Depends on:** Phase 4A
+**Status:** Not Started | **Priority:** P4 | **Effort:** ~45 min | **Depends on:** Phase 4A ✅
 
 **Goal:** Integrate Overlay Panel with toggle flow, IconCapturer, and EventSimulator.
 

@@ -74,6 +74,15 @@ final class SettingsManager: ObservableObject {
         didSet { hideOnMouseAwaySubject.send(hideOnMouseAway) }
     }
 
+    // MARK: - Display Mode Settings
+
+    /// Whether overlay mode is enabled (floating panel instead of expand mode).
+    /// When true, hidden icons appear in a floating panel at menu bar level
+    /// instead of expanding the menu bar. This solves the MacBook Notch problem.
+    @AppStorage("overlayModeEnabled") var overlayModeEnabled: Bool = false {
+        didSet { overlayModeEnabledSubject.send(overlayModeEnabled) }
+    }
+
     // MARK: - Combine Subjects
 
     let autoCollapseEnabledSubject = PassthroughSubject<Bool, Never>()
@@ -88,6 +97,9 @@ final class SettingsManager: ObservableObject {
 
     // Always Hidden section subject
     let alwaysHiddenSectionEnabledSubject = PassthroughSubject<Bool, Never>()
+
+    // Overlay mode subject
+    let overlayModeEnabledSubject = PassthroughSubject<Bool, Never>()
 
     /// Combined publisher for any auto-collapse setting change
     var autoCollapseSettingsChanged: AnyPublisher<Void, Never> {
@@ -154,7 +166,9 @@ final class SettingsManager: ObservableObject {
             "showOnScrollDown": true,
             "hideOnScrollUp": true,
             "hideOnClickOutside": true,
-            "hideOnMouseAway": true
+            "hideOnMouseAway": true,
+            // Overlay mode default
+            "overlayModeEnabled": false
         ])
     }
 
@@ -175,6 +189,8 @@ final class SettingsManager: ObservableObject {
         hideOnScrollUp = true
         hideOnClickOutside = true
         hideOnMouseAway = true
+        // Overlay mode
+        overlayModeEnabled = false
     }
 }
 

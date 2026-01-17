@@ -152,7 +152,8 @@ Drawer/
 │   └── Engines/
 │       └── IconCapturer.swift      # ScreenCaptureKit logic
 ├── UI/
-│   ├── Panels/             # NSPanel wrappers
+│   ├── Panels/             # NSPanel wrappers (DrawerPanel)
+│   ├── Overlay/            # Overlay mode components (OverlayPanel, OverlayPanelController)
 │   ├── Settings/           # Preferences views
 │   ├── Onboarding/         # First-run experience
 │   └── Components/         # Reusable UI elements
