@@ -10,8 +10,8 @@
 | **Branch** | main |
 | **Base** | main |
 | **Total Files** | 31 |
-| **Reviewed** | 4 |
-| **Findings** | 0 (0 critical, 0 high, 4 low, 5 info) |
+| **Reviewed** | 5 |
+| **Findings** | 0 (0 critical, 0 high, 5 low, 6 info) |
 | **Status** | In Progress |
 
 ## Project Context
@@ -33,7 +33,7 @@
 | [x] | `Drawer/Utilities/EventSimulator.swift` | CGEvent injection, coordinate validation, permission gating | 0 (1 info) |
 | [x] | `Drawer/Core/Engines/IconCapturer.swift` | Screen recording permission check, SCStreamConfiguration security | 0 (2 low, 1 info) |
 | [x] | `Drawer/Utilities/ScreenCapture.swift` | CGWindowListCreateImage usage, permission gating | 0 (2 low, 2 info) |
-| [ ] | `Drawer/Bridging/Shims/Private.swift` | Private API declarations, @_silgen_name usage, App Store compliance | - |
+| [x] | `Drawer/Bridging/Shims/Private.swift` | Private API declarations, @_silgen_name usage, App Store compliance | 0 (1 low, 1 info) |
 | [ ] | `Drawer/Bridging/Bridging.swift` | CGS API wrappers, cross-process window access | - |
 | [ ] | `Drawer/Utilities/GlobalEventMonitor.swift` | Global event monitoring, event types, permission requirements | - |
 | [ ] | `Drawer/Utilities/WindowInfo.swift` | CGWindowList enumeration, cross-process information access | - |
@@ -111,3 +111,4 @@ From AGENTS.md and project documentation:
 | 2026-01-17 | `Drawer/Utilities/EventSimulator.swift` | Ralphus | PASSED (0 critical, 0 high, 1 info) |
 | 2026-01-17 | `Drawer/Core/Engines/IconCapturer.swift` | Ralphus | PASSED (0 critical, 0 high, 2 low, 1 info) |
 | 2026-01-17 | `Drawer/Utilities/ScreenCapture.swift` | Ralphus | PASSED (0 critical, 0 high, 2 low, 2 info) |
+| 2026-01-17 | `Drawer/Bridging/Shims/Private.swift` | Ralphus | PASSED (0 critical, 0 high, 1 low, 1 info) |
