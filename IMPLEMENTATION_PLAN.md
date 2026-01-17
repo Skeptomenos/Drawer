@@ -447,19 +447,30 @@ The following specs define architecture improvements that would provide a cleane
 ---
 
 ### Spec: phase2a-core-models.md
-**Status:** Not Started | **Priority:** P3 | **Effort:** ~30 min | **Depends on:** Phase 1
+**Status:** ✅ COMPLETE (v0.3.16) | **Priority:** P3 | **Effort:** ~30 min | **Depends on:** Phase 1
 
 **Goal:** Create foundational `ControlItem` and `ControlItemImage` types that encapsulate NSStatusItem management.
 
-**Current State:** No model files exist. Using raw `NSStatusItem` directly.
+**Implementation (v0.3.16):**
+- Created `Drawer/Core/Models/` directory
+- Created `ControlItemState.swift` - enum with `expanded`, `collapsed`, `hidden` cases (CaseIterable, String raw values)
+- Created `ControlItemImage.swift` - enum for SF Symbols, BezierPath, assets, none; includes `render(size:)` method and static common images (chevronLeft, chevronRight, separatorDot)
+- Created `ControlItem.swift` - `@MainActor` wrapper around `NSStatusItem` with reactive `@Published state` and `image` properties; auto-updates length/visibility on state change
 
-**Tasks:**
-- [ ] Create `Drawer/Core/Models/` directory
-- [ ] Create `ControlItemState.swift` - enum with `expanded`, `collapsed`, `hidden`
-- [ ] Create `ControlItemImage.swift` - enum for SF Symbols, BezierPath, assets
-- [ ] Create `ControlItem.swift` - `@MainActor` wrapper around `NSStatusItem` with reactive state
+**Acceptance Criteria:**
+- [x] `ControlItemState` enum with `expanded`, `collapsed`, `hidden` cases
+- [x] `ControlItemImage` enum with SF Symbol, BezierPath, asset, and none cases
+- [x] `ControlItemImage.render()` returns properly configured NSImage
+- [x] `ControlItem` wraps NSStatusItem with reactive `state` property
+- [x] Setting `state` automatically updates `statusItem.length`
+- [x] Setting `state = .hidden` sets `statusItem.isVisible = false`
+- [x] Setting `image` updates the button image
+- [x] Convenience initializer creates its own NSStatusItem
+- [x] All files compile without errors (Build succeeded)
+- [x] All files have correct copyright headers
+- [x] All 224 tests pass (0 failures, 6 skipped)
 
-**Files to Create:**
+**Files Created:**
 - `Drawer/Core/Models/ControlItemState.swift`
 - `Drawer/Core/Models/ControlItemImage.swift`
 - `Drawer/Core/Models/ControlItem.swift`
