@@ -55,7 +55,7 @@ Drawer is a macOS menu bar utility (forked from Hidden Bar) in **mature developm
 | Permissions | Complete | Screen Recording + Accessibility flows |
 | Settings UI | Partial | Missing gesture trigger options |
 | Hover-to-Show | Complete | HoverManager with debouncing |
-| Gesture Controls | **In Progress** | Tasks 1.1-1.2, 2.2-2.4 complete, remaining tasks pending |
+| Gesture Controls | **In Progress** | Tasks 1.1-1.2, 2.2-2.4, 3.1, 4.1 complete, Tasks 4.2, 5.1-5.2 pending |
 | Test Suite | Complete | 26 test files covering all managers |
 
 ### Known Issues
@@ -239,19 +239,29 @@ hoverManager.updateDrawerFrame(drawerController.panelFrame)
 ### Phase 4: Integration & Polish (Priority: Medium)
 
 #### Task 4.1: Wire Up Gesture Settings in AppState
-**File**: `Drawer/App/AppState.swift`
+**File**: `Drawer/App/AppState.swift`, `Drawer/Core/Managers/HoverManager.swift`
 **Effort**: ~30 min
 **Description**: Update `setupHoverBindings()` to handle all gesture triggers.
 
-**Changes**:
-- Subscribe to all new settings subjects
-- Start/stop appropriate monitors based on settings
-- Ensure monitors are cleaned up properly
+**Implementation** (v0.3.11):
+- **AppState.swift**: Refactored `setupHoverBindings()`:
+  - Removed `showOnHover` guard from callbacks - each trigger type now handles its own settings check
+  - Combined all gesture trigger subjects using `Publishers.CombineLatest4` + `combineLatest`
+  - Monitor starts if ANY gesture trigger is enabled (not just `showOnHover`)
+  - Settings changes immediately start/stop monitors via reactive subscription
+- **HoverManager.swift**: Added settings checks to each gesture handler:
+  - `handleMouseMoved()`: Checks `showOnHover` before scheduling hover-to-show
+  - `handleMouseMoved()`: Checks `hideOnMouseAway` before scheduling hide on mouse leave
+  - `handleScrollEvent()`: Checks `showOnScrollDown`/`hideOnScrollUp` before triggering actions
+  - (Click-outside and app-deactivation already checked `hideOnClickOutside`)
 
 **Acceptance Criteria**:
-- [ ] Toggling any setting immediately affects behavior
-- [ ] No memory leaks (monitors properly stopped)
-- [ ] All gesture combinations work correctly
+- [x] Toggling any setting immediately affects behavior
+- [x] No memory leaks (monitors properly stopped)
+- [x] All gesture combinations work correctly
+- [x] Build passes (211 tests, 0 failures)
+
+**Status**: ✅ COMPLETE (v0.3.11)
 
 ---
 

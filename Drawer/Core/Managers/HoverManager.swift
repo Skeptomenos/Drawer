@@ -143,7 +143,8 @@ final class HoverManager: ObservableObject {
         isMouseInTriggerZone = isInMenuBarTriggerZone(mouseLocation)
         isMouseInDrawerArea = isDrawerVisible && isInDrawerArea(mouseLocation)
         
-        if isMouseInTriggerZone && !wasInTriggerZone && !isDrawerVisible {
+        // Only schedule hover-to-show if showOnHover setting is enabled
+        if isMouseInTriggerZone && !wasInTriggerZone && !isDrawerVisible && SettingsManager.shared.showOnHover {
             scheduleShowDrawer()
         } else if !isMouseInTriggerZone && wasInTriggerZone && !isDrawerVisible {
             cancelShowDrawer()
@@ -153,7 +154,10 @@ final class HoverManager: ObservableObject {
             let isInSafeArea = isMouseInTriggerZone || isMouseInDrawerArea
             
             if !isInSafeArea && (wasInTriggerZone || wasInDrawerArea) {
-                scheduleHideDrawer()
+                // Only schedule hide if hideOnMouseAway setting is enabled
+                if SettingsManager.shared.hideOnMouseAway {
+                    scheduleHideDrawer()
+                }
             } else if isInSafeArea {
                 cancelHideDrawer()
             }
@@ -216,8 +220,15 @@ final class HoverManager: ObservableObject {
     
     /// Handles scroll wheel events for gesture-based drawer control.
     /// Respects natural scrolling preference and accumulates delta until threshold is met.
+    /// Only triggers actions if the corresponding settings (showOnScrollDown, hideOnScrollUp) are enabled.
     private func handleScrollEvent(_ event: NSEvent?) {
         guard let event = event else { return }
+        
+        // Early exit if both scroll settings are disabled
+        let settings = SettingsManager.shared
+        guard settings.showOnScrollDown || settings.hideOnScrollUp else {
+            return
+        }
         
         let mouseLocation = NSEvent.mouseLocation
         
@@ -258,12 +269,12 @@ final class HoverManager: ObservableObject {
         
         // Check if we've reached the threshold
         if accumulatedScrollDelta >= scrollThreshold {
-            if currentDirection == .down && !isDrawerVisible {
-                // Scroll down gesture to show drawer
+            if currentDirection == .down && !isDrawerVisible && settings.showOnScrollDown {
+                // Scroll down gesture to show drawer (respects setting)
                 onShouldShowDrawer?()
                 resetScrollState()
-            } else if currentDirection == .up && isDrawerVisible {
-                // Scroll up gesture to hide drawer
+            } else if currentDirection == .up && isDrawerVisible && settings.hideOnScrollUp {
+                // Scroll up gesture to hide drawer (respects setting)
                 onShouldHideDrawer?()
                 resetScrollState()
             }

@@ -145,14 +145,14 @@ final class AppState: ObservableObject {
     }
     
     private func setupHoverBindings() {
+        // Callbacks from HoverManager - no need to check settings here
+        // HoverManager already checks the appropriate setting for each trigger type
         hoverManager.onShouldShowDrawer = { [weak self] in
-            guard let self = self, self.settings.showOnHover else { return }
-            self.showDrawerWithCapture()
+            self?.showDrawerWithCapture()
         }
         
         hoverManager.onShouldHideDrawer = { [weak self] in
-            guard let self = self, self.settings.showOnHover else { return }
-            self.hideDrawer()
+            self?.hideDrawer()
         }
         
         $isDrawerVisible
@@ -161,7 +161,21 @@ final class AppState: ObservableObject {
             }
             .store(in: &cancellables)
         
-        settings.showOnHoverSubject
+        // Subscribe to all gesture trigger setting changes
+        // Monitor should run if ANY gesture trigger is enabled
+        let anyGestureTriggerEnabled = Publishers.CombineLatest4(
+            settings.showOnHoverSubject.prepend(settings.showOnHover),
+            settings.showOnScrollDownSubject.prepend(settings.showOnScrollDown),
+            settings.hideOnScrollUpSubject.prepend(settings.hideOnScrollUp),
+            settings.hideOnClickOutsideSubject.prepend(settings.hideOnClickOutside)
+        )
+        .combineLatest(settings.hideOnMouseAwaySubject.prepend(settings.hideOnMouseAway))
+        .map { combined, hideOnMouseAway in
+            let (showOnHover, showOnScrollDown, hideOnScrollUp, hideOnClickOutside) = combined
+            return showOnHover || showOnScrollDown || hideOnScrollUp || hideOnClickOutside || hideOnMouseAway
+        }
+        
+        anyGestureTriggerEnabled
             .removeDuplicates()
             .sink { [weak self] enabled in
                 if enabled {
@@ -172,7 +186,8 @@ final class AppState: ObservableObject {
             }
             .store(in: &cancellables)
         
-        if settings.showOnHover {
+        // Start monitoring on init if any gesture trigger is enabled
+        if settings.showOnHover || settings.showOnScrollDown || settings.hideOnScrollUp || settings.hideOnClickOutside || settings.hideOnMouseAway {
             hoverManager.startMonitoring()
         }
     }
