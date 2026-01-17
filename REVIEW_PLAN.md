@@ -10,8 +10,8 @@
 | **Branch** | main |
 | **Base** | main |
 | **Total Files** | 31 |
-| **Reviewed** | 30 |
-| **Findings** | 0 (0 critical, 0 high, 2 medium, 16 low, 66 info) |
+| **Reviewed** | 31 |
+| **Findings** | 0 (0 critical, 0 high, 2 medium, 16 low, 69 info) |
 | **Status** | In Progress |
 
 ## Project Context
@@ -79,7 +79,7 @@
 
 | Status | File | Focus Areas | Findings |
 |--------|------|-------------|----------|
-| [ ] | `hidden/Info.plist` | Bundle config, required permissions declared | - |
+| [x] | `hidden/Info.plist` | Bundle config, required permissions declared | 0 (3 info) |
 | [ ] | `LauncherApplication/Info.plist` | Launcher config, LSUIElement | - |
 
 ## Known Concerns
@@ -137,3 +137,4 @@ From AGENTS.md and project documentation:
 | 2026-01-18 | `Drawer/UI/Onboarding/CompletionStepView.swift` | Ralphus | PASSED (0 critical, 0 high, 0 medium, 0 low, 3 info) |
 | 2026-01-18 | `Drawer/UI/Components/PermissionStatusView.swift` | Ralphus | PASSED (0 critical, 0 high, 0 medium, 0 low, 3 info) |
 | 2026-01-18 | `Drawer/Models/DrawerItem.swift` | Ralphus | PASSED (0 critical, 0 high, 0 medium, 0 low, 4 info) |
+| 2026-01-18 | `hidden/Info.plist` | Ralphus | PASSED (0 critical, 0 high, 0 medium, 0 low, 3 info) |
