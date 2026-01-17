@@ -10,8 +10,8 @@
 | **Branch** | main |
 | **Base** | main |
 | **Total Files** | 31 |
-| **Reviewed** | 7 |
-| **Findings** | 0 (0 critical, 0 high, 1 medium, 6 low, 10 info) |
+| **Reviewed** | 8 |
+| **Findings** | 0 (0 critical, 0 high, 1 medium, 7 low, 13 info) |
 | **Status** | In Progress |
 
 ## Project Context
@@ -36,7 +36,7 @@
 | [x] | `Drawer/Bridging/Shims/Private.swift` | Private API declarations, @_silgen_name usage, App Store compliance | 0 (1 low, 1 info) |
 | [x] | `Drawer/Bridging/Bridging.swift` | CGS API wrappers, cross-process window access | 0 (1 medium, 1 low, 2 info) |
 | [x] | `Drawer/Utilities/GlobalEventMonitor.swift` | Global event monitoring, event types, permission requirements | 0 (2 info) |
-| [ ] | `Drawer/Utilities/WindowInfo.swift` | CGWindowList enumeration, cross-process information access | - |
+| [x] | `Drawer/Utilities/WindowInfo.swift` | CGWindowList enumeration, cross-process information access | 0 (1 low, 3 info) |
 | [ ] | `Drawer/Core/Managers/SettingsManager.swift` | @AppStorage usage, hotkey validation, no sensitive data logging | - |
 
 ### Priority 1 - Core Logic (Business Logic, State Management)
@@ -114,3 +114,4 @@ From AGENTS.md and project documentation:
 | 2026-01-17 | `Drawer/Bridging/Shims/Private.swift` | Ralphus | PASSED (0 critical, 0 high, 1 low, 1 info) |
 | 2026-01-17 | `Drawer/Bridging/Bridging.swift` | Ralphus | PASSED (0 critical, 0 high, 1 medium, 1 low, 2 info) |
 | 2026-01-17 | `Drawer/Utilities/GlobalEventMonitor.swift` | Ralphus | PASSED (0 critical, 0 high, 0 medium, 0 low, 2 info) |
+| 2026-01-17 | `Drawer/Utilities/WindowInfo.swift` | Ralphus | PASSED (0 critical, 0 high, 0 medium, 1 low, 3 info) |
