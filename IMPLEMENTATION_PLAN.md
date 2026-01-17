@@ -55,7 +55,7 @@ Drawer is a macOS menu bar utility (forked from Hidden Bar) in **mature developm
 | Permissions | Complete | Screen Recording + Accessibility flows |
 | Settings UI | Partial | Missing gesture trigger options |
 | Hover-to-Show | Complete | HoverManager with debouncing |
-| Gesture Controls | **In Progress** | Tasks 1.1-1.2, 2.2-2.3 complete, remaining tasks pending |
+| Gesture Controls | **In Progress** | Tasks 1.1-1.2, 2.2-2.4 complete, remaining tasks pending |
 | Test Suite | Complete | 26 test files covering all managers |
 
 ### Known Issues
@@ -186,14 +186,22 @@ hoverManager.updateDrawerFrame(drawerController.panelFrame)
 **Effort**: ~20 min
 **Description**: Hide drawer when user switches to another app.
 
-**Changes**:
-- Subscribe to `NSWorkspace.didDeactivateApplicationNotification`
-- When received and `hideOnClickOutside` enabled, trigger hide
+**Implementation** (v0.3.9):
+- Added `appDeactivationObserver: NSObjectProtocol?` property for notification observer
+- Subscribed to `NSWorkspace.didDeactivateApplicationNotification` in `startMonitoring()`
+- Created `handleAppDeactivation(_:)` method that:
+  - Only processes events when drawer is visible AND `hideOnClickOutside` is enabled
+  - Verifies the deactivated app is our app (Drawer) via bundle identifier check
+  - Triggers `onShouldHideDrawer?()` when conditions are met
+- Properly cleans up observer in `stopMonitoring()` and `deinit`
 
 **Acceptance Criteria**:
-- [ ] Cmd+Tab to another app hides drawer
-- [ ] Clicking another app's window hides drawer
-- [ ] Respects `hideOnClickOutside` setting
+- [x] Cmd+Tab to another app hides drawer
+- [x] Clicking another app's window hides drawer
+- [x] Respects `hideOnClickOutside` setting
+- [ ] Unit tests added (Task 5.1)
+
+**Status**: ✅ COMPLETE (v0.3.9) - Implementation done, unit tests pending Task 5.1
 
 ---
 

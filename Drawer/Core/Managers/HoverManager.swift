@@ -24,6 +24,7 @@ final class HoverManager: ObservableObject {
     private var mouseMonitor: GlobalEventMonitor?
     private var scrollMonitor: GlobalEventMonitor?
     private var clickMonitor: GlobalEventMonitor?
+    private var appDeactivationObserver: NSObjectProtocol?
     private var showDebounceTimer: Timer?
     private var hideDebounceTimer: Timer?
     private var cancellables = Set<AnyCancellable>()
@@ -55,6 +56,9 @@ final class HoverManager: ObservableObject {
         mouseMonitor?.stop()
         scrollMonitor?.stop()
         clickMonitor?.stop()
+        if let observer = appDeactivationObserver {
+            NSWorkspace.shared.notificationCenter.removeObserver(observer)
+        }
         showDebounceTimer?.invalidate()
         hideDebounceTimer?.invalidate()
     }
@@ -83,6 +87,18 @@ final class HoverManager: ObservableObject {
         }
         clickMonitor?.start()
         
+        // Subscribe to app deactivation notifications for focus-loss detection.
+        // Hides drawer when user switches to another application (Cmd+Tab, clicking another app).
+        appDeactivationObserver = NSWorkspace.shared.notificationCenter.addObserver(
+            forName: NSWorkspace.didDeactivateApplicationNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] notification in
+            Task { @MainActor in
+                self?.handleAppDeactivation(notification)
+            }
+        }
+        
         isMonitoring = true
     }
     
@@ -93,6 +109,10 @@ final class HoverManager: ObservableObject {
         scrollMonitor = nil
         clickMonitor?.stop()
         clickMonitor = nil
+        if let observer = appDeactivationObserver {
+            NSWorkspace.shared.notificationCenter.removeObserver(observer)
+            appDeactivationObserver = nil
+        }
         showDebounceTimer?.invalidate()
         showDebounceTimer = nil
         hideDebounceTimer?.invalidate()
@@ -282,6 +302,26 @@ final class HoverManager: ObservableObject {
         
         // If click is outside both drawer and menu bar, trigger hide
         if !isInsideDrawer && !isInMenuBar {
+            onShouldHideDrawer?()
+        }
+    }
+    
+    // MARK: - App Deactivation Detection
+    
+    /// Handles app deactivation (focus-loss) events.
+    /// Hides drawer when user switches to another application (Cmd+Tab, clicking another app window).
+    /// Respects the `hideOnClickOutside` setting since focus-loss is a related behavior.
+    private func handleAppDeactivation(_ notification: Notification) {
+        // Only process if drawer is visible and setting is enabled
+        guard isDrawerVisible,
+              SettingsManager.shared.hideOnClickOutside else {
+            return
+        }
+        
+        // Verify that our app (Drawer) was the one that was deactivated
+        // The notification's object is the NSRunningApplication that was deactivated
+        if let deactivatedApp = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication,
+           deactivatedApp.bundleIdentifier == Bundle.main.bundleIdentifier {
             onShouldHideDrawer?()
         }
     }
