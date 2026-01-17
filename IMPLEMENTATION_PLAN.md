@@ -55,7 +55,7 @@ Drawer is a macOS menu bar utility (forked from Hidden Bar) in **mature developm
 | Permissions | Complete | Screen Recording + Accessibility flows |
 | Settings UI | Partial | Missing gesture trigger options |
 | Hover-to-Show | Complete | HoverManager with debouncing |
-| Gesture Controls | **In Progress** | Task 1.1-1.2, 2.2 complete, remaining tasks pending |
+| Gesture Controls | **In Progress** | Tasks 1.1-1.2, 2.2-2.3 complete, remaining tasks pending |
 | Test Suite | Complete | 26 test files covering all managers |
 
 ### Known Issues
@@ -162,16 +162,22 @@ hoverManager.updateDrawerFrame(drawerController.panelFrame)
 **Effort**: ~30 min
 **Description**: Add global mouse click monitoring to dismiss drawer.
 
-**Changes**:
-- Add `clickMonitor: GlobalEventMonitor?` for `.leftMouseDown, .rightMouseDown`
-- In handler: check if click is outside `drawerFrame`
-- If outside and `hideOnClickOutside` enabled, trigger hide
+**Implementation** (v0.3.8):
+- Added `clickMonitor: GlobalEventMonitor?` property for `.leftMouseDown, .rightMouseDown`
+- Created `handleClickEvent(_:)` method that:
+  - Only processes events when drawer is visible AND `hideOnClickOutside` is enabled
+  - Uses existing `isInDrawerArea()` helper to check if click is inside drawer (with padding)
+  - Also checks `isInMenuBarTriggerZone()` to avoid dismissing on toggle icon clicks
+  - Triggers `onShouldHideDrawer?()` only when click is outside both areas
+- Wired clickMonitor into `startMonitoring()`, `stopMonitoring()`, and `deinit`
 
 **Acceptance Criteria**:
-- [ ] Clicking outside drawer dismisses it
-- [ ] Clicking inside drawer does NOT dismiss it
-- [ ] Respects `hideOnClickOutside` setting
-- [ ] Unit tests added
+- [x] Clicking outside drawer dismisses it
+- [x] Clicking inside drawer does NOT dismiss it
+- [x] Respects `hideOnClickOutside` setting
+- [ ] Unit tests added (Task 5.1)
+
+**Status**: ✅ COMPLETE (v0.3.8) - Implementation done, unit tests pending Task 5.1
 
 ---
 

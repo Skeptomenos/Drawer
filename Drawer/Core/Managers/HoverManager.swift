@@ -23,6 +23,7 @@ final class HoverManager: ObservableObject {
     
     private var mouseMonitor: GlobalEventMonitor?
     private var scrollMonitor: GlobalEventMonitor?
+    private var clickMonitor: GlobalEventMonitor?
     private var showDebounceTimer: Timer?
     private var hideDebounceTimer: Timer?
     private var cancellables = Set<AnyCancellable>()
@@ -53,6 +54,7 @@ final class HoverManager: ObservableObject {
     deinit {
         mouseMonitor?.stop()
         scrollMonitor?.stop()
+        clickMonitor?.stop()
         showDebounceTimer?.invalidate()
         hideDebounceTimer?.invalidate()
     }
@@ -74,6 +76,13 @@ final class HoverManager: ObservableObject {
         }
         scrollMonitor?.start()
         
+        clickMonitor = GlobalEventMonitor(mask: [.leftMouseDown, .rightMouseDown]) { [weak self] event in
+            Task { @MainActor in
+                self?.handleClickEvent(event)
+            }
+        }
+        clickMonitor?.start()
+        
         isMonitoring = true
     }
     
@@ -82,6 +91,8 @@ final class HoverManager: ObservableObject {
         mouseMonitor = nil
         scrollMonitor?.stop()
         scrollMonitor = nil
+        clickMonitor?.stop()
+        clickMonitor = nil
         showDebounceTimer?.invalidate()
         showDebounceTimer = nil
         hideDebounceTimer?.invalidate()
@@ -248,5 +259,30 @@ final class HoverManager: ObservableObject {
     private func resetScrollState() {
         accumulatedScrollDelta = 0
         lastScrollDirection = .none
+    }
+    
+    // MARK: - Click-Outside Detection
+    
+    /// Handles click events for click-outside-to-dismiss behavior.
+    /// Only triggers hide when drawer is visible and click is outside drawer area.
+    private func handleClickEvent(_ event: NSEvent?) {
+        // Only process if drawer is visible and setting is enabled
+        guard isDrawerVisible,
+              SettingsManager.shared.hideOnClickOutside else {
+            return
+        }
+        
+        let clickLocation = NSEvent.mouseLocation
+        
+        // Check if click is inside the drawer area (with small padding for tolerance)
+        let isInsideDrawer = isInDrawerArea(clickLocation)
+        
+        // Also check if click is in menu bar area (toggle icon clicks should not dismiss)
+        let isInMenuBar = isInMenuBarTriggerZone(clickLocation)
+        
+        // If click is outside both drawer and menu bar, trigger hide
+        if !isInsideDrawer && !isInMenuBar {
+            onShouldHideDrawer?()
+        }
     }
 }
