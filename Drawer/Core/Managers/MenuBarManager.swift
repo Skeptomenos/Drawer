@@ -109,6 +109,7 @@ final class MenuBarManager: ObservableObject {
 
         setupUI(attempt: 1)
         setupSettingsBindings()
+        setupStateBindings()
 
         logger.debug("Initialized. Toggle button: \(String(describing: self.toggleItem.button)), Separator button: \(String(describing: self.separatorItem.button))")
 
@@ -149,6 +150,25 @@ final class MenuBarManager: ObservableObject {
         settings.autoCollapseSettingsChanged
             .sink { [weak self] in
                 self?.restartAutoCollapseTimerIfNeeded()
+            }
+            .store(in: &cancellables)
+    }
+
+    /// Reactive binding: changes to `isCollapsed` automatically update separator length and toggle image.
+    /// This eliminates manual synchronization in expand()/collapse() methods and prevents desync bugs.
+    /// See: specs/phase1-reactive-state-binding.md
+    private func setupStateBindings() {
+        $isCollapsed
+            .dropFirst()  // Skip initial value (already handled in setupUI)
+            .sink { [weak self] collapsed in
+                guard let self = self else { return }
+                self.separatorItem.length = collapsed
+                    ? self.separatorCollapsedLength
+                    : self.separatorExpandedLength
+                self.toggleItem.button?.image = collapsed
+                    ? self.expandImage
+                    : self.collapseImage
+                self.logger.debug("State binding triggered: isCollapsed=\(collapsed), length=\(self.separatorItem.length)")
             }
             .store(in: &cancellables)
     }
@@ -293,8 +313,7 @@ final class MenuBarManager: ObservableObject {
         guard isCollapsed else { return }
         logger.debug("Expanding...")
 
-        separatorItem.length = separatorExpandedLength
-        toggleItem.button?.image = collapseImage
+        // Reactive binding handles separator length and toggle image via setupStateBindings()
         isCollapsed = false
 
         startAutoCollapseTimer()
@@ -309,8 +328,7 @@ final class MenuBarManager: ObservableObject {
         logger.debug("Collapsing...")
 
         cancelAutoCollapseTimer()
-        separatorItem.length = separatorCollapsedLength
-        toggleItem.button?.image = expandImage
+        // Reactive binding handles separator length and toggle image via setupStateBindings()
         isCollapsed = true
         logger.debug("Collapsed. Separator Length: \(self.separatorItem.length)")
     }

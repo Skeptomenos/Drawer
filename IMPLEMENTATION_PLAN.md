@@ -421,18 +421,26 @@ hoverManager.updateDrawerFrame(drawerController.panelFrame)
 The following specs define architecture improvements that would provide a cleaner foundation. These are **not blocking** current features but would reduce technical debt.
 
 ### Spec: phase1-reactive-state-binding.md
-**Status:** Not Started | **Priority:** P3 | **Effort:** ~30 min
+**Status:** ✅ COMPLETE (v0.3.15) | **Priority:** P3 | **Effort:** ~30 min
 
 **Goal:** Add Combine-based reactive bindings to `MenuBarManager` so `isCollapsed` changes automatically update separator length and toggle image.
 
-**Current State:** `MenuBarManager` uses manual state synchronization in `expand()`/`collapse()` methods with 3 assignments each.
+**Implementation (v0.3.15):**
+- Added `setupStateBindings()` method with `$isCollapsed` Combine publisher
+- Uses `.dropFirst()` to skip initial value (already handled by setupUI)
+- Reactive binding updates both separator length and toggle image on state change
+- Simplified `expand()` to only set `isCollapsed = false` (plus timer)
+- Simplified `collapse()` to only set `isCollapsed = true` (plus timer cancel)
+- Removed duplicate length/image assignments from expand()/collapse()
 
-**Tasks:**
-- [ ] Add `setupStateBindings()` method with `$isCollapsed` Combine publisher
-- [ ] Use `.dropFirst()` to skip initial value
-- [ ] Simplify `expand()` to only set `isCollapsed = false`
-- [ ] Simplify `collapse()` to only set `isCollapsed = true`
-- [ ] Remove duplicate length/image assignments
+**Acceptance Criteria:**
+- [x] New `setupStateBindings()` method exists
+- [x] `$isCollapsed` publisher drives both separator length and toggle image
+- [x] `expand()` only sets `isCollapsed = false` (plus timer)
+- [x] `collapse()` only sets `isCollapsed = true` (plus timer cancel)
+- [x] No duplicate length/image assignments
+- [x] Build succeeds (Debug)
+- [x] All 224 tests pass (0 failures, 6 skipped)
 
 **Files:** `Drawer/Core/Managers/MenuBarManager.swift`
 
