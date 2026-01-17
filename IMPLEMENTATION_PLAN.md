@@ -212,25 +212,27 @@ hoverManager.updateDrawerFrame(drawerController.panelFrame)
 **Effort**: ~30 min
 **Description**: Add UI for configuring gesture triggers.
 
-**UI Layout**:
-```
-Triggers
---------
-Show Drawer when:
-  [x] Hover over menu bar
-  [x] Scroll down in menu bar
-
-Hide Drawer when:
-  [x] Scroll up
-  [x] Click outside or switch apps
-  [x] Move mouse away from drawer
-```
+**Implementation** (v0.3.10):
+- Added "Triggers" Section with grouped UI layout
+- "Show Drawer when:" subsection with 2 toggles:
+  - "Hover over menu bar" (bound to `showOnHover`)
+  - "Scroll down in menu bar" (bound to `showOnScrollDown`)
+- "Hide Drawer when:" subsection with 3 toggles:
+  - "Scroll up" (bound to `hideOnScrollUp`)
+  - "Click outside or switch apps" (bound to `hideOnClickOutside`)
+  - "Move mouse away from drawer" (bound to `hideOnMouseAway`)
+- All toggles include `.help()` tooltips
+- Uses `.formStyle(.grouped)` matching existing UI style
+- Updated Preview height to accommodate new section
 
 **Acceptance Criteria**:
-- [ ] All 5 toggles visible and functional
-- [ ] Changes take effect immediately (no restart)
-- [ ] Matches existing Settings UI style
-- [ ] SwiftUI Preview works
+- [x] All 5 toggles visible and functional
+- [x] Changes take effect immediately (no restart) - uses `@AppStorage` bindings
+- [x] Matches existing Settings UI style
+- [x] SwiftUI Preview works
+- [x] Build passes (211 tests, 0 failures)
+
+**Status**: ✅ COMPLETE (v0.3.10)
 
 ---
 

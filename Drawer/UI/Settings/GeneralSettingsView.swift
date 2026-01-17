@@ -34,9 +34,38 @@ struct GeneralSettingsView: View {
                 }
             }
             
-            Section {
-                Toggle("Show Drawer on hover", isOn: $settings.showOnHover)
-                    .help("Show the Drawer when mouse enters the menu bar area")
+            // MARK: - Triggers Section
+            
+            Section("Triggers") {
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Show Drawer when:")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                    
+                    Toggle("Hover over menu bar", isOn: $settings.showOnHover)
+                        .help("Show the Drawer when mouse enters the menu bar area")
+                    
+                    Toggle("Scroll down in menu bar", isOn: $settings.showOnScrollDown)
+                        .help("Show the Drawer when scrolling down with trackpad or mouse wheel in the menu bar area")
+                }
+                
+                Divider()
+                    .padding(.vertical, 4)
+                
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Hide Drawer when:")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                    
+                    Toggle("Scroll up", isOn: $settings.hideOnScrollUp)
+                        .help("Hide the Drawer when scrolling up with trackpad or mouse wheel")
+                    
+                    Toggle("Click outside or switch apps", isOn: $settings.hideOnClickOutside)
+                        .help("Hide the Drawer when clicking outside it or switching to another application")
+                    
+                    Toggle("Move mouse away from drawer", isOn: $settings.hideOnMouseAway)
+                        .help("Hide the Drawer when the mouse moves away from the drawer area")
+                }
             }
             
             Section {
@@ -72,5 +101,5 @@ struct GeneralSettingsView: View {
 
 #Preview {
     GeneralSettingsView()
-        .frame(width: 450, height: 320)
+        .frame(width: 450, height: 480)
 }
