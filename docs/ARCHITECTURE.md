@@ -145,10 +145,10 @@ panel.alphaValue = 0
 
 | Constant | Value | Purpose |
 |----------|-------|---------|
-| `cornerRadius` | 10pt | Rounded corners |
-| `shadowRadius` | 5pt | Drop shadow |
-| `rimLightOpacity` | 0.2 | Top highlight |
-| `drawerHeight` | 36pt | Panel height |
+| `cornerRadius` | 11pt | Rounded corners |
+| `shadowRadius` | 12pt | Drop shadow |
+| `rimLightOpacity` | 0.175 | Top highlight |
+| `drawerHeight` | 34pt | Panel height |
 
 ---
 
@@ -342,17 +342,20 @@ Drawer/
 ├── UI/
 │   ├── Panels/
 │   │   ├── DrawerPanel.swift            # NSPanel subclass
-│   │   └── DrawerPanelController.swift  # Panel management
+│   │   ├── DrawerPanelController.swift  # Panel management
+│   │   └── DrawerContentView.swift      # Icon rendering
 │   ├── Settings/                    # Preferences views
 │   ├── Onboarding/                  # First-run experience
 │   └── Components/                  # Reusable UI elements
 ├── Models/
+│   ├── DrawerItem.swift             # Drawer item model
 │   ├── MenuBarItem.swift            # Menu bar window info
 │   └── MenuBarMetrics.swift         # Sizing constants
 ├── Utilities/
 │   ├── EventSimulator.swift         # Click forwarding
 │   ├── GlobalEventMonitor.swift     # Mouse event monitoring
-│   └── ScreenCapture.swift          # Capture helpers
+│   ├── ScreenCapture.swift          # Capture helpers
+│   └── Notification+Extensions.swift # Custom notifications
 └── Bridging/
     └── PrivateAPIs.swift            # Private API declarations
 ```
