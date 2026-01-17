@@ -403,4 +403,54 @@ final class MenuBarManagerTests: XCTestCase {
         // Assert
         XCTAssertEqual(sut.collapseImageSymbolName, "chevron.left", "MBM-017: Collapse image should be chevron.left for RTL layout")
     }
+    
+    // MARK: - MBM-018: Initial state has correct image
+    
+    func testMBM018_InitialStateHasCorrectImage() async throws {
+        // Arrange & Act
+        sut = MenuBarManager(settings: SettingsManager.shared)
+        
+        // Assert
+        // Initial state is isCollapsed=true
+        // Should show "Expand" image (chevron.left)
+        XCTAssertEqual(sut.currentToggleImageDescription, "Expand", "MBM-018: Initial image should be 'Expand' (chevron.left)")
+    }
+    
+    // MARK: - MBM-019: Toggle updates image
+    
+    func testMBM019_ToggleUpdatesImage() async throws {
+        // Arrange
+        sut = MenuBarManager(settings: SettingsManager.shared)
+        XCTAssertEqual(sut.currentToggleImageDescription, "Expand", "Precondition: Start with Expand image")
+        
+        // Act - Expand
+        sut.toggle()
+        
+        // Assert
+        XCTAssertEqual(sut.currentToggleImageDescription, "Collapse", "MBM-019: After toggle (expand), image should be 'Collapse' (chevron.right)")
+        
+        // Wait for debounce
+        try await Task.sleep(for: .milliseconds(350))
+        
+        // Act - Collapse
+        sut.toggle()
+        
+        // Assert
+        if sut.isCollapsed {
+            XCTAssertEqual(sut.currentToggleImageDescription, "Expand", "MBM-019: After toggle (collapse), image should be 'Expand'")
+        }
+    }
+    
+    // MARK: - MBM-020: Initial state has correct separator length
+    
+    func testMBM020_InitialStateHasCorrectLength() async throws {
+        // Arrange & Act
+        sut = MenuBarManager(settings: SettingsManager.shared)
+        
+        // Assert
+        // Initial state is isCollapsed=true
+        // Separator should be collapsed (10000)
+        // NOTE: This test might fail if setupUI sets it to 20 (Expanded)
+        XCTAssertEqual(sut.currentSeparatorLength, 10000, "MBM-020: Initial separator length should be 10000 (Collapsed)")
+    }
 }

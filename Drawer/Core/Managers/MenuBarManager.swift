@@ -43,6 +43,11 @@ final class MenuBarManager: ObservableObject {
         separatorItem.length
     }
     
+    /// Exposes the current toggle button image accessibility description for testing purposes.
+    var currentToggleImageDescription: String? {
+        toggleItem.button?.image?.accessibilityDescription
+    }
+    
     /// Exposes the expected expand image symbol name for testing purposes.
     var expandImageSymbolName: String {
         isLTRLanguage ? "chevron.left" : "chevron.right"
@@ -164,12 +169,15 @@ final class MenuBarManager: ObservableObject {
         separatorButton.title = ""
         separatorButton.image = separatorImage ?? NSImage(named: NSImage.touchBarHistoryTemplateName)
         separatorButton.imagePosition = .imageOnly
-        separatorItem.length = separatorExpandedLength
+        // FIX: Initial length must match isCollapsed state to prevent desync
+        // See: docs/ROOT_CAUSE_INVISIBLE_ICONS.md Section 4
+        separatorItem.length = isCollapsed ? separatorCollapsedLength : separatorExpandedLength
         separatorItem.menu = createContextMenu()
         separatorItem.autosaveName = "drawer_separator_v3"
         
         toggleButton.title = ""
-        toggleButton.image = collapseImage ?? NSImage(named: NSImage.touchBarGoForwardTemplateName)
+        // Initial state is isCollapsed=true, so show expandImage (chevron.left) to indicate "click to expand"
+        toggleButton.image = expandImage ?? NSImage(named: NSImage.touchBarGoBackTemplateName)
         toggleButton.target = self
         toggleButton.action = #selector(toggleButtonPressed)
         toggleButton.sendAction(on: [.leftMouseUp, .rightMouseUp])

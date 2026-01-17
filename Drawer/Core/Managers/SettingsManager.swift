@@ -50,9 +50,39 @@ final class SettingsManager: ObservableObject {
     
     @AppStorage("hasCompletedOnboarding") var hasCompletedOnboarding: Bool = false
     
+    // MARK: - Gesture Trigger Settings
+    
+    /// Whether scrolling down in the menu bar area shows the drawer
+    @AppStorage("showOnScrollDown") var showOnScrollDown: Bool = true {
+        didSet { showOnScrollDownSubject.send(showOnScrollDown) }
+    }
+    
+    /// Whether scrolling up while drawer is visible hides it
+    @AppStorage("hideOnScrollUp") var hideOnScrollUp: Bool = true {
+        didSet { hideOnScrollUpSubject.send(hideOnScrollUp) }
+    }
+    
+    /// Whether clicking outside the drawer or switching apps hides it
+    @AppStorage("hideOnClickOutside") var hideOnClickOutside: Bool = true {
+        didSet { hideOnClickOutsideSubject.send(hideOnClickOutside) }
+    }
+    
+    /// Whether moving the mouse away from the drawer hides it
+    @AppStorage("hideOnMouseAway") var hideOnMouseAway: Bool = true {
+        didSet { hideOnMouseAwaySubject.send(hideOnMouseAway) }
+    }
+    
+    // MARK: - Combine Subjects
+    
     let autoCollapseEnabledSubject = PassthroughSubject<Bool, Never>()
     let autoCollapseDelaySubject = PassthroughSubject<Double, Never>()
     let showOnHoverSubject = PassthroughSubject<Bool, Never>()
+    
+    // Gesture trigger subjects
+    let showOnScrollDownSubject = PassthroughSubject<Bool, Never>()
+    let hideOnScrollUpSubject = PassthroughSubject<Bool, Never>()
+    let hideOnClickOutsideSubject = PassthroughSubject<Bool, Never>()
+    let hideOnMouseAwaySubject = PassthroughSubject<Bool, Never>()
     
     /// Combined publisher for any auto-collapse setting change
     var autoCollapseSettingsChanged: AnyPublisher<Void, Never> {
@@ -107,7 +137,12 @@ final class SettingsManager: ObservableObject {
             "hideSeparators": false,
             "alwaysHiddenEnabled": false,
             "useFullStatusBarOnExpand": false,
-            "showOnHover": false
+            "showOnHover": false,
+            // Gesture trigger defaults
+            "showOnScrollDown": true,
+            "hideOnScrollUp": true,
+            "hideOnClickOutside": true,
+            "hideOnMouseAway": true
         ])
     }
     
@@ -123,6 +158,11 @@ final class SettingsManager: ObservableObject {
         useFullStatusBarOnExpand = false
         showOnHover = false
         globalHotkey = nil
+        // Gesture triggers
+        showOnScrollDown = true
+        hideOnScrollUp = true
+        hideOnClickOutside = true
+        hideOnMouseAway = true
     }
 }
 
