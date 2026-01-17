@@ -68,6 +68,22 @@ struct GeneralSettingsView: View {
                 }
             }
 
+            // MARK: - Display Mode Section
+
+            Section("Display Mode") {
+                Picker("When clicking toggle:", selection: $settings.overlayModeEnabled) {
+                    Text("Expand menu bar").tag(false)
+                    Text("Show overlay panel").tag(true)
+                }
+                .pickerStyle(.radioGroup)
+
+                if settings.overlayModeEnabled {
+                    Text("Hidden icons will appear in a floating panel instead of expanding the menu bar. This works better on MacBooks with a notch.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+
             // MARK: - Advanced Section
 
             Section("Advanced") {
@@ -108,5 +124,5 @@ struct GeneralSettingsView: View {
 
 #Preview {
     GeneralSettingsView()
-        .frame(width: 450, height: 550)
+        .frame(width: 450, height: 650)
 }

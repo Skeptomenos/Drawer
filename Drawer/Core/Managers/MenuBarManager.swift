@@ -128,6 +128,11 @@ final class MenuBarManager: ObservableObject {
 
     // MARK: - Callbacks
 
+    /// Callback invoked when the toggle button is pressed.
+    /// AppState uses this to decide between expand mode and overlay mode.
+    var onTogglePressed: (() -> Void)?
+
+    /// Callback invoked when the drawer should be shown.
     var onShowDrawer: (() -> Void)?
 
     // MARK: - Initialization
@@ -381,7 +386,13 @@ final class MenuBarManager: ObservableObject {
         let isOptionKeyPressed = event.modifierFlags.contains(.option)
 
         if event.type == .leftMouseUp && !isOptionKeyPressed {
-            toggle()
+            // Delegate to AppState which decides expand vs overlay mode
+            if let callback = onTogglePressed {
+                callback()
+            } else {
+                // Fallback: direct toggle (for standalone usage)
+                toggle()
+            }
         }
     }
 

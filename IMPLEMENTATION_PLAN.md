@@ -28,8 +28,8 @@ Drawer is a macOS menu bar utility (forked from Hidden Bar) in **mature developm
 | `phase2b-section-architecture.md` | Not Started | P3 - Future | P1-P2 |
 | `phase2c-unit-tests.md` | Partial (26 tests exist) | P3 - Future | P2 |
 | `phase3-always-hidden-section.md` | **Complete** (v0.3.19) | P3 - Future | P2 |
-| `phase4a-overlay-panel-infrastructure.md` | Not Started | P4 - Future | P3 |
-| `phase4b-overlay-mode-integration.md` | Not Started | P4 - Future | P3 |
+| `phase4a-overlay-panel-infrastructure.md` | **Complete** (v0.3.20) | P4 - Future | P3 |
+| `phase4b-overlay-mode-integration.md` | **Complete** (v0.3.21) | P4 - Future | P3 |
 
 > **Note:** This plan uses a "Feature-First" strategy - delivering user value (Gesture Controls) before refactoring. The "Arch Plan" column shows priorities from `docs/IMPLEMENTATION_PLAN_ARCHITECTURE_IMPROVEMENTS.md` for reference.
 
@@ -626,23 +626,47 @@ The following specs define architecture improvements that would provide a cleane
 ---
 
 ### Spec: phase4b-overlay-mode-integration.md
-**Status:** Not Started | **Priority:** P4 | **Effort:** ~45 min | **Depends on:** Phase 4A ✅
+**Status:** ✅ COMPLETE (v0.3.21) | **Priority:** P4 | **Effort:** ~45 min | **Depends on:** Phase 4A ✅
 
 **Goal:** Integrate Overlay Panel with toggle flow, IconCapturer, and EventSimulator.
 
-**Current State:** No overlay integration exists.
+**Implementation (v0.3.21):**
+- Created `OverlayModeManager.swift` to orchestrate overlay flow:
+  - `toggleOverlay()`, `showOverlay()`, `hideOverlay()` methods
+  - Captures hidden icons by briefly expanding/collapsing menu bar
+  - Uses EventSimulator for click-through from overlay to real icons
+  - Auto-hide timer (5 seconds) dismisses overlay
+- Modified `AppState.swift`:
+  - Added `overlayModeManager: OverlayModeManager` property
+  - Added `setupToggleCallback()` to configure MenuBarManager callback
+  - Modified `toggleMenuBar()` to respect `overlayModeEnabled` setting
+- Modified `MenuBarManager.swift`:
+  - Added `onTogglePressed: (() -> Void)?` callback property
+  - Modified `toggleButtonPressed()` to use callback if set
+- Modified `GeneralSettingsView.swift`:
+  - Added "Display Mode" section with radio picker (Expand vs Overlay)
+  - Added explanatory text about overlay mode for notch displays
+- Added Overlay files to Xcode project (OverlayPanel, OverlayContentView, OverlayPanelController)
 
-**Tasks:**
-- [ ] Create `OverlayModeManager.swift` to orchestrate overlay flow
-- [ ] Modify `AppState.toggleMenuBar()` to respect overlay mode setting
-- [ ] Add `onTogglePressed` callback to MenuBarManager
-- [ ] Add radio picker in GeneralSettingsView for expand vs overlay mode
+**Acceptance Criteria:**
+- [x] `OverlayModeManager` created and functional
+- [x] Toggle respects `overlayModeEnabled` setting
+- [x] Overlay captures icons (via expand/collapse cycle)
+- [x] Overlay panel appears at menu bar level
+- [x] Click-through works from overlay to real icons via EventSimulator
+- [x] Auto-hide timer dismisses overlay after 5 seconds
+- [x] Settings UI allows switching between Expand and Overlay modes
+- [x] Build succeeds with no errors
+- [x] All 277 tests pass (0 failures, 8 skipped)
 
-**Files:**
-- Create: `Drawer/Core/Managers/OverlayModeManager.swift`
-- Modify: `Drawer/App/AppState.swift`
-- Modify: `Drawer/Core/Managers/MenuBarManager.swift`
-- Modify: `Drawer/UI/Settings/GeneralSettingsView.swift`
+**Files Created:**
+- `Drawer/Core/Managers/OverlayModeManager.swift`
+
+**Files Modified:**
+- `Drawer/App/AppState.swift`
+- `Drawer/Core/Managers/MenuBarManager.swift`
+- `Drawer/UI/Settings/GeneralSettingsView.swift`
+- `Hidden Bar.xcodeproj/project.pbxproj` (added Overlay files to project)
 
 ---
 

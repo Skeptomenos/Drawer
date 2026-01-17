@@ -26,6 +26,7 @@ final class AppState: ObservableObject {
     let iconCapturer: IconCapturer
     let eventSimulator: EventSimulator
     let hoverManager: HoverManager
+    let overlayModeManager: OverlayModeManager
 
     static let shared = AppState()
 
@@ -54,6 +55,14 @@ final class AppState: ObservableObject {
         self.menuBarManager = MenuBarManager(settings: settings)
         self.drawerController = DrawerPanelController()
 
+        // Initialize overlay mode manager for alternative display mode
+        self.overlayModeManager = OverlayModeManager(
+            settings: settings,
+            iconCapturer: iconCapturer,
+            eventSimulator: eventSimulator,
+            menuBarManager: menuBarManager
+        )
+
         // Using assign(to:) with &$ is safe - no retain cycle created
         // See: https://developer.apple.com/documentation/combine/publisher/assign(to:)
         menuBarManager.$isCollapsed
@@ -64,6 +73,7 @@ final class AppState: ObservableObject {
         setupCapturerBindings()
         setupHoverBindings()
         setupMenuBarFailureObserver()
+        setupToggleCallback()
     }
 
     private func setupMenuBarFailureObserver() {
@@ -90,8 +100,25 @@ final class AppState: ObservableObject {
         hasCompletedOnboarding = true
     }
 
+    /// Toggles the menu bar - respects overlay mode setting.
+    /// When overlay mode is enabled, shows the overlay panel instead of expanding the menu bar.
     func toggleMenuBar() {
-        menuBarManager.toggle()
+        if settings.overlayModeEnabled {
+            Task {
+                await overlayModeManager.toggleOverlay()
+            }
+        } else {
+            menuBarManager.toggle()
+        }
+    }
+
+    /// Sets up the toggle callback from MenuBarManager to AppState.
+    /// This allows the toggle button to route through AppState, which decides
+    /// whether to use traditional expand mode or overlay mode.
+    private func setupToggleCallback() {
+        menuBarManager.onTogglePressed = { [weak self] in
+            self?.toggleMenuBar()
+        }
     }
 
     func toggleDrawer() {
