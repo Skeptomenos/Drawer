@@ -1,5 +1,7 @@
 # PRD: Gesture Controls for Drawer
 
+> **Note:** This PRD is a **feature spec** that is orthogonal to the architecture refactoring in `phase1-*` through `phase4b-*`. It can be implemented before, during, or after the architecture improvements. If implementing after Phase 2B, the `MenuBarManager` API may have changed slightly (sections-based). If implementing after Phase 4B, consider adding Overlay Mode support to scroll gestures.
+
 ## Introduction
 
 Add intuitive gesture controls to show and hide the Drawer panel. Users can open the drawer by scrolling down (trackpad or mouse wheel) or hovering in the menu bar area, and close it by scrolling up or clicking outside. All gesture options are configurable via preferences, allowing users to customize their preferred interaction style.
@@ -194,6 +196,16 @@ NSWorkspace.shared.notificationCenter.addObserver(
 - Extend `HoverManager` to become `GestureManager` (or create separate manager)
 - Keep `GlobalEventMonitor` utility class, add `.scrollWheel` support
 - Gesture state machine: Idle -> Accumulating -> Triggered -> Cooldown
+
+#### Integration with Architecture Refactor (Phase 2+)
+
+If the Section-based architecture from `phase2b-section-architecture.md` has been implemented:
+- Use `menuBarManager.hiddenSection.isExpanded` instead of `menuBarManager.isCollapsed`
+- Access separator position via `menuBarManager.hiddenSection.controlItem.button?.window?.frame`
+
+If Overlay Mode from `phase4b-overlay-mode-integration.md` has been implemented:
+- Scroll gestures should respect `settings.overlayModeEnabled`
+- When overlay mode is on, scroll-down triggers `overlayModeManager.showOverlay()` instead of `menuBarManager.expand()`
 
 ### Bug Fix Location
 

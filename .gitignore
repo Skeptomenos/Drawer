@@ -125,3 +125,12 @@ DerivedData/
 **/xcshareddata/WorkspaceSettings.xcsettings
 
 # End of https://www.gitignore.io/api/macos,swift
+
+# Drawer Project Specific
+dist/
+build-debug/
+archive/
+sessions/
+.last-branch
+.last-review-branch
+PROMPT_*.md
