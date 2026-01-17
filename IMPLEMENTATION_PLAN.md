@@ -1,15 +1,21 @@
 # Drawer Implementation Plan
 
 > Generated: 2026-01-17
-> Status: Active Development
+> Updated: 2026-01-17
+> Status: **ALL PHASES COMPLETE** (v0.3.22)
 > Source Directory: `Drawer/`
 
 ## Executive Summary
 
-Drawer is a macOS menu bar utility (forked from Hidden Bar) in **mature development state**. The core "10k pixel hack" mechanism, icon capture engine, and click-through simulation are fully implemented and tested. The primary remaining work is implementing the **Gesture Controls** feature (specs/prd-gesture-controls.md).
+Drawer is a macOS menu bar utility (forked from Hidden Bar) in **feature-complete state**. All planned development phases have been implemented and tested.
 
-**Active Focus:** Gesture Controls (Phases 1-5 below)
-**Future Work:** Architecture improvements (see `docs/IMPLEMENTATION_PLAN_ARCHITECTURE_IMPROVEMENTS.md`), Always Hidden section, Overlay Mode
+**Completed Features:**
+- ✅ Gesture Controls (v0.3.5-v0.3.14, v0.3.22) - scroll, click-outside, app-deactivation, settings UI
+- ✅ Architecture Improvements (v0.3.15-v0.3.18) - reactive state binding, core models, section architecture
+- ✅ Always Hidden Section (v0.3.19) - third separator for permanently hidden icons
+- ✅ Overlay Mode (v0.3.20-v0.3.21) - floating panel alternative to expand mode
+
+**Remaining:** Manual user verification of gesture behaviors (see Task 5.2 checklist)
 
 > **Related Documents:**
 > - `docs/IMPLEMENTATION_PLAN_ARCHITECTURE_IMPROVEMENTS.md` - Detailed architecture refactor plan
@@ -677,31 +683,36 @@ The following specs define architecture improvements that would provide a cleane
 
 ---
 
-## Architecture Decision: Why Gesture Controls First?
+## Project Completion Summary
 
-The current plan prioritizes **Gesture Controls** over architecture improvements because:
+All development phases have been completed as of v0.3.22:
 
-1. **User Value:** Gesture controls provide immediate UX improvements
-2. **Working Code:** The current architecture functions correctly despite lacking elegance
-3. **Risk Mitigation:** Architecture refactors could introduce regressions
-4. **Incremental Delivery:** Complete features before refactoring
+| Phase | Description | Version | Tests |
+|-------|-------------|---------|-------|
+| 0 | Initial State Bug Fix | v0.3.4 | ✅ |
+| 1 | Bug Fix & Settings Foundation | v0.3.5-v0.3.6 | ✅ |
+| 2 | Gesture Infrastructure | v0.3.7-v0.3.9, v0.3.22 | ✅ |
+| 3 | Settings UI | v0.3.10 | ✅ |
+| 4 | Integration & Polish | v0.3.11-v0.3.12 | ✅ |
+| 5 | Testing & Verification | v0.3.13-v0.3.14 | ✅ |
+| Arch-1 | Reactive State Binding | v0.3.15 | ✅ |
+| Arch-2A | Core Models | v0.3.16 | ✅ |
+| Arch-2B | Section Architecture | v0.3.17 | ✅ |
+| Arch-2C | Unit Tests | v0.3.18 | ✅ |
+| 3 | Always Hidden Section | v0.3.19 | ✅ |
+| 4A | Overlay Infrastructure | v0.3.20 | ✅ |
+| 4B | Overlay Integration | v0.3.21 | ✅ |
 
-The architecture phases (1, 2A, 2B, 2C) can be tackled after gesture controls are complete, as a focused refactoring effort with proper test coverage.
+**Test Results:** 278 tests, 0 failures, 8 skipped
 
 ---
 
-## Relationship Between Planning Documents
+## Related Documents
 
-| Document | Focus | Use When |
-|----------|-------|----------|
-| **This file** (`IMPLEMENTATION_PLAN.md`) | Active development roadmap, Gesture Controls | Day-to-day implementation tasks |
-| `docs/IMPLEMENTATION_PLAN_ARCHITECTURE_IMPROVEMENTS.md` | Architecture refactoring strategy | Planning Section-based refactor |
-| `specs/prd-gesture-controls.md` | Gesture feature requirements | Understanding gesture UX goals |
-| `specs/phase*.md` | Detailed implementation specs | Executing specific architecture tasks |
-
-**Execution Strategy:**
-1. Complete Gesture Controls (this plan, Phases 1-5)
-2. Verify and stabilize
-3. Begin Architecture Improvements (phase1 → phase2c)
-4. Implement Always Hidden (phase3)
-5. Implement Overlay Mode (phase4a → phase4b)
+| Document | Purpose |
+|----------|---------|
+| `docs/IMPLEMENTATION_PLAN_ARCHITECTURE_IMPROVEMENTS.md` | Architecture refactoring details |
+| `docs/ROOT_CAUSE_INVISIBLE_ICONS.md` | Phase 0 bug analysis |
+| `docs/ARCHITECTURE_COMPARISON.md` | Hidden Bar vs Ice analysis |
+| `specs/prd-gesture-controls.md` | Gesture feature requirements |
+| `specs/phase*.md` | Detailed implementation specs |
