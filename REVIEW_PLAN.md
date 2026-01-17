@@ -10,8 +10,8 @@
 | **Branch** | main |
 | **Base** | main |
 | **Total Files** | 31 |
-| **Reviewed** | 21 |
-| **Findings** | 0 (0 critical, 0 high, 2 medium, 14 low, 41 info) |
+| **Reviewed** | 22 |
+| **Findings** | 0 (0 critical, 0 high, 2 medium, 14 low, 43 info) |
 | **Status** | In Progress |
 
 ## Project Context
@@ -65,7 +65,7 @@
 | [x] | `Drawer/UI/Overlay/OverlayContentView.swift` | Hover states, click handling, accessibility | 0 (1 low, 3 info) |
 | [x] | `Drawer/UI/Settings/SettingsView.swift` | Tab navigation, state management | 0 (2 info) |
 | [x] | `Drawer/UI/Settings/GeneralSettingsView.swift` | Settings bindings, validation | 0 (1 low, 2 info) |
-| [ ] | `Drawer/UI/Settings/AppearanceSettingsView.swift` | Appearance settings, bindings | - |
+| [x] | `Drawer/UI/Settings/AppearanceSettingsView.swift` | Appearance settings, bindings | 0 (2 info) |
 | [ ] | `Drawer/UI/Settings/AboutView.swift` | Static content, links | - |
 | [ ] | `Drawer/UI/Onboarding/OnboardingView.swift` | Step navigation, state flow | - |
 | [ ] | `Drawer/UI/Onboarding/PermissionsStepView.swift` | Permission grant buttons, status display | - |
@@ -128,3 +128,4 @@ From AGENTS.md and project documentation:
 | 2026-01-18 | `Drawer/UI/Overlay/OverlayContentView.swift` | Ralphus | PASSED (0 critical, 0 high, 0 medium, 1 low, 3 info) |
 | 2026-01-18 | `Drawer/UI/Settings/SettingsView.swift` | Ralphus | PASSED (0 critical, 0 high, 0 medium, 0 low, 2 info) |
 | 2026-01-18 | `Drawer/UI/Settings/GeneralSettingsView.swift` | Ralphus | PASSED (0 critical, 0 high, 0 medium, 1 low, 2 info) |
+| 2026-01-18 | `Drawer/UI/Settings/AppearanceSettingsView.swift` | Ralphus | PASSED (0 critical, 0 high, 0 medium, 0 low, 2 info) |
