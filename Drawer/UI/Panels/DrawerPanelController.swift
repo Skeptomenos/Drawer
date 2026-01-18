@@ -105,6 +105,10 @@ final class DrawerPanelController: ObservableObject {
 
         panel.orderFrontRegardless()
 
+        // Set visible state synchronously when panel is ordered front
+        // This ensures consistent state in tests and production
+        isVisible = true
+
         NSAnimationContext.runAnimationGroup({ context in
             context.duration = DrawerAnimation.showDuration
             context.timingFunction = DrawerAnimation.showTimingFunction
@@ -114,7 +118,6 @@ final class DrawerPanelController: ObservableObject {
             panel.animator().alphaValue = 1
         }, completionHandler: { [weak self] in
             self?.isAnimating = false
-            self?.isVisible = true
             #if DEBUG
             self?.logger.debug("Drawer panel show animation complete")
             #endif
@@ -127,6 +130,10 @@ final class DrawerPanelController: ObservableObject {
         #if DEBUG
         logger.debug("=== DRAWER PANEL HIDE (B2.2) ===")
         #endif
+
+        // Set visible state synchronously when hide begins
+        // This ensures consistent state in tests and production
+        isVisible = false
 
         var endFrame = panel.frame
         endFrame.origin.y += DrawerAnimation.slideOffset / 2
@@ -142,7 +149,6 @@ final class DrawerPanelController: ObservableObject {
             panel.orderOut(nil)
             panel.alphaValue = 1
             self?.isAnimating = false
-            self?.isVisible = false
             #if DEBUG
             self?.logger.debug("Drawer panel hide animation complete")
             #endif
