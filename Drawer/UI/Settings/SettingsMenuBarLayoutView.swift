@@ -97,6 +97,9 @@ struct SettingsMenuBarLayoutView: View {
     /// Whether layout has been modified (for save indication)
     @State private var hasUnsavedChanges: Bool = false
 
+    /// Whether to show the reset confirmation alert
+    @State private var showResetConfirmation: Bool = false
+
     /// Logger for debugging
     private let logger = Logger(
         subsystem: Bundle.main.bundleIdentifier ?? "com.drawer",
@@ -220,7 +223,7 @@ struct SettingsMenuBarLayoutView: View {
 
     // MARK: - Palette Section
 
-    /// Palette with action buttons for adding spacers
+    /// Palette with action buttons for adding spacers and resetting positions
     private var paletteSection: some View {
         VStack(alignment: .leading, spacing: LayoutDesign.sectionHeaderSpacing) {
             Label("Palette", systemImage: "square.grid.2x2")
@@ -236,6 +239,23 @@ struct SettingsMenuBarLayoutView: View {
                 }
                 .buttonStyle(.borderedProminent)
                 .controlSize(.small)
+
+                Button {
+                    showResetConfirmation = true
+                } label: {
+                    Text("Reset Icon Positions")
+                        .font(.system(size: 12, weight: .medium))
+                }
+                .buttonStyle(.bordered)
+                .controlSize(.small)
+                .alert("Reset Icon Positions?", isPresented: $showResetConfirmation) {
+                    Button("Cancel", role: .cancel) { }
+                    Button("Reset", role: .destructive) {
+                        resetIconPositions()
+                    }
+                } message: {
+                    Text("This will clear all saved icon position preferences. Icons will stay in their current positions but won't be restored on next launch.")
+                }
 
                 // Future: Add menu bar item group button (Phase 4.2.4)
                 // Button("Add a menu bar item group") { }
@@ -720,6 +740,15 @@ struct SettingsMenuBarLayoutView: View {
         }
 
         return normalized
+    }
+
+    /// Resets all saved icon position preferences.
+    ///
+    /// Clears the saved positions from SettingsManager. Icons will remain
+    /// in their current positions but will not be restored on next launch.
+    private func resetIconPositions() {
+        SettingsManager.shared.clearSavedPositions()
+        logger.info("Reset icon positions - cleared all saved preferences")
     }
 
     /// Adds a spacer to the hidden section.

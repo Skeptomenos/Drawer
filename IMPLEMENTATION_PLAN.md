@@ -16,7 +16,7 @@ Phase 5 implements the ability to physically reposition menu bar icons by draggi
 | 5.2 | Bridging Extensions | **100%** | getWindowList, getWindowFrame, activeSpaceID all exist |
 | 5.3 | IconRepositioner Engine | **100%** | All tasks complete: MouseCursor, Skeleton, CGEvent Move, Frame Detection, Retry/Wake-Up, Tests |
 | 5.4 | Settings UI Integration | **100%** | All tasks complete (5.4.1-5.4.3) |
-| 5.5 | Persistence | 60% | Tasks 5.5.1-5.5.4 complete - SettingsManager storage + IconPositionRestorer + Position Saving + App Launch Hook |
+| 5.5 | Persistence | 80% | Tasks 5.5.1-5.5.5 complete - SettingsManager storage + IconPositionRestorer + Position Saving + App Launch Hook + Reset Button |
 
 ## Task List
 
@@ -244,15 +244,23 @@ Phase 5.1 is fully complete. The core models for icon identification and represe
 - **Dependencies**: Task 5.5.2
 - **Verification**: Build passed, 380 tests pass, committed as feat(5.5.4)
 
-#### Task 5.5.5: Add Reset Positions Button
-- **File**: `Drawer/UI/Settings/SettingsMenuBarLayoutView.swift` or `GeneralSettingsView.swift` (modify)
+#### Task 5.5.5: Add Reset Positions Button [COMPLETE]
+- **File**: `Drawer/UI/Settings/SettingsMenuBarLayoutView.swift` (modified)
 - **Scope**: Allow users to clear saved positions
 - **Details**:
-  - Add "Reset Icon Positions" button
-  - Call `settingsManager.clearSavedPositions()` on click
-  - Show confirmation or inline feedback
+  - Added `showResetConfirmation` state property for confirmation alert
+  - Added "Reset Icon Positions" button in paletteSection (line 247-261)
+    - Uses `.bordered` button style to differentiate from primary "Add a Spacer" button
+    - Shows SwiftUI `.alert()` confirmation dialog:
+      - Title: "Reset Icon Positions?"
+      - Message: "This will clear all saved icon position preferences. Icons will stay in their current positions but won't be restored on next launch."
+      - Cancel button (role: `.cancel`)
+      - Reset button (role: `.destructive`) - triggers `resetIconPositions()`
+  - Added `resetIconPositions()` method (lines 749-752):
+    - Calls `SettingsManager.shared.clearSavedPositions()`
+    - Logs action via os.log
 - **Dependencies**: Task 5.5.1
-- **Verification**: Click reset, verify cleared with `defaults read`
+- **Verification**: Build passed, 380 tests pass
 
 #### Task 5.5.6: Add Persistence Tests
 - **File**: `DrawerTests/Managers/SettingsManagerTests.swift` (modify)
