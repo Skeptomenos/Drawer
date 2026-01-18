@@ -49,6 +49,11 @@ struct OverlayContentView: View {
 /// Displays a captured menu bar icon with hover and press states.
 struct OverlayIconView: View {
 
+    // MARK: - Constants
+
+    /// Default backing scale factor when NSScreen.main is unavailable (Retina default)
+    private static let defaultBackingScaleFactor: CGFloat = 2.0
+
     // MARK: - Properties
 
     let item: DrawerItem
@@ -59,7 +64,7 @@ struct OverlayIconView: View {
 
     var body: some View {
         Button(action: onTap) {
-            Image(decorative: item.image, scale: NSScreen.main?.backingScaleFactor ?? 2.0)
+            Image(decorative: item.image, scale: NSScreen.main?.backingScaleFactor ?? Self.defaultBackingScaleFactor)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 18, height: 18)

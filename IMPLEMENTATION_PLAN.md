@@ -53,7 +53,7 @@ This phase addresses 2 potential crashes and 13 code quality issues identified d
 | 1.2.11 | `Drawer/Core/Managers/SettingsManager.swift` + `GeneralSettingsView.swift` | Extract slider range constants | [x] |
 | 1.2.12 | `Drawer/UI/Onboarding/OnboardingView.swift` | Add MARK section comments | [x] |
 | 1.2.13 | `Drawer/UI/Panels/DrawerPanel.swift:26,39` | Remove unused `menuBarHeight` and `cornerRadius` | [x] |
-| 1.2.14 | `Drawer/UI/Overlay/OverlayContentView.swift:62` | Extract magic number `2.0` to constant | [ ] |
+| 1.2.14 | `Drawer/UI/Overlay/OverlayContentView.swift:62` | Extract magic number `2.0` to constant | [x] |
 | 1.2.15 | `Drawer/UI/Overlay/OverlayPanel.swift:76` | Extract magic number `2` for menu bar gap | [ ] |
 
 ### 1.3 Branding & Housekeeping
