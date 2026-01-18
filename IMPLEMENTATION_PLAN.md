@@ -138,7 +138,7 @@ The codebase has excellent coverage (278 tests) but two components lack tests.
 | Task | Description | Status |
 |------|-------------|--------|
 | 3.2.1 | Move `docs/IMPLEMENTATION_PLAN_ARCHITECTURE_IMPROVEMENTS.md` to `archive/` (Phase 0-3 complete) | [x] |
-| 3.2.2 | Move `docs/IMPLEMENTATION-PLAN-DRAWER-AND-ALWAYS-HIDDEN.md` to `archive/` (complete) | [ ] |
+| 3.2.2 | Move `docs/IMPLEMENTATION-PLAN-DRAWER-AND-ALWAYS-HIDDEN.md` to `archive/` (complete) | [x] |
 
 ---
 
