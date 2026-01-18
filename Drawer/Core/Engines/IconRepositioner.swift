@@ -151,8 +151,6 @@ final class IconRepositioner {
     /// - Note: This method will retry up to `maxRetries` times, using wake-up
     ///   clicks between attempts to handle unresponsive apps.
     func move(item: IconItem, to destination: MoveDestination) async throws {
-        // TODO: Task 5.3.5 - Implement retry and wake-up logic
-        
         logger.info("Move requested: \(item.displayName) to \(String(describing: destination))")
         
         // Validate that the item can be moved
@@ -172,7 +170,7 @@ final class IconRepositioner {
             throw RepositionError.invalidCursorLocation
         }
         
-        // Get initial frame to verify movement
+        // Get initial frame to verify movement (used to detect any change after all attempts)
         guard let initialFrame = Bridging.getWindowFrame(for: item.windowID) else {
             throw RepositionError.invalidItem(item)
         }
@@ -184,19 +182,35 @@ final class IconRepositioner {
             MouseCursor.show()
         }
         
-        // Single attempt for now (retry logic in Task 5.3.5)
-        try await performMove(item: item, to: destination)
-        
-        // Verify the move succeeded by checking final position
-        guard let newFrame = Bridging.getWindowFrame(for: item.windowID) else {
-            throw RepositionError.invalidItem(item)
-        }
-        
-        if newFrame != initialFrame {
-            logger.info("Successfully moved \(item.displayName)")
-            return
-        } else {
-            throw RepositionError.couldNotComplete(item)
+        // Retry loop: attempt up to maxRetries times, using wake-up clicks between attempts
+        for attempt in 1...maxRetries {
+            do {
+                try await performMove(item: item, to: destination)
+                
+                // Verify the move succeeded by checking final position
+                guard let newFrame = Bridging.getWindowFrame(for: item.windowID) else {
+                    throw RepositionError.invalidItem(item)
+                }
+                
+                if newFrame != initialFrame {
+                    logger.info("Successfully moved \(item.displayName) on attempt \(attempt)")
+                    return
+                } else {
+                    // Frame didn't change, consider it a failure for this attempt
+                    throw RepositionError.couldNotComplete(item)
+                }
+            } catch {
+                if attempt < maxRetries {
+                    // Log the failure and try to wake up the item before retrying
+                    logger.warning("Attempt \(attempt) failed for \(item.displayName): \(error.localizedDescription)")
+                    try await wakeUpItem(item)
+                    logger.info("Retrying move of \(item.displayName) (attempt \(attempt + 1)/\(self.maxRetries))")
+                } else {
+                    // All attempts exhausted, propagate the error
+                    logger.error("All \(self.maxRetries) attempts failed for \(item.displayName)")
+                    throw error
+                }
+            }
         }
     }
     
@@ -387,6 +401,60 @@ final class IconRepositioner {
         case .rightOfItem:
             return CGPoint(x: frame.maxX, y: frame.midY)
         }
+    }
+    
+    /// Attempts to wake up an unresponsive menu bar item with a click.
+    ///
+    /// Some menu bar items may become unresponsive or need a "wake up" click
+    /// before they respond to Command+Drag events. This method sends a simple
+    /// click (without Command modifier) to activate the item.
+    ///
+    /// - Parameter item: The IconItem to wake up.
+    /// - Throws:
+    ///   - `RepositionError.invalidEventSource` if event source creation fails.
+    ///   - `RepositionError.invalidItem` if the item's frame cannot be retrieved.
+    ///   - `RepositionError.eventCreationFailed` if click events cannot be created.
+    private func wakeUpItem(_ item: IconItem) async throws {
+        logger.debug("Attempting to wake up \(item.displayName)")
+        
+        guard let source = CGEventSource(stateID: .hidSystemState) else {
+            throw RepositionError.invalidEventSource
+        }
+        
+        guard let frame = Bridging.getWindowFrame(for: item.windowID) else {
+            throw RepositionError.invalidItem(item)
+        }
+        
+        let clickPoint = CGPoint(x: frame.midX, y: frame.midY)
+        
+        // Create click events (no Command modifier - this is a simple click)
+        guard let mouseDownEvent = CGEvent(
+            mouseEventSource: source,
+            mouseType: .leftMouseDown,
+            mouseCursorPosition: clickPoint,
+            mouseButton: .left
+        ),
+        let mouseUpEvent = CGEvent(
+            mouseEventSource: source,
+            mouseType: .leftMouseUp,
+            mouseCursorPosition: clickPoint,
+            mouseButton: .left
+        ) else {
+            throw RepositionError.eventCreationFailed
+        }
+        
+        // Set window targeting for the click
+        let windowID = Int64(item.windowID)
+        mouseDownEvent.setIntegerValueField(.mouseEventWindowUnderMousePointer, value: windowID)
+        mouseUpEvent.setIntegerValueField(.mouseEventWindowUnderMousePointer, value: windowID)
+        
+        // Post click events
+        postEvent(mouseDownEvent, to: item.ownerPID)
+        try await Task.sleep(for: .milliseconds(10))
+        postEvent(mouseUpEvent, to: item.ownerPID)
+        
+        // Brief pause to let the app respond
+        try await Task.sleep(for: .milliseconds(50))
     }
     
     /// Waits for an item's frame to change from the initial frame.

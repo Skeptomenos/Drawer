@@ -14,7 +14,7 @@ Phase 5 implements the ability to physically reposition menu bar icons by draggi
 |-------|-------------|--------|-------|
 | 5.1 | Core Models | **100%** | Complete - IconIdentifier & IconItem models + tests |
 | 5.2 | Bridging Extensions | **100%** | getWindowList, getWindowFrame, activeSpaceID all exist |
-| 5.3 | IconRepositioner Engine | **67%** | MouseCursor + Skeleton + CGEvent Move + Frame Detection complete (4/6 tasks) |
+| 5.3 | IconRepositioner Engine | **83%** | MouseCursor + Skeleton + CGEvent Move + Frame Detection + Retry/Wake-Up complete (5/6 tasks) |
 | 5.4 | Settings UI Integration | 0% | Drag-drop UI exists but no repositioner hook |
 | 5.5 | Persistence | 10% | Basic layout save exists, needs icon position persistence |
 
@@ -88,12 +88,12 @@ Phase 5.1 is fully complete. The core models for icon identification and represe
 - **Dependencies**: Task 5.3.3
 - **Verification**: Build passed, 358 tests pass, committed as feat(5.3.4), tagged v0.5.1-alpha.7
 
-#### Task 5.3.5: Implement Retry and Wake-Up Logic
+#### Task 5.3.5: Implement Retry and Wake-Up Logic [COMPLETE]
 - **File**: `Drawer/Core/Engines/IconRepositioner.swift` (modify)
 - **Scope**: Reliability improvements for unresponsive apps
 - **Details**:
-  - `wakeUpItem(_:) async throws` - click without Command modifier
-  - Complete `move(item:to:)` implementation:
+  - `wakeUpItem(_:) async throws` - click without Command modifier to wake unresponsive apps
+  - Complete `move(item:to:)` implementation with retry loop:
     1. Check isMovable (throw .notMovable if false)
     2. Check if already in correct position (early return)
     3. Save cursor location, hide cursor
@@ -102,9 +102,9 @@ Phase 5.1 is fully complete. The core models for icon identification and represe
        - performMove → waitForFrameChange
        - On failure: wakeUpItem → retry
     6. Restore cursor position and show cursor (via defer)
-  - Add os.log logging for all operations
+  - Full os.log logging for all operations (info, debug, warning, error levels)
 - **Dependencies**: Task 5.3.4
-- **Verification**: `xcodebuild -scheme Drawer build`
+- **Verification**: Build passed, 358 tests pass, committed as feat(5.3.5), tagged v0.5.1-alpha.8
 
 #### Task 5.3.6: Create IconRepositioner Tests
 - **File**: `DrawerTests/Engines/IconRepositionerTests.swift` (new)
