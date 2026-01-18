@@ -7,37 +7,104 @@
 
 import SwiftUI
 
+// MARK: - SettingsTab
+
+/// Represents a settings tab in the sidebar navigation.
+/// Conforms to CaseIterable for iteration and Identifiable for SwiftUI.
+enum SettingsTab: String, CaseIterable, Identifiable {
+    case general
+    case menuBarLayout
+    case appearance
+    case about
+
+    var id: String { rawValue }
+
+    /// Display title for the tab
+    var title: String {
+        switch self {
+        case .general:
+            return "General"
+        case .menuBarLayout:
+            return "Menu Bar Layout"
+        case .appearance:
+            return "Appearance"
+        case .about:
+            return "About"
+        }
+    }
+
+    /// SF Symbol icon for the tab
+    var icon: String {
+        switch self {
+        case .general:
+            return "gearshape"
+        case .menuBarLayout:
+            return "menubar.rectangle"
+        case .appearance:
+            return "paintbrush"
+        case .about:
+            return "info.circle"
+        }
+    }
+}
+
 // MARK: - SettingsView
 
-/// Main settings window with tabbed navigation.
-/// Uses native macOS Settings scene for proper integration with ⌘, shortcut.
+/// Main settings window with sidebar navigation.
+/// Uses NavigationSplitView for a sidebar layout matching the reference design.
+/// Matches: specs/reference_images/settings-layout.jpg
 struct SettingsView: View {
+
+    // MARK: - Environment
+
     @EnvironmentObject private var appState: AppState
 
+    // MARK: - State
+
+    /// Currently selected tab in the sidebar
+    @State private var selectedTab: SettingsTab = .general
+
+    // MARK: - Body
+
     var body: some View {
-        TabView {
-            GeneralSettingsView()
-                .tabItem {
-                    Label("General", systemImage: "gearshape")
-                }
-
-            AppearanceSettingsView()
-                .tabItem {
-                    Label("Appearance", systemImage: "paintbrush")
-                }
-
-            SettingsMenuBarLayoutView()
-                .tabItem {
-                    Label("Menu Bar Layout", systemImage: "menubar.rectangle")
-                }
-
-            AboutView()
-                .tabItem {
-                    Label("About", systemImage: "info.circle")
-                }
+        NavigationSplitView {
+            sidebarContent
+        } detail: {
+            detailContent
+                .environmentObject(appState)
         }
-        .frame(width: 500, height: 520)
+        .frame(width: 680, height: 540)
         .environmentObject(appState)
+    }
+
+    // MARK: - Sidebar Content
+
+    /// Sidebar with navigation items
+    private var sidebarContent: some View {
+        List(SettingsTab.allCases, selection: $selectedTab) { tab in
+            NavigationLink(value: tab) {
+                Label(tab.title, systemImage: tab.icon)
+            }
+        }
+        .listStyle(.sidebar)
+        .navigationSplitViewColumnWidth(min: 180, ideal: 200, max: 220)
+    }
+
+    // MARK: - Detail Content
+
+    /// Detail view showing the selected settings panel
+    @ViewBuilder
+    private var detailContent: some View {
+        switch selectedTab {
+        case .general:
+            GeneralSettingsView()
+        case .menuBarLayout:
+            SettingsMenuBarLayoutView()
+        case .appearance:
+            AppearanceSettingsView()
+        case .about:
+            AboutView()
+        }
     }
 }
 

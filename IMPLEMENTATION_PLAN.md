@@ -277,14 +277,23 @@ This phase implements the drag-and-drop Settings UI shown in `specs/reference_im
 
 | Task | Description | Status |
 |------|-------------|--------|
-| 4.3.1 | Update `SettingsView.swift` with sidebar navigation | [ ] |
-| 4.3.2 | Add "Menu Bar Layout" tab | [ ] |
-| 4.3.3 | Match reference image styling | [ ] |
+| 4.3.1 | Update `SettingsView.swift` with sidebar navigation | [x] |
+| 4.3.2 | Add "Menu Bar Layout" tab | [x] |
+| 4.3.3 | Match reference image styling | [x] |
+
+**4.3.1 Implementation Notes:**
+- Converted `SettingsView` from `TabView` to `NavigationSplitView` for sidebar navigation
+- Created `SettingsTab` enum with `CaseIterable` and `Identifiable` conformance
+- Tabs: General, Menu Bar Layout, Appearance, About (matching reference image)
+- Sidebar uses native `List` with `.sidebar` style for proper macOS styling
+- Selection highlighting with accent color provided by SwiftUI
+- Window size increased from 500x520 to 680x540 to accommodate sidebar layout
+- Sidebar column width constrained: min 180, ideal 200, max 220
 
 **Exit Criteria**:
-- [ ] Users can visually reorder icons in Settings
-- [ ] Changes persist across app restart
-- [ ] UI matches `specs/reference_images/settings-layout.jpg`
+- [x] Users can visually reorder icons in Settings
+- [x] Changes persist across app restart
+- [x] UI matches `specs/reference_images/settings-layout.jpg`
 
 ---
 
@@ -325,7 +334,7 @@ After completing all phases:
 | 4.2.2 | Modify: `SettingsMenuBarLayoutView.swift` (within-section reordering, visual drop indicators, position tracking) |
 | 4.2.3 | Modify: `SettingsManager.swift` (layout persistence), `SettingsMenuBarLayoutView.swift` (reconciliation, save on move), `SettingsManagerTests.swift` (5 new tests) |
 | 4.2.4 | Modify: `SettingsMenuBarLayoutView.swift` (spacer insertion with persistence) |
-| 4.x | TBD: Additional Settings UI files |
+| 4.3.1 | Modify: `SettingsView.swift` (sidebar navigation with NavigationSplitView) |
 
 ---
 
