@@ -38,6 +38,9 @@
 		DRAWERTEST00100000000030 /* ControlItemImageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000030 /* ControlItemImageTests.swift */; };
 		DRAWERTEST00100000000031 /* ControlItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000031 /* ControlItemTests.swift */; };
 		DRAWERTEST00100000000032 /* MenuBarSectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000032 /* MenuBarSectionTests.swift */; };
+		DRAWERTEST00100000000033 /* OverlayModeManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000033 /* OverlayModeManagerTests.swift */; };
+		DRAWERTEST00100000000034 /* MockEventSimulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000034 /* MockEventSimulator.swift */; };
+		DRAWERTEST00100000000035 /* MockOverlayPanelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000035 /* MockOverlayPanelController.swift */; };
 		DRAWER001000000000000001 /* DrawerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000001 /* DrawerApp.swift */; };
 		DRAWER001000000000000002 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000002 /* AppState.swift */; };
 		DRAWER001000000000000003 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000003 /* AppDelegate.swift */; };
@@ -169,6 +172,9 @@
 		DRAWERTEST00200000000030 /* ControlItemImageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlItemImageTests.swift; sourceTree = "<group>"; };
 		DRAWERTEST00200000000031 /* ControlItemTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlItemTests.swift; sourceTree = "<group>"; };
 		DRAWERTEST00200000000032 /* MenuBarSectionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarSectionTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000033 /* OverlayModeManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayModeManagerTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000034 /* MockEventSimulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockEventSimulator.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000035 /* MockOverlayPanelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockOverlayPanelController.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000001 /* DrawerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerApp.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000002 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000003 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -366,6 +372,7 @@
 				DRAWERTEST00200000000015 /* LaunchAtLoginManagerTests.swift */,
 				DRAWERTEST00200000000020 /* PermissionTypeTests.swift */,
 				DRAWERTEST00200000000021 /* PermissionManagerTests.swift */,
+				DRAWERTEST00200000000033 /* OverlayModeManagerTests.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -381,6 +388,8 @@
 				DRAWERTEST00200000000008 /* MockMenuBarManagerTests.swift */,
 				DRAWERTEST00200000000009 /* MockIconCapturer.swift */,
 				DRAWERTEST00200000000010 /* MockIconCapturerTests.swift */,
+				DRAWERTEST00200000000034 /* MockEventSimulator.swift */,
+				DRAWERTEST00200000000035 /* MockOverlayPanelController.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -920,6 +929,9 @@
 				DRAWERTEST00100000000030 /* ControlItemImageTests.swift in Sources */,
 				DRAWERTEST00100000000031 /* ControlItemTests.swift in Sources */,
 				DRAWERTEST00100000000032 /* MenuBarSectionTests.swift in Sources */,
+				DRAWERTEST00100000000033 /* OverlayModeManagerTests.swift in Sources */,
+				DRAWERTEST00100000000034 /* MockEventSimulator.swift in Sources */,
+				DRAWERTEST00100000000035 /* MockOverlayPanelController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

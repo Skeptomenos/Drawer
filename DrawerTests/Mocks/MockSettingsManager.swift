@@ -26,6 +26,7 @@ final class MockSettingsManager: ObservableObject {
     @Published var showOnHover: Bool = false
     @Published var hasCompletedOnboarding: Bool = false
     @Published var globalHotkey: GlobalHotkeyConfig?
+    @Published var overlayModeEnabled: Bool = false
 
     // MARK: - Combine Publishers (mirrors SettingsManager)
 
@@ -65,6 +66,7 @@ final class MockSettingsManager: ObservableObject {
         showOnHover = false
         hasCompletedOnboarding = false
         globalHotkey = nil
+        overlayModeEnabled = false
     }
 
     // MARK: - Test Helpers

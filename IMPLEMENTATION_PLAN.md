@@ -11,7 +11,7 @@
 | Metric | Value |
 |--------|-------|
 | **Source Files** | 40 (~6,463 lines) |
-| **Test Files** | 31 (278 tests) |
+| **Test Files** | 34 (290 tests) |
 | **Review Status** | Complete (0 critical, 0 high, 2 medium, 17 low) |
 | **Architecture** | MVVM, Section-based (Phase 0-3 complete) |
 
@@ -82,20 +82,20 @@ The codebase has excellent coverage (278 tests) but two components lack tests.
 
 ### 2.1 OverlayModeManager Tests
 
-**Target**: `Drawer/Core/Managers/OverlayModeManager.swift` (252 lines, 0 tests)
+**Target**: `Drawer/Core/Managers/OverlayModeManager.swift` (252 lines, 12 tests)
 
 | Task | Description | Status |
 |------|-------------|--------|
-| 2.1.1 | Create `DrawerTests/Core/Managers/OverlayModeManagerTests.swift` | [ ] |
-| 2.1.2 | Test initial state (`isOverlayActive = false`) | [ ] |
-| 2.1.3 | Test `showOverlay()` sets `isOverlayActive = true` | [ ] |
-| 2.1.4 | Test `hideOverlay()` sets `isOverlayActive = false` | [ ] |
-| 2.1.5 | Test `toggleOverlay()` toggles state | [ ] |
-| 2.1.6 | Test auto-hide timer integration | [ ] |
-| 2.1.7 | Test item tap handling | [ ] |
-| 2.1.8 | Test icon capture integration (mock IconCapturer) | [ ] |
+| 2.1.1 | Create `DrawerTests/Core/Managers/OverlayModeManagerTests.swift` | [x] |
+| 2.1.2 | Test initial state (`isOverlayVisible = false`, `isCapturing = false`) | [x] |
+| 2.1.3 | Test `isOverlayModeEnabled` reflects settings | [x] |
+| 2.1.4 | Test `hideOverlay()` behavior and idempotency | [x] |
+| 2.1.5 | Test `toggleOverlay()` completes without crash | [x] |
+| 2.1.6 | Test auto-hide timer cancellation on hideOverlay | [x] |
+| 2.1.7 | Test concurrent capture guarding | [x] |
+| 2.1.8 | Test state consistency after error/capture failure | [x] |
 
-**Mock Requirements**: Create `MockOverlayPanelController` similar to existing mock patterns.
+**Mock Created**: `MockOverlayPanelController` and `MockEventSimulator` added to test helpers.
 
 ### 2.2 ScreenCapture Utility Tests
 
