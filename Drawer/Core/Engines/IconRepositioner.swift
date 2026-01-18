@@ -151,7 +151,6 @@ final class IconRepositioner {
     /// - Note: This method will retry up to `maxRetries` times, using wake-up
     ///   clicks between attempts to handle unresponsive apps.
     func move(item: IconItem, to destination: MoveDestination) async throws {
-        // TODO: Task 5.3.4 - Implement frame change detection
         // TODO: Task 5.3.5 - Implement retry and wake-up logic
         
         logger.info("Move requested: \(item.displayName) to \(String(describing: destination))")
@@ -186,9 +185,9 @@ final class IconRepositioner {
         }
         
         // Single attempt for now (retry logic in Task 5.3.5)
-        try performMove(item: item, to: destination)
+        try await performMove(item: item, to: destination)
         
-        // Verify the move succeeded
+        // Verify the move succeeded by checking final position
         guard let newFrame = Bridging.getWindowFrame(for: item.windowID) else {
             throw RepositionError.invalidItem(item)
         }
@@ -207,14 +206,15 @@ final class IconRepositioner {
     ///
     /// This method simulates a Command+Drag operation:
     /// 1. Creates a mouse down event at an off-screen point with Command modifier
-    /// 2. Creates a mouse up event at the destination point
-    /// 3. Posts both events to the target process
+    /// 2. Posts mouse down and waits for frame change (drag started)
+    /// 3. Creates a mouse up event at the destination point
+    /// 4. Posts mouse up and waits for frame change (drop completed)
     ///
     /// - Parameters:
     ///   - item: The item to move.
     ///   - destination: Where to move the item.
-    /// - Throws: `RepositionError` if event creation or posting fails.
-    private func performMove(item: IconItem, to destination: MoveDestination) throws {
+    /// - Throws: `RepositionError` if event creation, posting, or frame detection fails.
+    private func performMove(item: IconItem, to destination: MoveDestination) async throws {
         guard let source = CGEventSource(stateID: .hidSystemState) else {
             throw RepositionError.invalidEventSource
         }
@@ -248,14 +248,26 @@ final class IconRepositioner {
             throw RepositionError.eventCreationFailed
         }
         
+        // Get initial frame for change detection
+        guard let initialFrame = Bridging.getWindowFrame(for: item.windowID) else {
+            throw RepositionError.invalidItem(item)
+        }
+        
         // Permit all events during suppression
         permitAllEvents(for: source)
         
-        // Post mouse down to initiate drag
+        // Post mouse down to initiate drag and wait for frame change
         postEvent(mouseDownEvent, to: item.ownerPID)
+        try await waitForFrameChange(of: item, initialFrame: initialFrame)
         
-        // Post mouse up to complete the move
+        // Get mid-move frame for second wait
+        guard let midFrame = Bridging.getWindowFrame(for: item.windowID) else {
+            throw RepositionError.invalidItem(item)
+        }
+        
+        // Post mouse up to complete the move and wait for frame change
         postEvent(mouseUpEvent, to: item.ownerPID)
+        try await waitForFrameChange(of: item, initialFrame: midFrame)
     }
     
     /// Creates a CGEvent for menu bar item movement.
@@ -375,6 +387,41 @@ final class IconRepositioner {
         case .rightOfItem:
             return CGPoint(x: frame.maxX, y: frame.midY)
         }
+    }
+    
+    /// Waits for an item's frame to change from the initial frame.
+    ///
+    /// This method polls the window frame at regular intervals until either:
+    /// - The frame differs from the initial frame (success)
+    /// - The timeout is exceeded (throws `.timeout`)
+    /// - The frame cannot be retrieved (throws `.invalidItem`)
+    ///
+    /// - Parameters:
+    ///   - item: The IconItem to monitor.
+    ///   - initialFrame: The frame before the move operation.
+    /// - Throws:
+    ///   - `RepositionError.timeout` if `frameChangeTimeout` (50ms) is exceeded.
+    ///   - `RepositionError.invalidItem` if the frame cannot be retrieved.
+    private func waitForFrameChange(
+        of item: IconItem,
+        initialFrame: CGRect
+    ) async throws {
+        let deadline = ContinuousClock.now + frameChangeTimeout
+        
+        while ContinuousClock.now < deadline {
+            guard let currentFrame = Bridging.getWindowFrame(for: item.windowID) else {
+                throw RepositionError.invalidItem(item)
+            }
+            
+            if currentFrame != initialFrame {
+                logger.debug("Frame changed for \(item.displayName)")
+                return
+            }
+            
+            try await Task.sleep(for: frameChangePollInterval)
+        }
+        
+        throw RepositionError.timeout(item)
     }
     
     /// Checks if an item is already in the correct position relative to the destination.
