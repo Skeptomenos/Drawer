@@ -62,7 +62,7 @@ This phase addresses 2 potential crashes and 13 code quality issues identified d
 |------|------|-------|--------|
 | 1.3.1 | `LauncherApplication/Info.plist` | Update copyright to "Drawer", use build variables | [x] |
 | 1.3.2 | `LauncherApplication/AppDelegate.swift:34` | Update app name from "Hidden Bar" to "Drawer" | [x] |
-| 1.3.3 | `LauncherApplication/AppDelegate.swift:20` | Update bundle identifier to match main app | [ ] |
+| 1.3.3 | `LauncherApplication/AppDelegate.swift:20` | Update bundle identifier to match main app | [x] |
 | 1.3.4 | `hidden/Info.plist` | Remove empty `CFBundleIconFile`, update copyright year | [ ] |
 
 **Exit Criteria**:
