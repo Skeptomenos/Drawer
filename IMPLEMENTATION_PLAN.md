@@ -43,7 +43,7 @@ This phase addresses 2 potential crashes and 13 code quality issues identified d
 | 1.2.1 | `Drawer/Core/Managers/DrawerManager.swift:48` | Remove unused `cancellables` | [x] |
 | 1.2.2 | `Drawer/Core/Managers/HoverManager.swift:30` | Remove unused `cancellables` | [x] |
 | 1.2.3 | `Drawer/UI/Panels/DrawerPanelController.swift:49` | Remove unused `cancellables` | [x] |
-| 1.2.4 | `Drawer/App/AppState.swift:79-87` | Fix NotificationCenter observer cleanup in deinit | [ ] |
+| 1.2.4 | `Drawer/App/AppState.swift:79-87` | Fix NotificationCenter observer cleanup in deinit | [x] |
 | 1.2.5 | `Drawer/Core/Engines/IconCapturer.swift:418` | Fix off-by-one: `> 50` → `>= 50` | [ ] |
 | 1.2.6 | `Drawer/Core/Engines/IconCapturer.swift:381-382` | Make `standardIconWidth` and `iconSpacing` private | [ ] |
 | 1.2.7 | `Drawer/Utilities/WindowInfo.swift:41` | Replace force cast with safe unwrap | [ ] |

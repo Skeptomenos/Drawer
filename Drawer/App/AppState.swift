@@ -32,6 +32,7 @@ final class AppState: ObservableObject {
 
     private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "com.drawer", category: "AppState")
     private var cancellables = Set<AnyCancellable>()
+    private var menuBarFailureObserver: NSObjectProtocol?
 
     var hasCompletedOnboarding: Bool {
         get { settings.hasCompletedOnboarding }
@@ -77,7 +78,7 @@ final class AppState: ObservableObject {
     }
 
     private func setupMenuBarFailureObserver() {
-        NotificationCenter.default.addObserver(
+        menuBarFailureObserver = NotificationCenter.default.addObserver(
             forName: .menuBarSetupFailed,
             object: nil,
             queue: .main
@@ -220,6 +221,9 @@ final class AppState: ObservableObject {
     }
 
     deinit {
+        if let observer = menuBarFailureObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
         cancellables.removeAll()
     }
 
