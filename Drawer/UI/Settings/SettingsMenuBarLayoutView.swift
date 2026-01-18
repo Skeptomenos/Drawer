@@ -11,22 +11,9 @@ import os.log
 import SwiftUI
 import UniformTypeIdentifiers
 
-// MARK: - Legacy Reconciliation Result
-// NOTE: This struct is deprecated. Use ReconciliationResult from LayoutReconciler.swift instead.
-// This is kept temporarily for backward compatibility until the view is updated to use LayoutReconciler.
-
-/// Legacy result of reconciling captured icons with saved layout.
-/// @deprecated Use `ReconciliationResult` from `LayoutReconciler.swift` instead.
-private struct LegacyReconciliationResult {
-    /// Reconciled layout items
-    let items: [SettingsLayoutItem]
-    /// Cache mapping item IDs to captured images
-    let imageCache: [UUID: CGImage]
-    /// Number of items matched from saved layout
-    let matchedCount: Int
-    /// Number of new items not found in saved layout
-    let newCount: Int
-}
+// MARK: - Reconciliation
+// Uses LayoutReconciler for layout reconciliation (Spec 5.6, 5.7)
+// See LayoutReconciler.swift for algorithm details
 
 // MARK: - Design Constants
 
@@ -100,8 +87,14 @@ struct SettingsMenuBarLayoutView: View {
     /// Whether layout has been modified (for save indication)
     @State private var hasUnsavedChanges: Bool = false
 
+    /// Cache mapping layout item IDs to window IDs for repositioning (Spec 5.7)
+    @State private var windowIDCache: [UUID: CGWindowID] = [:]
+
     /// Whether to show the reset confirmation alert
     @State private var showResetConfirmation: Bool = false
+
+    /// Reconciler instance for layout reconciliation (Spec 5.6)
+    private let reconciler = LayoutReconciler()
 
     /// Logger for debugging
     private let logger = Logger(
@@ -612,6 +605,9 @@ struct SettingsMenuBarLayoutView: View {
     /// Refreshes the menu bar items by capturing icons from the menu bar.
     /// Uses IconCapturer to get real menu bar items with their images, then
     /// reconciles with the saved layout to preserve user's section assignments.
+    ///
+    /// Spec 5.6: Uses LayoutReconciler to ensure captured X-position order is used
+    /// Spec 5.7: Stores windowIDCache for reliable icon matching during repositioning
     private func refreshItems() {
         isRefreshing = true
         errorMessage = nil
@@ -626,8 +622,9 @@ struct SettingsMenuBarLayoutView: View {
                 // Load saved layout for reconciliation
                 let savedLayout = SettingsManager.shared.menuBarLayout
 
-                // Reconcile captured icons with saved layout
-                let reconciled = reconcileLayout(
+                // Spec 5.6: Use LayoutReconciler for correct ordering and section handling
+                // Spec 5.7: reconciler populates windowIDCache for repositioning
+                let reconciled = reconciler.reconcile(
                     capturedIcons: result.icons,
                     savedLayout: savedLayout
                 )
@@ -635,6 +632,7 @@ struct SettingsMenuBarLayoutView: View {
                 await MainActor.run {
                     layoutItems = reconciled.items
                     imageCache = reconciled.imageCache
+                    windowIDCache = reconciled.windowIDCache  // Spec 5.7
                     isRefreshing = false
                     hasUnsavedChanges = false
 
@@ -642,7 +640,7 @@ struct SettingsMenuBarLayoutView: View {
                     let itemCount = reconciled.items.count
                     let matched = reconciled.matchedCount
                     let newItems = reconciled.newCount
-                    logger.debug("Refreshed layout: \(itemCount) items (matched: \(matched), new: \(newItems))")
+                    logger.debug("Refreshed layout: \(itemCount) items (matched: \(matched), new: \(newItems), windowIDs: \(reconciled.windowIDCache.count))")
                     #endif
                 }
             } catch {
@@ -655,100 +653,9 @@ struct SettingsMenuBarLayoutView: View {
         }
     }
 
-    /// Reconciles captured icons with saved layout to preserve user's section assignments.
-    ///
-    /// Algorithm:
-    /// 1. For each captured icon, try to find a matching saved item (by bundle ID + title)
-    /// 2. If found, use the saved section and order (user's preference)
-    /// 3. If not found, use the captured icon's section (new icon, first time seen)
-    /// 4. Spacers from saved layout are preserved
-    ///
-    /// - Parameters:
-    ///   - capturedIcons: Icons captured from the current menu bar state
-    ///   - savedLayout: Previously saved layout items
-    /// - Returns: Reconciled layout items with image cache and statistics
-    private func reconcileLayout(
-        capturedIcons: [CapturedIcon],
-        savedLayout: [SettingsLayoutItem]
-    ) -> LegacyReconciliationResult {
-        var reconciledItems: [SettingsLayoutItem] = []
-        var newImageCache: [UUID: CGImage] = [:]
-        var matchedCount = 0
-        var newCount = 0
-
-        // Spec 5.6 Task 6: Sort captured icons by X-position (left to right)
-        // This is the source of truth for display order - not the saved layout order
-        let sortedIcons = capturedIcons.sorted { $0.originalFrame.minX < $1.originalFrame.minX }
-        logger.debug("[Layout] Sorted \(sortedIcons.count) icons by X-position")
-
-        // Track which saved items have been matched to avoid duplicates
-        var matchedSavedItemIds: Set<UUID> = []
-
-        // Process each captured icon in X-position order
-        for capturedIcon in sortedIcons {
-            // Try to find a matching saved item
-            if let matchingSaved = savedLayout.first(where: { saved in
-                !matchedSavedItemIds.contains(saved.id) && saved.matches(capturedIcon: capturedIcon)
-            }) {
-                // Use saved section/order but create new item with fresh ID for SwiftUI
-                let reconciledItem = SettingsLayoutItem(
-                    bundleIdentifier: matchingSaved.bundleIdentifier ?? "",
-                    title: matchingSaved.title,
-                    section: matchingSaved.section,
-                    order: matchingSaved.order
-                )
-                reconciledItems.append(reconciledItem)
-                newImageCache[reconciledItem.id] = capturedIcon.image
-                matchedSavedItemIds.insert(matchingSaved.id)
-                matchedCount += 1
-            } else {
-                // New icon not in saved layout - use captured section
-                if let newItem = SettingsLayoutItem.from(
-                    capturedIcon: capturedIcon,
-                    section: capturedIcon.sectionType,
-                    order: reconciledItems.count
-                ) {
-                    reconciledItems.append(newItem)
-                    newImageCache[newItem.id] = capturedIcon.image
-                    newCount += 1
-                }
-            }
-        }
-
-        // Preserve spacers from saved layout
-        for savedItem in savedLayout where savedItem.isSpacer {
-            reconciledItems.append(savedItem)
-        }
-
-        // Normalize orders within each section to prevent gaps
-        reconciledItems = normalizeOrders(reconciledItems)
-
-        return LegacyReconciliationResult(
-            items: reconciledItems,
-            imageCache: newImageCache,
-            matchedCount: matchedCount,
-            newCount: newCount
-        )
-    }
-
-    /// Normalizes order values within each section to be sequential (0, 1, 2, ...).
-    /// This prevents order values from growing unboundedly after repeated insertions.
-    private func normalizeOrders(_ items: [SettingsLayoutItem]) -> [SettingsLayoutItem] {
-        var normalized: [SettingsLayoutItem] = []
-
-        for sectionType in MenuBarSectionType.allCases {
-            let sectionItems = items
-                .filter { $0.section == sectionType }
-                .sorted { $0.order < $1.order }
-
-            for (index, var item) in sectionItems.enumerated() {
-                item.order = index
-                normalized.append(item)
-            }
-        }
-
-        return normalized
-    }
+    // MARK: - Legacy Reconciliation (Removed)
+    // The legacy reconcileLayout() and normalizeOrders() methods have been removed.
+    // Reconciliation is now handled by LayoutReconciler.swift (Spec 5.6, 5.7)
 
     /// Resets all saved icon position preferences.
     ///

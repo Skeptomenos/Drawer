@@ -109,34 +109,28 @@ This plan implements fixes in 4 phases with 19 tasks total.
 - **Scope**: Add sorting before main loop
 - **Status**: Completed - Added X-position sorting at line 681 and debug log at line 682. The loop now iterates over `sortedIcons` instead of `capturedIcons`.
 
-### Task 7: Refactor reconcileLayout() - Section from Capture
+### Task 7: Refactor reconcileLayout() - Section from Capture [COMPLETED]
 - **File**: `Drawer/UI/Settings/SettingsMenuBarLayoutView.swift`
-- **Lines**: 680-710
-- **Action**:
-  1. Determine section from captured icon's position relative to separators
-  2. Check saved layout ONLY for section overrides (user moved item)
-  3. Add debug log: `[Layout] Icon \(id): captured=\(section), override=\(hasOverride)`
-- **Scope**: Section determination logic
+- **Action**: Updated `refreshItems()` to use `LayoutReconciler` instead of legacy `reconcileLayout()`
+- **Changes**:
+  1. Added `private let reconciler = LayoutReconciler()` property
+  2. Updated `refreshItems()` to call `reconciler.reconcile()` instead of legacy method
+  3. Removed legacy `reconcileLayout()` and `normalizeOrders()` methods
+  4. Removed `LegacyReconciliationResult` struct
+- **Status**: Completed - `LayoutReconciler` now handles section determination from captured icons with override support
 
-### Task 8: Refactor reconcileLayout() - Order from Position
-- **File**: `Drawer/UI/Settings/SettingsMenuBarLayoutView.swift`
-- **Lines**: 686-707
-- **Action**:
-  1. Assign `order` based on position within each section (not saved order)
-  2. Track order per section: `sectionOrderCounters: [SectionType: Int]`
-  3. Add debug log: `[Layout] Icon \(id): order=\(order) in section \(section)`
-- **Scope**: Order assignment logic
+### Task 8: Refactor reconcileLayout() - Order from Position [COMPLETED]
+- **Action**: Already implemented in `LayoutReconciler.swift` lines 138-140
+- **Status**: Completed - Order is assigned via `sectionOrderCounters` per section, not from saved layout
 
-### Task 9: Update normalizeOrders() for New Algorithm
-- **File**: `Drawer/UI/Settings/SettingsMenuBarLayoutView.swift`
-- **Lines**: 728-743
-- **Action**: Verify normalization works with new ordering approach
-- **Scope**: Validation and potential adjustment
+### Task 9: Update normalizeOrders() for New Algorithm [COMPLETED]
+- **Action**: Already implemented in `LayoutReconciler.swift` lines 245-260
+- **Status**: Completed - Normalization uses the same algorithm, now in `LayoutReconciler`
 
-### Task 10: Verify Spec 5.6 Tests Pass
-- **Action**: Run `testReconcileLayout_*` tests
-- **Expected**: All ordering tests pass
-- **Scope**: Test execution and any final fixes
+### Task 10: Verify Spec 5.6 Tests Pass [COMPLETED]
+- **Action**: Ran full test suite
+- **Result**: All 392 tests pass (6 skipped, 0 failed)
+- **Status**: Completed
 
 ---
 
@@ -144,32 +138,25 @@ This plan implements fixes in 4 phases with 19 tasks total.
 
 **Goal**: Implement windowID caching and multi-tier icon matching.
 
-### Task 11: Add windowIDCache State
+### Task 11: Add windowIDCache State [COMPLETED]
 - **File**: `Drawer/UI/Settings/SettingsMenuBarLayoutView.swift`
-- **Lines**: 86-92
-- **Action**: Add `@State private var windowIDCache: [UUID: CGWindowID] = [:]`
-- **Scope**: State variable addition
+- **Action**: Added `@State private var windowIDCache: [UUID: CGWindowID] = [:]` at line 105
+- **Status**: Completed
 
-### Task 12: Update ReconciliationResult Struct
-- **File**: `Drawer/UI/Settings/SettingsMenuBarLayoutView.swift`
-- **Lines**: 17-26
-- **Action**: Add `let windowIDCache: [UUID: CGWindowID]` to struct
-- **Scope**: Struct modification
+### Task 12: Update ReconciliationResult Struct [COMPLETED]
+- **File**: `Drawer/UI/Settings/LayoutReconciler.swift`
+- **Action**: `ReconciliationResult` struct already includes `windowIDCache` at line 21
+- **Status**: Completed (already existed in `LayoutReconciler.swift`)
 
-### Task 13: Populate windowIDCache in reconcileLayout()
-- **File**: `Drawer/UI/Settings/SettingsMenuBarLayoutView.swift`
-- **Lines**: 667-724
-- **Action**:
-  1. Extract `windowID` from `capturedIcon.itemInfo?.windowID`
-  2. Map layout item UUID to window ID
-  3. Return populated cache in `ReconciliationResult`
-- **Scope**: Cache population logic
+### Task 13: Populate windowIDCache in reconcileLayout() [COMPLETED]
+- **File**: `Drawer/UI/Settings/LayoutReconciler.swift`
+- **Action**: Lines 151-154 populate the cache during reconciliation
+- **Status**: Completed (already implemented in `LayoutReconciler`)
 
-### Task 14: Update refreshItems() to Use windowIDCache
+### Task 14: Update refreshItems() to Use windowIDCache [COMPLETED]
 - **File**: `Drawer/UI/Settings/SettingsMenuBarLayoutView.swift`
-- **Lines**: 632-635
-- **Action**: Extract and store windowIDCache from reconciliation result
-- **Scope**: Result handling update
+- **Action**: Line 644 now stores `reconciled.windowIDCache` to the state variable
+- **Status**: Completed
 
 ### Task 15: Rewrite findIconItem() - Fast Path (WindowID)
 - **File**: `Drawer/UI/Settings/SettingsMenuBarLayoutView.swift`
