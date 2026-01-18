@@ -14,7 +14,7 @@ Phase 5 implements the ability to physically reposition menu bar icons by draggi
 |-------|-------------|--------|-------|
 | 5.1 | Core Models | **100%** | Complete - IconIdentifier & IconItem models + tests |
 | 5.2 | Bridging Extensions | **100%** | getWindowList, getWindowFrame, activeSpaceID all exist |
-| 5.3 | IconRepositioner Engine | **33%** | MouseCursor + Skeleton complete (2/6 tasks) |
+| 5.3 | IconRepositioner Engine | **50%** | MouseCursor + Skeleton + CGEvent Move complete (3/6 tasks) |
 | 5.4 | Settings UI Integration | 0% | Drag-drop UI exists but no repositioner hook |
 | 5.5 | Persistence | 10% | Basic layout save exists, needs icon position persistence |
 
@@ -57,7 +57,7 @@ Phase 5.1 is fully complete. The core models for icon identification and represe
   - DEBUG testing support with `createForTesting()`
 - **Verification**: Build passed, committed as feat(5.3.2), tagged v0.5.1-alpha.5
 
-#### Task 5.3.3: Implement CGEvent Move Logic
+#### Task 5.3.3: Implement CGEvent Move Logic [COMPLETE]
 - **File**: `Drawer/Core/Engines/IconRepositioner.swift` (modify)
 - **Scope**: Core CGEvent simulation for Command+Drag
 - **Details**:
@@ -66,11 +66,13 @@ Phase 5.1 is fully complete. The core models for icon identification and represe
     - Set `.eventTargetUnixProcessID`, `.mouseEventWindowUnderMousePointer`
     - Set undocumented field 0x33 for windowID
   - `postEvent(_:to:)` - post to PID and session tap
-  - `performMove(item:to:) async throws` - execute single move attempt
-  - `permitAllEvents(for:) throws` - configure event source permissions
+  - `performMove(item:to:) throws` - execute single move attempt (sync for now)
+  - `permitAllEvents(for:)` - configure event source permissions
   - `getEndPoint(for:) throws -> CGPoint` - calculate target position
+  - `itemHasCorrectPosition(item:for:) throws -> Bool` - verify item is already positioned
+  - Updated `move(item:to:)` to use new methods with basic implementation
 - **Dependencies**: Task 5.3.2
-- **Verification**: `xcodebuild -scheme Drawer build`
+- **Verification**: Build passed, 358 tests pass, committed as feat(5.3.3)
 
 #### Task 5.3.4: Implement Frame Change Detection
 - **File**: `Drawer/Core/Engines/IconRepositioner.swift` (modify)
