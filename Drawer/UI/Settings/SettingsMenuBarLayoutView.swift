@@ -6,6 +6,7 @@
 //
 
 import AppKit
+import CoreGraphics
 import os.log
 import SwiftUI
 import UniformTypeIdentifiers
@@ -266,6 +267,17 @@ struct SettingsMenuBarLayoutView: View {
             return
         }
 
+        // Skip spacers for physical repositioning (they don't exist in the real menu bar)
+        // Also skip immovable items
+        let shouldReposition = !item.isSpacer && !item.isImmovable
+
+        // Trigger physical repositioning asynchronously (before updating UI state)
+        if shouldReposition {
+            Task {
+                await performReposition(item: item, to: targetSection, at: insertIndex)
+            }
+        }
+
         // Remove from current position
         var movedItem = layoutItems.remove(at: sourceIndex)
 
@@ -314,6 +326,219 @@ struct SettingsMenuBarLayoutView: View {
         #if DEBUG
         logger.debug("Saved layout with \(self.layoutItems.count) items")
         #endif
+    }
+
+    // MARK: - Repositioning (Task 5.4.2)
+
+    /// Performs physical repositioning of a menu bar icon using IconRepositioner.
+    ///
+    /// This method:
+    /// 1. Finds the IconItem matching the dropped SettingsLayoutItem
+    /// 2. Calculates the destination using control items as section boundaries
+    /// 3. Calls IconRepositioner.shared.move(item:to:)
+    /// 4. Refreshes icons on success, shows error on failure
+    ///
+    /// - Parameters:
+    ///   - item: The layout item being moved
+    ///   - targetSection: The section to move the item to
+    ///   - insertIndex: The position within the section to insert at
+    @MainActor
+    private func performReposition(
+        item: SettingsLayoutItem,
+        to targetSection: MenuBarSectionType,
+        at insertIndex: Int
+    ) async {
+        // Find the IconItem that matches this layout item
+        guard let iconItem = findIconItem(for: item) else {
+            logger.warning("Could not find IconItem for \(item.displayName)")
+            return
+        }
+
+        // Calculate the destination based on section and position
+        guard let destination = calculateDestination(
+            for: targetSection,
+            at: insertIndex,
+            excludingItem: iconItem
+        ) else {
+            logger.warning("Could not calculate destination for \(item.displayName)")
+            return
+        }
+
+        do {
+            try await IconRepositioner.shared.move(item: iconItem, to: destination)
+            logger.info("Successfully repositioned \(item.displayName) to \(String(describing: targetSection))")
+
+            // Refresh icons after successful move
+            refreshItems()
+        } catch let error as RepositionError {
+            logger.error("Failed to reposition \(item.displayName): \(error.localizedDescription)")
+            showRepositionError(error)
+        } catch {
+            logger.error("Unexpected error repositioning \(item.displayName): \(error.localizedDescription)")
+        }
+    }
+
+    /// Finds the IconItem matching a SettingsLayoutItem.
+    ///
+    /// Uses bundle identifier and title to match the layout item to a current menu bar icon.
+    ///
+    /// - Parameter layoutItem: The layout item to find
+    /// - Returns: The matching IconItem, or nil if not found
+    private func findIconItem(for layoutItem: SettingsLayoutItem) -> IconItem? {
+        guard case .menuBarItem(let bundleId, let title) = layoutItem.itemType else {
+            // Spacers don't have corresponding IconItems
+            return nil
+        }
+
+        let identifier = IconIdentifier(namespace: bundleId, title: title ?? "")
+        return IconItem.find(matching: identifier)
+    }
+
+    /// Calculates the MoveDestination for a target section and insert index.
+    ///
+    /// Section boundaries are defined by Drawer's control items:
+    /// - Visible section: items to the right of `hiddenControlItem`
+    /// - Hidden section: items between `alwaysHiddenControlItem` and `hiddenControlItem`
+    /// - Always Hidden: items to the left of `alwaysHiddenControlItem`
+    ///
+    /// Within a section, the destination is calculated relative to adjacent items.
+    ///
+    /// - Parameters:
+    ///   - targetSection: The section to move to
+    ///   - insertIndex: Position within the section (0 = leftmost)
+    ///   - excludingItem: Item being moved (excluded from position calculations)
+    /// - Returns: The MoveDestination, or nil if no valid destination found
+    private func calculateDestination(
+        for targetSection: MenuBarSectionType,
+        at insertIndex: Int,
+        excludingItem: IconItem
+    ) -> MoveDestination? {
+        // Get all current menu bar items
+        let allItems = IconItem.getMenuBarItems(onScreenOnly: false, activeSpaceOnly: true)
+            .filter { $0.windowID != excludingItem.windowID }
+
+        // Find Drawer's control items (section separators)
+        let hiddenControlItem = allItems.first { $0.identifier == .hiddenControlItem }
+        let alwaysHiddenControlItem = allItems.first { $0.identifier == .alwaysHiddenControlItem }
+
+        // Get items in the target section (sorted left-to-right by frame.minX)
+        let sectionItems = getSectionItems(
+            for: targetSection,
+            from: allItems,
+            hiddenControlItem: hiddenControlItem,
+            alwaysHiddenControlItem: alwaysHiddenControlItem
+        )
+
+        // Calculate destination based on section and index
+        switch targetSection {
+        case .visible:
+            // Visible items are to the RIGHT of hiddenControlItem
+            if insertIndex == 0 {
+                // Insert at start of visible section (right of hidden control)
+                if let controlItem = hiddenControlItem {
+                    return .rightOfItem(controlItem)
+                }
+            } else if insertIndex <= sectionItems.count, let targetItem = sectionItems[safe: insertIndex - 1] {
+                // Insert after existing item
+                return .rightOfItem(targetItem)
+            } else if let lastItem = sectionItems.last {
+                // Insert at end
+                return .rightOfItem(lastItem)
+            } else if let controlItem = hiddenControlItem {
+                // Empty section, place right of control
+                return .rightOfItem(controlItem)
+            }
+
+        case .hidden:
+            // Hidden items are between alwaysHiddenControlItem and hiddenControlItem
+            if insertIndex == 0 {
+                // Insert at start of hidden section (right of always-hidden control)
+                if let controlItem = alwaysHiddenControlItem {
+                    return .rightOfItem(controlItem)
+                }
+            } else if insertIndex <= sectionItems.count, let targetItem = sectionItems[safe: insertIndex - 1] {
+                // Insert after existing item
+                return .rightOfItem(targetItem)
+            } else if let lastItem = sectionItems.last {
+                // Insert at end (but before hidden control)
+                return .rightOfItem(lastItem)
+            } else if let controlItem = alwaysHiddenControlItem {
+                // Empty section, place right of control
+                return .rightOfItem(controlItem)
+            }
+
+        case .alwaysHidden:
+            // Always-hidden items are to the LEFT of alwaysHiddenControlItem
+            if let controlItem = alwaysHiddenControlItem {
+                if insertIndex == 0 {
+                    // Insert at start (leftmost in always-hidden)
+                    if let firstItem = sectionItems.first {
+                        return .leftOfItem(firstItem)
+                    }
+                    return .leftOfItem(controlItem)
+                } else if insertIndex <= sectionItems.count, let targetItem = sectionItems[safe: insertIndex - 1] {
+                    // Insert after existing item
+                    return .rightOfItem(targetItem)
+                } else {
+                    // Insert at end (just before control item)
+                    return .leftOfItem(controlItem)
+                }
+            }
+        }
+
+        return nil
+    }
+
+    /// Returns items belonging to a specific section based on control item positions.
+    ///
+    /// - Parameters:
+    ///   - section: The section to get items for
+    ///   - allItems: All menu bar items
+    ///   - hiddenControlItem: Drawer's hidden section separator
+    ///   - alwaysHiddenControlItem: Drawer's always-hidden section separator
+    /// - Returns: Items in the specified section, sorted by X position (left to right)
+    private func getSectionItems(
+        for section: MenuBarSectionType,
+        from allItems: [IconItem],
+        hiddenControlItem: IconItem?,
+        alwaysHiddenControlItem: IconItem?
+    ) -> [IconItem] {
+        let hiddenControlX = hiddenControlItem?.frame.minX ?? CGFloat.infinity
+        let alwaysHiddenControlX = alwaysHiddenControlItem?.frame.minX ?? CGFloat.infinity
+
+        return allItems.filter { item in
+            // Skip control items themselves
+            if item.identifier == .hiddenControlItem || item.identifier == .alwaysHiddenControlItem {
+                return false
+            }
+
+            let itemX = item.frame.minX
+
+            switch section {
+            case .visible:
+                // Visible: items to the right of hiddenControlItem
+                return itemX > hiddenControlX
+            case .hidden:
+                // Hidden: items between alwaysHiddenControlItem and hiddenControlItem
+                return itemX > alwaysHiddenControlX && itemX < hiddenControlX
+            case .alwaysHidden:
+                // Always Hidden: items to the left of alwaysHiddenControlItem
+                return itemX < alwaysHiddenControlX
+            }
+        }.sorted { $0.frame.minX < $1.frame.minX }
+    }
+
+    /// Shows an error alert for repositioning failures.
+    ///
+    /// - Parameter error: The RepositionError that occurred
+    private func showRepositionError(_ error: RepositionError) {
+        // Create and show alert on main thread
+        let alert = NSAlert()
+        alert.alertStyle = .warning
+        alert.messageText = "Could Not Move Icon"
+        alert.informativeText = error.localizedDescription
+        alert.addButton(withTitle: "OK")
+        alert.runModal()
     }
 
     /// Refreshes the menu bar items by capturing icons from the menu bar.
@@ -821,6 +1046,16 @@ private struct LayoutItemView: View {
         RoundedRectangle(cornerRadius: 2)
             .fill(Color.accentColor.opacity(0.5))
             .frame(width: 8, height: LayoutDesign.iconSize)
+    }
+}
+
+// MARK: - Safe Array Subscript
+
+/// Extension for safe array access, returns nil for out-of-bounds indices.
+private extension Array {
+    subscript(safe index: Int) -> Element? {
+        guard index >= 0 && index < count else { return nil }
+        return self[index]
     }
 }
 

@@ -15,7 +15,7 @@ Phase 5 implements the ability to physically reposition menu bar icons by draggi
 | 5.1 | Core Models | **100%** | Complete - IconIdentifier & IconItem models + tests |
 | 5.2 | Bridging Extensions | **100%** | getWindowList, getWindowFrame, activeSpaceID all exist |
 | 5.3 | IconRepositioner Engine | **100%** | All tasks complete: MouseCursor, Skeleton, CGEvent Move, Frame Detection, Retry/Wake-Up, Tests |
-| 5.4 | Settings UI Integration | 33% | Task 5.4.1 complete (lock indicators), Tasks 5.4.2-5.4.3 pending |
+| 5.4 | Settings UI Integration | 67% | Tasks 5.4.1-5.4.2 complete, Task 5.4.3 pending |
 | 5.5 | Persistence | 10% | Basic layout save exists, needs icon position persistence |
 
 ## Task List
@@ -138,20 +138,22 @@ Phase 5.1 is fully complete. The core models for icon identification and represe
 - **Dependencies**: Tasks 5.1.1, 5.1.2
 - **Verification**: Build passed, 380 tests pass (8 new tests added)
 
-#### Task 5.4.2: Integrate Repositioner into Drop Handler
-- **File**: `Drawer/UI/Settings/SettingsMenuBarLayoutView.swift` (modify)
+#### Task 5.4.2: Integrate Repositioner into Drop Handler [COMPLETE]
+- **File**: `Drawer/UI/Settings/SettingsMenuBarLayoutView.swift` (modified)
 - **Scope**: Connect drag-drop to real repositioning
 - **Details**:
-  - Create `performReposition(icon:toSection:atIndex:) async` method
-  - Find IconItem matching dropped icon (by bundleIdentifier or ownerName)
-  - Calculate destination using control items as section boundaries:
-    - Visible section: right of `hiddenControlItem`
-    - Hidden section: left of `hiddenControlItem`
-    - Always Hidden: left of `alwaysHiddenControlItem`
-  - Call `IconRepositioner.shared.move(item:to:)`
-  - Trigger `iconCapturer.captureMenuBarIcons()` on success
+  - Added `performReposition(item:to:at:) async` method that triggers physical repositioning
+  - Added `findIconItem(for:)` to match SettingsLayoutItem to IconItem via IconIdentifier
+  - Added `calculateDestination(for:at:excludingItem:)` to compute MoveDestination based on:
+    - Section boundaries defined by `hiddenControlItem` and `alwaysHiddenControlItem`
+    - Insert position within the section
+  - Added `getSectionItems(for:from:...)` helper to filter items by section based on X position
+  - Added `showRepositionError(_:)` to display NSAlert on failure (basic error UI)
+  - Modified `moveItem(_:to:at:)` to trigger `performReposition` in a Task for non-spacer, movable items
+  - Added safe array subscript extension for bounds-safe access
+  - Calls `IconRepositioner.shared.move(item:to:)` and refreshes icons on success
 - **Dependencies**: Tasks 5.3.5, 5.4.1
-- **Verification**: Build and run, drag icon between sections
+- **Verification**: Build passed, 380 tests pass
 
 #### Task 5.4.3: Add Error Handling UI
 - **File**: `Drawer/UI/Settings/SettingsMenuBarLayoutView.swift` (modify)
