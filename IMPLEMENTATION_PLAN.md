@@ -16,7 +16,7 @@ Phase 5 implements the ability to physically reposition menu bar icons by draggi
 | 5.2 | Bridging Extensions | **100%** | getWindowList, getWindowFrame, activeSpaceID all exist |
 | 5.3 | IconRepositioner Engine | **100%** | All tasks complete: MouseCursor, Skeleton, CGEvent Move, Frame Detection, Retry/Wake-Up, Tests |
 | 5.4 | Settings UI Integration | **100%** | All tasks complete (5.4.1-5.4.3) |
-| 5.5 | Persistence | 80% | Tasks 5.5.1-5.5.5 complete - SettingsManager storage + IconPositionRestorer + Position Saving + App Launch Hook + Reset Button |
+| 5.5 | Persistence | **100%** | All tasks complete (5.5.1-5.5.6) |
 
 ## Task List
 
@@ -262,14 +262,24 @@ Phase 5.1 is fully complete. The core models for icon identification and represe
 - **Dependencies**: Task 5.5.1
 - **Verification**: Build passed, 380 tests pass
 
-#### Task 5.5.6: Add Persistence Tests
-- **File**: `DrawerTests/Managers/SettingsManagerTests.swift` (modify)
-- **Scope**: Test save/load round-trip
+#### Task 5.5.6: Add Persistence Tests [COMPLETE]
+- **File**: `DrawerTests/Core/Managers/SettingsManagerTests.swift` (modified)
+- **Scope**: Test save/load round-trip for icon positions
 - **Details**:
-  - `testSaveAndLoadPositions()` - verify round-trip persistence
-  - `testClearPositions()` - verify reset functionality
+  - `testSET021_SaveAndLoadIconPositionsRoundtrip()` - verify round-trip persistence:
+    - Tests saving positions for all three sections (visible, hidden, alwaysHidden)
+    - Verifies IconIdentifier data is correctly encoded/decoded via JSON
+    - Confirms data is written to UserDefaults
+  - `testSET022_ClearSavedPositionsRemovesAllPositions()` - verify reset functionality:
+    - Saves test positions
+    - Calls `clearSavedPositions()`
+    - Verifies positions are empty and UserDefaults key is removed
+  - `testSET023_IconPositionsChangedSubjectFiresOnSave()` - verify Combine publisher:
+    - Tests that `iconPositionsChangedSubject` fires when positions are saved
+  - `testSET024_SavedIconPositionsDefaultIsEmpty()` - verify default state:
+    - Confirms empty dictionary is returned when no positions saved
 - **Dependencies**: Task 5.5.1
-- **Verification**: `xcodebuild test -scheme Drawer -only-testing:DrawerTests/SettingsManagerTests`
+- **Verification**: `xcodebuild test -scheme Drawer -only-testing:DrawerTests/SettingsManagerTests` - PASSED (24 tests, 4 new)
 
 ---
 
