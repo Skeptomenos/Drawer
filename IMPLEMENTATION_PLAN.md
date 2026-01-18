@@ -165,7 +165,7 @@ This phase implements the drag-and-drop Settings UI shown in `specs/reference_im
 | Task | Description | Status |
 |------|-------------|--------|
 | 4.1.1 | Design data model for settings icon representation | [x] |
-| 4.1.2 | Create `SettingsMenuBarLayoutView.swift` | [ ] |
+| 4.1.2 | Create `SettingsMenuBarLayoutView.swift` | [x] |
 | 4.1.3 | Implement icon drag-drop between sections | [ ] |
 
 **4.1.1 Implementation Notes:**
@@ -174,6 +174,20 @@ This phase implements the drag-and-drop Settings UI shown in `specs/reference_im
 - Items identified by bundle ID + title (stable across app launches, unlike window IDs)
 - Fully `Codable` for persistence, `Hashable` for drag-and-drop
 - Created 24 tests in `DrawerTests/Models/SettingsLayoutItemTests.swift`
+
+**4.1.2 Implementation Notes:**
+- Created `Drawer/UI/Settings/SettingsMenuBarLayoutView.swift` with complete static layout
+- View structure matches `specs/reference_images/settings-layout.jpg`:
+  - Header section with icon, title ("Menu Bar Items"), and description
+  - Three `LayoutSectionView` components for Shown, Hidden, Always Hidden sections
+  - Each section has SF Symbol header and dark rounded container
+  - Palette section with "Add a Spacer" button
+  - Refresh button in top-right corner
+- Added `LayoutDesign` enum with design constants (corner radius, padding, icon sizes)
+- Subviews: `LayoutSectionView` (section container), `LayoutItemView` (item placeholder)
+- Added "Menu Bar Layout" tab to `SettingsView.swift` with `menubar.rectangle` icon
+- Increased settings window size from 450x320 to 500x520 to accommodate new tab
+- Foundation ready for Phase 4.1.3 (drag-drop) and 4.2 (icon integration)
 
 ### 4.2 Menu Bar Layout View
 
@@ -230,7 +244,8 @@ After completing all phases:
 | 2.2 | New: `ScreenCaptureTests.swift` |
 | 3.1 | `IconCapturerTests.swift` |
 | 4.1.1 | New: `SettingsLayoutItem.swift`, `SettingsLayoutItemTests.swift` |
-| 4.x | New: `SettingsMenuBarLayoutView.swift`, modify `SettingsView.swift` |
+| 4.1.2 | New: `SettingsMenuBarLayoutView.swift`, modify `SettingsView.swift` |
+| 4.x | TBD: Additional Settings UI files |
 
 ---
 

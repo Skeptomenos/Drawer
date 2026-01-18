@@ -26,12 +26,17 @@ struct SettingsView: View {
                     Label("Appearance", systemImage: "paintbrush")
                 }
 
+            SettingsMenuBarLayoutView()
+                .tabItem {
+                    Label("Menu Bar Layout", systemImage: "menubar.rectangle")
+                }
+
             AboutView()
                 .tabItem {
                     Label("About", systemImage: "info.circle")
                 }
         }
-        .frame(width: 450, height: 320)
+        .frame(width: 500, height: 520)
         .environmentObject(appState)
     }
 }

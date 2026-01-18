@@ -64,6 +64,7 @@
 		DRAWER001000000000000019 /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000019 /* GeneralSettingsView.swift */; };
 		DRAWER001000000000000020 /* AppearanceSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000020 /* AppearanceSettingsView.swift */; };
 		DRAWER001000000000000021 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000021 /* AboutView.swift */; };
+		DRAWER001000000000000042 /* SettingsMenuBarLayoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000042 /* SettingsMenuBarLayoutView.swift */; };
 		DRAWER001000000000000022 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000022 /* OnboardingView.swift */; };
 		DRAWER001000000000000023 /* WelcomeStepView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000023 /* WelcomeStepView.swift */; };
 		DRAWER001000000000000024 /* PermissionsStepView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000024 /* PermissionsStepView.swift */; };
@@ -201,6 +202,7 @@
 		DRAWER002000000000000019 /* GeneralSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsView.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000020 /* AppearanceSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettingsView.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000021 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000042 /* SettingsMenuBarLayoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsMenuBarLayoutView.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000022 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000023 /* WelcomeStepView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeStepView.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000024 /* PermissionsStepView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsStepView.swift; sourceTree = "<group>"; };
@@ -566,6 +568,7 @@
 				DRAWER002000000000000018 /* SettingsView.swift */,
 				DRAWER002000000000000019 /* GeneralSettingsView.swift */,
 				DRAWER002000000000000020 /* AppearanceSettingsView.swift */,
+				DRAWER002000000000000042 /* SettingsMenuBarLayoutView.swift */,
 				DRAWER002000000000000021 /* AboutView.swift */,
 			);
 			path = Settings;
@@ -871,6 +874,7 @@
 				DRAWER001000000000000018 /* SettingsView.swift in Sources */,
 				DRAWER001000000000000019 /* GeneralSettingsView.swift in Sources */,
 				DRAWER001000000000000020 /* AppearanceSettingsView.swift in Sources */,
+				DRAWER001000000000000042 /* SettingsMenuBarLayoutView.swift in Sources */,
 				DRAWER001000000000000021 /* AboutView.swift in Sources */,
 				DRAWER001000000000000022 /* OnboardingView.swift in Sources */,
 				DRAWER001000000000000023 /* WelcomeStepView.swift in Sources */,
