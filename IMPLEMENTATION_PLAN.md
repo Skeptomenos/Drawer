@@ -158,14 +158,14 @@ This plan implements fixes in 4 phases with 19 tasks total.
 - **Action**: Line 644 now stores `reconciled.windowIDCache` to the state variable
 - **Status**: Completed
 
-### Task 15: Rewrite findIconItem() - Fast Path (WindowID)
+### Task 15: Rewrite findIconItem() - Fast Path (WindowID) [COMPLETED]
 - **File**: `Drawer/UI/Settings/SettingsMenuBarLayoutView.swift`
-- **Lines**: 410-418
+- **Lines**: 409-441
 - **Action**:
-  1. Check windowIDCache first for fast lookup
-  2. If found, use `IconItem.find(byWindowID:)` or equivalent
-  3. Add debug log: `[Match] Fast path: windowID \(id) found`
-- **Scope**: Fast path implementation
+  1. Added `IconMatcher` instance to the view
+  2. Rewrote `findIconItem()` to use `iconMatcher.findIconItem()` with windowIDCache
+  3. Added debug logging for all match methods
+- **Status**: Completed - `findIconItem()` now delegates to `IconMatcher` which checks windowIDCache first (fast path) and logs `[Match] Fast path: windowID cache hit`
 
 ### Task 16: Rewrite findIconItem() - Fallback Tiers
 - **File**: `Drawer/UI/Settings/SettingsMenuBarLayoutView.swift`

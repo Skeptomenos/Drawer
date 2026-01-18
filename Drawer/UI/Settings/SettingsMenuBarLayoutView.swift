@@ -96,6 +96,9 @@ struct SettingsMenuBarLayoutView: View {
     /// Reconciler instance for layout reconciliation (Spec 5.6)
     private let reconciler = LayoutReconciler()
 
+    /// Matcher instance for finding IconItems from SettingsLayoutItems (Spec 5.7)
+    private let iconMatcher = IconMatcher()
+
     /// Logger for debugging
     private let logger = Logger(
         subsystem: Bundle.main.bundleIdentifier ?? "com.drawer",
@@ -399,18 +402,38 @@ struct SettingsMenuBarLayoutView: View {
 
     /// Finds the IconItem matching a SettingsLayoutItem.
     ///
-    /// Uses bundle identifier and title to match the layout item to a current menu bar icon.
+    /// Uses a multi-tier matching strategy (Spec 5.7):
+    /// 1. Fast path: Use cached windowID (most reliable)
+    /// 2. Fallback 1: Exact match (bundle ID + title)
+    /// 3. Fallback 2: Bundle ID match only (for apps with dynamic titles)
+    /// 4. Fallback 3: Owner name match (for apps without bundle ID)
     ///
     /// - Parameter layoutItem: The layout item to find
     /// - Returns: The matching IconItem, or nil if not found
     private func findIconItem(for layoutItem: SettingsLayoutItem) -> IconItem? {
-        guard case .menuBarItem(let bundleId, let title) = layoutItem.itemType else {
-            // Spacers don't have corresponding IconItems
-            return nil
+        let result = iconMatcher.findIconItem(
+            for: layoutItem,
+            windowIDCache: windowIDCache,
+            menuBarItems: nil  // Use live items
+        )
+        
+        // Log the match method for debugging
+        switch result.matchMethod {
+        case .windowIDCache:
+            logger.debug("[Match] Fast path: windowID cache hit for \(layoutItem.displayName)")
+        case .exactMatch:
+            logger.debug("[Match] Exact match for \(layoutItem.displayName)")
+        case .bundleIDOnly:
+            logger.debug("[Match] Bundle ID only match for \(layoutItem.displayName)")
+        case .ownerName:
+            logger.debug("[Match] Owner name fallback for \(layoutItem.displayName)")
+        case .notFound:
+            logger.warning("[Match] No match found for \(layoutItem.displayName)")
+        case .spacer:
+            logger.debug("[Match] Spacer item - no physical match needed")
         }
-
-        let identifier = IconIdentifier(namespace: bundleId, title: title ?? "")
-        return IconItem.find(matching: identifier)
+        
+        return result.iconItem
     }
 
     /// Calculates the MoveDestination for a target section and insert index.
