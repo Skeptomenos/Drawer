@@ -452,15 +452,28 @@ struct SettingsMenuBarLayoutView: View {
         return normalized
     }
 
-    /// Adds a spacer to the hidden section
+    /// Adds a spacer to the hidden section.
+    ///
+    /// Spacers are added to the Hidden section by default, at the end.
+    /// Users can drag the spacer to other sections as needed.
+    /// The spacer is persisted immediately to SettingsManager.
     private func addSpacer() {
-        // TODO: Phase 4.2.4 - Implement spacer addition
-        // For now, add a spacer to the hidden section
+        // Calculate order as one past the last item in Hidden section
+        let hiddenItems = items(for: .hidden)
+        let newOrder = (hiddenItems.last?.order ?? -1) + 1
+
         let newSpacer = SettingsLayoutItem.spacer(
             section: .hidden,
-            order: items(for: .hidden).count
+            order: newOrder
         )
         layoutItems.append(newSpacer)
+
+        // Persist the new spacer immediately
+        saveLayout()
+
+        #if DEBUG
+        logger.debug("Added spacer to Hidden section at order \(newOrder)")
+        #endif
     }
 }
 

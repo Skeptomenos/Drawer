@@ -209,7 +209,7 @@ This phase implements the drag-and-drop Settings UI shown in `specs/reference_im
 | 4.2.1 | Display three sections: Shown, Hidden, Always Hidden | [x] |
 | 4.2.2 | Enable drag-and-drop reordering | [x] |
 | 4.2.3 | Sync changes to `MenuBarManager` | [x] |
-| 4.2.4 | Add spacer insertion capability | [ ] |
+| 4.2.4 | Add spacer insertion capability | [x] |
 
 **4.2.2 Implementation Notes:**
 - Added within-section reordering with visual drop indicators
@@ -244,6 +244,14 @@ This phase implements the drag-and-drop Settings UI shown in `specs/reference_im
     4. Preserve spacers from saved layout
   - Added `normalizeOrders()` to prevent order value gaps
 - Added 5 new tests in `SettingsManagerTests.swift` (SET-016 through SET-020)
+- All 330 tests pass, no SwiftLint errors
+
+**4.2.4 Implementation Notes:**
+- Updated `addSpacer()` method in `SettingsMenuBarLayoutView.swift`
+- Spacers are added to the Hidden section by default (users can drag to other sections)
+- Order is calculated correctly as one past the last item in the Hidden section
+- Spacer is persisted immediately via `saveLayout()` call
+- Debug logging added for spacer creation tracking
 - All 330 tests pass, no SwiftLint errors
 
 **4.2.1 Implementation Notes:**
@@ -316,6 +324,7 @@ After completing all phases:
 | 4.2.1 | Modify: `SettingsMenuBarLayoutView.swift` (IconCapturer integration, image cache, live icons) |
 | 4.2.2 | Modify: `SettingsMenuBarLayoutView.swift` (within-section reordering, visual drop indicators, position tracking) |
 | 4.2.3 | Modify: `SettingsManager.swift` (layout persistence), `SettingsMenuBarLayoutView.swift` (reconciliation, save on move), `SettingsManagerTests.swift` (5 new tests) |
+| 4.2.4 | Modify: `SettingsMenuBarLayoutView.swift` (spacer insertion with persistence) |
 | 4.x | TBD: Additional Settings UI files |
 
 ---
