@@ -16,7 +16,7 @@ Phase 5 implements the ability to physically reposition menu bar icons by draggi
 | 5.2 | Bridging Extensions | **100%** | getWindowList, getWindowFrame, activeSpaceID all exist |
 | 5.3 | IconRepositioner Engine | **100%** | All tasks complete: MouseCursor, Skeleton, CGEvent Move, Frame Detection, Retry/Wake-Up, Tests |
 | 5.4 | Settings UI Integration | **100%** | All tasks complete (5.4.1-5.4.3) |
-| 5.5 | Persistence | 25% | Task 5.5.1 complete - icon position storage added to SettingsManager |
+| 5.5 | Persistence | 40% | Tasks 5.5.1-5.5.2 complete - SettingsManager storage + IconPositionRestorer |
 
 ## Task List
 
@@ -188,20 +188,27 @@ Phase 5.1 is fully complete. The core models for icon identification and represe
 - **Dependencies**: Task 5.1.1
 - **Verification**: Build passed, 380 tests pass
 
-#### Task 5.5.2: Create IconPositionRestorer
-- **File**: `Drawer/Core/Managers/IconPositionRestorer.swift` (new)
+#### Task 5.5.2: Create IconPositionRestorer [COMPLETE]
+- **File**: `Drawer/Core/Managers/IconPositionRestorer.swift`
 - **Scope**: Restore saved positions on app launch
 - **Details**:
-  - `@MainActor` class with singleton pattern
-  - Dependencies: SettingsManager, IconRepositioner
-  - `restorePositions() async` - main restoration method
-  - `restoreSection(_:) async` - per-section restoration
-  - `isItemInSection(_:section:) -> Bool` - position verification
-  - Process order: alwaysHidden -> hidden -> visible
-  - 100ms pause between moves
-  - Skip missing icons gracefully with logging
+  - `@MainActor final class` with singleton pattern (`IconPositionRestorer.shared`)
+  - Dependency injection: `init(settingsManager:repositioner:)` with defaults
+  - `restorePositions() async` - main restoration method:
+    - Loads saved positions from SettingsManager
+    - Gets current menu bar items via `IconItem.getMenuBarItems()`
+    - Finds control items for section boundary detection
+    - Restores sections in order: alwaysHidden → hidden → visible
+  - `restoreSection(_:savedIcons:targetItem:destination:currentItems:) async` - per-section restoration:
+    - Skips immovable items
+    - Finds IconItem for each saved IconIdentifier
+    - Checks if already in correct section
+    - Moves via IconRepositioner with 100ms delay between moves
+  - `isItemInSection(_:section:currentItems:) -> Bool` - position verification using control item X positions
+  - Full os.log logging (info, debug, warning levels)
+  - Graceful degradation: missing icons logged and skipped, failed moves logged but don't stop process
 - **Dependencies**: Tasks 5.3.5, 5.5.1
-- **Verification**: `xcodebuild -scheme Drawer build`
+- **Verification**: Build passed, 380 tests pass
 
 #### Task 5.5.3: Integrate Position Saving After Moves
 - **File**: `Drawer/UI/Settings/SettingsMenuBarLayoutView.swift` (modify)
