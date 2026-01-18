@@ -18,6 +18,11 @@ import AppKit
 /// hidden while displaying them in a floating panel.
 final class OverlayPanel: NSPanel {
 
+    // MARK: - Constants
+
+    /// Gap between menu bar and overlay panel for visual separation (in points)
+    private static let menuBarGap: CGFloat = 2
+
     // MARK: - Initialization
 
     init() {
@@ -72,8 +77,8 @@ final class OverlayPanel: NSPanel {
         let menuBarHeight = NSStatusBar.system.thickness
         let panelHeight = frame.height
 
-        // Position just below the menu bar (2px gap for visual separation)
-        let yPosition = screen.frame.maxY - menuBarHeight - panelHeight - 2
+        // Position just below the menu bar with gap for visual separation
+        let yPosition = screen.frame.maxY - menuBarHeight - panelHeight - Self.menuBarGap
 
         // Clamp X to stay within screen bounds
         let maxX = screen.frame.maxX - frame.width
