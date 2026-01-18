@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UniformTypeIdentifiers
 
 // MARK: - Design Constants
 
@@ -35,6 +36,12 @@ private enum LayoutDesign {
 
     /// Header icon size
     static let headerIconSize: CGFloat = 48
+
+    /// Drop indicator width
+    static let dropIndicatorWidth: CGFloat = 2
+
+    /// Item hit zone padding for easier drop targets
+    static let itemDropPadding: CGFloat = 4
 }
 
 // MARK: - SettingsMenuBarLayoutView
@@ -43,16 +50,15 @@ private enum LayoutDesign {
 ///
 /// Displays three sections (Shown, Hidden, Always Hidden) where users can:
 /// - See which icons are in each section
-/// - Drag and drop icons between sections (Phase 4.1.3)
+/// - Drag and drop icons between sections
 /// - Add spacers between icons (Phase 4.2.4)
 ///
 /// This view is the foundation for the drag-and-drop layout editor.
-/// Phase 4.1.2 creates the static display; later phases add interactivity.
 struct SettingsMenuBarLayoutView: View {
 
     // MARK: - State
 
-    /// Mock items for display (will be replaced with real data in Phase 4.2)
+    /// Items for display (will be replaced with real data from IconCapturer in Phase 4.2)
     @State private var layoutItems: [SettingsLayoutItem] = []
 
     /// Whether a refresh is in progress
@@ -68,7 +74,10 @@ struct SettingsMenuBarLayoutView: View {
                 ForEach(MenuBarSectionType.allCases) { sectionType in
                     LayoutSectionView(
                         sectionType: sectionType,
-                        items: items(for: sectionType)
+                        items: items(for: sectionType),
+                        onMoveItem: { item, targetSection, insertIndex in
+                            moveItem(item, to: targetSection, at: insertIndex)
+                        }
                     )
                 }
 
@@ -177,6 +186,53 @@ struct SettingsMenuBarLayoutView: View {
             .sorted { $0.order < $1.order }
     }
 
+    /// Moves an item to a new section at the specified index.
+    /// - Parameters:
+    ///   - item: The item to move
+    ///   - targetSection: The section to move the item to
+    ///   - insertIndex: The position within the section to insert at
+    private func moveItem(_ item: SettingsLayoutItem, to targetSection: MenuBarSectionType, at insertIndex: Int) {
+        guard let sourceIndex = layoutItems.firstIndex(where: { $0.id == item.id }) else {
+            return
+        }
+
+        // Remove from current position
+        var movedItem = layoutItems.remove(at: sourceIndex)
+
+        // Update section
+        movedItem.section = targetSection
+
+        // Get items in target section and determine new order
+        let targetItems = items(for: targetSection)
+        let clampedIndex = min(insertIndex, targetItems.count)
+
+        // Calculate new order based on insertion index
+        if clampedIndex == 0 {
+            // Insert at beginning
+            movedItem.order = (targetItems.first?.order ?? 0) - 1
+        } else if clampedIndex >= targetItems.count {
+            // Insert at end
+            movedItem.order = (targetItems.last?.order ?? 0) + 1
+        } else {
+            // Insert between items - use average of surrounding orders
+            let prevOrder = targetItems[clampedIndex - 1].order
+            let nextOrder = targetItems[clampedIndex].order
+            movedItem.order = (prevOrder + nextOrder) / 2
+
+            // Handle case where orders are adjacent integers
+            if movedItem.order == prevOrder || movedItem.order == nextOrder {
+                movedItem.order = prevOrder + 1
+                // Shift subsequent items
+                for index in layoutItems.indices where layoutItems[index].section == targetSection
+                    && layoutItems[index].order >= movedItem.order {
+                    layoutItems[index].order += 1
+                }
+            }
+        }
+
+        layoutItems.append(movedItem)
+    }
+
     /// Refreshes the menu bar items
     private func refreshItems() {
         isRefreshing = true
@@ -206,6 +262,7 @@ struct SettingsMenuBarLayoutView: View {
 // MARK: - LayoutSectionView
 
 /// A section container showing items in a specific menu bar section.
+/// Supports drag-and-drop for reordering items between sections.
 private struct LayoutSectionView: View {
 
     // MARK: - Properties
@@ -215,6 +272,17 @@ private struct LayoutSectionView: View {
 
     /// Items in this section
     let items: [SettingsLayoutItem]
+
+    /// Callback when an item is moved to this section
+    var onMoveItem: (SettingsLayoutItem, MenuBarSectionType, Int) -> Void
+
+    // MARK: - State
+
+    /// Whether the section is currently a drop target
+    @State private var isDropTargeted: Bool = false
+
+    /// Index where drop would occur (-1 if none)
+    @State private var dropInsertIndex: Int = -1
 
     // MARK: - Computed Properties
 
@@ -251,19 +319,20 @@ private struct LayoutSectionView: View {
                 .font(.system(size: 13, weight: .medium))
                 .foregroundColor(.primary)
 
-            // Section container
+            // Section container with drop support
             sectionContainer
         }
     }
 
-    /// The container showing items or empty state
+    /// The container showing items or empty state with drop support
     private var sectionContainer: some View {
         HStack(spacing: LayoutDesign.iconSpacing) {
             if items.isEmpty {
                 emptyStateView
             } else {
-                ForEach(items) { item in
+                ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
                     LayoutItemView(item: item)
+                        .draggable(item)
                 }
             }
 
@@ -273,13 +342,27 @@ private struct LayoutSectionView: View {
         .frame(maxWidth: .infinity, minHeight: LayoutDesign.sectionMinHeight, alignment: .leading)
         .background(
             RoundedRectangle(cornerRadius: LayoutDesign.sectionCornerRadius)
-                .fill(Color(nsColor: .controlBackgroundColor))
+                .fill(isDropTargeted
+                    ? Color.accentColor.opacity(0.15)
+                    : Color(nsColor: .controlBackgroundColor))
         )
+        .overlay(
+            RoundedRectangle(cornerRadius: LayoutDesign.sectionCornerRadius)
+                .stroke(isDropTargeted ? Color.accentColor : Color.clear, lineWidth: 2)
+        )
+        .dropDestination(for: SettingsLayoutItem.self) { droppedItems, _ in
+            // Handle drop: move first dropped item to this section
+            guard let item = droppedItems.first else { return false }
+            onMoveItem(item, sectionType, items.count)
+            return true
+        } isTargeted: { targeted in
+            isDropTargeted = targeted
+        }
     }
 
     /// Empty state shown when section has no items
     private var emptyStateView: some View {
-        Text("No items")
+        Text("Drop items here")
             .font(.system(size: 12))
             .foregroundColor(.secondary)
             .frame(maxWidth: .infinity, alignment: .center)

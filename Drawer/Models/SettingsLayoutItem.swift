@@ -6,7 +6,9 @@
 //
 
 import AppKit
+import CoreTransferable
 import Foundation
+import UniformTypeIdentifiers
 
 // MARK: - SettingsLayoutItemType
 
@@ -267,3 +269,22 @@ extension SettingsLayoutItem {
 // MARK: - MenuBarSectionType + Codable
 
 extension MenuBarSectionType: Codable {}
+
+// MARK: - SettingsLayoutItem + Transferable
+
+/// Custom UTType for dragging SettingsLayoutItem within the app.
+/// Uses a custom identifier to prevent conflicts with other apps.
+extension UTType {
+    /// UTType for dragging SettingsLayoutItem between sections in Settings UI.
+    static let settingsLayoutItem = UTType(
+        exportedAs: "com.drawer.settings-layout-item"
+    )
+}
+
+extension SettingsLayoutItem: Transferable {
+    /// Transfer representation for drag-and-drop.
+    /// Uses JSON encoding via Codable conformance.
+    static var transferRepresentation: some TransferRepresentation {
+        CodableRepresentation(contentType: .settingsLayoutItem)
+    }
+}

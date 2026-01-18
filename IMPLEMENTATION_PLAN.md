@@ -166,7 +166,7 @@ This phase implements the drag-and-drop Settings UI shown in `specs/reference_im
 |------|-------------|--------|
 | 4.1.1 | Design data model for settings icon representation | [x] |
 | 4.1.2 | Create `SettingsMenuBarLayoutView.swift` | [x] |
-| 4.1.3 | Implement icon drag-drop between sections | [ ] |
+| 4.1.3 | Implement icon drag-drop between sections | [x] |
 
 **4.1.1 Implementation Notes:**
 - Created `SettingsLayoutItem` model in `Drawer/Models/SettingsLayoutItem.swift`
@@ -188,6 +188,19 @@ This phase implements the drag-and-drop Settings UI shown in `specs/reference_im
 - Added "Menu Bar Layout" tab to `SettingsView.swift` with `menubar.rectangle` icon
 - Increased settings window size from 450x320 to 500x520 to accommodate new tab
 - Foundation ready for Phase 4.1.3 (drag-drop) and 4.2 (icon integration)
+
+**4.1.3 Implementation Notes:**
+- Added `Transferable` conformance to `SettingsLayoutItem` for SwiftUI drag-drop
+- Created custom UTType `com.drawer.settings-layout-item` for type-safe transfers
+- Registered UTType in `hidden/Info.plist` under `UTExportedTypeDeclarations`
+- Updated `LayoutSectionView` with:
+  - `.draggable()` modifier on `LayoutItemView` for drag source
+  - `.dropDestination(for:)` modifier on section container for drop target
+  - Visual feedback: accent color highlight and border when drop targeted
+  - Empty state changed from "No items" to "Drop items here"
+- Added `moveItem(_:to:at:)` method to handle item relocation between sections
+- Order calculation handles insertion at beginning, end, or between existing items
+- All 325 tests pass, no SwiftLint errors
 
 ### 4.2 Menu Bar Layout View
 
@@ -245,6 +258,7 @@ After completing all phases:
 | 3.1 | `IconCapturerTests.swift` |
 | 4.1.1 | New: `SettingsLayoutItem.swift`, `SettingsLayoutItemTests.swift` |
 | 4.1.2 | New: `SettingsMenuBarLayoutView.swift`, modify `SettingsView.swift` |
+| 4.1.3 | Modify: `SettingsLayoutItem.swift` (Transferable), `SettingsMenuBarLayoutView.swift` (drag-drop), `hidden/Info.plist` (UTType) |
 | 4.x | TBD: Additional Settings UI files |
 
 ---

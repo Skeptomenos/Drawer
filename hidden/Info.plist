@@ -26,5 +26,21 @@
 	<true/>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2024-2026 Drawer. MIT License.</string>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>com.drawer.settings-layout-item</string>
+			<key>UTTypeDescription</key>
+			<string>Drawer Settings Layout Item</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+				<string>public.content</string>
+			</array>
+			<key>UTTypeTagSpecification</key>
+			<dict/>
+		</dict>
+	</array>
 </dict>
 </plist>
