@@ -24,8 +24,8 @@ struct GeneralSettingsView: View {
                         Text("Delay:")
                         Slider(
                             value: $settings.autoCollapseDelay,
-                            in: 1...60,
-                            step: 1
+                            in: SettingsManager.autoCollapseDelayRange,
+                            step: SettingsManager.autoCollapseDelayStep
                         )
                         Text("\(Int(settings.autoCollapseDelay))s")
                             .monospacedDigit()

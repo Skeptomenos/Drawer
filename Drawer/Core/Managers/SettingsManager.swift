@@ -15,6 +15,22 @@ import SwiftUI
 @MainActor
 final class SettingsManager: ObservableObject {
 
+    // MARK: - Constants
+
+    /// Minimum value for auto-collapse delay slider (seconds)
+    static let autoCollapseDelayMin: Double = 1
+
+    /// Maximum value for auto-collapse delay slider (seconds)
+    static let autoCollapseDelayMax: Double = 60
+
+    /// Step increment for auto-collapse delay slider (seconds)
+    static let autoCollapseDelayStep: Double = 1
+
+    /// Range for auto-collapse delay slider
+    static var autoCollapseDelayRange: ClosedRange<Double> {
+        autoCollapseDelayMin...autoCollapseDelayMax
+    }
+
     // MARK: - Singleton
 
     static let shared = SettingsManager()

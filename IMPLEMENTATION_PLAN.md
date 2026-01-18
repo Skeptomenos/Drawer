@@ -50,7 +50,7 @@ This phase addresses 2 potential crashes and 13 code quality issues identified d
 | 1.2.8 | `Drawer/UI/Settings/AboutView.swift:43` | Extract URL to static constant | [x] |
 | 1.2.9 | `Drawer/UI/Panels/DrawerContentView.swift:189` | Add debug logging for capture errors | [x] |
 | 1.2.10 | `Drawer/Utilities/ScreenCapture.swift:110-111` | Use integer comparison instead of float | [x] |
-| 1.2.11 | `Drawer/Core/Managers/SettingsManager.swift` + `GeneralSettingsView.swift` | Extract slider range constants | [ ] |
+| 1.2.11 | `Drawer/Core/Managers/SettingsManager.swift` + `GeneralSettingsView.swift` | Extract slider range constants | [x] |
 | 1.2.12 | `Drawer/UI/Onboarding/OnboardingView.swift` | Add MARK section comments | [ ] |
 | 1.2.13 | `Drawer/UI/Panels/DrawerPanel.swift:26,39` | Remove unused `menuBarHeight` and `cornerRadius` | [ ] |
 | 1.2.14 | `Drawer/UI/Overlay/OverlayContentView.swift:62` | Extract magic number `2.0` to constant | [ ] |
