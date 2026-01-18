@@ -8,6 +8,12 @@
 import SwiftUI
 
 struct AboutView: View {
+    // MARK: - Constants
+
+    private static let githubURL = URL(string: "https://github.com/dwarvesf/hidden")!
+
+    // MARK: - Properties
+
     private var appVersion: String {
         Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
     }
@@ -40,7 +46,7 @@ struct AboutView: View {
             Spacer()
 
             VStack(spacing: 8) {
-                Link("View on GitHub", destination: URL(string: "https://github.com/dwarvesf/hidden")!)
+                Link("View on GitHub", destination: Self.githubURL)
                     .font(.callout)
 
                 Text("Based on Hidden Bar by Dwarves Foundation")
