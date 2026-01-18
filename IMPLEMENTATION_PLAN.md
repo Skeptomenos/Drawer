@@ -14,7 +14,7 @@ Phase 5 implements the ability to physically reposition menu bar icons by draggi
 |-------|-------------|--------|-------|
 | 5.1 | Core Models | **100%** | Complete - IconIdentifier & IconItem models + tests |
 | 5.2 | Bridging Extensions | **100%** | getWindowList, getWindowFrame, activeSpaceID all exist |
-| 5.3 | IconRepositioner Engine | **16%** | MouseCursor utility complete (1/6 tasks) |
+| 5.3 | IconRepositioner Engine | **33%** | MouseCursor + Skeleton complete (2/6 tasks) |
 | 5.4 | Settings UI Integration | 0% | Drag-drop UI exists but no repositioner hook |
 | 5.5 | Persistence | 10% | Basic layout save exists, needs icon position persistence |
 
@@ -44,17 +44,18 @@ Phase 5.1 is fully complete. The core models for icon identification and represe
   - `static func warp(to point: CGPoint)` - CGWarpMouseCursorPosition
 - **Verification**: Build passed, committed as feat(5.3.1), tagged v0.5.1-alpha.4
 
-#### Task 5.3.2: Create IconRepositioner Skeleton
-- **File**: `Drawer/Core/Engines/IconRepositioner.swift` (new)
+#### Task 5.3.2: Create IconRepositioner Skeleton [COMPLETE]
+- **File**: `Drawer/Core/Engines/IconRepositioner.swift`
 - **Scope**: Core engine class structure and error types
 - **Details**:
-  - `RepositionError` enum: `.notMovable`, `.invalidItem`, `.timeout`, `.eventCreationFailed`, `.invalidCursorLocation`, `.invalidEventSource`, `.couldNotComplete`
-  - `MoveDestination` enum: `.leftOfItem(IconItem)`, `.rightOfItem(IconItem)`
+  - `RepositionError` enum with 7 cases and `LocalizedError` conformance
+  - `MoveDestination` enum with `.leftOfItem`/`.rightOfItem` and `targetItem` property
   - `IconRepositioner` class: `@MainActor`, `final`, singleton pattern
   - Configuration constants: `maxRetries = 5`, `frameChangeTimeout = 50ms`, `frameChangePollInterval = 10ms`
+  - `CGEventField.windowID` extension for undocumented field 0x33
   - Public method stub: `func move(item: IconItem, to destination: MoveDestination) async throws`
-- **Dependencies**: Tasks 5.1.1, 5.1.2, 5.3.1
-- **Verification**: `xcodebuild -scheme Drawer build`
+  - DEBUG testing support with `createForTesting()`
+- **Verification**: Build passed, committed as feat(5.3.2), tagged v0.5.1-alpha.5
 
 #### Task 5.3.3: Implement CGEvent Move Logic
 - **File**: `Drawer/Core/Engines/IconRepositioner.swift` (modify)
