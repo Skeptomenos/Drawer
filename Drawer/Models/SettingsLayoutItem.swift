@@ -173,6 +173,20 @@ struct SettingsLayoutItem: Identifiable, Codable, Equatable, Hashable {
         return nil
     }
 
+    /// Whether this item is immovable (locked by macOS).
+    /// Uses IconIdentifier's immovableItems set to determine if the item cannot be moved.
+    var isImmovable: Bool {
+        guard case .menuBarItem(let bundleId, let itemTitle) = itemType else {
+            // Spacers are always movable
+            return false
+        }
+        let identifier = IconIdentifier(
+            namespace: bundleId,
+            title: itemTitle ?? ""
+        )
+        return identifier.isImmovable
+    }
+
     /// Display name for the item (app name or "Spacer")
     var displayName: String {
         switch itemType {
@@ -265,10 +279,6 @@ extension SettingsLayoutItem {
         )
     }
 }
-
-// MARK: - MenuBarSectionType + Codable
-
-extension MenuBarSectionType: Codable {}
 
 // MARK: - SettingsLayoutItem + Transferable
 

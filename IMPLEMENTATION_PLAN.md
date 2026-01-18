@@ -1,347 +1,349 @@
-# Implementation Plan: Drawer
+# Drawer Phase 5: Drag-to-Reposition Implementation Plan
 
-> **Generated**: 2026-01-18
-> **Status**: Active
-> **Based on**: `specs/review-fixes.md`, `PRD.md`, code review findings, architecture analysis
+> Generated from specs/* analysis on 2026-01-18
 
----
+## Overview
 
-## Executive Summary
+Phase 5 implements the ability to physically reposition menu bar icons by dragging them in the Settings > Menu Bar Layout view. The implementation uses CGEvent simulation (based on Ice's proven approach) to programmatically move icons.
 
-| Metric | Value |
-|--------|-------|
-| **Source Files** | 41 (~6,900 lines) |
-| **Test Files** | 36 (330 tests, 8 skipped) |
-| **Review Status** | Complete (0 critical, 0 high, 2 medium, 17 low) |
-| **Architecture** | MVVM, Section-based (Phase 0-3 complete, 4.1.1 done) |
+**Goal**: Make the Settings UI the control surface for real menu bar repositioning.
 
-**Goal**: Eliminate crash risks, achieve comprehensive test coverage, and prepare for advanced Settings UI.
+## Current State
 
----
+| Phase | Description | Status | Notes |
+|-------|-------------|--------|-------|
+| 5.1 | Core Models | **100%** | Complete - IconIdentifier & IconItem models + tests |
+| 5.2 | Bridging Extensions | **100%** | getWindowList, getWindowFrame, activeSpaceID all exist |
+| 5.3 | IconRepositioner Engine | **100%** | All tasks complete: MouseCursor, Skeleton, CGEvent Move, Frame Detection, Retry/Wake-Up, Tests |
+| 5.4 | Settings UI Integration | **100%** | All tasks complete (5.4.1-5.4.3) |
+| 5.5 | Persistence | **100%** | All tasks complete (5.5.1-5.5.6) |
 
-## Phase 1: Stability & Code Hygiene (Review Fixes)
+## Task List
 
-**Priority**: CRITICAL (Safety)  
-**Source**: `specs/review-fixes.md`  
-**Effort**: 2-3 hours  
+### Phase 5.1: Core Models [COMPLETE]
 
-This phase addresses 2 potential crashes and 13 code quality issues identified during code review.
+Phase 5.1 is fully complete. The core models for icon identification and representation have been implemented and tested.
 
-### 1.1 Medium Severity Fixes (Crash Prevention)
-
-| Task | File | Issue | Status |
-|------|------|-------|--------|
-| 1.1.1 | `Drawer/UI/Overlay/OverlayPanelController.swift:76` | Force unwrap `NSScreen.screens.first!` can crash on headless/screen-change | [x] |
-| 1.1.2 | `Drawer/Bridging/Bridging.swift:74-95` | TOCTOU race condition in window list allocation | [x] |
-
-**Verification**: Build and run; test overlay mode on single/multi-monitor setups.
-
-### 1.2 Low Severity Fixes (Code Quality)
-
-| Task | File | Issue | Status |
-|------|------|-------|--------|
-| 1.2.1 | `Drawer/Core/Managers/DrawerManager.swift:48` | Remove unused `cancellables` | [x] |
-| 1.2.2 | `Drawer/Core/Managers/HoverManager.swift:30` | Remove unused `cancellables` | [x] |
-| 1.2.3 | `Drawer/UI/Panels/DrawerPanelController.swift:49` | Remove unused `cancellables` | [x] |
-| 1.2.4 | `Drawer/App/AppState.swift:79-87` | Fix NotificationCenter observer cleanup in deinit | [x] |
-| 1.2.5 | `Drawer/Core/Engines/IconCapturer.swift:418` | Fix off-by-one: `> 50` → `>= 50` | [x] |
-| 1.2.6 | `Drawer/Core/Engines/IconCapturer.swift:381-382` | Make `standardIconWidth` and `iconSpacing` private | [x] |
-| 1.2.7 | `Drawer/Utilities/WindowInfo.swift:41` | Replace force cast with safe unwrap | [x] |
-| 1.2.8 | `Drawer/UI/Settings/AboutView.swift:43` | Extract URL to static constant | [x] |
-| 1.2.9 | `Drawer/UI/Panels/DrawerContentView.swift:189` | Add debug logging for capture errors | [x] |
-| 1.2.10 | `Drawer/Utilities/ScreenCapture.swift:110-111` | Use integer comparison instead of float | [x] |
-| 1.2.11 | `Drawer/Core/Managers/SettingsManager.swift` + `GeneralSettingsView.swift` | Extract slider range constants | [x] |
-| 1.2.12 | `Drawer/UI/Onboarding/OnboardingView.swift` | Add MARK section comments | [x] |
-| 1.2.13 | `Drawer/UI/Panels/DrawerPanel.swift:26,39` | Remove unused `menuBarHeight` and `cornerRadius` | [x] |
-| 1.2.14 | `Drawer/UI/Overlay/OverlayContentView.swift:62` | Extract magic number `2.0` to constant | [x] |
-| 1.2.15 | `Drawer/UI/Overlay/OverlayPanel.swift:76` | Extract magic number `2` for menu bar gap | [x] |
-
-### 1.3 Branding & Housekeeping
-
-| Task | File | Issue | Status |
-|------|------|-------|--------|
-| 1.3.1 | `LauncherApplication/Info.plist` | Update copyright to "Drawer", use build variables | [x] |
-| 1.3.2 | `LauncherApplication/AppDelegate.swift:34` | Update app name from "Hidden Bar" to "Drawer" | [x] |
-| 1.3.3 | `LauncherApplication/AppDelegate.swift:20` | Update bundle identifier to match main app | [x] |
-| 1.3.4 | `hidden/Info.plist` | Remove empty `CFBundleIconFile`, update copyright year | [x] |
-
-### 1.4 SwiftLint Error Fixes
-
-| Task | File | Issue | Status |
-|------|------|-------|--------|
-| 1.4.1 | `Drawer/Core/Engines/IconCapturer.swift:159,208` | Rename `f` variable to `frame` (identifier_name) | [x] |
-| 1.4.2 | `Drawer/Core/Engines/IconCapturer.swift:155,160` | Break long logger lines (line_length > 200) | [x] |
-| 1.4.3 | `Drawer/Bridging/Bridging.swift:198` | Rename `i` variable to `index` (identifier_name) | [x] |
-| 1.4.4 | `Drawer/UI/Panels/DrawerPanelController.swift:69` | Rename `x` to `alignX` (identifier_name) | [x] |
-| 1.4.5 | `Drawer/UI/Panels/DrawerPanel.swift:95-96,123` | Rename `x`/`y` to `originX`/`originY` (identifier_name) | [x] |
-
-**Exit Criteria**:
-- [x] `xcodebuild test -scheme Drawer` passes (all 301 tests)
-- [x] `swiftlint lint Drawer/` - no errors
-- [ ] Launch-at-login works with updated bundle ID
-- [ ] Manual verification on multi-monitor setup
+- **IconIdentifier**: `Drawer/Models/IconIdentifier.swift` - Identifies menu bar items by namespace/title
+- **IconItem**: `Drawer/Models/IconItem.swift` - Full menu bar item representation with window info
+- **Tests**: `DrawerTests/Models/MenuBarItemTests.swift` - 28 tests covering both models
+- **Verification**: `xcodebuild test -scheme Drawer -only-testing:DrawerTests/MenuBarItemTests` - PASSED (28 tests)
 
 ---
 
-## Phase 2: Test Coverage Gaps
+### Phase 5.3: IconRepositioner Engine
 
-**Priority**: HIGH (Reliability)  
-**Effort**: 3-4 hours  
+#### Task 5.3.1: Create MouseCursor Utility [COMPLETE]
+- **File**: `Drawer/Utilities/MouseCursor.swift` (new)
+- **Scope**: Cursor management during repositioning
+- **Details**:
+  - Enum with static methods
+  - `static var location: CGPoint?` - current cursor location
+  - `static func hide()` - CGDisplayHideCursor
+  - `static func show()` - CGDisplayShowCursor
+  - `static func warp(to point: CGPoint)` - CGWarpMouseCursorPosition
+- **Verification**: Build passed, committed as feat(5.3.1), tagged v0.5.1-alpha.4
 
-The codebase has excellent coverage (278 tests) but two components lack tests.
+#### Task 5.3.2: Create IconRepositioner Skeleton [COMPLETE]
+- **File**: `Drawer/Core/Engines/IconRepositioner.swift`
+- **Scope**: Core engine class structure and error types
+- **Details**:
+  - `RepositionError` enum with 7 cases and `LocalizedError` conformance
+  - `MoveDestination` enum with `.leftOfItem`/`.rightOfItem` and `targetItem` property
+  - `IconRepositioner` class: `@MainActor`, `final`, singleton pattern
+  - Configuration constants: `maxRetries = 5`, `frameChangeTimeout = 50ms`, `frameChangePollInterval = 10ms`
+  - `CGEventField.windowID` extension for undocumented field 0x33
+  - Public method stub: `func move(item: IconItem, to destination: MoveDestination) async throws`
+  - DEBUG testing support with `createForTesting()`
+- **Verification**: Build passed, committed as feat(5.3.2), tagged v0.5.1-alpha.5
 
-### 2.1 OverlayModeManager Tests
+#### Task 5.3.3: Implement CGEvent Move Logic [COMPLETE]
+- **File**: `Drawer/Core/Engines/IconRepositioner.swift` (modify)
+- **Scope**: Core CGEvent simulation for Command+Drag
+- **Details**:
+  - `createMoveEvent(type:location:item:source:isDown:) -> CGEvent?`
+    - Set `.maskCommand` flag on mouse down only
+    - Set `.eventTargetUnixProcessID`, `.mouseEventWindowUnderMousePointer`
+    - Set undocumented field 0x33 for windowID
+  - `postEvent(_:to:)` - post to PID and session tap
+  - `performMove(item:to:) throws` - execute single move attempt (sync for now)
+  - `permitAllEvents(for:)` - configure event source permissions
+  - `getEndPoint(for:) throws -> CGPoint` - calculate target position
+  - `itemHasCorrectPosition(item:for:) throws -> Bool` - verify item is already positioned
+  - Updated `move(item:to:)` to use new methods with basic implementation
+- **Dependencies**: Task 5.3.2
+- **Verification**: Build passed, 358 tests pass, committed as feat(5.3.3)
 
-**Target**: `Drawer/Core/Managers/OverlayModeManager.swift` (252 lines, 12 tests)
+#### Task 5.3.4: Implement Frame Change Detection [COMPLETE]
+- **File**: `Drawer/Core/Engines/IconRepositioner.swift` (modify)
+- **Scope**: Verification that move succeeded
+- **Details**:
+  - `waitForFrameChange(of item: IconItem, initialFrame: CGRect) async throws`
+    - Uses `ContinuousClock` for timing
+    - Polls every 10ms (`frameChangePollInterval`) until frame differs from initial
+    - Throws `.timeout` if 50ms (`frameChangeTimeout`) deadline exceeded
+    - Throws `.invalidItem` if frame cannot be retrieved
+  - `performMove` updated to be async and call `waitForFrameChange` after both mouse down and mouse up events
+  - `itemHasCorrectPosition(item:for:) throws -> Bool` - verify final position (already existed)
+- **Dependencies**: Task 5.3.3
+- **Verification**: Build passed, 358 tests pass, committed as feat(5.3.4), tagged v0.5.1-alpha.7
 
-| Task | Description | Status |
-|------|-------------|--------|
-| 2.1.1 | Create `DrawerTests/Core/Managers/OverlayModeManagerTests.swift` | [x] |
-| 2.1.2 | Test initial state (`isOverlayVisible = false`, `isCapturing = false`) | [x] |
-| 2.1.3 | Test `isOverlayModeEnabled` reflects settings | [x] |
-| 2.1.4 | Test `hideOverlay()` behavior and idempotency | [x] |
-| 2.1.5 | Test `toggleOverlay()` completes without crash | [x] |
-| 2.1.6 | Test auto-hide timer cancellation on hideOverlay | [x] |
-| 2.1.7 | Test concurrent capture guarding | [x] |
-| 2.1.8 | Test state consistency after error/capture failure | [x] |
+#### Task 5.3.5: Implement Retry and Wake-Up Logic [COMPLETE]
+- **File**: `Drawer/Core/Engines/IconRepositioner.swift` (modify)
+- **Scope**: Reliability improvements for unresponsive apps
+- **Details**:
+  - `wakeUpItem(_:) async throws` - click without Command modifier to wake unresponsive apps
+  - Complete `move(item:to:)` implementation with retry loop:
+    1. Check isMovable (throw .notMovable if false)
+    2. Check if already in correct position (early return)
+    3. Save cursor location, hide cursor
+    4. Get initial frame
+    5. Retry loop (up to 5 attempts):
+       - performMove → waitForFrameChange
+       - On failure: wakeUpItem → retry
+    6. Restore cursor position and show cursor (via defer)
+  - Full os.log logging for all operations (info, debug, warning, error levels)
+- **Dependencies**: Task 5.3.4
+- **Verification**: Build passed, 358 tests pass, committed as feat(5.3.5), tagged v0.5.1-alpha.8
 
-**Mock Created**: `MockOverlayPanelController` and `MockEventSimulator` added to test helpers.
-
-### 2.2 ScreenCapture Utility Tests
-
-**Target**: `Drawer/Utilities/ScreenCapture.swift` (148 lines, 11 tests)
-
-| Task | Description | Status |
-|------|-------------|--------|
-| 2.2.1 | Create `DrawerTests/Utilities/ScreenCaptureTests.swift` | [x] |
-| 2.2.2 | Test permission caching API (`invalidatePermissionCache`) | [x] |
-| 2.2.3 | Test `captureWindows()` with empty/invalid arrays | [x] |
-| 2.2.4 | Test `captureMenuBarItems()` returns empty dict when no items | [x] |
-| 2.2.5 | Test `NSScreen.displayID` extension | [x] |
-| 2.2.6 | Test width comparison logic (integer rounding) | [x] |
-| 2.2.7 | Test `requestPermissions()` API exists | [x] |
-
-**Notes**: 
-- Permission check tests (`checkPermissions`, `cachedCheckPermissions`) cannot be tested directly because they call `MenuBarItem.getMenuBarItems()` which uses private CGS APIs that crash in test environments.
-- Tests verify API contracts and edge cases rather than full integration behavior.
-
-**Exit Criteria**:
-- [x] OverlayModeManager test coverage > 80%
-- [x] Total project test count > 290 (now 301 tests)
-- [x] All new tests pass
-
----
-
-## Phase 3: Documentation & Cleanup
-
-**Priority**: MEDIUM (Maintainability)  
-**Effort**: 1-2 hours  
-
-### 3.1 Update Test for Off-by-One Fix
-
-| Task | File | Description | Status |
-|------|------|-------------|--------|
-| 3.1.1 | `DrawerTests/Core/Engines/IconCapturerTests.swift` | Update test `ICN-007` to expect exactly 50 icons (after 1.2.5) | [x] |
-
-### 3.2 Archive Completed Plans
-
-| Task | Description | Status |
-|------|-------------|--------|
-| 3.2.1 | Move `docs/IMPLEMENTATION_PLAN_ARCHITECTURE_IMPROVEMENTS.md` to `archive/` (Phase 0-3 complete) | [x] |
-| 3.2.2 | Move `docs/IMPLEMENTATION-PLAN-DRAWER-AND-ALWAYS-HIDDEN.md` to `archive/` (complete) | [x] |
-
----
-
-## Phase 4: Advanced Settings UI (Future)
-
-**Priority**: LOW (Feature Enhancement)  
-**Effort**: 1-2 weeks  
-**Dependencies**: Phases 1-3 complete
-
-This phase implements the drag-and-drop Settings UI shown in `specs/reference_images/settings-layout.jpg`.
-
-### 4.1 Settings Architecture
-
-| Task | Description | Status |
-|------|-------------|--------|
-| 4.1.1 | Design data model for settings icon representation | [x] |
-| 4.1.2 | Create `SettingsMenuBarLayoutView.swift` | [x] |
-| 4.1.3 | Implement icon drag-drop between sections | [x] |
-
-**4.1.1 Implementation Notes:**
-- Created `SettingsLayoutItem` model in `Drawer/Models/SettingsLayoutItem.swift`
-- `SettingsLayoutItemType` enum supports `.menuBarItem(bundleIdentifier:title:)` and `.spacer(id:)`
-- Items identified by bundle ID + title (stable across app launches, unlike window IDs)
-- Fully `Codable` for persistence, `Hashable` for drag-and-drop
-- Created 24 tests in `DrawerTests/Models/SettingsLayoutItemTests.swift`
-
-**4.1.2 Implementation Notes:**
-- Created `Drawer/UI/Settings/SettingsMenuBarLayoutView.swift` with complete static layout
-- View structure matches `specs/reference_images/settings-layout.jpg`:
-  - Header section with icon, title ("Menu Bar Items"), and description
-  - Three `LayoutSectionView` components for Shown, Hidden, Always Hidden sections
-  - Each section has SF Symbol header and dark rounded container
-  - Palette section with "Add a Spacer" button
-  - Refresh button in top-right corner
-- Added `LayoutDesign` enum with design constants (corner radius, padding, icon sizes)
-- Subviews: `LayoutSectionView` (section container), `LayoutItemView` (item placeholder)
-- Added "Menu Bar Layout" tab to `SettingsView.swift` with `menubar.rectangle` icon
-- Increased settings window size from 450x320 to 500x520 to accommodate new tab
-- Foundation ready for Phase 4.1.3 (drag-drop) and 4.2 (icon integration)
-
-**4.1.3 Implementation Notes:**
-- Added `Transferable` conformance to `SettingsLayoutItem` for SwiftUI drag-drop
-- Created custom UTType `com.drawer.settings-layout-item` for type-safe transfers
-- Registered UTType in `hidden/Info.plist` under `UTExportedTypeDeclarations`
-- Updated `LayoutSectionView` with:
-  - `.draggable()` modifier on `LayoutItemView` for drag source
-  - `.dropDestination(for:)` modifier on section container for drop target
-  - Visual feedback: accent color highlight and border when drop targeted
-  - Empty state changed from "No items" to "Drop items here"
-- Added `moveItem(_:to:at:)` method to handle item relocation between sections
-- Order calculation handles insertion at beginning, end, or between existing items
-- All 325 tests pass, no SwiftLint errors
-
-### 4.2 Menu Bar Layout View
-
-| Task | Description | Status |
-|------|-------------|--------|
-| 4.2.1 | Display three sections: Shown, Hidden, Always Hidden | [x] |
-| 4.2.2 | Enable drag-and-drop reordering | [x] |
-| 4.2.3 | Sync changes to `MenuBarManager` | [x] |
-| 4.2.4 | Add spacer insertion capability | [x] |
-
-**4.2.2 Implementation Notes:**
-- Added within-section reordering with visual drop indicators
-- Created `ItemFramePreferenceKey` to track item positions in coordinate space
-- Created `DropPositionDelegate` implementing `DropDelegate` for position tracking:
-  - `dropUpdated()` calculates insertion index from horizontal mouse position
-  - Compares drop point to item midpoints to determine insertion slot
-- Added visual drop indicator between icons:
-  - Uses `LayoutDesign.dropIndicatorWidth` (2pt) accent-colored bar
-  - Appears at calculated insertion index during drag
-  - Smooth transition animation on index change
-- Updated `LayoutSectionView`:
-  - Added `.coordinateSpace(name:)` for position tracking
-  - Interleaved drop indicators between items using `ForEach` with indices
-  - Combined `.dropDestination()` with `.onDrop(delegate:)` for position awareness
-- All 325 tests pass, no SwiftLint errors
-
-**4.2.3 Implementation Notes:**
-- Added layout persistence to `SettingsManager.swift`:
-  - `menuBarLayout` computed property with UserDefaults backing
-  - `saveMenuBarLayout(_:)` method to persist layout items
-  - `clearMenuBarLayout()` method to clear saved layout
-  - `menuBarLayoutChangedSubject` Combine publisher for reactive updates
-- Updated `SettingsMenuBarLayoutView.swift`:
-  - `moveItem(_:to:at:)` now calls `saveLayout()` to persist changes immediately
-  - `refreshItems()` loads saved layout and reconciles with captured icons
-  - Added `ReconciliationResult` struct to avoid large tuple SwiftLint error
-  - `reconcileLayout()` algorithm:
-    1. For each captured icon, match against saved layout by bundle ID + title
-    2. If matched, use saved section/order (user's preference preserved)
-    3. If not matched, use captured icon's section (new icon, first seen)
-    4. Preserve spacers from saved layout
-  - Added `normalizeOrders()` to prevent order value gaps
-- Added 5 new tests in `SettingsManagerTests.swift` (SET-016 through SET-020)
-- All 330 tests pass, no SwiftLint errors
-
-**4.2.4 Implementation Notes:**
-- Updated `addSpacer()` method in `SettingsMenuBarLayoutView.swift`
-- Spacers are added to the Hidden section by default (users can drag to other sections)
-- Order is calculated correctly as one past the last item in the Hidden section
-- Spacer is persisted immediately via `saveLayout()` call
-- Debug logging added for spacer creation tracking
-- All 330 tests pass, no SwiftLint errors
-
-**4.2.1 Implementation Notes:**
-- Modified `SettingsMenuBarLayoutView.swift` to access `AppState` via `@EnvironmentObject`
-- Added `imageCache: [UUID: CGImage]` state to store captured icon images
-- Added `errorMessage` state to display capture errors
-- Implemented `refreshItems()` to capture icons using `IconCapturer.captureHiddenIcons()`
-- Converts `CapturedIcon` to `SettingsLayoutItem` using `SettingsLayoutItem.from(capturedIcon:section:order:)`
-- Caches images keyed by layout item UUID for efficient lookup
-- Updated `LayoutSectionView` to:
-  - Accept `imageCache: [UUID: CGImage]` parameter
-  - Pass cached images to `LayoutItemView`
-  - Display item count in section header
-- Updated `LayoutItemView` to:
-  - Accept optional `image: CGImage?` parameter
-  - Display actual captured icon when available, fallback to placeholder
-  - Use proper backing scale factor for Retina display
-- Added `.onAppear` modifier to auto-refresh on view load
-- Added error banner when capture fails
-- All 325 tests pass, build succeeds, SwiftLint no errors
-
-### 4.3 Sidebar Navigation
-
-| Task | Description | Status |
-|------|-------------|--------|
-| 4.3.1 | Update `SettingsView.swift` with sidebar navigation | [x] |
-| 4.3.2 | Add "Menu Bar Layout" tab | [x] |
-| 4.3.3 | Match reference image styling | [x] |
-
-**4.3.1 Implementation Notes:**
-- Converted `SettingsView` from `TabView` to `NavigationSplitView` for sidebar navigation
-- Created `SettingsTab` enum with `CaseIterable` and `Identifiable` conformance
-- Tabs: General, Menu Bar Layout, Appearance, About (matching reference image)
-- Sidebar uses native `List` with `.sidebar` style for proper macOS styling
-- Selection highlighting with accent color provided by SwiftUI
-- Window size increased from 500x520 to 680x540 to accommodate sidebar layout
-- Sidebar column width constrained: min 180, ideal 200, max 220
-
-**Exit Criteria**:
-- [x] Users can visually reorder icons in Settings
-- [x] Changes persist across app restart
-- [x] UI matches `specs/reference_images/settings-layout.jpg`
+#### Task 5.3.6: Create IconRepositioner Tests [COMPLETE]
+- **File**: `DrawerTests/Core/Engines/IconRepositionerTests.swift`
+- **Scope**: Unit tests for repositioner
+- **Details**:
+  - Test that immovable items throw `.notMovable` error
+  - Test MoveDestination.targetItem computed property
+  - Test RepositionError localized descriptions (all 7 cases)
+  - Test singleton pattern and createForTesting()
+  - Note: Actual CGEvent moves cannot be tested in unit tests (manual verification required)
+- **Dependencies**: Task 5.3.5
+- **Verification**: `xcodebuild test -scheme Drawer -only-testing:DrawerTests/IconRepositionerTests` - PASSED (14 tests)
+- **Note**: Also added IconRepositioner.swift and MouseCursor.swift to Xcode project (they were on filesystem but not in project)
 
 ---
 
-## Verification Checklist
+### Phase 5.4: Settings UI Integration
 
-After completing all phases:
+#### Task 5.4.1: Add Lock Indicators for Immovable Icons [COMPLETE]
+- **Files Modified**:
+  - `Drawer/Models/SettingsLayoutItem.swift` - Added `isImmovable` computed property
+  - `Drawer/UI/Settings/SettingsMenuBarLayoutView.swift` - Updated `LayoutItemView` and `LayoutSectionView`
+- **Scope**: Visual feedback for system icons
+- **Details**:
+  - Added `isImmovable` property to `SettingsLayoutItem` using `IconIdentifier.immovableItems`
+  - Added lock icon (`lock.fill` SF Symbol, 8pt) in top-trailing corner of immovable items
+  - Applied 50% opacity to immovable icons
+  - Added tooltip: "This item cannot be moved by macOS"
+  - Added `itemView(for:)` method to conditionally apply `.draggable()` for movable items only
+  - Added 8 unit tests for `isImmovable` property (SLI-041 to SLI-048)
+- **Dependencies**: Tasks 5.1.1, 5.1.2
+- **Verification**: Build passed, 380 tests pass (8 new tests added)
 
-### Build & Test
-- [ ] `xcodebuild -scheme Drawer -configuration Debug build` - no warnings
-- [ ] `xcodebuild test -scheme Drawer -destination 'platform=macOS'` - all tests pass
-- [ ] `swiftlint lint Drawer/` - no errors
+#### Task 5.4.2: Integrate Repositioner into Drop Handler [COMPLETE]
+- **File**: `Drawer/UI/Settings/SettingsMenuBarLayoutView.swift` (modified)
+- **Scope**: Connect drag-drop to real repositioning
+- **Details**:
+  - Added `performReposition(item:to:at:) async` method that triggers physical repositioning
+  - Added `findIconItem(for:)` to match SettingsLayoutItem to IconItem via IconIdentifier
+  - Added `calculateDestination(for:at:excludingItem:)` to compute MoveDestination based on:
+    - Section boundaries defined by `hiddenControlItem` and `alwaysHiddenControlItem`
+    - Insert position within the section
+  - Added `getSectionItems(for:from:...)` helper to filter items by section based on X position
+  - Added `showRepositionError(_:)` to display NSAlert on failure (basic error UI)
+  - Modified `moveItem(_:to:at:)` to trigger `performReposition` in a Task for non-spacer, movable items
+  - Added safe array subscript extension for bounds-safe access
+  - Calls `IconRepositioner.shared.move(item:to:)` and refreshes icons on success
+- **Dependencies**: Tasks 5.3.5, 5.4.1
+- **Verification**: Build passed, 380 tests pass
 
-### Manual Verification
-- [ ] Toggle drawer open/close
-- [ ] Test overlay mode on notched MacBook
-- [ ] Verify permissions flow (revoke and re-grant)
-- [ ] Test launch-at-login with updated bundle ID
-- [ ] Verify settings persist across restart
-- [ ] Test on multi-monitor setup
+#### Task 5.4.3: Add Error Handling UI [COMPLETE]
+- **File**: `Drawer/UI/Settings/SettingsMenuBarLayoutView.swift` (modified)
+- **Scope**: User feedback on repositioning failures
+- **Details**:
+  - `showRepositionError(_ error: RepositionError)` method (lines 534-542)
+  - NSAlert with `.warning` style
+  - Title: "Could Not Move Icon"
+  - Body: `error.localizedDescription`
+  - Single "OK" button via `.runModal()`
+  - Called from `performReposition` catch block (line 375)
+- **Dependencies**: Task 5.4.2
+- **Verification**: Build passed, 380 tests pass
+- **Note**: Implementation was added as part of Task 5.4.2 since error handling is integral to the drop handler integration
 
 ---
 
-## Files Modified Summary
+### Phase 5.5: Persistence
 
-| Phase | Files |
-|-------|-------|
-| 1.1 | `OverlayPanelController.swift`, `Bridging.swift` |
-| 1.2 | 15 files (see detailed table above) |
-| 1.3 | `LauncherApplication/Info.plist`, `LauncherApplication/AppDelegate.swift`, `hidden/Info.plist` |
-| 1.4 | `IconCapturer.swift`, `Bridging.swift`, `DrawerPanelController.swift`, `DrawerPanel.swift` |
-| 2.1 | New: `OverlayModeManagerTests.swift` |
-| 2.2 | New: `ScreenCaptureTests.swift` |
-| 3.1 | `IconCapturerTests.swift` |
-| 4.1.1 | New: `SettingsLayoutItem.swift`, `SettingsLayoutItemTests.swift` |
-| 4.1.2 | New: `SettingsMenuBarLayoutView.swift`, modify `SettingsView.swift` |
-| 4.1.3 | Modify: `SettingsLayoutItem.swift` (Transferable), `SettingsMenuBarLayoutView.swift` (drag-drop), `hidden/Info.plist` (UTType) |
-| 4.2.1 | Modify: `SettingsMenuBarLayoutView.swift` (IconCapturer integration, image cache, live icons) |
-| 4.2.2 | Modify: `SettingsMenuBarLayoutView.swift` (within-section reordering, visual drop indicators, position tracking) |
-| 4.2.3 | Modify: `SettingsManager.swift` (layout persistence), `SettingsMenuBarLayoutView.swift` (reconciliation, save on move), `SettingsManagerTests.swift` (5 new tests) |
-| 4.2.4 | Modify: `SettingsMenuBarLayoutView.swift` (spacer insertion with persistence) |
-| 4.3.1 | Modify: `SettingsView.swift` (sidebar navigation with NavigationSplitView) |
+#### Task 5.5.1: Add Icon Position Storage to SettingsManager [COMPLETE]
+- **File**: `Drawer/Core/Managers/SettingsManager.swift` (modified)
+- **Scope**: UserDefaults storage for icon positions
+- **Details**:
+  - Added `savedIconPositions: [String: [IconIdentifier]]` computed property
+  - UserDefaults key: `menuBarIconPositions` (via `iconPositionsStorageKey`)
+  - Added `loadIconPositions() -> [String: [IconIdentifier]]` method
+  - Saving is handled by computed property setter (follows existing `menuBarLayout` pattern)
+  - Added `updateSavedPositions(for section: MenuBarSectionType, icons: [IconIdentifier])` method
+  - Added `clearSavedPositions()` method
+  - Added `iconPositionsChangedSubject` for Combine integration
+  - Added `Codable` conformance to `MenuBarSectionType` enum (removed redundant extension from SettingsLayoutItem.swift)
+- **Dependencies**: Task 5.1.1
+- **Verification**: Build passed, 380 tests pass
+
+#### Task 5.5.2: Create IconPositionRestorer [COMPLETE]
+- **File**: `Drawer/Core/Managers/IconPositionRestorer.swift`
+- **Scope**: Restore saved positions on app launch
+- **Details**:
+  - `@MainActor final class` with singleton pattern (`IconPositionRestorer.shared`)
+  - Dependency injection: `init(settingsManager:repositioner:)` with defaults
+  - `restorePositions() async` - main restoration method:
+    - Loads saved positions from SettingsManager
+    - Gets current menu bar items via `IconItem.getMenuBarItems()`
+    - Finds control items for section boundary detection
+    - Restores sections in order: alwaysHidden → hidden → visible
+  - `restoreSection(_:savedIcons:targetItem:destination:currentItems:) async` - per-section restoration:
+    - Skips immovable items
+    - Finds IconItem for each saved IconIdentifier
+    - Checks if already in correct section
+    - Moves via IconRepositioner with 100ms delay between moves
+  - `isItemInSection(_:section:currentItems:) -> Bool` - position verification using control item X positions
+  - Full os.log logging (info, debug, warning levels)
+  - Graceful degradation: missing icons logged and skipped, failed moves logged but don't stop process
+- **Dependencies**: Tasks 5.3.5, 5.5.1
+- **Verification**: Build passed, 380 tests pass
+
+#### Task 5.5.3: Integrate Position Saving After Moves [COMPLETE]
+- **File**: `Drawer/UI/Settings/SettingsMenuBarLayoutView.swift` (modified)
+- **Scope**: Save positions after successful repositioning
+- **Details**:
+  - Added `saveCurrentPositions(for:) async` method (lines 546-588):
+    - 100ms delay to let menu bar settle after move
+    - Gets current menu bar items via `IconItem.getMenuBarItems()`
+    - Finds control items for section boundary detection
+    - Iterates all sections (visible, hidden, alwaysHidden)
+    - Extracts IconItems per section using existing `getSectionItems(for:from:...)` helper
+    - Converts to `[IconIdentifier]` (left-to-right order)
+    - Saves via `SettingsManager.shared.updateSavedPositions(for:icons:)`
+  - Modified `performReposition` to call `saveCurrentPositions` after successful move (line 372)
+- **Dependencies**: Tasks 5.4.2, 5.5.1
+- **Verification**: Build passed, 380 tests pass, committed as feat(5.5.3), tagged v0.5.1-alpha.15
+
+#### Task 5.5.4: Hook Position Restoration into App Launch [COMPLETE]
+- **File**: `Drawer/App/AppDelegate.swift` (modified)
+- **Scope**: Restore positions on app startup
+- **Details**:
+  - Added `iconPositionRestorer: IconPositionRestorer?` property
+  - Added `logger` for os.log logging
+  - Added `setupIconPositionRestoration()` method:
+    - Checks if saved positions exist (early return if none)
+    - Initializes `IconPositionRestorer.shared`
+    - Uses `Task { }` for async non-blocking restoration
+    - Waits 2 seconds via `Task.sleep(for: .seconds(2))` to let menu bar stabilize
+    - Calls `await iconPositionRestorer?.restorePositions()`
+    - Logs progress at info level
+  - Called from `applicationDidFinishLaunching`
+  - Added `IconPositionRestorer.swift` to Xcode project (was on disk but not in project.pbxproj)
+- **Dependencies**: Task 5.5.2
+- **Verification**: Build passed, 380 tests pass, committed as feat(5.5.4)
+
+#### Task 5.5.5: Add Reset Positions Button [COMPLETE]
+- **File**: `Drawer/UI/Settings/SettingsMenuBarLayoutView.swift` (modified)
+- **Scope**: Allow users to clear saved positions
+- **Details**:
+  - Added `showResetConfirmation` state property for confirmation alert
+  - Added "Reset Icon Positions" button in paletteSection (line 247-261)
+    - Uses `.bordered` button style to differentiate from primary "Add a Spacer" button
+    - Shows SwiftUI `.alert()` confirmation dialog:
+      - Title: "Reset Icon Positions?"
+      - Message: "This will clear all saved icon position preferences. Icons will stay in their current positions but won't be restored on next launch."
+      - Cancel button (role: `.cancel`)
+      - Reset button (role: `.destructive`) - triggers `resetIconPositions()`
+  - Added `resetIconPositions()` method (lines 749-752):
+    - Calls `SettingsManager.shared.clearSavedPositions()`
+    - Logs action via os.log
+- **Dependencies**: Task 5.5.1
+- **Verification**: Build passed, 380 tests pass
+
+#### Task 5.5.6: Add Persistence Tests [COMPLETE]
+- **File**: `DrawerTests/Core/Managers/SettingsManagerTests.swift` (modified)
+- **Scope**: Test save/load round-trip for icon positions
+- **Details**:
+  - `testSET021_SaveAndLoadIconPositionsRoundtrip()` - verify round-trip persistence:
+    - Tests saving positions for all three sections (visible, hidden, alwaysHidden)
+    - Verifies IconIdentifier data is correctly encoded/decoded via JSON
+    - Confirms data is written to UserDefaults
+  - `testSET022_ClearSavedPositionsRemovesAllPositions()` - verify reset functionality:
+    - Saves test positions
+    - Calls `clearSavedPositions()`
+    - Verifies positions are empty and UserDefaults key is removed
+  - `testSET023_IconPositionsChangedSubjectFiresOnSave()` - verify Combine publisher:
+    - Tests that `iconPositionsChangedSubject` fires when positions are saved
+  - `testSET024_SavedIconPositionsDefaultIsEmpty()` - verify default state:
+    - Confirms empty dictionary is returned when no positions saved
+- **Dependencies**: Task 5.5.1
+- **Verification**: `xcodebuild test -scheme Drawer -only-testing:DrawerTests/SettingsManagerTests` - PASSED (24 tests, 4 new)
 
 ---
+
+## Implementation Order (Recommended)
+
+```
+Phase 5.1: Core Models (Foundation) [COMPLETE]
+└── IconIdentifier + IconItem models with 28 tests
+
+Phase 5.3: IconRepositioner Engine (Core Logic)
+├── 5.3.1 MouseCursor Utility
+├── 5.3.2 IconRepositioner Skeleton
+├── 5.3.3 CGEvent Move Logic
+├── 5.3.4 Frame Change Detection
+├── 5.3.5 Retry and Wake-Up Logic
+└── 5.3.6 IconRepositioner Tests
+
+Phase 5.4: Settings UI Integration (User-Facing)
+├── 5.4.1 Lock Indicators for Immovable Icons
+├── 5.4.2 Integrate Repositioner into Drop Handler
+└── 5.4.3 Add Error Handling UI
+
+Phase 5.5: Persistence (Polish)
+├── 5.5.1 Icon Position Storage in SettingsManager
+├── 5.5.2 IconPositionRestorer
+├── 5.5.3 Integrate Position Saving After Moves
+├── 5.5.4 Hook Position Restoration into App Launch
+├── 5.5.5 Add Reset Positions Button
+└── 5.5.6 Add Persistence Tests
+```
+
+## Success Criteria
+
+- [ ] Dragging icon in Settings moves it in real menu bar
+- [ ] Works for all three sections (Shown, Hidden, Always Hidden)
+- [ ] Within-section reordering works
+- [ ] System icons show lock and cannot be moved
+- [ ] Positions persist across app restart
+- [ ] 90%+ success rate for moves
+- [ ] < 500ms per move operation
 
 ## Notes
 
-- All changes follow existing patterns in the codebase (see `AGENTS.md`)
-- No new dependencies required for Phases 1-3
-- Phase 4 may require additional UI components
-- Test coverage already exists for most affected components
-- Estimated total effort: ~8-10 hours for Phases 1-3
+- **Phase 5.1 is complete** - Core models implemented and tested (28 tests passing)
+- **Phase 5.2 is already complete** - Bridging APIs exist and are tested
+
+### Type Renaming (CRITICAL)
+
+The spec-defined type names conflicted with existing types in `WindowInfo.swift`. The following renames were applied:
+
+| Spec Name | Actual Name | File |
+|-----------|-------------|------|
+| `MenuBarItemInfo` | `IconIdentifier` | `Drawer/Models/IconIdentifier.swift` |
+| `MenuBarItem` | `IconItem` | `Drawer/Models/IconItem.swift` |
+
+Additional changes:
+- The `info` property on `IconItem` was renamed to `identifier` to match the new type name
+- The `find(matching:)` method now takes an `IconIdentifier` parameter
+- This renaming was required to avoid conflicts with existing `MenuBarItem`/`MenuBarItemInfo` types in `WindowInfo.swift` used by the capture system
+
+**All future tasks should use `IconIdentifier` and `IconItem` instead of the spec names.**
+
+### Other Notes
+
+- Existing `MenuBarItem`/`MenuBarItemInfo` in `WindowInfo.swift` are still used by capture system - do not modify
+- New models in `Drawer/Models/` are spec-compliant and used only by repositioning system
+- Manual testing required for CGEvent operations (cannot unit test actual moves)

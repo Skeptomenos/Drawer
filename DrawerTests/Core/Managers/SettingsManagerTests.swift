@@ -438,4 +438,115 @@ final class SettingsManagerTests: XCTestCase {
         // Cleanup
         sut.clearMenuBarLayout()
     }
+
+    // MARK: - SET-021: savedIconPositions save and load roundtrip
+
+    func testSET021_SaveAndLoadIconPositionsRoundtrip() async throws {
+        // Arrange - clear any existing positions
+        sut.clearSavedPositions()
+        XCTAssertTrue(sut.savedIconPositions.isEmpty, "SET-021: Should start with empty positions")
+
+        // Create test icon identifiers
+        let visibleIcons = [
+            IconIdentifier(namespace: "com.apple.controlcenter", title: "WiFi"),
+            IconIdentifier(namespace: "com.1password.1password", title: "1Password")
+        ]
+        let hiddenIcons = [
+            IconIdentifier(namespace: "com.spotify.client", title: "Spotify"),
+            IconIdentifier(namespace: "com.slack.Slack", title: "Slack")
+        ]
+        let alwaysHiddenIcons = [
+            IconIdentifier(namespace: "com.adobe.acc.AdobeCreativeCloud", title: "Creative Cloud")
+        ]
+
+        // Act - save positions for each section
+        sut.updateSavedPositions(for: .visible, icons: visibleIcons)
+        sut.updateSavedPositions(for: .hidden, icons: hiddenIcons)
+        sut.updateSavedPositions(for: .alwaysHidden, icons: alwaysHiddenIcons)
+
+        // Assert - retrieve and verify roundtrip
+        let retrieved = sut.loadIconPositions()
+
+        // Verify visible section
+        XCTAssertEqual(retrieved[MenuBarSectionType.visible.rawValue]?.count, 2, "SET-021: Should have 2 visible icons")
+        XCTAssertEqual(retrieved[MenuBarSectionType.visible.rawValue]?[0].namespace, "com.apple.controlcenter")
+        XCTAssertEqual(retrieved[MenuBarSectionType.visible.rawValue]?[0].title, "WiFi")
+        XCTAssertEqual(retrieved[MenuBarSectionType.visible.rawValue]?[1].namespace, "com.1password.1password")
+
+        // Verify hidden section
+        XCTAssertEqual(retrieved[MenuBarSectionType.hidden.rawValue]?.count, 2, "SET-021: Should have 2 hidden icons")
+        XCTAssertEqual(retrieved[MenuBarSectionType.hidden.rawValue]?[0].namespace, "com.spotify.client")
+
+        // Verify always-hidden section
+        XCTAssertEqual(retrieved[MenuBarSectionType.alwaysHidden.rawValue]?.count, 1, "SET-021: Should have 1 always-hidden icon")
+        XCTAssertEqual(retrieved[MenuBarSectionType.alwaysHidden.rawValue]?[0].namespace, "com.adobe.acc.AdobeCreativeCloud")
+
+        // Verify data is actually in UserDefaults
+        XCTAssertNotNil(UserDefaults.standard.data(forKey: "menuBarIconPositions"), "SET-021: UserDefaults should contain icon positions data")
+
+        // Cleanup
+        sut.clearSavedPositions()
+    }
+
+    // MARK: - SET-022: clearSavedPositions removes all positions
+
+    func testSET022_ClearSavedPositionsRemovesAllPositions() async throws {
+        // Arrange - save some positions first
+        let icons = [
+            IconIdentifier(namespace: "com.test.app", title: "TestIcon")
+        ]
+        sut.updateSavedPositions(for: .visible, icons: icons)
+        sut.updateSavedPositions(for: .hidden, icons: icons)
+        XCTAssertFalse(sut.savedIconPositions.isEmpty, "SET-022: Positions should not be empty before clear")
+        XCTAssertNotNil(UserDefaults.standard.data(forKey: "menuBarIconPositions"), "SET-022: UserDefaults should contain data before clear")
+
+        // Act
+        sut.clearSavedPositions()
+
+        // Assert
+        XCTAssertTrue(sut.savedIconPositions.isEmpty, "SET-022: Positions should be empty after clear")
+        XCTAssertNil(UserDefaults.standard.data(forKey: "menuBarIconPositions"), "SET-022: UserDefaults should not contain data after clear")
+    }
+
+    // MARK: - SET-023: iconPositionsChangedSubject fires on save
+
+    func testSET023_IconPositionsChangedSubjectFiresOnSave() async throws {
+        // Arrange - clear any existing positions
+        sut.clearSavedPositions()
+
+        var receivedPositions: [[String: [IconIdentifier]]] = []
+        let expectation = XCTestExpectation(description: "Subject should fire on save")
+
+        sut.iconPositionsChangedSubject
+            .sink { positions in
+                receivedPositions.append(positions)
+                expectation.fulfill()
+            }
+            .store(in: &cancellables)
+
+        // Act - save positions
+        let icons = [
+            IconIdentifier(namespace: "com.test.app", title: "TestIcon")
+        ]
+        sut.updateSavedPositions(for: .hidden, icons: icons)
+
+        // Assert
+        await fulfillment(of: [expectation], timeout: 1.0)
+        XCTAssertEqual(receivedPositions.count, 1, "SET-023: Subject should fire once")
+        XCTAssertEqual(receivedPositions.first?[MenuBarSectionType.hidden.rawValue]?.count, 1, "SET-023: Should receive saved positions")
+
+        // Cleanup
+        sut.clearSavedPositions()
+    }
+
+    // MARK: - SET-024: savedIconPositions default is empty
+
+    func testSET024_SavedIconPositionsDefaultIsEmpty() async throws {
+        // Arrange - clear any existing positions
+        sut.clearSavedPositions()
+
+        // Assert
+        XCTAssertTrue(sut.savedIconPositions.isEmpty, "SET-024: Default savedIconPositions should be empty")
+        XCTAssertTrue(sut.loadIconPositions().isEmpty, "SET-024: loadIconPositions() should return empty dictionary")
+    }
 }

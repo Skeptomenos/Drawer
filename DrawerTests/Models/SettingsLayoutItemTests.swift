@@ -368,4 +368,98 @@ final class SettingsLayoutItemTests: XCTestCase {
         // Then
         XCTAssertEqual(item.order, 0)
     }
+
+    // MARK: - SLI-041 to SLI-050: Immovable Items (Phase 5.4)
+
+    func testSLI041_ControlCenterBentoBoxIsImmovable() {
+        // Given - Control Center's BentoBox is a system item that cannot be moved
+        let item = SettingsLayoutItem(
+            bundleIdentifier: "com.apple.controlcenter",
+            title: "BentoBox",
+            section: .visible
+        )
+
+        // Then
+        XCTAssertTrue(item.isImmovable)
+    }
+
+    func testSLI042_ControlCenterClockIsImmovable() {
+        // Given - Control Center's Clock is a system item that cannot be moved
+        let item = SettingsLayoutItem(
+            bundleIdentifier: "com.apple.controlcenter",
+            title: "Clock",
+            section: .visible
+        )
+
+        // Then
+        XCTAssertTrue(item.isImmovable)
+    }
+
+    func testSLI043_SiriIsImmovable() {
+        // Given - Siri is a system item that cannot be moved
+        let item = SettingsLayoutItem(
+            bundleIdentifier: "com.apple.Siri",
+            title: "Siri",
+            section: .visible
+        )
+
+        // Then
+        XCTAssertTrue(item.isImmovable)
+    }
+
+    func testSLI044_SpotlightIsImmovable() {
+        // Given - Spotlight is a system item that cannot be moved
+        let item = SettingsLayoutItem(
+            bundleIdentifier: "com.apple.Spotlight",
+            title: "Spotlight",
+            section: .visible
+        )
+
+        // Then
+        XCTAssertTrue(item.isImmovable)
+    }
+
+    func testSLI045_RegularAppIsMovable() {
+        // Given - A regular third-party app should be movable
+        let item = SettingsLayoutItem(
+            bundleIdentifier: "com.example.app",
+            title: "StatusItem",
+            section: .hidden
+        )
+
+        // Then
+        XCTAssertFalse(item.isImmovable)
+    }
+
+    func testSLI046_ControlCenterOtherItemIsMovable() {
+        // Given - Other Control Center items (like WiFi, Bluetooth) are movable
+        let item = SettingsLayoutItem(
+            bundleIdentifier: "com.apple.controlcenter",
+            title: "WiFi",
+            section: .hidden
+        )
+
+        // Then
+        XCTAssertFalse(item.isImmovable)
+    }
+
+    func testSLI047_SpacerIsAlwaysMovable() {
+        // Given - Spacers are user-created and should always be movable
+        let spacer = SettingsLayoutItem.spacer(section: .hidden)
+
+        // Then
+        XCTAssertFalse(spacer.isImmovable)
+    }
+
+    func testSLI048_ItemWithNilTitleIsMovable() {
+        // Given - Items without a title should be treated as movable
+        // (immovable items require an exact namespace+title match)
+        let item = SettingsLayoutItem(
+            bundleIdentifier: "com.apple.controlcenter",
+            section: .hidden
+        )
+
+        // Then - nil title doesn't match "BentoBox" or "Clock"
+        XCTAssertFalse(item.isImmovable)
+    }
 }

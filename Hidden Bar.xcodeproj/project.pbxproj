@@ -43,6 +43,8 @@
 		DRAWERTEST00100000000035 /* MockOverlayPanelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000035 /* MockOverlayPanelController.swift */; };
 		DRAWERTEST00100000000036 /* ScreenCaptureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000036 /* ScreenCaptureTests.swift */; };
 		DRAWERTEST00100000000037 /* SettingsLayoutItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000037 /* SettingsLayoutItemTests.swift */; };
+		DRAWERTEST00100000000038 /* MenuBarItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000038 /* MenuBarItemTests.swift */; };
+		DRAWERTEST00100000000039 /* IconRepositionerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000039 /* IconRepositionerTests.swift */; };
 		DRAWER001000000000000001 /* DrawerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000001 /* DrawerApp.swift */; };
 		DRAWER001000000000000002 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000002 /* AppState.swift */; };
 		DRAWER001000000000000003 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000003 /* AppDelegate.swift */; };
@@ -85,6 +87,11 @@
 		DRAWER001000000000000039 /* OverlayPanelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000039 /* OverlayPanelController.swift */; };
 		DRAWER001000000000000040 /* OverlayModeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000040 /* OverlayModeManager.swift */; };
 		DRAWER001000000000000041 /* SettingsLayoutItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000041 /* SettingsLayoutItem.swift */; };
+		DRAWER001000000000000043 /* IconIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000043 /* IconIdentifier.swift */; };
+		DRAWER001000000000000044 /* IconItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000044 /* IconItem.swift */; };
+		DRAWER001000000000000045 /* IconRepositioner.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000045 /* IconRepositioner.swift */; };
+		DRAWER001000000000000046 /* MouseCursor.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000046 /* MouseCursor.swift */; };
+		DRAWER001000000000000047 /* IconPositionRestorer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000047 /* IconPositionRestorer.swift */; };
 		00117C4426600671005E517C /* Assets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00117C4326600671005E517C /* Assets.swift */; };
 		00137CDF24A63DB1004AC855 /* Notification.Name+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00137CDE24A63DB1004AC855 /* Notification.Name+Extension.swift */; };
 		0842CDFB23A9FDD000D14BD4 /* GlobalKeybindingPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0842CDFA23A9FDD000D14BD4 /* GlobalKeybindingPreferences.swift */; };
@@ -181,6 +188,8 @@
 		DRAWERTEST00200000000035 /* MockOverlayPanelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockOverlayPanelController.swift; sourceTree = "<group>"; };
 		DRAWERTEST00200000000036 /* ScreenCaptureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenCaptureTests.swift; sourceTree = "<group>"; };
 		DRAWERTEST00200000000037 /* SettingsLayoutItemTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsLayoutItemTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000038 /* MenuBarItemTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarItemTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000039 /* IconRepositionerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconRepositionerTests.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000001 /* DrawerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerApp.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000002 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000003 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -223,6 +232,11 @@
 		DRAWER002000000000000039 /* OverlayPanelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayPanelController.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000040 /* OverlayModeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayModeManager.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000041 /* SettingsLayoutItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsLayoutItem.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000043 /* IconIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconIdentifier.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000044 /* IconItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconItem.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000045 /* IconRepositioner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconRepositioner.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000046 /* MouseCursor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MouseCursor.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000047 /* IconPositionRestorer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconPositionRestorer.swift; sourceTree = "<group>"; };
 		00117C4326600671005E517C /* Assets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assets.swift; sourceTree = "<group>"; };
 		00137CDE24A63DB1004AC855 /* Notification.Name+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification.Name+Extension.swift"; sourceTree = "<group>"; };
 		0842CDFA23A9FDD000D14BD4 /* GlobalKeybindingPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalKeybindingPreferences.swift; sourceTree = "<group>"; };
@@ -349,6 +363,7 @@
 				DRAWERTEST00200000000016 /* DrawerItemTests.swift */,
 				DRAWERTEST00200000000017 /* GlobalHotkeyConfigTests.swift */,
 				DRAWERTEST00200000000032 /* MenuBarSectionTests.swift */,
+				DRAWERTEST00200000000038 /* MenuBarItemTests.swift */,
 				DRAWERTEST00200000000037 /* SettingsLayoutItemTests.swift */,
 			);
 			path = Models;
@@ -368,6 +383,7 @@
 			children = (
 				DRAWERTEST00200000000018 /* CaptureErrorTests.swift */,
 				DRAWERTEST00200000000022 /* IconCapturerTests.swift */,
+				DRAWERTEST00200000000039 /* IconRepositionerTests.swift */,
 			);
 			path = Engines;
 			sourceTree = "<group>";
@@ -522,6 +538,7 @@
 				DRAWER002000000000000015 /* EventSimulator.swift */,
 				DRAWER002000000000000017 /* GlobalEventMonitor.swift */,
 				DRAWER002000000000000031 /* MenuBarMetrics.swift */,
+				DRAWER002000000000000046 /* MouseCursor.swift */,
 				DRAWER002000000000000032 /* Notification+Extensions.swift */,
 				DRAWER002000000000000030 /* ScreenCapture.swift */,
 				DRAWER002000000000000029 /* WindowInfo.swift */,
@@ -533,6 +550,8 @@
 			isa = PBXGroup;
 			children = (
 				DRAWER002000000000000013 /* DrawerItem.swift */,
+				DRAWER002000000000000043 /* IconIdentifier.swift */,
+				DRAWER002000000000000044 /* IconItem.swift */,
 				DRAWER002000000000000041 /* SettingsLayoutItem.swift */,
 			);
 			path = Models;
@@ -637,6 +656,7 @@
 			isa = PBXGroup;
 			children = (
 				DRAWER002000000000000012 /* IconCapturer.swift */,
+				DRAWER002000000000000045 /* IconRepositioner.swift */,
 			);
 			path = Engines;
 			sourceTree = "<group>";
@@ -646,6 +666,7 @@
 			children = (
 				DRAWER002000000000000014 /* DrawerManager.swift */,
 				DRAWER002000000000000016 /* HoverManager.swift */,
+				DRAWER002000000000000047 /* IconPositionRestorer.swift */,
 				DRAWER002000000000000006 /* LaunchAtLoginManager.swift */,
 				DRAWER002000000000000004 /* MenuBarManager.swift */,
 				DRAWER002000000000000040 /* OverlayModeManager.swift */,
@@ -896,6 +917,11 @@
 				DRAWER001000000000000039 /* OverlayPanelController.swift in Sources */,
 				DRAWER001000000000000040 /* OverlayModeManager.swift in Sources */,
 				DRAWER001000000000000041 /* SettingsLayoutItem.swift in Sources */,
+				DRAWER001000000000000043 /* IconIdentifier.swift in Sources */,
+				DRAWER001000000000000044 /* IconItem.swift in Sources */,
+				DRAWER001000000000000045 /* IconRepositioner.swift in Sources */,
+				DRAWER001000000000000047 /* IconPositionRestorer.swift in Sources */,
+				DRAWER001000000000000046 /* MouseCursor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -948,6 +974,8 @@
 				DRAWERTEST00100000000035 /* MockOverlayPanelController.swift in Sources */,
 				DRAWERTEST00100000000036 /* ScreenCaptureTests.swift in Sources */,
 				DRAWERTEST00100000000037 /* SettingsLayoutItemTests.swift in Sources */,
+				DRAWERTEST00100000000039 /* IconRepositionerTests.swift in Sources */,
+				DRAWERTEST00100000000038 /* MenuBarItemTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

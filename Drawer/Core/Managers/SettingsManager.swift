@@ -157,6 +157,9 @@ final class SettingsManager: ObservableObject {
     /// Storage key for persisted layout
     private static let layoutStorageKey = "menuBarLayout"
 
+    /// Storage key for persisted icon positions
+    private static let iconPositionsStorageKey = "menuBarIconPositions"
+
     /// Combine subject for layout changes
     let menuBarLayoutChangedSubject = PassthroughSubject<[SettingsLayoutItem], Never>()
 
@@ -189,6 +192,59 @@ final class SettingsManager: ObservableObject {
     /// Clears the persisted menu bar layout.
     func clearMenuBarLayout() {
         menuBarLayout = []
+    }
+
+    // MARK: - Icon Position Persistence
+
+    /// Combine subject for icon position changes
+    let iconPositionsChangedSubject = PassthroughSubject<[String: [IconIdentifier]], Never>()
+
+    /// The persisted icon positions by section.
+    /// Key: Section name ("visible", "hidden", "alwaysHidden")
+    /// Value: Array of IconIdentifier in order from left to right
+    var savedIconPositions: [String: [IconIdentifier]] {
+        get {
+            guard let data = UserDefaults.standard.data(forKey: Self.iconPositionsStorageKey) else {
+                return [:]
+            }
+            return (try? JSONDecoder().decode([String: [IconIdentifier]].self, from: data)) ?? [:]
+        }
+        set {
+            if newValue.isEmpty {
+                UserDefaults.standard.removeObject(forKey: Self.iconPositionsStorageKey)
+            } else if let data = try? JSONEncoder().encode(newValue) {
+                UserDefaults.standard.set(data, forKey: Self.iconPositionsStorageKey)
+            }
+            objectWillChange.send()
+            iconPositionsChangedSubject.send(newValue)
+        }
+    }
+
+    /// Loads saved icon positions from UserDefaults.
+    /// Call this during app initialization to populate the savedIconPositions property.
+    /// - Returns: The loaded icon positions dictionary
+    @discardableResult
+    func loadIconPositions() -> [String: [IconIdentifier]] {
+        let positions = savedIconPositions
+        if positions.isEmpty {
+            // No saved positions - this is expected on first launch
+        }
+        return positions
+    }
+
+    /// Updates saved positions for a specific section.
+    /// - Parameters:
+    ///   - section: The menu bar section to update
+    ///   - icons: The ordered array of icon identifiers for this section
+    func updateSavedPositions(for section: MenuBarSectionType, icons: [IconIdentifier]) {
+        var positions = savedIconPositions
+        positions[section.rawValue] = icons
+        savedIconPositions = positions
+    }
+
+    /// Clears all saved icon positions.
+    func clearSavedPositions() {
+        savedIconPositions = [:]
     }
 
     // MARK: - Initialization
