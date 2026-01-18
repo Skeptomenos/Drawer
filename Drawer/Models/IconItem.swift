@@ -78,6 +78,26 @@ struct IconItem: Hashable, Equatable {
 
     // MARK: - Initializers
 
+    /// Internal memberwise initializer for testing.
+    ///
+    /// - Note: This initializer is internal to allow test targets to create mock IconItems.
+    ///   It should not be used in production code.
+    init(
+        windowID: CGWindowID,
+        frame: CGRect,
+        ownerPID: pid_t,
+        ownerName: String?,
+        title: String?,
+        bundleIdentifier: String?
+    ) {
+        self.windowID = windowID
+        self.frame = frame
+        self.ownerPID = ownerPID
+        self.ownerName = ownerName
+        self.title = title
+        self.bundleIdentifier = bundleIdentifier
+    }
+
     /// Creates an IconItem from a window information dictionary.
     /// Returns nil if the dictionary doesn't represent a valid menu bar item.
     ///

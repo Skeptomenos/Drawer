@@ -70,13 +70,23 @@ This plan implements fixes in 4 phases with 19 tasks total.
   - Added ownerName fallback to `SettingsLayoutItem.matches()` for test compatibility
   - Renamed `ReconciliationResult` to `LegacyReconciliationResult` in `SettingsMenuBarLayoutView.swift` to avoid conflict
 
-### Task 4: Write Icon Matching Tests (Spec 5.7)
+### Task 4: Write Icon Matching Tests (Spec 5.7) [COMPLETED]
 - **File**: `DrawerTests/UI/Settings/SettingsMenuBarLayoutViewTests.swift`  
 - **Action**: Implement tests:
   - `testFindIconItem_UsesWindowIDCache()` - Verifies windowID cache is used first
   - `testFindIconItem_FallsBackToBundleID()` - Verifies fallback matching
   - `testFindIconItem_ReturnsNilForSpacers()` - Verifies spacer handling
-- **Expected**: Tests will fail until Phase 3 implementation
+- **Status**: Completed - Implemented 7 tests for Spec 5.7:
+  1. `testFindIconItem_UsesWindowIDCache()` - PASSING
+  2. `testFindIconItem_FallsBackToBundleID()` - PASSING
+  3. `testFindIconItem_ReturnsNilForSpacers()` - PASSING
+  4. `testFindIconItem_MatchesByBundleIDIgnoringDynamicTitle()` - PASSING
+  5. `testFindIconItem_FallsBackToOwnerName()` - PASSING
+  6. `testFindIconItem_ReturnsNotFoundWhenNoMatch()` - PASSING
+  7. `testFindIconItem_ExactMatchTakesPrecedence()` - PASSING
+- **Additional Changes**:
+  - Created `Drawer/UI/Settings/IconMatcher.swift` - New testable multi-tier matching algorithm
+  - Added test initializer to `IconItem` for creating mock IconItems in tests
 
 ---
 
@@ -234,6 +244,9 @@ Phases must be completed in order. Tasks within each phase can be done sequentia
 | File | Phases |
 |------|--------|
 | `Drawer/UI/Settings/SettingsMenuBarLayoutView.swift` | 2, 3 |
+| `Drawer/UI/Settings/LayoutReconciler.swift` | 1 (new) |
+| `Drawer/UI/Settings/IconMatcher.swift` | 1 (new) |
+| `Drawer/Models/IconItem.swift` | 1 (modified - added test initializer) |
 | `DrawerTests/UI/Settings/SettingsMenuBarLayoutViewTests.swift` | 1 (new) |
 | `DrawerTests/Mocks/MockCapturedIconFactory.swift` | 1 (new) |
 

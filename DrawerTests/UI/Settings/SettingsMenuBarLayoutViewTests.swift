@@ -292,6 +292,9 @@ final class SettingsMenuBarLayoutViewTests: XCTestCase {
 
     // MARK: - Spec 5.7: Icon Matching Tests
 
+    /// The icon matcher under test
+    private var matcher: IconMatcher { IconMatcher() }
+
     /// Verifies that findIconItem() uses windowID cache as fast path.
     ///
     /// Scenario:
@@ -300,29 +303,120 @@ final class SettingsMenuBarLayoutViewTests: XCTestCase {
     ///
     /// Expected: findIconItem() returns the IconItem via windowID lookup (fast path)
     func testFindIconItem_UsesWindowIDCache() throws {
-        // TODO: Task 4 - Implement this test
-        // This test will fail until Task 15 implementation
-        throw XCTSkip("Test implementation pending Task 4")
+        // Arrange: Create a layout item with a specific ID
+        let layoutItem = SettingsLayoutItem(
+            bundleIdentifier: "com.test.app",
+            title: "Test Title",
+            section: .visible,
+            order: 0
+        )
+
+        // Create a mock IconItem with a known windowID
+        let windowID: CGWindowID = 99999
+        let mockIconItem = IconItem(
+            windowID: windowID,
+            frame: CGRect(x: 100, y: 0, width: 22, height: 24),
+            ownerPID: 12345,
+            ownerName: "TestApp",
+            title: "Test Title",
+            bundleIdentifier: "com.test.app"
+        )
+
+        // Setup windowIDCache with the mapping
+        var windowIDCache: [UUID: CGWindowID] = [:]
+        windowIDCache[layoutItem.id] = windowID
+
+        // Create mock menu bar items that includes our target
+        let mockMenuBarItems = [mockIconItem]
+
+        // Act: Find the icon item
+        let result = matcher.findIconItem(
+            for: layoutItem,
+            windowIDCache: windowIDCache,
+            menuBarItems: mockMenuBarItems
+        )
+
+        // Assert: Should find via windowID cache (fast path)
+        XCTAssertNotNil(result.iconItem, "Should find IconItem via windowID cache")
+        XCTAssertEqual(result.matchMethod, .windowIDCache, "Should use windowIDCache match method")
+        XCTAssertEqual(result.iconItem?.windowID, windowID, "Should return the correct IconItem")
     }
 
     /// Verifies fallback to bundle ID matching when windowID cache misses.
     ///
     /// Scenario:
-    /// - windowIDCache is empty or stale
+    /// - windowIDCache is empty (no cached windowID)
     /// - IconItem exists with matching bundle ID
     ///
     /// Expected: findIconItem() falls back to bundle ID matching
     func testFindIconItem_FallsBackToBundleID() throws {
-        // TODO: Task 4 - Implement this test
-        throw XCTSkip("Test implementation pending Task 4")
+        // Arrange: Create a layout item
+        let layoutItem = SettingsLayoutItem(
+            bundleIdentifier: "com.test.fallback",
+            title: "Fallback Title",
+            section: .hidden,
+            order: 0
+        )
+
+        // Create a mock IconItem with matching bundle ID but different title
+        let mockIconItem = IconItem(
+            windowID: 11111,
+            frame: CGRect(x: 200, y: 0, width: 22, height: 24),
+            ownerPID: 23456,
+            ownerName: "FallbackApp",
+            title: "Different Title",  // Different title
+            bundleIdentifier: "com.test.fallback"  // Same bundle ID
+        )
+
+        // Empty windowIDCache - no fast path available
+        let windowIDCache: [UUID: CGWindowID] = [:]
+
+        // Create mock menu bar items
+        let mockMenuBarItems = [mockIconItem]
+
+        // Act: Find the icon item
+        let result = matcher.findIconItem(
+            for: layoutItem,
+            windowIDCache: windowIDCache,
+            menuBarItems: mockMenuBarItems
+        )
+
+        // Assert: Should find via bundle ID fallback
+        XCTAssertNotNil(result.iconItem, "Should find IconItem via bundle ID fallback")
+        XCTAssertEqual(result.matchMethod, .bundleIDOnly, "Should use bundleIDOnly match method")
+        XCTAssertEqual(result.iconItem?.bundleIdentifier, "com.test.fallback")
     }
 
     /// Verifies that findIconItem() returns nil for spacer items.
     ///
     /// Spacers don't have corresponding IconItems in the menu bar.
     func testFindIconItem_ReturnsNilForSpacers() throws {
-        // TODO: Task 4 - Implement this test
-        throw XCTSkip("Test implementation pending Task 4")
+        // Arrange: Create a spacer layout item
+        let spacer = SettingsLayoutItem.spacer(section: .hidden, order: 0)
+
+        // Create some mock menu bar items (spacers shouldn't match any of these)
+        let mockIconItem = IconItem(
+            windowID: 22222,
+            frame: CGRect(x: 100, y: 0, width: 22, height: 24),
+            ownerPID: 34567,
+            ownerName: "SomeApp",
+            title: "Some Title",
+            bundleIdentifier: "com.some.app"
+        )
+
+        let windowIDCache: [UUID: CGWindowID] = [:]
+        let mockMenuBarItems = [mockIconItem]
+
+        // Act: Find the icon item
+        let result = matcher.findIconItem(
+            for: spacer,
+            windowIDCache: windowIDCache,
+            menuBarItems: mockMenuBarItems
+        )
+
+        // Assert: Should return nil with spacer match method
+        XCTAssertNil(result.iconItem, "Spacers should not match any IconItem")
+        XCTAssertEqual(result.matchMethod, .spacer, "Should indicate spacer match method")
     }
 
     /// Verifies multi-tier fallback when title doesn't match.
@@ -333,19 +427,173 @@ final class SettingsMenuBarLayoutViewTests: XCTestCase {
     ///
     /// Expected: findIconItem() matches via bundle ID ignoring title
     func testFindIconItem_MatchesByBundleIDIgnoringDynamicTitle() throws {
-        // TODO: Task 4 - Implement this test
-        throw XCTSkip("Test implementation pending Task 4")
+        // Arrange: Create a layout item with "Old Title"
+        let layoutItem = SettingsLayoutItem(
+            bundleIdentifier: "com.dynamic.app",
+            title: "Old Title",  // Title saved at capture time
+            section: .visible,
+            order: 0
+        )
+
+        // Create a mock IconItem with same bundle ID but different (dynamic) title
+        let mockIconItem = IconItem(
+            windowID: 33333,
+            frame: CGRect(x: 150, y: 0, width: 22, height: 24),
+            ownerPID: 45678,
+            ownerName: "DynamicApp",
+            title: "New Title (12:34 PM)",  // Dynamic title changed
+            bundleIdentifier: "com.dynamic.app"  // Same bundle ID
+        )
+
+        let windowIDCache: [UUID: CGWindowID] = [:]
+        let mockMenuBarItems = [mockIconItem]
+
+        // Act: Find the icon item
+        let result = matcher.findIconItem(
+            for: layoutItem,
+            windowIDCache: windowIDCache,
+            menuBarItems: mockMenuBarItems
+        )
+
+        // Assert: Should find via bundle ID ignoring title mismatch
+        XCTAssertNotNil(result.iconItem, "Should find IconItem despite title mismatch")
+        XCTAssertEqual(result.matchMethod, .bundleIDOnly, "Should use bundleIDOnly (title-ignoring) match")
+        XCTAssertEqual(result.iconItem?.bundleIdentifier, "com.dynamic.app")
     }
 
     /// Verifies owner name fallback for apps without bundle ID.
     ///
     /// Scenario:
-    /// - Saved layout has bundleID from ownerName (not a real bundle ID)
-    /// - Current IconItem has matching ownerName
+    /// - Saved layout has identifier from ownerName (not a real bundle ID)
+    /// - Current IconItem has matching ownerName but nil bundleIdentifier
     ///
     /// Expected: findIconItem() matches via owner name fallback
     func testFindIconItem_FallsBackToOwnerName() throws {
-        // TODO: Task 4 - Implement this test
-        throw XCTSkip("Test implementation pending Task 4")
+        // Arrange: Create a layout item where bundleId is actually an ownerName
+        // This happens when the app doesn't have a bundle ID (e.g., some system processes)
+        let layoutItem = SettingsLayoutItem(
+            bundleIdentifier: "NoBundleApp",  // This is actually the ownerName
+            title: nil,
+            section: .hidden,
+            order: 0
+        )
+
+        // Create a mock IconItem with ownerName matching but no bundleIdentifier
+        let mockIconItem = IconItem(
+            windowID: 44444,
+            frame: CGRect(x: 250, y: 0, width: 22, height: 24),
+            ownerPID: 56789,
+            ownerName: "NoBundleApp",  // Matches the layout item's "bundleIdentifier"
+            title: nil,
+            bundleIdentifier: nil  // No bundle ID available
+        )
+
+        let windowIDCache: [UUID: CGWindowID] = [:]
+        let mockMenuBarItems = [mockIconItem]
+
+        // Act: Find the icon item
+        let result = matcher.findIconItem(
+            for: layoutItem,
+            windowIDCache: windowIDCache,
+            menuBarItems: mockMenuBarItems
+        )
+
+        // Assert: Should find via owner name fallback
+        XCTAssertNotNil(result.iconItem, "Should find IconItem via owner name fallback")
+        XCTAssertEqual(result.matchMethod, .ownerName, "Should use ownerName match method")
+        XCTAssertEqual(result.iconItem?.ownerName, "NoBundleApp")
+    }
+
+    /// Verifies that findIconItem() returns notFound when no match exists.
+    ///
+    /// Scenario:
+    /// - Layout item has bundleId that doesn't exist in menu bar
+    /// - windowIDCache is empty
+    ///
+    /// Expected: findIconItem() returns nil with notFound method
+    func testFindIconItem_ReturnsNotFoundWhenNoMatch() throws {
+        // Arrange: Create a layout item for a non-existent app
+        let layoutItem = SettingsLayoutItem(
+            bundleIdentifier: "com.nonexistent.app",
+            title: "Ghost App",
+            section: .visible,
+            order: 0
+        )
+
+        // Create mock menu bar items that DON'T include our target
+        let mockIconItem = IconItem(
+            windowID: 55555,
+            frame: CGRect(x: 100, y: 0, width: 22, height: 24),
+            ownerPID: 67890,
+            ownerName: "OtherApp",
+            title: "Other Title",
+            bundleIdentifier: "com.other.app"
+        )
+
+        let windowIDCache: [UUID: CGWindowID] = [:]
+        let mockMenuBarItems = [mockIconItem]
+
+        // Act: Find the icon item
+        let result = matcher.findIconItem(
+            for: layoutItem,
+            windowIDCache: windowIDCache,
+            menuBarItems: mockMenuBarItems
+        )
+
+        // Assert: Should return nil with notFound method
+        XCTAssertNil(result.iconItem, "Should not find IconItem when no match exists")
+        XCTAssertEqual(result.matchMethod, .notFound, "Should indicate notFound match method")
+    }
+
+    /// Verifies that exact match (bundle ID + title) takes precedence over partial match.
+    ///
+    /// Scenario:
+    /// - Two IconItems with same bundle ID but different titles
+    /// - Layout item has a specific title
+    ///
+    /// Expected: findIconItem() returns the exact match
+    func testFindIconItem_ExactMatchTakesPrecedence() throws {
+        // Arrange: Create a layout item with specific bundle ID and title
+        let layoutItem = SettingsLayoutItem(
+            bundleIdentifier: "com.multi.app",
+            title: "Target Title",
+            section: .visible,
+            order: 0
+        )
+
+        // Create two mock IconItems with same bundle ID but different titles
+        let wrongIconItem = IconItem(
+            windowID: 66666,
+            frame: CGRect(x: 100, y: 0, width: 22, height: 24),
+            ownerPID: 78901,
+            ownerName: "MultiApp",
+            title: "Wrong Title",
+            bundleIdentifier: "com.multi.app"
+        )
+
+        let correctIconItem = IconItem(
+            windowID: 77777,
+            frame: CGRect(x: 150, y: 0, width: 22, height: 24),
+            ownerPID: 78902,
+            ownerName: "MultiApp",
+            title: "Target Title",  // Exact match
+            bundleIdentifier: "com.multi.app"
+        )
+
+        let windowIDCache: [UUID: CGWindowID] = [:]
+        // Note: wrongIconItem is first, but exact match should still be found
+        let mockMenuBarItems = [wrongIconItem, correctIconItem]
+
+        // Act: Find the icon item
+        let result = matcher.findIconItem(
+            for: layoutItem,
+            windowIDCache: windowIDCache,
+            menuBarItems: mockMenuBarItems
+        )
+
+        // Assert: Should find the exact match
+        XCTAssertNotNil(result.iconItem, "Should find IconItem with exact match")
+        XCTAssertEqual(result.matchMethod, .exactMatch, "Should use exactMatch method")
+        XCTAssertEqual(result.iconItem?.windowID, 77777, "Should return the correct IconItem (exact match)")
     }
 }

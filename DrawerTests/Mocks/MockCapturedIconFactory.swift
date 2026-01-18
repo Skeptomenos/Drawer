@@ -300,6 +300,40 @@ final class MockCapturedIconFactory {
     }
 }
 
+// MARK: - IconItem Test Extension
+
+extension IconItem {
+    /// Creates an IconItem directly for testing purposes.
+    ///
+    /// This initializer bypasses the normal `windowInfo` requirement,
+    /// allowing tests to create mock IconItems without real window data.
+    ///
+    /// - Parameters:
+    ///   - windowID: The window ID
+    ///   - bundleIdentifier: The bundle identifier
+    ///   - ownerName: The owner application name
+    ///   - title: The window title
+    ///   - frame: The window frame (defaults to a standard menu bar icon frame)
+    ///   - ownerPID: The owner process ID (defaults to 0)
+    init(
+        testWindowID windowID: CGWindowID,
+        bundleIdentifier: String?,
+        ownerName: String?,
+        title: String?,
+        frame: CGRect = CGRect(x: 0, y: 0, width: 22, height: 24),
+        ownerPID: pid_t = 0
+    ) {
+        self.init(
+            windowID: windowID,
+            frame: frame,
+            ownerPID: ownerPID,
+            ownerName: ownerName,
+            title: title,
+            bundleIdentifier: bundleIdentifier
+        )
+    }
+}
+
 // MARK: - MenuBarItemInfo Test Extension
 
 extension MenuBarItemInfo {
