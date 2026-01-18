@@ -10,10 +10,10 @@
 
 | Metric | Value |
 |--------|-------|
-| **Source Files** | 40 (~6,463 lines) |
-| **Test Files** | 35 (301 tests, 8 skipped) |
+| **Source Files** | 41 (~6,800 lines) |
+| **Test Files** | 36 (325 tests, 8 skipped) |
 | **Review Status** | Complete (0 critical, 0 high, 2 medium, 17 low) |
-| **Architecture** | MVVM, Section-based (Phase 0-3 complete) |
+| **Architecture** | MVVM, Section-based (Phase 0-3 complete, 4.1.1 done) |
 
 **Goal**: Eliminate crash risks, achieve comprehensive test coverage, and prepare for advanced Settings UI.
 
@@ -164,9 +164,16 @@ This phase implements the drag-and-drop Settings UI shown in `specs/reference_im
 
 | Task | Description | Status |
 |------|-------------|--------|
-| 4.1.1 | Design data model for settings icon representation | [ ] |
+| 4.1.1 | Design data model for settings icon representation | [x] |
 | 4.1.2 | Create `SettingsMenuBarLayoutView.swift` | [ ] |
 | 4.1.3 | Implement icon drag-drop between sections | [ ] |
+
+**4.1.1 Implementation Notes:**
+- Created `SettingsLayoutItem` model in `Drawer/Models/SettingsLayoutItem.swift`
+- `SettingsLayoutItemType` enum supports `.menuBarItem(bundleIdentifier:title:)` and `.spacer(id:)`
+- Items identified by bundle ID + title (stable across app launches, unlike window IDs)
+- Fully `Codable` for persistence, `Hashable` for drag-and-drop
+- Created 24 tests in `DrawerTests/Models/SettingsLayoutItemTests.swift`
 
 ### 4.2 Menu Bar Layout View
 
@@ -222,6 +229,7 @@ After completing all phases:
 | 2.1 | New: `OverlayModeManagerTests.swift` |
 | 2.2 | New: `ScreenCaptureTests.swift` |
 | 3.1 | `IconCapturerTests.swift` |
+| 4.1.1 | New: `SettingsLayoutItem.swift`, `SettingsLayoutItemTests.swift` |
 | 4.x | New: `SettingsMenuBarLayoutView.swift`, modify `SettingsView.swift` |
 
 ---
