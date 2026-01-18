@@ -16,7 +16,7 @@ Phase 5 implements the ability to physically reposition menu bar icons by draggi
 | 5.2 | Bridging Extensions | **100%** | getWindowList, getWindowFrame, activeSpaceID all exist |
 | 5.3 | IconRepositioner Engine | **100%** | All tasks complete: MouseCursor, Skeleton, CGEvent Move, Frame Detection, Retry/Wake-Up, Tests |
 | 5.4 | Settings UI Integration | **100%** | All tasks complete (5.4.1-5.4.3) |
-| 5.5 | Persistence | 40% | Tasks 5.5.1-5.5.2 complete - SettingsManager storage + IconPositionRestorer |
+| 5.5 | Persistence | 50% | Tasks 5.5.1-5.5.3 complete - SettingsManager storage + IconPositionRestorer + Position Saving |
 
 ## Task List
 
@@ -210,17 +210,21 @@ Phase 5.1 is fully complete. The core models for icon identification and represe
 - **Dependencies**: Tasks 5.3.5, 5.5.1
 - **Verification**: Build passed, 380 tests pass
 
-#### Task 5.5.3: Integrate Position Saving After Moves
-- **File**: `Drawer/UI/Settings/SettingsMenuBarLayoutView.swift` (modify)
+#### Task 5.5.3: Integrate Position Saving After Moves [COMPLETE]
+- **File**: `Drawer/UI/Settings/SettingsMenuBarLayoutView.swift` (modified)
 - **Scope**: Save positions after successful repositioning
 - **Details**:
-  - After successful `IconRepositioner.move()` call:
-    - Get current menu bar items
-    - Extract items for affected section
-    - Convert to `[IconIdentifier]`
-    - Call `settingsManager.updateSavedPositions(for:icons:)`
+  - Added `saveCurrentPositions(for:) async` method (lines 546-588):
+    - 100ms delay to let menu bar settle after move
+    - Gets current menu bar items via `IconItem.getMenuBarItems()`
+    - Finds control items for section boundary detection
+    - Iterates all sections (visible, hidden, alwaysHidden)
+    - Extracts IconItems per section using existing `getSectionItems(for:from:...)` helper
+    - Converts to `[IconIdentifier]` (left-to-right order)
+    - Saves via `SettingsManager.shared.updateSavedPositions(for:icons:)`
+  - Modified `performReposition` to call `saveCurrentPositions` after successful move (line 372)
 - **Dependencies**: Tasks 5.4.2, 5.5.1
-- **Verification**: Move icon, check UserDefaults with `defaults read`
+- **Verification**: Build passed, 380 tests pass, committed as feat(5.5.3)
 
 #### Task 5.5.4: Hook Position Restoration into App Launch
 - **File**: `Drawer/App/AppDelegate.swift` (modify)
