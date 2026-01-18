@@ -16,7 +16,7 @@ Phase 5 implements the ability to physically reposition menu bar icons by draggi
 | 5.2 | Bridging Extensions | **100%** | getWindowList, getWindowFrame, activeSpaceID all exist |
 | 5.3 | IconRepositioner Engine | **100%** | All tasks complete: MouseCursor, Skeleton, CGEvent Move, Frame Detection, Retry/Wake-Up, Tests |
 | 5.4 | Settings UI Integration | **100%** | All tasks complete (5.4.1-5.4.3) |
-| 5.5 | Persistence | 50% | Tasks 5.5.1-5.5.3 complete - SettingsManager storage + IconPositionRestorer + Position Saving |
+| 5.5 | Persistence | 60% | Tasks 5.5.1-5.5.4 complete - SettingsManager storage + IconPositionRestorer + Position Saving + App Launch Hook |
 
 ## Task List
 
@@ -226,16 +226,23 @@ Phase 5.1 is fully complete. The core models for icon identification and represe
 - **Dependencies**: Tasks 5.4.2, 5.5.1
 - **Verification**: Build passed, 380 tests pass, committed as feat(5.5.3), tagged v0.5.1-alpha.15
 
-#### Task 5.5.4: Hook Position Restoration into App Launch
-- **File**: `Drawer/App/AppDelegate.swift` (modify)
+#### Task 5.5.4: Hook Position Restoration into App Launch [COMPLETE]
+- **File**: `Drawer/App/AppDelegate.swift` (modified)
 - **Scope**: Restore positions on app startup
 - **Details**:
-  - In `applicationDidFinishLaunching`:
-    - Add 2-second delay (let menu bar stabilize)
-    - Call `IconPositionRestorer.shared.restorePositions()` asynchronously
-    - Non-blocking (use Task { })
+  - Added `iconPositionRestorer: IconPositionRestorer?` property
+  - Added `logger` for os.log logging
+  - Added `setupIconPositionRestoration()` method:
+    - Checks if saved positions exist (early return if none)
+    - Initializes `IconPositionRestorer.shared`
+    - Uses `Task { }` for async non-blocking restoration
+    - Waits 2 seconds via `Task.sleep(for: .seconds(2))` to let menu bar stabilize
+    - Calls `await iconPositionRestorer?.restorePositions()`
+    - Logs progress at info level
+  - Called from `applicationDidFinishLaunching`
+  - Added `IconPositionRestorer.swift` to Xcode project (was on disk but not in project.pbxproj)
 - **Dependencies**: Task 5.5.2
-- **Verification**: Arrange icons, quit, relaunch, verify positions restored
+- **Verification**: Build passed, 380 tests pass, committed as feat(5.5.4)
 
 #### Task 5.5.5: Add Reset Positions Button
 - **File**: `Drawer/UI/Settings/SettingsMenuBarLayoutView.swift` or `GeneralSettingsView.swift` (modify)

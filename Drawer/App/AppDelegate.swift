@@ -6,15 +6,25 @@
 //
 
 import AppKit
+import os.log
 import SwiftUI
 
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
 
+    // MARK: - Properties
+
     static var shared: AppDelegate?
 
     private var onboardingWindow: NSWindow?
     private var settingsWindow: NSWindow?
+
+    /// Holds the position restorer instance during restoration
+    private var iconPositionRestorer: IconPositionRestorer?
+
+    private let logger = Logger(subsystem: "com.drawer.app", category: "AppDelegate")
+
+    // MARK: - Lifecycle
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         AppDelegate.shared = self
@@ -22,6 +32,31 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         _ = AppState.shared
 
         showOnboardingIfNeeded()
+        setupIconPositionRestoration()
+    }
+
+    // MARK: - Icon Position Restoration
+
+    /// Sets up asynchronous icon position restoration after app launch.
+    /// Waits 2 seconds to let the menu bar stabilize before restoring positions.
+    private func setupIconPositionRestoration() {
+        // Skip restoration if no saved positions exist
+        guard !SettingsManager.shared.savedIconPositions.isEmpty else {
+            logger.info("No saved icon positions to restore")
+            return
+        }
+
+        iconPositionRestorer = IconPositionRestorer.shared
+
+        // Restore positions asynchronously (non-blocking)
+        Task { [weak self] in
+            // Wait 2 seconds for menu bar to stabilize after app launch
+            try? await Task.sleep(for: .seconds(2))
+
+            self?.logger.info("Starting icon position restoration")
+            await self?.iconPositionRestorer?.restorePositions()
+            self?.logger.info("Icon position restoration complete")
+        }
     }
 
     func openSettings() {
