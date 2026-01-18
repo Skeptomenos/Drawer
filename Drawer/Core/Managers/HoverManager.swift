@@ -27,7 +27,6 @@ final class HoverManager: ObservableObject {
     private var appDeactivationObserver: NSObjectProtocol?
     private var showDebounceTimer: Timer?
     private var hideDebounceTimer: Timer?
-    private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Scroll Gesture Properties
 
