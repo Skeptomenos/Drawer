@@ -14,7 +14,7 @@ Phase 5 implements the ability to physically reposition menu bar icons by draggi
 |-------|-------------|--------|-------|
 | 5.1 | Core Models | **100%** | Complete - IconIdentifier & IconItem models + tests |
 | 5.2 | Bridging Extensions | **100%** | getWindowList, getWindowFrame, activeSpaceID all exist |
-| 5.3 | IconRepositioner Engine | 0% | No CGEvent command+drag code exists |
+| 5.3 | IconRepositioner Engine | **16%** | MouseCursor utility complete (1/6 tasks) |
 | 5.4 | Settings UI Integration | 0% | Drag-drop UI exists but no repositioner hook |
 | 5.5 | Persistence | 10% | Basic layout save exists, needs icon position persistence |
 
@@ -33,7 +33,7 @@ Phase 5.1 is fully complete. The core models for icon identification and represe
 
 ### Phase 5.3: IconRepositioner Engine
 
-#### Task 5.3.1: Create MouseCursor Utility
+#### Task 5.3.1: Create MouseCursor Utility [COMPLETE]
 - **File**: `Drawer/Utilities/MouseCursor.swift` (new)
 - **Scope**: Cursor management during repositioning
 - **Details**:
@@ -42,7 +42,7 @@ Phase 5.1 is fully complete. The core models for icon identification and represe
   - `static func hide()` - CGDisplayHideCursor
   - `static func show()` - CGDisplayShowCursor
   - `static func warp(to point: CGPoint)` - CGWarpMouseCursorPosition
-- **Verification**: `xcodebuild -scheme Drawer build`
+- **Verification**: Build passed, committed as feat(5.3.1), tagged v0.5.1-alpha.4
 
 #### Task 5.3.2: Create IconRepositioner Skeleton
 - **File**: `Drawer/Core/Engines/IconRepositioner.swift` (new)
