@@ -46,7 +46,6 @@ final class DrawerPanelController: ObservableObject {
         panel?.frame ?? .zero
     }
     private var hostingView: NSHostingView<AnyView>?
-    private var cancellables = Set<AnyCancellable>()
     private var isAnimating: Bool = false
     private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "com.drawer", category: "DrawerPanelController")
 
