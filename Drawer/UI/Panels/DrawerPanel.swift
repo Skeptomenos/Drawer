@@ -23,7 +23,6 @@ final class DrawerPanel: NSPanel {
 
     // MARK: - Constants
 
-    private static var menuBarHeight: CGFloat { MenuBarMetrics.height }
     private static let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "com.drawer", category: "DrawerPanel")
 
     /// Gap between menu bar and drawer panel
@@ -34,9 +33,6 @@ final class DrawerPanel: NSPanel {
 
     /// Default panel width (will be adjusted based on content)
     static let defaultWidth: CGFloat = 200
-
-    /// Corner radius matching reference design (10-12pt)
-    static let cornerRadius: CGFloat = 10
 
     // MARK: - Initialization
 
