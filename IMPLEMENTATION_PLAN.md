@@ -14,7 +14,7 @@ Phase 5 implements the ability to physically reposition menu bar icons by draggi
 |-------|-------------|--------|-------|
 | 5.1 | Core Models | **100%** | Complete - IconIdentifier & IconItem models + tests |
 | 5.2 | Bridging Extensions | **100%** | getWindowList, getWindowFrame, activeSpaceID all exist |
-| 5.3 | IconRepositioner Engine | **83%** | MouseCursor + Skeleton + CGEvent Move + Frame Detection + Retry/Wake-Up complete (5/6 tasks) |
+| 5.3 | IconRepositioner Engine | **100%** | All tasks complete: MouseCursor, Skeleton, CGEvent Move, Frame Detection, Retry/Wake-Up, Tests |
 | 5.4 | Settings UI Integration | 0% | Drag-drop UI exists but no repositioner hook |
 | 5.5 | Persistence | 10% | Basic layout save exists, needs icon position persistence |
 
@@ -106,16 +106,18 @@ Phase 5.1 is fully complete. The core models for icon identification and represe
 - **Dependencies**: Task 5.3.4
 - **Verification**: Build passed, 358 tests pass, committed as feat(5.3.5), tagged v0.5.1-alpha.8
 
-#### Task 5.3.6: Create IconRepositioner Tests
-- **File**: `DrawerTests/Engines/IconRepositionerTests.swift` (new)
+#### Task 5.3.6: Create IconRepositioner Tests [COMPLETE]
+- **File**: `DrawerTests/Core/Engines/IconRepositionerTests.swift`
 - **Scope**: Unit tests for repositioner
 - **Details**:
   - Test that immovable items throw `.notMovable` error
   - Test MoveDestination.targetItem computed property
-  - Test RepositionError localized descriptions
+  - Test RepositionError localized descriptions (all 7 cases)
+  - Test singleton pattern and createForTesting()
   - Note: Actual CGEvent moves cannot be tested in unit tests (manual verification required)
 - **Dependencies**: Task 5.3.5
-- **Verification**: `xcodebuild test -scheme Drawer -only-testing:DrawerTests/IconRepositionerTests`
+- **Verification**: `xcodebuild test -scheme Drawer -only-testing:DrawerTests/IconRepositionerTests` - PASSED (14 tests)
+- **Note**: Also added IconRepositioner.swift and MouseCursor.swift to Xcode project (they were on filesystem but not in project)
 
 ---
 
