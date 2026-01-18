@@ -5,6 +5,7 @@
 //  Copyright © 2026 Drawer. MIT License.
 //
 
+import os.log
 import SwiftUI
 
 // MARK: - Design Constants
@@ -52,6 +53,13 @@ enum DrawerDesign {
 /// Renders captured menu bar icons in a horizontal layout with proper styling.
 /// Supports section headers for "Always Hidden" and "Hidden" sections.
 struct DrawerContentView: View {
+
+    // MARK: - Logger
+
+    private static let logger = Logger(
+        subsystem: Bundle.main.bundleIdentifier ?? "com.drawer",
+        category: "DrawerContentView"
+    )
 
     // MARK: - Properties
 
@@ -187,7 +195,11 @@ struct DrawerContentView: View {
 
     /// Error state when capture fails
     private func errorView(_ error: Error) -> some View {
-        HStack(spacing: DrawerDesign.iconSpacing) {
+        #if DEBUG
+        Self.logger.error("Capture failed: \(error.localizedDescription)")
+        #endif
+
+        return HStack(spacing: DrawerDesign.iconSpacing) {
             Image(systemName: "exclamationmark.triangle")
                 .font(.system(size: 14, weight: .medium))
                 .foregroundColor(.orange)
