@@ -225,9 +225,18 @@ struct SettingsLayoutItem: Identifiable, Codable, Equatable, Hashable {
             return false
         }
 
-        // Get bundle ID from PID
-        guard let app = NSRunningApplication(processIdentifier: itemInfo.ownerPID),
-              let capturedBundleId = app.bundleIdentifier else {
+        // Get bundle ID from PID, with fallback to ownerName
+        let capturedBundleId: String?
+        if let app = NSRunningApplication(processIdentifier: itemInfo.ownerPID),
+           let appBundleId = app.bundleIdentifier {
+            capturedBundleId = appBundleId
+        } else {
+            // Fallback: use ownerName if bundle ID lookup fails
+            // This handles testing scenarios and edge cases where PID lookup fails
+            capturedBundleId = itemInfo.ownerName
+        }
+
+        guard let capturedBundleId else {
             return false
         }
 

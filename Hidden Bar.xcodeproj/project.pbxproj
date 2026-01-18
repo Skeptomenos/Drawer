@@ -45,6 +45,9 @@
 		DRAWERTEST00100000000037 /* SettingsLayoutItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000037 /* SettingsLayoutItemTests.swift */; };
 		DRAWERTEST00100000000038 /* MenuBarItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000038 /* MenuBarItemTests.swift */; };
 		DRAWERTEST00100000000039 /* IconRepositionerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000039 /* IconRepositionerTests.swift */; };
+		DRAWERTEST00100000000040 /* MockCapturedIconFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000040 /* MockCapturedIconFactory.swift */; };
+		DRAWERTEST00100000000041 /* SettingsMenuBarLayoutViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000041 /* SettingsMenuBarLayoutViewTests.swift */; };
+		DRAWER001000000000000048 /* LayoutReconciler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000048 /* LayoutReconciler.swift */; };
 		DRAWER001000000000000001 /* DrawerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000001 /* DrawerApp.swift */; };
 		DRAWER001000000000000002 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000002 /* AppState.swift */; };
 		DRAWER001000000000000003 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000003 /* AppDelegate.swift */; };
@@ -190,6 +193,9 @@
 		DRAWERTEST00200000000037 /* SettingsLayoutItemTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsLayoutItemTests.swift; sourceTree = "<group>"; };
 		DRAWERTEST00200000000038 /* MenuBarItemTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarItemTests.swift; sourceTree = "<group>"; };
 		DRAWERTEST00200000000039 /* IconRepositionerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconRepositionerTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000040 /* MockCapturedIconFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCapturedIconFactory.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000041 /* SettingsMenuBarLayoutViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsMenuBarLayoutViewTests.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000048 /* LayoutReconciler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutReconciler.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000001 /* DrawerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerApp.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000002 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000003 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -325,11 +331,28 @@
 				DRAWERTEST00400000000008 /* App */,
 				DRAWERTEST00400000000003 /* Core */,
 				DRAWERTEST00400000000005 /* Models */,
+				DRAWERTEST00400000000009 /* UI */,
 				DRAWERTEST00400000000007 /* Utilities */,
 				DRAWERTEST00400000000002 /* Mocks */,
 				DRAWERTEST00200000000001 /* SetupVerificationTests.swift */,
 			);
 			path = DrawerTests;
+			sourceTree = "<group>";
+		};
+		DRAWERTEST00400000000009 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				DRAWERTEST00400000000010 /* Settings */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		DRAWERTEST00400000000010 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				DRAWERTEST00200000000041 /* SettingsMenuBarLayoutViewTests.swift */,
+			);
+			path = Settings;
 			sourceTree = "<group>";
 		};
 		DRAWERTEST00400000000008 /* App */ = {
@@ -416,6 +439,7 @@
 				DRAWERTEST00200000000010 /* MockIconCapturerTests.swift */,
 				DRAWERTEST00200000000034 /* MockEventSimulator.swift */,
 				DRAWERTEST00200000000035 /* MockOverlayPanelController.swift */,
+				DRAWERTEST00200000000040 /* MockCapturedIconFactory.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -588,6 +612,7 @@
 				DRAWER002000000000000019 /* GeneralSettingsView.swift */,
 				DRAWER002000000000000020 /* AppearanceSettingsView.swift */,
 				DRAWER002000000000000042 /* SettingsMenuBarLayoutView.swift */,
+				DRAWER002000000000000048 /* LayoutReconciler.swift */,
 				DRAWER002000000000000021 /* AboutView.swift */,
 			);
 			path = Settings;
@@ -896,6 +921,7 @@
 				DRAWER001000000000000019 /* GeneralSettingsView.swift in Sources */,
 				DRAWER001000000000000020 /* AppearanceSettingsView.swift in Sources */,
 				DRAWER001000000000000042 /* SettingsMenuBarLayoutView.swift in Sources */,
+				DRAWER001000000000000048 /* LayoutReconciler.swift in Sources */,
 				DRAWER001000000000000021 /* AboutView.swift in Sources */,
 				DRAWER001000000000000022 /* OnboardingView.swift in Sources */,
 				DRAWER001000000000000023 /* WelcomeStepView.swift in Sources */,
@@ -976,6 +1002,8 @@
 				DRAWERTEST00100000000037 /* SettingsLayoutItemTests.swift in Sources */,
 				DRAWERTEST00100000000039 /* IconRepositionerTests.swift in Sources */,
 				DRAWERTEST00100000000038 /* MenuBarItemTests.swift in Sources */,
+				DRAWERTEST00100000000040 /* MockCapturedIconFactory.swift in Sources */,
+				DRAWERTEST00100000000041 /* SettingsMenuBarLayoutViewTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -320,15 +320,19 @@ extension MenuBarItemInfo {
         title: String?
     ) {
         // Create a dictionary that can be parsed by WindowInfo
+        // Note: CGRect.dictionaryRepresentation uses these specific keys
         let bounds: [String: CGFloat] = [
             "X": 0, "Y": 0, "Width": 22, "Height": 24
         ]
 
+        // kCGStatusWindowLevel is Int32 (CGWindowLevel), need to convert to Int
+        let statusWindowLevel = Int(CGWindowLevelForKey(.statusWindow))
+
         var dict: [CFString: Any] = [
             kCGWindowNumber: windowID,
             kCGWindowBounds: bounds,
-            kCGWindowLayer: kCGStatusWindowLevel,
-            kCGWindowAlpha: 1.0,
+            kCGWindowLayer: statusWindowLevel,
+            kCGWindowAlpha: Double(1.0),
             kCGWindowOwnerPID: ownerPID,
             kCGWindowIsOnscreen: true
         ]
@@ -343,12 +347,7 @@ extension MenuBarItemInfo {
 
         // Create WindowInfo from dictionary
         guard let windowInfo = WindowInfo(dictionary: dict as CFDictionary) else {
-            // Fallback: manually set properties (this path shouldn't be hit in tests)
-            self.windowID = windowID
-            self.ownerPID = ownerPID
-            self.ownerName = ownerName
-            self.title = title
-            return
+            fatalError("MockCapturedIconFactory: Failed to create WindowInfo from dictionary. This should not happen in tests.")
         }
 
         self.init(from: windowInfo)

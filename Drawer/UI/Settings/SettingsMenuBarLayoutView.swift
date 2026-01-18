@@ -11,10 +11,13 @@ import os.log
 import SwiftUI
 import UniformTypeIdentifiers
 
-// MARK: - Reconciliation Result
+// MARK: - Legacy Reconciliation Result
+// NOTE: This struct is deprecated. Use ReconciliationResult from LayoutReconciler.swift instead.
+// This is kept temporarily for backward compatibility until the view is updated to use LayoutReconciler.
 
-/// Result of reconciling captured icons with saved layout.
-private struct ReconciliationResult {
+/// Legacy result of reconciling captured icons with saved layout.
+/// @deprecated Use `ReconciliationResult` from `LayoutReconciler.swift` instead.
+private struct LegacyReconciliationResult {
     /// Reconciled layout items
     let items: [SettingsLayoutItem]
     /// Cache mapping item IDs to captured images
@@ -667,7 +670,7 @@ struct SettingsMenuBarLayoutView: View {
     private func reconcileLayout(
         capturedIcons: [CapturedIcon],
         savedLayout: [SettingsLayoutItem]
-    ) -> ReconciliationResult {
+    ) -> LegacyReconciliationResult {
         var reconciledItems: [SettingsLayoutItem] = []
         var newImageCache: [UUID: CGImage] = [:]
         var matchedCount = 0
@@ -715,7 +718,7 @@ struct SettingsMenuBarLayoutView: View {
         // Normalize orders within each section to prevent gaps
         reconciledItems = normalizeOrders(reconciledItems)
 
-        return ReconciliationResult(
+        return LegacyReconciliationResult(
             items: reconciledItems,
             imageCache: newImageCache,
             matchedCount: matchedCount,
