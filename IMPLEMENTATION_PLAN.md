@@ -16,7 +16,7 @@ Phase 5 implements the ability to physically reposition menu bar icons by draggi
 | 5.2 | Bridging Extensions | **100%** | getWindowList, getWindowFrame, activeSpaceID all exist |
 | 5.3 | IconRepositioner Engine | **100%** | All tasks complete: MouseCursor, Skeleton, CGEvent Move, Frame Detection, Retry/Wake-Up, Tests |
 | 5.4 | Settings UI Integration | **100%** | All tasks complete (5.4.1-5.4.3) |
-| 5.5 | Persistence | 10% | Basic layout save exists, needs icon position persistence |
+| 5.5 | Persistence | 25% | Task 5.5.1 complete - icon position storage added to SettingsManager |
 
 ## Task List
 
@@ -173,18 +173,20 @@ Phase 5.1 is fully complete. The core models for icon identification and represe
 
 ### Phase 5.5: Persistence
 
-#### Task 5.5.1: Add Icon Position Storage to SettingsManager
-- **File**: `Drawer/Core/Managers/SettingsManager.swift` (modify)
+#### Task 5.5.1: Add Icon Position Storage to SettingsManager [COMPLETE]
+- **File**: `Drawer/Core/Managers/SettingsManager.swift` (modified)
 - **Scope**: UserDefaults storage for icon positions
 - **Details**:
-  - Add `savedIconPositions: [String: [IconIdentifier]]` property
-  - UserDefaults key: `menuBarIconPositions`
-  - Add `loadIconPositions() -> [String: [IconIdentifier]]` method
-  - Add private `saveIconPositions()` method (called from didSet)
-  - Add `updateSavedPositions(for section: String, icons: [IconIdentifier])` method
-  - Add `clearSavedPositions()` method
+  - Added `savedIconPositions: [String: [IconIdentifier]]` computed property
+  - UserDefaults key: `menuBarIconPositions` (via `iconPositionsStorageKey`)
+  - Added `loadIconPositions() -> [String: [IconIdentifier]]` method
+  - Saving is handled by computed property setter (follows existing `menuBarLayout` pattern)
+  - Added `updateSavedPositions(for section: MenuBarSectionType, icons: [IconIdentifier])` method
+  - Added `clearSavedPositions()` method
+  - Added `iconPositionsChangedSubject` for Combine integration
+  - Added `Codable` conformance to `MenuBarSectionType` enum (removed redundant extension from SettingsLayoutItem.swift)
 - **Dependencies**: Task 5.1.1
-- **Verification**: `xcodebuild -scheme Drawer build`
+- **Verification**: Build passed, 380 tests pass
 
 #### Task 5.5.2: Create IconPositionRestorer
 - **File**: `Drawer/Core/Managers/IconPositionRestorer.swift` (new)

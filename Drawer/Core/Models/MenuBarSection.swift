@@ -12,7 +12,7 @@ import os.log
 // MARK: - MenuBarSectionType
 
 /// Represents the type of menu bar section
-enum MenuBarSectionType: String, CaseIterable, Identifiable {
+enum MenuBarSectionType: String, Codable, CaseIterable, Identifiable {
     /// The always-visible toggle button area
     case visible
 

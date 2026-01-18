@@ -280,10 +280,6 @@ extension SettingsLayoutItem {
     }
 }
 
-// MARK: - MenuBarSectionType + Codable
-
-extension MenuBarSectionType: Codable {}
-
 // MARK: - SettingsLayoutItem + Transferable
 
 /// Custom UTType for dragging SettingsLayoutItem within the app.
