@@ -378,8 +378,8 @@ final class IconCapturer: ObservableObject {
 
     // MARK: - Fixed-Width Slicing (Legacy Fallback)
 
-    let standardIconWidth: CGFloat = 22
-    let iconSpacing: CGFloat = 4
+    private let standardIconWidth: CGFloat = 22
+    private let iconSpacing: CGFloat = 4
 
     func sliceIconsUsingFixedWidth(from image: CGImage) -> [CapturedIcon] {
         var icons: [CapturedIcon] = []
