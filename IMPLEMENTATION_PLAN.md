@@ -12,7 +12,7 @@ Phase 5 implements the ability to physically reposition menu bar icons by draggi
 
 | Phase | Description | Status | Notes |
 |-------|-------------|--------|-------|
-| 5.1 | Core Models | 33% | Task 5.1.1 complete (MenuBarItemInfo model) |
+| 5.1 | Core Models | 66% | Tasks 5.1.1, 5.1.2 complete |
 | 5.2 | Bridging Extensions | **100%** | getWindowList, getWindowFrame, activeSpaceID all exist |
 | 5.3 | IconRepositioner Engine | 0% | No CGEvent command+drag code exists |
 | 5.4 | Settings UI Integration | 0% | Drag-drop UI exists but no repositioner hook |
@@ -37,7 +37,7 @@ Phase 5 implements the ability to physically reposition menu bar icons by draggi
   - Computed property: `isImmovable: Bool`
 - **Verification**: `xcodebuild -scheme Drawer build` - PASSED
 
-#### Task 5.1.2: Create MenuBarItem Model
+#### Task 5.1.2: Create MenuBarItem Model [COMPLETE]
 - **File**: `Drawer/Models/MenuBarItem.swift` (new)
 - **Scope**: Create spec-compliant MenuBarItem struct
 - **Details**:
@@ -48,7 +48,7 @@ Phase 5 implements the ability to physically reposition menu bar icons by draggi
   - Static method: `find(matching info: MenuBarItemInfo) -> MenuBarItem?`
   - Hashable/Equatable based on `windowID`
 - **Dependencies**: Task 5.1.1, Bridging.swift (existing)
-- **Verification**: `xcodebuild -scheme Drawer build`
+- **Verification**: `xcodebuild -scheme Drawer build` - PASSED
 
 #### Task 5.1.3: Create MenuBarItem Tests
 - **File**: `DrawerTests/Models/MenuBarItemTests.swift` (new)
