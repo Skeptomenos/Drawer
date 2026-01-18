@@ -15,7 +15,7 @@ Phase 5 implements the ability to physically reposition menu bar icons by draggi
 | 5.1 | Core Models | **100%** | Complete - IconIdentifier & IconItem models + tests |
 | 5.2 | Bridging Extensions | **100%** | getWindowList, getWindowFrame, activeSpaceID all exist |
 | 5.3 | IconRepositioner Engine | **100%** | All tasks complete: MouseCursor, Skeleton, CGEvent Move, Frame Detection, Retry/Wake-Up, Tests |
-| 5.4 | Settings UI Integration | 67% | Tasks 5.4.1-5.4.2 complete, Task 5.4.3 pending |
+| 5.4 | Settings UI Integration | **100%** | All tasks complete (5.4.1-5.4.3) |
 | 5.5 | Persistence | 10% | Basic layout save exists, needs icon position persistence |
 
 ## Task List
@@ -155,17 +155,19 @@ Phase 5.1 is fully complete. The core models for icon identification and represe
 - **Dependencies**: Tasks 5.3.5, 5.4.1
 - **Verification**: Build passed, 380 tests pass
 
-#### Task 5.4.3: Add Error Handling UI
-- **File**: `Drawer/UI/Settings/SettingsMenuBarLayoutView.swift` (modify)
+#### Task 5.4.3: Add Error Handling UI [COMPLETE]
+- **File**: `Drawer/UI/Settings/SettingsMenuBarLayoutView.swift` (modified)
 - **Scope**: User feedback on repositioning failures
 - **Details**:
-  - Create `showRepositionError(_ error: RepositionError)` method
-  - Display NSAlert with warning style
+  - `showRepositionError(_ error: RepositionError)` method (lines 534-542)
+  - NSAlert with `.warning` style
   - Title: "Could Not Move Icon"
-  - Body: Error's localizedDescription
-  - Single "OK" button
+  - Body: `error.localizedDescription`
+  - Single "OK" button via `.runModal()`
+  - Called from `performReposition` catch block (line 375)
 - **Dependencies**: Task 5.4.2
-- **Verification**: Build and run, test error handling (simulate failure)
+- **Verification**: Build passed, 380 tests pass
+- **Note**: Implementation was added as part of Task 5.4.2 since error handling is integral to the drop handler integration
 
 ---
 
