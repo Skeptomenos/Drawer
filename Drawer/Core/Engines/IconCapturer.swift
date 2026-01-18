@@ -415,7 +415,7 @@ final class IconCapturer: ObservableObject {
 
             currentX += stepSize
 
-            if icons.count > 50 {
+            if icons.count >= 50 {
                 logger.warning("Hit icon limit (50), stopping slice")
                 break
             }
