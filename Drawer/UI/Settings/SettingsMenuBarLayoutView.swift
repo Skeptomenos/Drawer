@@ -368,6 +368,9 @@ struct SettingsMenuBarLayoutView: View {
             try await IconRepositioner.shared.move(item: iconItem, to: destination)
             logger.info("Successfully repositioned \(item.displayName) to \(String(describing: targetSection))")
 
+            // Save the new positions to persist across app restarts
+            await saveCurrentPositions(for: targetSection)
+
             // Refresh icons after successful move
             refreshItems()
         } catch let error as RepositionError {
@@ -539,6 +542,48 @@ struct SettingsMenuBarLayoutView: View {
         alert.informativeText = error.localizedDescription
         alert.addButton(withTitle: "OK")
         alert.runModal()
+    }
+
+    /// Saves the current menu bar icon positions to persist across app restarts.
+    ///
+    /// After a successful repositioning, this method queries the current menu bar state
+    /// and saves the icon positions for the affected section and related sections.
+    ///
+    /// - Parameter affectedSection: The section that was modified by the move
+    @MainActor
+    private func saveCurrentPositions(for affectedSection: MenuBarSectionType) async {
+        // Small delay to let the menu bar fully settle after the move
+        try? await Task.sleep(for: .milliseconds(100))
+
+        // Get current menu bar items
+        let allItems = IconItem.getMenuBarItems()
+        guard !allItems.isEmpty else {
+            logger.warning("No menu bar items found when saving positions")
+            return
+        }
+
+        // Find control items to determine section boundaries
+        let hiddenControlItem = allItems.first { $0.identifier == .hiddenControlItem }
+        let alwaysHiddenControlItem = allItems.first { $0.identifier == .alwaysHiddenControlItem }
+
+        // Save positions for all sections to ensure consistency
+        // (moving an item affects both source and destination sections)
+        for section in MenuBarSectionType.allCases {
+            let sectionItems = getSectionItems(
+                for: section,
+                from: allItems,
+                hiddenControlItem: hiddenControlItem,
+                alwaysHiddenControlItem: alwaysHiddenControlItem
+            )
+
+            // Convert IconItems to IconIdentifiers (left-to-right order)
+            let identifiers = sectionItems.map { $0.identifier }
+
+            // Save to SettingsManager
+            SettingsManager.shared.updateSavedPositions(for: section, icons: identifiers)
+        }
+
+        logger.info("Saved icon positions for all sections after moving to \(affectedSection.displayName)")
     }
 
     /// Refreshes the menu bar items by capturing icons from the menu bar.
