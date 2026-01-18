@@ -33,9 +33,14 @@ Drawer is a high-performance macOS menu bar utility (forked from [Hidden Bar](ht
 - **Show on Hover**: Automatically reveal icons when your mouse enters the menu bar
 - **Drawer Panel**: View and click hidden icons in a floating panel
 - **Click-Through**: Click icons in the drawer panel - actions forward to the real items
+- **Menu Bar Layout Settings**: View and organize your menu bar icons in a visual settings panel
 - **Native Experience**: Built with SwiftUI and AppKit for a seamless macOS feel
 - **Lightweight**: Minimal CPU and memory footprint
 - **Open Source**: MIT licensed, contributions welcome
+
+### Coming Soon
+
+- **Drag-to-Reposition**: Move icons between sections (Shown, Hidden, Always Hidden) directly from Settings - no more Command+Drag required
 
 ## Requirements
 
@@ -108,6 +113,7 @@ Drawer/
 │   └── Onboarding/         # First-run experience
 ├── Models/                 # Data structures
 ├── Utilities/              # Helpers (EventSimulator, GlobalEventMonitor, etc.)
+├── ideas/                  # Feature proposals and design docs
 └── specs/                  # Feature specifications and PRDs
 ```
 

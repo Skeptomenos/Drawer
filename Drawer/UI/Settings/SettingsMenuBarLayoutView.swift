@@ -44,8 +44,8 @@ private enum LayoutDesign {
     /// Spacing between sections
     static let sectionSpacing: CGFloat = 16
 
-    /// Icon size in section containers
-    static let iconSize: CGFloat = 16
+    /// Icon size in section containers (matches macOS menu bar icon size)
+    static let iconSize: CGFloat = 22
 
     /// Spacing between icons
     static let iconSpacing: CGFloat = 8
@@ -772,7 +772,7 @@ private struct LayoutItemView: View {
         )
         .resizable()
         .aspectRatio(contentMode: .fit)
-        .frame(width: LayoutDesign.iconSize, height: LayoutDesign.iconSize)
+        .frame(height: LayoutDesign.iconSize)
     }
 
     /// Placeholder shown when image is not available

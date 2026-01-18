@@ -30,6 +30,10 @@ final class MenuBarManager: ObservableObject {
     /// Icons in this section are never shown in the menu bar - only in the Drawer panel.
     private(set) var alwaysHiddenSection: MenuBarSection?
 
+    /// The invisible spacer for always-hidden section (10k px, pushes icons off-screen)
+    /// This is separate from the visible separator so the `≡` icon stays on-screen.
+    private var alwaysHiddenSpacer: ControlItem?
+
     /// The hidden section (separator that expands to hide icons)
     private(set) var hiddenSection: MenuBarSection!
 
@@ -169,30 +173,14 @@ final class MenuBarManager: ObservableObject {
     /// Creates the menu bar sections with their control items.
     /// The hidden section manages the separator (10k pixel hack).
     /// The visible section manages the toggle button.
+    ///
+    /// IMPORTANT: Toggle MUST be created BEFORE Separator.
+    /// macOS places new NSStatusItems to the LEFT of existing items.
+    /// Creating Toggle first ensures layout: [Separator] [Toggle]
+    /// This keeps Toggle visible when Separator expands to 10k pixels.
     private func setupSections(attempt: Int) {
-        // Create separator control item (for hidden section)
-        let separatorControl = ControlItem(
-            expandedLength: separatorExpandedLength,
-            collapsedLength: separatorCollapsedLength,
-            initialState: isCollapsed ? .collapsed : .expanded
-        )
-
-        guard separatorControl.button != nil else {
-            handleSetupFailure(component: "separatorControl.button", attempt: attempt)
-            return
-        }
-
-        separatorControl.image = separatorImage
-        separatorControl.autosaveName = "drawer_separator_v3"
-        separatorControl.setMenu(createContextMenu())
-
-        hiddenSection = MenuBarSection(
-            type: .hidden,
-            controlItem: separatorControl,
-            isExpanded: !isCollapsed
-        )
-
-        // Create toggle control item (for visible section)
+        // Create toggle control item FIRST (for visible section)
+        // This ensures Toggle is placed rightmost, staying visible when Separator expands.
         let toggleControl = ControlItem(
             expandedLength: NSStatusItem.variableLength,
             collapsedLength: NSStatusItem.variableLength,
@@ -205,7 +193,7 @@ final class MenuBarManager: ObservableObject {
         }
 
         toggleControl.image = isCollapsed ? expandImage : collapseImage
-        toggleControl.autosaveName = "drawer_toggle_v3"
+        toggleControl.autosaveName = "drawer_toggle_v4"
         toggleControl.setAction(target: self, action: #selector(toggleButtonPressed))
         toggleControl.setSendAction(on: [.leftMouseUp, .rightMouseUp])
 
@@ -213,6 +201,29 @@ final class MenuBarManager: ObservableObject {
             type: .visible,
             controlItem: toggleControl,
             isExpanded: true  // Toggle section is always expanded
+        )
+
+        // Create separator control item SECOND (for hidden section)
+        // This places Separator to the LEFT of Toggle.
+        let separatorControl = ControlItem(
+            expandedLength: separatorExpandedLength,
+            collapsedLength: separatorCollapsedLength,
+            initialState: isCollapsed ? .collapsed : .expanded
+        )
+
+        guard separatorControl.button != nil else {
+            handleSetupFailure(component: "separatorControl.button", attempt: attempt)
+            return
+        }
+
+        separatorControl.image = separatorImage
+        separatorControl.autosaveName = "drawer_separator_v4"
+        separatorControl.setMenu(createContextMenu())
+
+        hiddenSection = MenuBarSection(
+            type: .hidden,
+            controlItem: separatorControl,
+            isExpanded: !isCollapsed
         )
 
         logger.info("Sections setup complete on attempt \(attempt)")
@@ -224,14 +235,23 @@ final class MenuBarManager: ObservableObject {
     }
 
     /// Sets up or tears down the always-hidden section based on settings.
-    /// The always-hidden section stays at 10k pixels permanently - icons to its left
-    /// are only visible in the Drawer panel.
+    ///
+    /// Uses a TWO-ITEM approach to solve the visibility bug:
+    /// 1. Invisible Spacer (10k px) - pushes icons off-screen, created LAST (leftmost)
+    /// 2. Visible Separator (20px) - shows `≡` icon, user can interact with it
+    ///
+    /// Layout: [Spacer 10k] [≡ 20px] [Hidden Icons] [● 20px] [< Toggle]
+    ///
+    /// The spacer has no icon and exists purely to push always-hidden icons off-screen.
+    /// The separator shows `≡` and is always visible when the feature is enabled.
     private func setupAlwaysHiddenSection() {
         guard settings.alwaysHiddenSectionEnabled else {
-            // Remove section if disabled
-            if alwaysHiddenSection != nil {
+            // Remove section and spacer if disabled
+            if alwaysHiddenSection != nil || alwaysHiddenSpacer != nil {
                 alwaysHiddenSection?.isEnabled = false
                 alwaysHiddenSection = nil
+                alwaysHiddenSpacer?.state = .hidden
+                alwaysHiddenSpacer = nil
                 logger.info("Always Hidden section disabled")
             }
             return
@@ -239,30 +259,63 @@ final class MenuBarManager: ObservableObject {
 
         guard alwaysHiddenSection == nil else { return }
 
-        // Create always-hidden control item
+        // STEP 1: Create the VISIBLE separator (20px, shows ≡ icon)
+        // Created FIRST so it appears to the RIGHT of the spacer
         let alwaysHiddenControl = ControlItem(
             expandedLength: separatorExpandedLength,
-            collapsedLength: separatorCollapsedLength,
-            initialState: .collapsed  // Always stays collapsed (10k pixels)
+            collapsedLength: separatorExpandedLength,  // Always 20px (never collapses)
+            initialState: .expanded  // Always visible at 20px
         )
 
         guard alwaysHiddenControl.button != nil else {
-            logger.error("Failed to create always-hidden section: button is nil")
+            logger.error("Failed to create always-hidden section: separator button is nil")
             return
         }
 
         alwaysHiddenControl.image = alwaysHiddenSeparatorImage
-        alwaysHiddenControl.autosaveName = "drawer_always_hidden_v1"
+        alwaysHiddenControl.autosaveName = "drawer_always_hidden_separator_v2"
         alwaysHiddenControl.setMenu(createContextMenu())
 
         alwaysHiddenSection = MenuBarSection(
             type: .alwaysHidden,
             controlItem: alwaysHiddenControl,
-            isExpanded: false,  // Never expands
+            isExpanded: true,  // Always expanded (visible at 20px)
             isEnabled: true
         )
 
-        logger.info("Always Hidden section enabled")
+        // STEP 2: Create the INVISIBLE spacer (10k px, no icon)
+        // Created SECOND so it appears to the LEFT of the separator
+        // This pushes always-hidden icons off-screen
+        let spacer = ControlItem(
+            expandedLength: separatorCollapsedLength,  // 10k px (always pushing)
+            collapsedLength: separatorCollapsedLength,
+            initialState: .expanded  // Always at 10k px
+        )
+
+        guard spacer.button != nil else {
+            logger.error("Failed to create always-hidden section: spacer button is nil")
+            // Clean up the separator we already created
+            alwaysHiddenSection?.isEnabled = false
+            alwaysHiddenSection = nil
+            return
+        }
+        
+        // No image - this is an invisible spacer
+        spacer.autosaveName = "drawer_always_hidden_spacer_v2"
+        alwaysHiddenSpacer = spacer
+        
+        // Log positions
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 500_000_000)
+            if let spacerWindow = spacer.button?.window, let ctrlWindow = alwaysHiddenControl.button?.window {
+                self.logger.debug("Always Hidden Setup: Spacer X=\(spacerWindow.frame.origin.x), Ctrl X=\(ctrlWindow.frame.origin.x)")
+                self.logger.debug("Spacer Width: \(spacerWindow.frame.width), Ctrl Width: \(ctrlWindow.frame.width)")
+            } else {
+                self.logger.error("Could not get window frames for Always Hidden section")
+            }
+        }
+        
+        logger.info("Always Hidden section enabled and setup")
     }
 
     private func handleSetupFailure(component: String, attempt: Int) {

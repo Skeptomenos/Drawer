@@ -179,30 +179,22 @@ enum Bridging {
     }
 
     private static func getSpacesForWindow(_ windowID: CGWindowID) -> [CGSSpaceID]? {
-        var pointer = UnsafeRawPointer(bitPattern: Int(windowID))
-        guard let windowArray = CFArrayCreate(kCFAllocatorDefault, &pointer, 1, nil) else {
-            return nil
-        }
-
+        // Use Swift's automatic bridging to create CFArray - matches Ice's implementation
         guard let spacesArray = CGSCopySpacesForWindows(
             CGSMainConnectionID(),
             kCGSAllSpacesMask,
-            windowArray
+            [windowID] as CFArray
         ) else {
             return nil
         }
 
-        let count = CFArrayGetCount(spacesArray)
-        var spaces = [CGSSpaceID]()
-
-        for index in 0..<count {
-            if let spaceNumber = CFArrayGetValueAtIndex(spacesArray, index) {
-                let space = unsafeBitCast(spaceNumber, to: CGSSpaceID.self)
-                spaces.append(space)
-            }
+        // Cast CFArray to Swift array of space IDs
+        guard let spaceIDs = spacesArray as? [CGSSpaceID] else {
+            logger.error("CGSCopySpacesForWindows returned array of unexpected type")
+            return nil
         }
 
-        return spaces
+        return spaceIDs
     }
 
     // MARK: - Fullscreen Detection
