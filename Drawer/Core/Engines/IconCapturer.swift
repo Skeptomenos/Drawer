@@ -152,12 +152,16 @@ final class IconCapturer: ObservableObject {
             #if DEBUG
             logger.debug("=== CAPTURE RESULT DEBUG (B1.1) ===")
             logger.debug("Total icons: \(captureResult.icons.count)")
-            logger.debug("Captured region: x=\(captureResult.capturedRegion.origin.x), y=\(captureResult.capturedRegion.origin.y), w=\(captureResult.capturedRegion.width), h=\(captureResult.capturedRegion.height)")
+            let region = captureResult.capturedRegion
+            // swiftlint:disable:next line_length
+            logger.debug("Captured region: x=\(region.origin.x), y=\(region.origin.y), w=\(region.width), h=\(region.height)")
             logger.debug("Menu bar items found: \(captureResult.menuBarItems.count)")
 
             for (index, icon) in captureResult.icons.enumerated() {
-                let f = icon.originalFrame
-                logger.debug("Icon \(index): frame=(\(f.origin.x),\(f.origin.y),\(f.width),\(f.height)), image=\(icon.image.width)x\(icon.image.height), owner=\(icon.itemInfo?.ownerName ?? "unknown")")
+                let frame = icon.originalFrame
+                let ownerName = icon.itemInfo?.ownerName ?? "unknown"
+                // swiftlint:disable:next line_length
+                logger.debug("Icon \(index): frame=(\(frame.origin.x),\(frame.origin.y),\(frame.width),\(frame.height)), image=\(icon.image.width)x\(icon.image.height), owner=\(ownerName)")
             }
             logger.debug("=== END CAPTURE DEBUG ===")
             #endif
@@ -205,8 +209,10 @@ final class IconCapturer: ObservableObject {
         #if DEBUG
         logger.debug("MenuBarItem.getMenuBarItemsForDisplay returned \(menuBarItems.count) items")
         for (index, item) in menuBarItems.enumerated() {
-            let f = item.frame
-            logger.debug("  [\(index)] windowID=\(item.windowID), owner=\(item.ownerName ?? "nil"), frame=(\(f.origin.x),\(f.origin.y),\(f.width),\(f.height))")
+            let frame = item.frame
+            let ownerName = item.ownerName ?? "nil"
+            // swiftlint:disable:next line_length
+            logger.debug("  [\(index)] windowID=\(item.windowID), owner=\(ownerName), frame=(\(frame.origin.x),\(frame.origin.y),\(frame.width),\(frame.height))")
         }
         #endif
 

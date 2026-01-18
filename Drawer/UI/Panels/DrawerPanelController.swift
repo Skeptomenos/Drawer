@@ -66,8 +66,8 @@ final class DrawerPanelController: ObservableObject {
 
         guard let panel = panel else { return }
 
-        if let x = xPosition {
-            panel.position(alignedTo: x, on: screen)
+        if let alignX = xPosition {
+            panel.position(alignedTo: alignX, on: screen)
         } else {
             panel.position(on: screen)
         }

@@ -65,8 +65,18 @@ This phase addresses 2 potential crashes and 13 code quality issues identified d
 | 1.3.3 | `LauncherApplication/AppDelegate.swift:20` | Update bundle identifier to match main app | [x] |
 | 1.3.4 | `hidden/Info.plist` | Remove empty `CFBundleIconFile`, update copyright year | [x] |
 
+### 1.4 SwiftLint Error Fixes
+
+| Task | File | Issue | Status |
+|------|------|-------|--------|
+| 1.4.1 | `Drawer/Core/Engines/IconCapturer.swift:159,208` | Rename `f` variable to `frame` (identifier_name) | [x] |
+| 1.4.2 | `Drawer/Core/Engines/IconCapturer.swift:155,160` | Break long logger lines (line_length > 200) | [x] |
+| 1.4.3 | `Drawer/Bridging/Bridging.swift:198` | Rename `i` variable to `index` (identifier_name) | [x] |
+| 1.4.4 | `Drawer/UI/Panels/DrawerPanelController.swift:69` | Rename `x` to `alignX` (identifier_name) | [x] |
+| 1.4.5 | `Drawer/UI/Panels/DrawerPanel.swift:95-96,123` | Rename `x`/`y` to `originX`/`originY` (identifier_name) | [x] |
+
 **Exit Criteria**:
-- [x] `xcodebuild test -scheme Drawer` passes (all 278 tests)
+- [x] `xcodebuild test -scheme Drawer` passes (all 301 tests)
 - [x] `swiftlint lint Drawer/` - no errors
 - [ ] Launch-at-login works with updated bundle ID
 - [ ] Manual verification on multi-monitor setup
@@ -208,6 +218,7 @@ After completing all phases:
 | 1.1 | `OverlayPanelController.swift`, `Bridging.swift` |
 | 1.2 | 15 files (see detailed table above) |
 | 1.3 | `LauncherApplication/Info.plist`, `LauncherApplication/AppDelegate.swift`, `hidden/Info.plist` |
+| 1.4 | `IconCapturer.swift`, `Bridging.swift`, `DrawerPanelController.swift`, `DrawerPanel.swift` |
 | 2.1 | New: `OverlayModeManagerTests.swift` |
 | 2.2 | New: `ScreenCaptureTests.swift` |
 | 3.1 | `IconCapturerTests.swift` |

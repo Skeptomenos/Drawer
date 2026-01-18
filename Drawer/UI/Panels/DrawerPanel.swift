@@ -92,8 +92,8 @@ final class DrawerPanel: NSPanel {
         let panelWidth = frame.width
         let panelHeight = frame.height
 
-        let x = fullFrame.midX - (panelWidth / 2)
-        let y = fullFrame.maxY - menuBarHeight - Self.menuBarGap - panelHeight
+        let originX = fullFrame.midX - (panelWidth / 2)
+        let originY = fullFrame.maxY - menuBarHeight - Self.menuBarGap - panelHeight
 
         #if DEBUG
         Self.logger.debug("=== DRAWER PANEL POSITION (B2.2) ===")
@@ -101,11 +101,11 @@ final class DrawerPanel: NSPanel {
         Self.logger.debug("Full frame: x=\(fullFrame.origin.x), y=\(fullFrame.origin.y), w=\(fullFrame.width), h=\(fullFrame.height)")
         Self.logger.debug("Visible frame: x=\(visibleFrame.origin.x), y=\(visibleFrame.origin.y), w=\(visibleFrame.width), h=\(visibleFrame.height)")
         Self.logger.debug("Menu bar height: \(menuBarHeight)")
-        Self.logger.debug("Panel position: x=\(x), y=\(y)")
+        Self.logger.debug("Panel position: x=\(originX), y=\(originY)")
         Self.logger.debug("Panel size: w=\(panelWidth), h=\(panelHeight)")
         #endif
 
-        setFrameOrigin(NSPoint(x: x, y: y))
+        setFrameOrigin(NSPoint(x: originX, y: originY))
     }
 
     func position(alignedTo xPosition: CGFloat, on screen: NSScreen? = nil) {
@@ -120,15 +120,15 @@ final class DrawerPanel: NSPanel {
         let maxX = fullFrame.maxX - frame.width
         let clampedX = min(max(xPosition, fullFrame.minX), maxX)
 
-        let y = fullFrame.maxY - menuBarHeight - Self.menuBarGap - panelHeight
+        let originY = fullFrame.maxY - menuBarHeight - Self.menuBarGap - panelHeight
 
         #if DEBUG
         Self.logger.debug("=== DRAWER PANEL POSITION ALIGNED (B2.2) ===")
         Self.logger.debug("Requested X: \(xPosition), Clamped X: \(clampedX)")
-        Self.logger.debug("Panel position: x=\(clampedX), y=\(y)")
+        Self.logger.debug("Panel position: x=\(clampedX), y=\(originY)")
         #endif
 
-        setFrameOrigin(NSPoint(x: clampedX, y: y))
+        setFrameOrigin(NSPoint(x: clampedX, y: originY))
     }
 
     // MARK: - Size Management

@@ -195,8 +195,8 @@ enum Bridging {
         let count = CFArrayGetCount(spacesArray)
         var spaces = [CGSSpaceID]()
 
-        for i in 0..<count {
-            if let spaceNumber = CFArrayGetValueAtIndex(spacesArray, i) {
+        for index in 0..<count {
+            if let spaceNumber = CFArrayGetValueAtIndex(spacesArray, index) {
                 let space = unsafeBitCast(spaceNumber, to: CGSSpaceID.self)
                 spaces.append(space)
             }
