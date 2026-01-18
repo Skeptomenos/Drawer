@@ -15,7 +15,7 @@ Phase 5 implements the ability to physically reposition menu bar icons by draggi
 | 5.1 | Core Models | **100%** | Complete - IconIdentifier & IconItem models + tests |
 | 5.2 | Bridging Extensions | **100%** | getWindowList, getWindowFrame, activeSpaceID all exist |
 | 5.3 | IconRepositioner Engine | **100%** | All tasks complete: MouseCursor, Skeleton, CGEvent Move, Frame Detection, Retry/Wake-Up, Tests |
-| 5.4 | Settings UI Integration | 0% | Drag-drop UI exists but no repositioner hook |
+| 5.4 | Settings UI Integration | 33% | Task 5.4.1 complete (lock indicators), Tasks 5.4.2-5.4.3 pending |
 | 5.5 | Persistence | 10% | Basic layout save exists, needs icon position persistence |
 
 ## Task List
@@ -123,16 +123,20 @@ Phase 5.1 is fully complete. The core models for icon identification and represe
 
 ### Phase 5.4: Settings UI Integration
 
-#### Task 5.4.1: Add Lock Indicators for Immovable Icons
-- **File**: `Drawer/UI/Settings/SettingsMenuBarLayoutView.swift` (modify)
+#### Task 5.4.1: Add Lock Indicators for Immovable Icons [COMPLETE]
+- **Files Modified**:
+  - `Drawer/Models/SettingsLayoutItem.swift` - Added `isImmovable` computed property
+  - `Drawer/UI/Settings/SettingsMenuBarLayoutView.swift` - Updated `LayoutItemView` and `LayoutSectionView`
 - **Scope**: Visual feedback for system icons
 - **Details**:
-  - Add lock icon (`lock.fill` SF Symbol, 8pt) in top-right corner of immovable items
-  - Apply 50% opacity to immovable icons
-  - Add tooltip: "This item cannot be moved by macOS"
-  - Disable `.draggable()` modifier for immovable items
+  - Added `isImmovable` property to `SettingsLayoutItem` using `IconIdentifier.immovableItems`
+  - Added lock icon (`lock.fill` SF Symbol, 8pt) in top-trailing corner of immovable items
+  - Applied 50% opacity to immovable icons
+  - Added tooltip: "This item cannot be moved by macOS"
+  - Added `itemView(for:)` method to conditionally apply `.draggable()` for movable items only
+  - Added 8 unit tests for `isImmovable` property (SLI-041 to SLI-048)
 - **Dependencies**: Tasks 5.1.1, 5.1.2
-- **Verification**: Build and run, verify Control Center shows lock icon
+- **Verification**: Build passed, 380 tests pass (8 new tests added)
 
 #### Task 5.4.2: Integrate Repositioner into Drop Handler
 - **File**: `Drawer/UI/Settings/SettingsMenuBarLayoutView.swift` (modify)

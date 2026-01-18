@@ -574,8 +574,7 @@ private struct LayoutSectionView: View {
                 dropIndicator(at: 0)
 
                 ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
-                    LayoutItemView(item: item, image: imageCache[item.id])
-                        .draggable(item)
+                    itemView(for: item)
                         .background(
                             GeometryReader { geometry in
                                 Color.clear
@@ -632,6 +631,20 @@ private struct LayoutSectionView: View {
             itemFrames: itemFrames,
             dropInsertIndex: $dropInsertIndex
         ))
+    }
+
+    /// Creates the item view with conditional draggable modifier.
+    /// Immovable items (system icons) cannot be dragged.
+    /// - Parameter item: The layout item to display
+    /// - Returns: The item view, optionally with .draggable() modifier
+    @ViewBuilder
+    private func itemView(for item: SettingsLayoutItem) -> some View {
+        let layoutItemView = LayoutItemView(item: item, image: imageCache[item.id])
+        if item.isImmovable {
+            layoutItemView
+        } else {
+            layoutItemView.draggable(item)
+        }
     }
 
     /// Visual drop indicator shown between items during drag
@@ -739,6 +752,8 @@ private struct DropPositionDelegate: DropDelegate {
 // MARK: - LayoutItemView
 
 /// A single item in the layout editor (icon with actual image or spacer).
+/// Immovable items (system icons like Control Center, Clock) display a lock indicator
+/// and are rendered at 50% opacity.
 private struct LayoutItemView: View {
 
     // MARK: - Properties
@@ -749,19 +764,38 @@ private struct LayoutItemView: View {
     /// The cached image for this item (nil if not available)
     let image: CGImage?
 
+    // MARK: - Design Constants
+
+    /// Size of the lock icon overlay
+    private let lockIconSize: CGFloat = 8
+
+    /// Padding around the lock icon
+    private let lockIconPadding: CGFloat = 2
+
     // MARK: - Body
 
     var body: some View {
-        Group {
-            if item.isSpacer {
-                spacerView
-            } else if let cgImage = image {
-                iconImageView(cgImage)
-            } else {
-                iconPlaceholder
+        ZStack(alignment: .topTrailing) {
+            Group {
+                if item.isSpacer {
+                    spacerView
+                } else if let cgImage = image {
+                    iconImageView(cgImage)
+                } else {
+                    iconPlaceholder
+                }
+            }
+            .opacity(item.isImmovable ? 0.5 : 1.0)
+
+            // Lock indicator for immovable items
+            if item.isImmovable {
+                Image(systemName: "lock.fill")
+                    .font(.system(size: lockIconSize, weight: .medium))
+                    .foregroundColor(.secondary)
+                    .padding(lockIconPadding)
             }
         }
-        .help(item.displayName)
+        .help(item.isImmovable ? "This item cannot be moved by macOS" : item.displayName)
     }
 
     /// Displays the actual captured icon image
