@@ -40,7 +40,7 @@ This phase addresses 2 potential crashes and 13 code quality issues identified d
 
 | Task | File | Issue | Status |
 |------|------|-------|--------|
-| 1.2.1 | `Drawer/Core/Managers/DrawerManager.swift:48` | Remove unused `cancellables` | [ ] |
+| 1.2.1 | `Drawer/Core/Managers/DrawerManager.swift:48` | Remove unused `cancellables` | [x] |
 | 1.2.2 | `Drawer/Core/Managers/HoverManager.swift:30` | Remove unused `cancellables` | [ ] |
 | 1.2.3 | `Drawer/UI/Panels/DrawerPanelController.swift:49` | Remove unused `cancellables` | [ ] |
 | 1.2.4 | `Drawer/App/AppState.swift:79-87` | Fix NotificationCenter observer cleanup in deinit | [ ] |

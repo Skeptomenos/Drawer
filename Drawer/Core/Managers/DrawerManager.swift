@@ -43,18 +43,10 @@ final class DrawerManager: ObservableObject {
     /// The last error that occurred during item loading
     @Published private(set) var lastError: Error?
 
-    // MARK: - Private Properties
-
-    private var cancellables = Set<AnyCancellable>()
-
     // MARK: - Initialization
 
     init() {
         logger.debug("DrawerManager initialized")
-    }
-
-    deinit {
-        cancellables.removeAll()
     }
 
     // MARK: - Public API
