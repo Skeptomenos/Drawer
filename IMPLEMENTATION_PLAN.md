@@ -39,10 +39,18 @@ This plan implements fixes in 4 phases with 19 tasks total.
 - **Scope**: File scaffolding only
 - **Status**: Completed - Created `DrawerTests/UI/Settings/` directory and test file with 10 test method stubs (7 skipped, awaiting implementation)
 
-### Task 2: Create Mock CapturedIcon Factory
+### Task 2: Create Mock CapturedIcon Factory [COMPLETED]
 - **File**: `DrawerTests/Mocks/MockCapturedIconFactory.swift`
 - **Action**: Create helper to generate `CapturedIcon` instances with controllable X-positions
 - **Scope**: Factory methods for test data generation
+- **Status**: Completed - Created factory with:
+  - `createIcon()` - Creates icons with specific bundleId, xPosition, section, windowID
+  - `createIconWithoutInfo()` - Creates icons without itemInfo for edge case testing
+  - `createIconsInOrder()` - Creates multiple icons at even intervals
+  - `createIconsWithPositions()` - Creates icons with explicit X positions
+  - `createIconsWithSections()` - Creates icons with mixed sections
+  - `createLayoutItem()` / `createLayoutItems()` - Creates SettingsLayoutItem from icons
+  - Test extension for `MenuBarItemInfo` with direct initializer
 
 ### Task 3: Write Ordering Tests (Spec 5.6)
 - **File**: `DrawerTests/UI/Settings/SettingsMenuBarLayoutViewTests.swift`
