@@ -73,7 +73,10 @@ final class OverlayPanelController: ObservableObject {
         on screen: NSScreen? = nil,
         onItemTap: @escaping (DrawerItem) -> Void
     ) {
-        let targetScreen = screen ?? NSScreen.main ?? NSScreen.screens.first!
+        guard let targetScreen = screen ?? NSScreen.main ?? NSScreen.screens.first else {
+            logger.warning("No screen available for overlay panel")
+            return
+        }
 
         // Create panel if needed
         if panel == nil {
