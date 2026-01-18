@@ -256,17 +256,12 @@ final class IconCapturerTests: XCTestCase {
         let icons = capturer.sliceIconsUsingFixedWidth(from: testImage)
 
         // Assert
-        // The implementation uses `icons.count > 50` which means it stops AFTER adding the 51st icon
-        // So the max is 51, not 50
-        XCTAssertLessThanOrEqual(
+        // The implementation uses `icons.count >= 50` which stops BEFORE adding the 51st icon
+        // So the max is exactly 50
+        XCTAssertEqual(
             icons.count,
-            51,
-            "ICN-007: sliceIconsUsingFixedWidth should limit icons to ~50 (implementation allows up to 51)"
-        )
-        XCTAssertGreaterThan(
-            icons.count,
-            0,
-            "ICN-007: Should have created some icons before hitting limit"
+            50,
+            "ICN-007: sliceIconsUsingFixedWidth should limit icons to exactly 50"
         )
 
         // Verify the limit was actually hit (we provided enough width for 60 icons)

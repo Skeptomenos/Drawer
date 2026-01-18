@@ -131,7 +131,7 @@ The codebase has excellent coverage (278 tests) but two components lack tests.
 
 | Task | File | Description | Status |
 |------|------|-------------|--------|
-| 3.1.1 | `DrawerTests/Core/Engines/IconCapturerTests.swift` | Update test `ICN-007` to expect exactly 50 icons (after 1.2.5) | [ ] |
+| 3.1.1 | `DrawerTests/Core/Engines/IconCapturerTests.swift` | Update test `ICN-007` to expect exactly 50 icons (after 1.2.5) | [x] |
 
 ### 3.2 Archive Completed Plans
 
