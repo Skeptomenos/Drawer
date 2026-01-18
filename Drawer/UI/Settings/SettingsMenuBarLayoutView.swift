@@ -676,11 +676,16 @@ struct SettingsMenuBarLayoutView: View {
         var matchedCount = 0
         var newCount = 0
 
+        // Spec 5.6 Task 6: Sort captured icons by X-position (left to right)
+        // This is the source of truth for display order - not the saved layout order
+        let sortedIcons = capturedIcons.sorted { $0.originalFrame.minX < $1.originalFrame.minX }
+        logger.debug("[Layout] Sorted \(sortedIcons.count) icons by X-position")
+
         // Track which saved items have been matched to avoid duplicates
         var matchedSavedItemIds: Set<UUID> = []
 
-        // Process each captured icon
-        for capturedIcon in capturedIcons {
+        // Process each captured icon in X-position order
+        for capturedIcon in sortedIcons {
             // Try to find a matching saved item
             if let matchingSaved = savedLayout.first(where: { saved in
                 !matchedSavedItemIds.contains(saved.id) && saved.matches(capturedIcon: capturedIcon)

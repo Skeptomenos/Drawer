@@ -94,18 +94,20 @@ This plan implements fixes in 4 phases with 19 tasks total.
 
 **Goal**: Fix `reconcileLayout()` to use captured X-positions as source of truth.
 
-### Task 5: Add Debug Logger for Layout View
+### Task 5: Add Debug Logger for Layout View [COMPLETED]
 - **File**: `Drawer/UI/Settings/SettingsMenuBarLayoutView.swift`
 - **Action**: Add `os.log` subsystem/category for layout debugging
 - **Scope**: Logger setup only
+- **Status**: Completed - Logger already exists at lines 107-110 with subsystem `com.drawer` and category `SettingsMenuBarLayoutView`. Currently used in 12 locations for debug, info, warning, and error logging.
 
-### Task 6: Refactor reconcileLayout() - Sort by X-Position
+### Task 6: Refactor reconcileLayout() - Sort by X-Position [COMPLETED]
 - **File**: `Drawer/UI/Settings/SettingsMenuBarLayoutView.swift`
-- **Lines**: 667-680
+- **Lines**: 670-686 (after edit)
 - **Action**: 
   1. Sort `capturedIcons` by `originalFrame.minX` at start of function
   2. Add debug log: `[Layout] Sorted \(count) icons by X-position`
 - **Scope**: Add sorting before main loop
+- **Status**: Completed - Added X-position sorting at line 681 and debug log at line 682. The loop now iterates over `sortedIcons` instead of `capturedIcons`.
 
 ### Task 7: Refactor reconcileLayout() - Section from Capture
 - **File**: `Drawer/UI/Settings/SettingsMenuBarLayoutView.swift`
