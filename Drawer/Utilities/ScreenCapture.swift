@@ -106,8 +106,10 @@ enum ScreenCapture {
             return [:]
         }
 
-        let expectedWidth = unionFrame.width * backingScaleFactor
-        guard CGFloat(compositeImage.width) == expectedWidth else {
+        // Use integer comparison to avoid floating-point precision issues.
+        // CGImage.width is Int, so round the expected width for comparison.
+        let expectedWidth = Int((unionFrame.width * backingScaleFactor).rounded())
+        guard compositeImage.width == expectedWidth else {
             return [:]
         }
 
