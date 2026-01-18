@@ -10,8 +10,8 @@
 
 | Metric | Value |
 |--------|-------|
-| **Source Files** | 41 (~6,800 lines) |
-| **Test Files** | 36 (325 tests, 8 skipped) |
+| **Source Files** | 41 (~6,900 lines) |
+| **Test Files** | 36 (330 tests, 8 skipped) |
 | **Review Status** | Complete (0 critical, 0 high, 2 medium, 17 low) |
 | **Architecture** | MVVM, Section-based (Phase 0-3 complete, 4.1.1 done) |
 
@@ -208,7 +208,7 @@ This phase implements the drag-and-drop Settings UI shown in `specs/reference_im
 |------|-------------|--------|
 | 4.2.1 | Display three sections: Shown, Hidden, Always Hidden | [x] |
 | 4.2.2 | Enable drag-and-drop reordering | [x] |
-| 4.2.3 | Sync changes to `MenuBarManager` | [ ] |
+| 4.2.3 | Sync changes to `MenuBarManager` | [x] |
 | 4.2.4 | Add spacer insertion capability | [ ] |
 
 **4.2.2 Implementation Notes:**
@@ -226,6 +226,25 @@ This phase implements the drag-and-drop Settings UI shown in `specs/reference_im
   - Interleaved drop indicators between items using `ForEach` with indices
   - Combined `.dropDestination()` with `.onDrop(delegate:)` for position awareness
 - All 325 tests pass, no SwiftLint errors
+
+**4.2.3 Implementation Notes:**
+- Added layout persistence to `SettingsManager.swift`:
+  - `menuBarLayout` computed property with UserDefaults backing
+  - `saveMenuBarLayout(_:)` method to persist layout items
+  - `clearMenuBarLayout()` method to clear saved layout
+  - `menuBarLayoutChangedSubject` Combine publisher for reactive updates
+- Updated `SettingsMenuBarLayoutView.swift`:
+  - `moveItem(_:to:at:)` now calls `saveLayout()` to persist changes immediately
+  - `refreshItems()` loads saved layout and reconciles with captured icons
+  - Added `ReconciliationResult` struct to avoid large tuple SwiftLint error
+  - `reconcileLayout()` algorithm:
+    1. For each captured icon, match against saved layout by bundle ID + title
+    2. If matched, use saved section/order (user's preference preserved)
+    3. If not matched, use captured icon's section (new icon, first seen)
+    4. Preserve spacers from saved layout
+  - Added `normalizeOrders()` to prevent order value gaps
+- Added 5 new tests in `SettingsManagerTests.swift` (SET-016 through SET-020)
+- All 330 tests pass, no SwiftLint errors
 
 **4.2.1 Implementation Notes:**
 - Modified `SettingsMenuBarLayoutView.swift` to access `AppState` via `@EnvironmentObject`
@@ -296,6 +315,7 @@ After completing all phases:
 | 4.1.3 | Modify: `SettingsLayoutItem.swift` (Transferable), `SettingsMenuBarLayoutView.swift` (drag-drop), `hidden/Info.plist` (UTType) |
 | 4.2.1 | Modify: `SettingsMenuBarLayoutView.swift` (IconCapturer integration, image cache, live icons) |
 | 4.2.2 | Modify: `SettingsMenuBarLayoutView.swift` (within-section reordering, visual drop indicators, position tracking) |
+| 4.2.3 | Modify: `SettingsManager.swift` (layout persistence), `SettingsMenuBarLayoutView.swift` (reconciliation, save on move), `SettingsManagerTests.swift` (5 new tests) |
 | 4.x | TBD: Additional Settings UI files |
 
 ---

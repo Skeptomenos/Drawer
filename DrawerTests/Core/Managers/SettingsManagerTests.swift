@@ -318,4 +318,124 @@ final class SettingsManagerTests: XCTestCase {
         XCTAssertNil(sut.globalHotkey, "SET-015: globalHotkey should be nil after setting to nil")
         XCTAssertNil(UserDefaults.standard.data(forKey: "globalHotkey"), "SET-015: UserDefaults should not contain globalHotkey key after setting to nil")
     }
+
+    // MARK: - SET-016: menuBarLayout default is empty
+
+    func testSET016_MenuBarLayoutDefaultIsEmpty() async throws {
+        // Arrange - clear any existing layout
+        sut.clearMenuBarLayout()
+
+        // Assert
+        XCTAssertTrue(sut.menuBarLayout.isEmpty, "SET-016: Default menuBarLayout should be empty")
+    }
+
+    // MARK: - SET-017: menuBarLayout save and retrieve roundtrip
+
+    func testSET017_MenuBarLayoutSaveAndRetrieveRoundtrip() async throws {
+        // Arrange - create layout items
+        let items = [
+            SettingsLayoutItem(bundleIdentifier: "com.apple.controlcenter", title: "WiFi", section: .visible, order: 0),
+            SettingsLayoutItem(bundleIdentifier: "com.1password.1password", title: nil, section: .hidden, order: 1),
+            SettingsLayoutItem.spacer(section: .hidden, order: 2)
+        ]
+
+        // Act - save layout
+        sut.saveMenuBarLayout(items)
+
+        // Assert - retrieve and verify
+        let retrieved = sut.menuBarLayout
+        XCTAssertEqual(retrieved.count, 3, "SET-017: Should retrieve 3 items")
+
+        // Verify first item
+        XCTAssertEqual(retrieved[0].bundleIdentifier, "com.apple.controlcenter")
+        XCTAssertEqual(retrieved[0].title, "WiFi")
+        XCTAssertEqual(retrieved[0].section, .visible)
+        XCTAssertEqual(retrieved[0].order, 0)
+
+        // Verify second item
+        XCTAssertEqual(retrieved[1].bundleIdentifier, "com.1password.1password")
+        XCTAssertNil(retrieved[1].title)
+        XCTAssertEqual(retrieved[1].section, .hidden)
+        XCTAssertEqual(retrieved[1].order, 1)
+
+        // Verify third item is a spacer
+        XCTAssertTrue(retrieved[2].isSpacer, "SET-017: Third item should be a spacer")
+        XCTAssertEqual(retrieved[2].section, .hidden)
+
+        // Cleanup
+        sut.clearMenuBarLayout()
+    }
+
+    // MARK: - SET-018: clearMenuBarLayout removes layout
+
+    func testSET018_ClearMenuBarLayoutRemovesLayout() async throws {
+        // Arrange - save some items first
+        let items = [
+            SettingsLayoutItem(bundleIdentifier: "com.test.app", title: nil, section: .visible, order: 0)
+        ]
+        sut.saveMenuBarLayout(items)
+        XCTAssertFalse(sut.menuBarLayout.isEmpty, "SET-018: Layout should not be empty before clear")
+
+        // Act
+        sut.clearMenuBarLayout()
+
+        // Assert
+        XCTAssertTrue(sut.menuBarLayout.isEmpty, "SET-018: Layout should be empty after clear")
+    }
+
+    // MARK: - SET-019: menuBarLayoutChangedSubject fires on save
+
+    func testSET019_MenuBarLayoutChangedSubjectFiresOnSave() async throws {
+        // Arrange
+        var receivedLayouts: [[SettingsLayoutItem]] = []
+        let expectation = XCTestExpectation(description: "Subject should fire on save")
+
+        sut.menuBarLayoutChangedSubject
+            .sink { layout in
+                receivedLayouts.append(layout)
+                expectation.fulfill()
+            }
+            .store(in: &cancellables)
+
+        // Act
+        let items = [
+            SettingsLayoutItem(bundleIdentifier: "com.test.app", title: nil, section: .hidden, order: 0)
+        ]
+        sut.saveMenuBarLayout(items)
+
+        // Assert
+        await fulfillment(of: [expectation], timeout: 1.0)
+        XCTAssertEqual(receivedLayouts.count, 1, "SET-019: Subject should fire once")
+        XCTAssertEqual(receivedLayouts.first?.count, 1, "SET-019: Should receive the saved layout")
+
+        // Cleanup
+        sut.clearMenuBarLayout()
+    }
+
+    // MARK: - SET-020: menuBarLayout persists with all section types
+
+    func testSET020_MenuBarLayoutPersistsAllSectionTypes() async throws {
+        // Arrange - create items in all section types
+        let items = [
+            SettingsLayoutItem(bundleIdentifier: "com.visible.app", title: nil, section: .visible, order: 0),
+            SettingsLayoutItem(bundleIdentifier: "com.hidden.app", title: nil, section: .hidden, order: 0),
+            SettingsLayoutItem(bundleIdentifier: "com.always.app", title: nil, section: .alwaysHidden, order: 0)
+        ]
+
+        // Act
+        sut.saveMenuBarLayout(items)
+
+        // Assert
+        let retrieved = sut.menuBarLayout
+        let visibleItems = retrieved.filter { $0.section == .visible }
+        let hiddenItems = retrieved.filter { $0.section == .hidden }
+        let alwaysHiddenItems = retrieved.filter { $0.section == .alwaysHidden }
+
+        XCTAssertEqual(visibleItems.count, 1, "SET-020: Should have 1 visible item")
+        XCTAssertEqual(hiddenItems.count, 1, "SET-020: Should have 1 hidden item")
+        XCTAssertEqual(alwaysHiddenItems.count, 1, "SET-020: Should have 1 always-hidden item")
+
+        // Cleanup
+        sut.clearMenuBarLayout()
+    }
 }

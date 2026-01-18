@@ -152,6 +152,45 @@ final class SettingsManager: ObservableObject {
         }
     }
 
+    // MARK: - Menu Bar Layout (Codable, stored as Data)
+
+    /// Storage key for persisted layout
+    private static let layoutStorageKey = "menuBarLayout"
+
+    /// Combine subject for layout changes
+    let menuBarLayoutChangedSubject = PassthroughSubject<[SettingsLayoutItem], Never>()
+
+    /// The persisted menu bar layout configuration.
+    /// Stores the user's preferred section assignments and ordering for menu bar icons.
+    var menuBarLayout: [SettingsLayoutItem] {
+        get {
+            guard let data = UserDefaults.standard.data(forKey: Self.layoutStorageKey) else {
+                return []
+            }
+            return (try? JSONDecoder().decode([SettingsLayoutItem].self, from: data)) ?? []
+        }
+        set {
+            if newValue.isEmpty {
+                UserDefaults.standard.removeObject(forKey: Self.layoutStorageKey)
+            } else if let data = try? JSONEncoder().encode(newValue) {
+                UserDefaults.standard.set(data, forKey: Self.layoutStorageKey)
+            }
+            objectWillChange.send()
+            menuBarLayoutChangedSubject.send(newValue)
+        }
+    }
+
+    /// Saves the menu bar layout to UserDefaults.
+    /// - Parameter items: The layout items to persist
+    func saveMenuBarLayout(_ items: [SettingsLayoutItem]) {
+        menuBarLayout = items
+    }
+
+    /// Clears the persisted menu bar layout.
+    func clearMenuBarLayout() {
+        menuBarLayout = []
+    }
+
     // MARK: - Initialization
 
     private init() {
