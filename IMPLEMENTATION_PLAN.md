@@ -12,7 +12,7 @@ Phase 5 implements the ability to physically reposition menu bar icons by draggi
 
 | Phase | Description | Status | Notes |
 |-------|-------------|--------|-------|
-| 5.1 | Core Models | 66% | Tasks 5.1.1, 5.1.2 complete |
+| 5.1 | Core Models | **100%** | Complete - IconIdentifier & IconItem models + tests |
 | 5.2 | Bridging Extensions | **100%** | getWindowList, getWindowFrame, activeSpaceID all exist |
 | 5.3 | IconRepositioner Engine | 0% | No CGEvent command+drag code exists |
 | 5.4 | Settings UI Integration | 0% | Drag-drop UI exists but no repositioner hook |
@@ -20,46 +20,14 @@ Phase 5 implements the ability to physically reposition menu bar icons by draggi
 
 ## Task List
 
-### Phase 5.1: Core Models
+### Phase 5.1: Core Models [COMPLETE]
 
-#### Task 5.1.1: Create MenuBarItemInfo Model [COMPLETE]
-- **File**: `Drawer/Models/MenuBarItemInfo.swift` (new)
-- **Scope**: Create spec-compliant MenuBarItemInfo struct
-- **Details**:
-  - Properties: `namespace: String`, `title: String`
-  - Protocols: `Hashable`, `Codable`, `Equatable`
-  - Static constants: `hiddenControlItem`, `alwaysHiddenControlItem`
-  - Static property: `immovableItems: Set<MenuBarItemInfo>` containing:
-    - Control Center (`com.apple.controlcenter` / `BentoBox`)
-    - Clock (`com.apple.controlcenter` / `Clock`)
-    - Siri (`com.apple.Siri` / `Siri`)
-    - Spotlight (`com.apple.Spotlight` / `Spotlight`)
-  - Computed property: `isImmovable: Bool`
-- **Verification**: `xcodebuild -scheme Drawer build` - PASSED
+Phase 5.1 is fully complete. The core models for icon identification and representation have been implemented and tested.
 
-#### Task 5.1.2: Create MenuBarItem Model [COMPLETE]
-- **File**: `Drawer/Models/MenuBarItem.swift` (new)
-- **Scope**: Create spec-compliant MenuBarItem struct
-- **Details**:
-  - Properties: `windowID: CGWindowID`, `frame: CGRect`, `ownerPID: pid_t`, `ownerName: String?`, `title: String?`, `bundleIdentifier: String?`
-  - Computed properties: `info: MenuBarItemInfo`, `isMovable: Bool`, `displayName: String`
-  - Initializers: `init?(windowInfo: [String: Any])`, `init?(windowID: CGWindowID)`
-  - Static method: `getMenuBarItems(onScreenOnly: Bool, activeSpaceOnly: Bool) -> [MenuBarItem]`
-  - Static method: `find(matching info: MenuBarItemInfo) -> MenuBarItem?`
-  - Hashable/Equatable based on `windowID`
-- **Dependencies**: Task 5.1.1, Bridging.swift (existing)
-- **Verification**: `xcodebuild -scheme Drawer build` - PASSED
-
-#### Task 5.1.3: Create MenuBarItem Tests
-- **File**: `DrawerTests/Models/MenuBarItemTests.swift` (new)
-- **Scope**: Unit tests for core models
-- **Details**:
-  - Test MenuBarItemInfo equality and hashing
-  - Test immovable items detection (Control Center should be immovable)
-  - Test MenuBarItem.isMovable returns false for system icons
-  - Test getMenuBarItems() returns sorted results
-- **Dependencies**: Tasks 5.1.1, 5.1.2
-- **Verification**: `xcodebuild test -scheme Drawer -only-testing:DrawerTests/MenuBarItemTests`
+- **IconIdentifier**: `Drawer/Models/IconIdentifier.swift` - Identifies menu bar items by namespace/title
+- **IconItem**: `Drawer/Models/IconItem.swift` - Full menu bar item representation with window info
+- **Tests**: `DrawerTests/Models/MenuBarItemTests.swift` - 28 tests covering both models
+- **Verification**: `xcodebuild test -scheme Drawer -only-testing:DrawerTests/MenuBarItemTests` - PASSED (28 tests)
 
 ---
 
@@ -81,10 +49,10 @@ Phase 5 implements the ability to physically reposition menu bar icons by draggi
 - **Scope**: Core engine class structure and error types
 - **Details**:
   - `RepositionError` enum: `.notMovable`, `.invalidItem`, `.timeout`, `.eventCreationFailed`, `.invalidCursorLocation`, `.invalidEventSource`, `.couldNotComplete`
-  - `MoveDestination` enum: `.leftOfItem(MenuBarItem)`, `.rightOfItem(MenuBarItem)`
+  - `MoveDestination` enum: `.leftOfItem(IconItem)`, `.rightOfItem(IconItem)`
   - `IconRepositioner` class: `@MainActor`, `final`, singleton pattern
   - Configuration constants: `maxRetries = 5`, `frameChangeTimeout = 50ms`, `frameChangePollInterval = 10ms`
-  - Public method stub: `func move(item: MenuBarItem, to destination: MoveDestination) async throws`
+  - Public method stub: `func move(item: IconItem, to destination: MoveDestination) async throws`
 - **Dependencies**: Tasks 5.1.1, 5.1.2, 5.3.1
 - **Verification**: `xcodebuild -scheme Drawer build`
 
@@ -107,7 +75,7 @@ Phase 5 implements the ability to physically reposition menu bar icons by draggi
 - **File**: `Drawer/Core/Engines/IconRepositioner.swift` (modify)
 - **Scope**: Verification that move succeeded
 - **Details**:
-  - `waitForFrameChange(of item: MenuBarItem, initialFrame: CGRect) async throws`
+  - `waitForFrameChange(of item: IconItem, initialFrame: CGRect) async throws`
     - Use `ContinuousClock` for timing
     - Poll every 10ms until frame differs from initial
     - Throw `.timeout` if 50ms deadline exceeded
@@ -165,7 +133,7 @@ Phase 5 implements the ability to physically reposition menu bar icons by draggi
 - **Scope**: Connect drag-drop to real repositioning
 - **Details**:
   - Create `performReposition(icon:toSection:atIndex:) async` method
-  - Find MenuBarItem matching dropped icon (by bundleIdentifier or ownerName)
+  - Find IconItem matching dropped icon (by bundleIdentifier or ownerName)
   - Calculate destination using control items as section boundaries:
     - Visible section: right of `hiddenControlItem`
     - Hidden section: left of `hiddenControlItem`
@@ -195,11 +163,11 @@ Phase 5 implements the ability to physically reposition menu bar icons by draggi
 - **File**: `Drawer/Core/Managers/SettingsManager.swift` (modify)
 - **Scope**: UserDefaults storage for icon positions
 - **Details**:
-  - Add `savedIconPositions: [String: [MenuBarItemInfo]]` property
+  - Add `savedIconPositions: [String: [IconIdentifier]]` property
   - UserDefaults key: `menuBarIconPositions`
-  - Add `loadIconPositions() -> [String: [MenuBarItemInfo]]` method
+  - Add `loadIconPositions() -> [String: [IconIdentifier]]` method
   - Add private `saveIconPositions()` method (called from didSet)
-  - Add `updateSavedPositions(for section: String, icons: [MenuBarItemInfo])` method
+  - Add `updateSavedPositions(for section: String, icons: [IconIdentifier])` method
   - Add `clearSavedPositions()` method
 - **Dependencies**: Task 5.1.1
 - **Verification**: `xcodebuild -scheme Drawer build`
@@ -226,7 +194,7 @@ Phase 5 implements the ability to physically reposition menu bar icons by draggi
   - After successful `IconRepositioner.move()` call:
     - Get current menu bar items
     - Extract items for affected section
-    - Convert to `[MenuBarItemInfo]`
+    - Convert to `[IconIdentifier]`
     - Call `settingsManager.updateSavedPositions(for:icons:)`
 - **Dependencies**: Tasks 5.4.2, 5.5.1
 - **Verification**: Move icon, check UserDefaults with `defaults read`
@@ -266,10 +234,8 @@ Phase 5 implements the ability to physically reposition menu bar icons by draggi
 ## Implementation Order (Recommended)
 
 ```
-Phase 5.1: Core Models (Foundation)
-├── 5.1.1 MenuBarItemInfo Model
-├── 5.1.2 MenuBarItem Model
-└── 5.1.3 MenuBarItem Tests
+Phase 5.1: Core Models (Foundation) [COMPLETE]
+└── IconIdentifier + IconItem models with 28 tests
 
 Phase 5.3: IconRepositioner Engine (Core Logic)
 ├── 5.3.1 MouseCursor Utility
@@ -305,7 +271,27 @@ Phase 5.5: Persistence (Polish)
 
 ## Notes
 
+- **Phase 5.1 is complete** - Core models implemented and tested (28 tests passing)
 - **Phase 5.2 is already complete** - Bridging APIs exist and are tested
+
+### Type Renaming (CRITICAL)
+
+The spec-defined type names conflicted with existing types in `WindowInfo.swift`. The following renames were applied:
+
+| Spec Name | Actual Name | File |
+|-----------|-------------|------|
+| `MenuBarItemInfo` | `IconIdentifier` | `Drawer/Models/IconIdentifier.swift` |
+| `MenuBarItem` | `IconItem` | `Drawer/Models/IconItem.swift` |
+
+Additional changes:
+- The `info` property on `IconItem` was renamed to `identifier` to match the new type name
+- The `find(matching:)` method now takes an `IconIdentifier` parameter
+- This renaming was required to avoid conflicts with existing `MenuBarItem`/`MenuBarItemInfo` types in `WindowInfo.swift` used by the capture system
+
+**All future tasks should use `IconIdentifier` and `IconItem` instead of the spec names.**
+
+### Other Notes
+
 - Existing `MenuBarItem`/`MenuBarItemInfo` in `WindowInfo.swift` are still used by capture system - do not modify
 - New models in `Drawer/Models/` are spec-compliant and used only by repositioning system
 - Manual testing required for CGEvent operations (cannot unit test actual moves)

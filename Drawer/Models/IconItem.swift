@@ -1,5 +1,5 @@
 //
-//  MenuBarItem.swift
+//  IconItem.swift
 //  Drawer
 //
 //  Copyright © 2026 Drawer. MIT License.
@@ -10,11 +10,12 @@ import CoreGraphics
 import Foundation
 import os.log
 
-// MARK: - MenuBarItem
+// MARK: - IconItem
 
-/// A full representation of a menu bar item with window information.
+/// A full representation of a menu bar icon with window information.
 /// Used for repositioning operations where we need the window ID and frame.
-struct MenuBarItem: Hashable, Equatable {
+/// This type is used by the repositioning system (IconRepositioner).
+struct IconItem: Hashable, Equatable {
 
     // MARK: - Properties
 
@@ -40,15 +41,15 @@ struct MenuBarItem: Hashable, Equatable {
 
     /// The unique identifier for this item, used for persistence and matching.
     /// Computed from bundleIdentifier (or ownerName) and title.
-    var info: MenuBarItemInfo {
+    var identifier: IconIdentifier {
         let namespace = bundleIdentifier ?? ownerName ?? "unknown"
-        return MenuBarItemInfo(namespace: namespace, title: title ?? "")
+        return IconIdentifier(namespace: namespace, title: title ?? "")
     }
 
     /// Returns true if this item can be repositioned.
     /// System items like Control Center and Clock cannot be moved.
     var isMovable: Bool {
-        !info.isImmovable
+        !identifier.isImmovable
     }
 
     /// A display name suitable for showing to users.
@@ -71,13 +72,13 @@ struct MenuBarItem: Hashable, Equatable {
     }
 
     /// Equality based on windowID only.
-    static func == (lhs: MenuBarItem, rhs: MenuBarItem) -> Bool {
+    static func == (lhs: IconItem, rhs: IconItem) -> Bool {
         lhs.windowID == rhs.windowID
     }
 
     // MARK: - Initializers
 
-    /// Creates a MenuBarItem from a window information dictionary.
+    /// Creates an IconItem from a window information dictionary.
     /// Returns nil if the dictionary doesn't represent a valid menu bar item.
     ///
     /// - Parameter windowInfo: Dictionary from CGWindowListCopyWindowInfo
@@ -118,7 +119,7 @@ struct MenuBarItem: Hashable, Equatable {
         }
     }
 
-    /// Creates a MenuBarItem from a window ID by fetching current window info.
+    /// Creates an IconItem from a window ID by fetching current window info.
     /// Returns nil if the window is invalid or unavailable.
     ///
     /// - Parameter windowID: The window ID to look up
@@ -156,11 +157,11 @@ struct MenuBarItem: Hashable, Equatable {
 
 // MARK: - Static Methods
 
-extension MenuBarItem {
+extension IconItem {
 
     private static let logger = Logger(
         subsystem: Bundle.main.bundleIdentifier ?? "com.drawer",
-        category: "MenuBarItem"
+        category: "IconItem"
     )
 
     /// Returns all current menu bar items, sorted by X position (left to right).
@@ -168,8 +169,8 @@ extension MenuBarItem {
     /// - Parameters:
     ///   - onScreenOnly: If true, only return items currently visible on screen.
     ///   - activeSpaceOnly: If true, only return items on the active space. Default is true.
-    /// - Returns: Array of MenuBarItem sorted by X position.
-    static func getMenuBarItems(onScreenOnly: Bool = false, activeSpaceOnly: Bool = true) -> [MenuBarItem] {
+    /// - Returns: Array of IconItem sorted by X position.
+    static func getMenuBarItems(onScreenOnly: Bool = false, activeSpaceOnly: Bool = true) -> [IconItem] {
         // Build the option set
         var options: Bridging.WindowListOption = [.menuBarItems]
         if onScreenOnly {
@@ -199,11 +200,11 @@ extension MenuBarItem {
             }
         }
 
-        // Convert to MenuBarItems
-        var items: [MenuBarItem] = []
+        // Convert to IconItems
+        var items: [IconItem] = []
         for windowID in windowIDs {
             if let info = windowInfoByID[windowID],
-               let item = MenuBarItem(windowInfo: info) {
+               let item = IconItem(windowInfo: info) {
                 items.append(item)
             }
         }
@@ -214,12 +215,12 @@ extension MenuBarItem {
         return items
     }
 
-    /// Finds a menu bar item matching the given info.
+    /// Finds a menu bar item matching the given identifier.
     ///
-    /// - Parameter info: The MenuBarItemInfo to match against.
-    /// - Returns: The matching MenuBarItem, or nil if not found.
-    static func find(matching info: MenuBarItemInfo) -> MenuBarItem? {
+    /// - Parameter identifier: The IconIdentifier to match against.
+    /// - Returns: The matching IconItem, or nil if not found.
+    static func find(matching identifier: IconIdentifier) -> IconItem? {
         let items = getMenuBarItems(onScreenOnly: false, activeSpaceOnly: true)
-        return items.first { $0.info == info }
+        return items.first { $0.identifier == identifier }
     }
 }

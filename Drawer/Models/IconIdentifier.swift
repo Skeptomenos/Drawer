@@ -1,5 +1,5 @@
 //
-//  MenuBarItemInfo.swift
+//  IconIdentifier.swift
 //  Drawer
 //
 //  Copyright © 2026 Drawer. MIT License.
@@ -7,11 +7,12 @@
 
 import Foundation
 
-// MARK: - MenuBarItemInfo
+// MARK: - IconIdentifier
 
-/// A lightweight identifier for a menu bar item.
-/// Used to track items across window list refreshes and for persistence.
-struct MenuBarItemInfo: Hashable, Codable, Equatable {
+/// A lightweight, persistable identifier for a menu bar icon.
+/// Used to track icons across window list refreshes and for position persistence.
+/// This type is used by the repositioning system (IconRepositioner).
+struct IconIdentifier: Hashable, Codable, Equatable {
 
     // MARK: - Properties
 
@@ -24,13 +25,13 @@ struct MenuBarItemInfo: Hashable, Codable, Equatable {
     // MARK: - Known Control Items
 
     /// Identifier for Drawer's hidden section control item (separator).
-    static let hiddenControlItem = MenuBarItemInfo(
+    static let hiddenControlItem = IconIdentifier(
         namespace: Bundle.main.bundleIdentifier ?? "com.drawer",
         title: "HiddenControlItem"
     )
 
     /// Identifier for Drawer's always-hidden section control item.
-    static let alwaysHiddenControlItem = MenuBarItemInfo(
+    static let alwaysHiddenControlItem = IconIdentifier(
         namespace: Bundle.main.bundleIdentifier ?? "com.drawer",
         title: "AlwaysHiddenControlItem"
     )
@@ -39,14 +40,14 @@ struct MenuBarItemInfo: Hashable, Codable, Equatable {
 
     /// System items that macOS does not allow to be repositioned.
     /// These are locked to specific positions in the menu bar by the system.
-    static let immovableItems: Set<MenuBarItemInfo> = [
+    static let immovableItems: Set<IconIdentifier> = [
         // Control Center items
-        MenuBarItemInfo(namespace: "com.apple.controlcenter", title: "BentoBox"),
-        MenuBarItemInfo(namespace: "com.apple.controlcenter", title: "Clock"),
+        IconIdentifier(namespace: "com.apple.controlcenter", title: "BentoBox"),
+        IconIdentifier(namespace: "com.apple.controlcenter", title: "Clock"),
         // Siri
-        MenuBarItemInfo(namespace: "com.apple.Siri", title: "Siri"),
+        IconIdentifier(namespace: "com.apple.Siri", title: "Siri"),
         // Spotlight
-        MenuBarItemInfo(namespace: "com.apple.Spotlight", title: "Spotlight"),
+        IconIdentifier(namespace: "com.apple.Spotlight", title: "Spotlight"),
     ]
 
     /// Returns true if this item is a system item that cannot be moved.
