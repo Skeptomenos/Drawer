@@ -5,6 +5,8 @@
 //  Copyright © 2026 Drawer. MIT License.
 //
 
+import AppKit
+import os.log
 import SwiftUI
 import UniformTypeIdentifiers
 
@@ -42,6 +44,9 @@ private enum LayoutDesign {
 
     /// Item hit zone padding for easier drop targets
     static let itemDropPadding: CGFloat = 4
+
+    /// Default scale factor for icon rendering (used when NSScreen.main is unavailable)
+    static let defaultScaleFactor: CGFloat = 2.0
 }
 
 // MARK: - SettingsMenuBarLayoutView
@@ -56,13 +61,29 @@ private enum LayoutDesign {
 /// This view is the foundation for the drag-and-drop layout editor.
 struct SettingsMenuBarLayoutView: View {
 
+    // MARK: - Environment
+
+    @EnvironmentObject private var appState: AppState
+
     // MARK: - State
 
-    /// Items for display (will be replaced with real data from IconCapturer in Phase 4.2)
+    /// Items for display, populated from IconCapturer
     @State private var layoutItems: [SettingsLayoutItem] = []
+
+    /// Cache mapping layout item IDs to captured CGImages
+    @State private var imageCache: [UUID: CGImage] = [:]
 
     /// Whether a refresh is in progress
     @State private var isRefreshing: Bool = false
+
+    /// Error message if capture fails
+    @State private var errorMessage: String?
+
+    /// Logger for debugging
+    private let logger = Logger(
+        subsystem: Bundle.main.bundleIdentifier ?? "com.drawer",
+        category: "SettingsMenuBarLayoutView"
+    )
 
     // MARK: - Body
 
@@ -71,10 +92,15 @@ struct SettingsMenuBarLayoutView: View {
             VStack(alignment: .leading, spacing: LayoutDesign.sectionSpacing) {
                 headerSection
 
+                if let errorMessage {
+                    errorView(errorMessage)
+                }
+
                 ForEach(MenuBarSectionType.allCases) { sectionType in
                     LayoutSectionView(
                         sectionType: sectionType,
                         items: items(for: sectionType),
+                        imageCache: imageCache,
                         onMoveItem: { item, targetSection, insertIndex in
                             moveItem(item, to: targetSection, at: insertIndex)
                         }
@@ -88,6 +114,33 @@ struct SettingsMenuBarLayoutView: View {
             .padding()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .onAppear {
+            // Auto-refresh on appear if no items are loaded
+            if layoutItems.isEmpty && !isRefreshing {
+                refreshItems()
+            }
+        }
+    }
+
+    // MARK: - Error View
+
+    /// Displays an error message when capture fails
+    private func errorView(_ message: String) -> some View {
+        HStack(spacing: 8) {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .foregroundColor(.orange)
+
+            Text(message)
+                .font(.system(size: 12))
+                .foregroundColor(.secondary)
+
+            Spacer()
+        }
+        .padding(LayoutDesign.sectionPadding)
+        .background(
+            RoundedRectangle(cornerRadius: LayoutDesign.sectionCornerRadius)
+                .fill(Color.orange.opacity(0.1))
+        )
     }
 
     // MARK: - Header Section
@@ -233,16 +286,51 @@ struct SettingsMenuBarLayoutView: View {
         layoutItems.append(movedItem)
     }
 
-    /// Refreshes the menu bar items
+    /// Refreshes the menu bar items by capturing icons from the menu bar.
+    /// Uses IconCapturer to get real menu bar items with their images.
     private func refreshItems() {
         isRefreshing = true
+        errorMessage = nil
 
-        // TODO: Phase 4.2 - Integrate with IconCapturer to get real items
-        // For now, simulate a refresh delay
         Task {
-            try? await Task.sleep(for: .milliseconds(500))
-            await MainActor.run {
-                isRefreshing = false
+            do {
+                // Capture icons using IconCapturer
+                let result = try await appState.iconCapturer.captureHiddenIcons(
+                    menuBarManager: appState.menuBarManager
+                )
+
+                // Convert CapturedIcons to SettingsLayoutItems and cache images
+                var newItems: [SettingsLayoutItem] = []
+                var newImageCache: [UUID: CGImage] = [:]
+
+                for (index, capturedIcon) in result.icons.enumerated() {
+                    // Create SettingsLayoutItem from captured icon
+                    if let layoutItem = SettingsLayoutItem.from(
+                        capturedIcon: capturedIcon,
+                        section: capturedIcon.sectionType,
+                        order: index
+                    ) {
+                        newItems.append(layoutItem)
+                        // Cache the image using the layout item's ID
+                        newImageCache[layoutItem.id] = capturedIcon.image
+                    }
+                }
+
+                await MainActor.run {
+                    layoutItems = newItems
+                    imageCache = newImageCache
+                    isRefreshing = false
+
+                    #if DEBUG
+                    logger.debug("Refreshed layout with \(newItems.count) items")
+                    #endif
+                }
+            } catch {
+                await MainActor.run {
+                    errorMessage = error.localizedDescription
+                    isRefreshing = false
+                    logger.error("Failed to capture icons: \(error.localizedDescription)")
+                }
             }
         }
     }
@@ -272,6 +360,9 @@ private struct LayoutSectionView: View {
 
     /// Items in this section
     let items: [SettingsLayoutItem]
+
+    /// Cache of images keyed by layout item ID
+    let imageCache: [UUID: CGImage]
 
     /// Callback when an item is moved to this section
     var onMoveItem: (SettingsLayoutItem, MenuBarSectionType, Int) -> Void
@@ -314,10 +405,16 @@ private struct LayoutSectionView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: LayoutDesign.sectionHeaderSpacing) {
-            // Section header
-            Label(sectionTitle, systemImage: sectionIcon)
-                .font(.system(size: 13, weight: .medium))
-                .foregroundColor(.primary)
+            // Section header with item count
+            HStack {
+                Label(sectionTitle, systemImage: sectionIcon)
+                    .font(.system(size: 13, weight: .medium))
+                    .foregroundColor(.primary)
+
+                Text("(\(items.count))")
+                    .font(.system(size: 11))
+                    .foregroundColor(.secondary)
+            }
 
             // Section container with drop support
             sectionContainer
@@ -330,8 +427,8 @@ private struct LayoutSectionView: View {
             if items.isEmpty {
                 emptyStateView
             } else {
-                ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
-                    LayoutItemView(item: item)
+                ForEach(Array(items.enumerated()), id: \.element.id) { _, item in
+                    LayoutItemView(item: item, image: imageCache[item.id])
                         .draggable(item)
                 }
             }
@@ -371,7 +468,7 @@ private struct LayoutSectionView: View {
 
 // MARK: - LayoutItemView
 
-/// A single item in the layout editor (icon placeholder or spacer).
+/// A single item in the layout editor (icon with actual image or spacer).
 private struct LayoutItemView: View {
 
     // MARK: - Properties
@@ -379,12 +476,17 @@ private struct LayoutItemView: View {
     /// The layout item to display
     let item: SettingsLayoutItem
 
+    /// The cached image for this item (nil if not available)
+    let image: CGImage?
+
     // MARK: - Body
 
     var body: some View {
         Group {
             if item.isSpacer {
                 spacerView
+            } else if let cgImage = image {
+                iconImageView(cgImage)
             } else {
                 iconPlaceholder
             }
@@ -392,8 +494,18 @@ private struct LayoutItemView: View {
         .help(item.displayName)
     }
 
-    /// Placeholder for menu bar icon
-    /// In Phase 4.2, this will show the actual captured icon image
+    /// Displays the actual captured icon image
+    private func iconImageView(_ cgImage: CGImage) -> some View {
+        Image(
+            decorative: cgImage,
+            scale: NSScreen.main?.backingScaleFactor ?? LayoutDesign.defaultScaleFactor
+        )
+        .resizable()
+        .aspectRatio(contentMode: .fit)
+        .frame(width: LayoutDesign.iconSize, height: LayoutDesign.iconSize)
+    }
+
+    /// Placeholder shown when image is not available
     private var iconPlaceholder: some View {
         RoundedRectangle(cornerRadius: 4)
             .fill(Color.gray.opacity(0.3))
@@ -413,4 +525,5 @@ private struct LayoutItemView: View {
 #Preview {
     SettingsMenuBarLayoutView()
         .frame(width: 500, height: 600)
+        .environmentObject(AppState.shared)
 }

@@ -206,10 +206,29 @@ This phase implements the drag-and-drop Settings UI shown in `specs/reference_im
 
 | Task | Description | Status |
 |------|-------------|--------|
-| 4.2.1 | Display three sections: Shown, Hidden, Always Hidden | [ ] |
+| 4.2.1 | Display three sections: Shown, Hidden, Always Hidden | [x] |
 | 4.2.2 | Enable drag-and-drop reordering | [ ] |
 | 4.2.3 | Sync changes to `MenuBarManager` | [ ] |
 | 4.2.4 | Add spacer insertion capability | [ ] |
+
+**4.2.1 Implementation Notes:**
+- Modified `SettingsMenuBarLayoutView.swift` to access `AppState` via `@EnvironmentObject`
+- Added `imageCache: [UUID: CGImage]` state to store captured icon images
+- Added `errorMessage` state to display capture errors
+- Implemented `refreshItems()` to capture icons using `IconCapturer.captureHiddenIcons()`
+- Converts `CapturedIcon` to `SettingsLayoutItem` using `SettingsLayoutItem.from(capturedIcon:section:order:)`
+- Caches images keyed by layout item UUID for efficient lookup
+- Updated `LayoutSectionView` to:
+  - Accept `imageCache: [UUID: CGImage]` parameter
+  - Pass cached images to `LayoutItemView`
+  - Display item count in section header
+- Updated `LayoutItemView` to:
+  - Accept optional `image: CGImage?` parameter
+  - Display actual captured icon when available, fallback to placeholder
+  - Use proper backing scale factor for Retina display
+- Added `.onAppear` modifier to auto-refresh on view load
+- Added error banner when capture fails
+- All 325 tests pass, build succeeds, SwiftLint no errors
 
 ### 4.3 Sidebar Navigation
 
@@ -259,6 +278,7 @@ After completing all phases:
 | 4.1.1 | New: `SettingsLayoutItem.swift`, `SettingsLayoutItemTests.swift` |
 | 4.1.2 | New: `SettingsMenuBarLayoutView.swift`, modify `SettingsView.swift` |
 | 4.1.3 | Modify: `SettingsLayoutItem.swift` (Transferable), `SettingsMenuBarLayoutView.swift` (drag-drop), `hidden/Info.plist` (UTType) |
+| 4.2.1 | Modify: `SettingsMenuBarLayoutView.swift` (IconCapturer integration, image cache, live icons) |
 | 4.x | TBD: Additional Settings UI files |
 
 ---
