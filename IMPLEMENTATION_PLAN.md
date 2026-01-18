@@ -207,9 +207,25 @@ This phase implements the drag-and-drop Settings UI shown in `specs/reference_im
 | Task | Description | Status |
 |------|-------------|--------|
 | 4.2.1 | Display three sections: Shown, Hidden, Always Hidden | [x] |
-| 4.2.2 | Enable drag-and-drop reordering | [ ] |
+| 4.2.2 | Enable drag-and-drop reordering | [x] |
 | 4.2.3 | Sync changes to `MenuBarManager` | [ ] |
 | 4.2.4 | Add spacer insertion capability | [ ] |
+
+**4.2.2 Implementation Notes:**
+- Added within-section reordering with visual drop indicators
+- Created `ItemFramePreferenceKey` to track item positions in coordinate space
+- Created `DropPositionDelegate` implementing `DropDelegate` for position tracking:
+  - `dropUpdated()` calculates insertion index from horizontal mouse position
+  - Compares drop point to item midpoints to determine insertion slot
+- Added visual drop indicator between icons:
+  - Uses `LayoutDesign.dropIndicatorWidth` (2pt) accent-colored bar
+  - Appears at calculated insertion index during drag
+  - Smooth transition animation on index change
+- Updated `LayoutSectionView`:
+  - Added `.coordinateSpace(name:)` for position tracking
+  - Interleaved drop indicators between items using `ForEach` with indices
+  - Combined `.dropDestination()` with `.onDrop(delegate:)` for position awareness
+- All 325 tests pass, no SwiftLint errors
 
 **4.2.1 Implementation Notes:**
 - Modified `SettingsMenuBarLayoutView.swift` to access `AppState` via `@EnvironmentObject`
@@ -279,6 +295,7 @@ After completing all phases:
 | 4.1.2 | New: `SettingsMenuBarLayoutView.swift`, modify `SettingsView.swift` |
 | 4.1.3 | Modify: `SettingsLayoutItem.swift` (Transferable), `SettingsMenuBarLayoutView.swift` (drag-drop), `hidden/Info.plist` (UTType) |
 | 4.2.1 | Modify: `SettingsMenuBarLayoutView.swift` (IconCapturer integration, image cache, live icons) |
+| 4.2.2 | Modify: `SettingsMenuBarLayoutView.swift` (within-section reordering, visual drop indicators, position tracking) |
 | 4.x | TBD: Additional Settings UI files |
 
 ---

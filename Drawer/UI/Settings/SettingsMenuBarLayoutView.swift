@@ -350,7 +350,12 @@ struct SettingsMenuBarLayoutView: View {
 // MARK: - LayoutSectionView
 
 /// A section container showing items in a specific menu bar section.
-/// Supports drag-and-drop for reordering items between sections.
+/// Supports drag-and-drop for reordering items within and between sections.
+///
+/// Drop position detection:
+/// - Uses a coordinate space to track mouse position relative to items
+/// - Calculates insertion index based on horizontal position over items
+/// - Shows visual drop indicator at the calculated insertion point
 private struct LayoutSectionView: View {
 
     // MARK: - Properties
@@ -372,8 +377,16 @@ private struct LayoutSectionView: View {
     /// Whether the section is currently a drop target
     @State private var isDropTargeted: Bool = false
 
-    /// Index where drop would occur (-1 if none)
+    /// Index where drop would occur (-1 if no active drop target)
     @State private var dropInsertIndex: Int = -1
+
+    /// Tracks the geometry of each item for drop position calculation
+    @State private var itemFrames: [UUID: CGRect] = [:]
+
+    // MARK: - Private Constants
+
+    /// Namespace for coordinate space calculations
+    private let coordinateSpaceName = "sectionCoordinateSpace"
 
     // MARK: - Computed Properties
 
@@ -423,17 +436,37 @@ private struct LayoutSectionView: View {
 
     /// The container showing items or empty state with drop support
     private var sectionContainer: some View {
-        HStack(spacing: LayoutDesign.iconSpacing) {
+        HStack(spacing: 0) {
             if items.isEmpty {
                 emptyStateView
             } else {
-                ForEach(Array(items.enumerated()), id: \.element.id) { _, item in
+                // Leading drop indicator (before first item)
+                dropIndicator(at: 0)
+
+                ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
                     LayoutItemView(item: item, image: imageCache[item.id])
                         .draggable(item)
+                        .background(
+                            GeometryReader { geometry in
+                                Color.clear
+                                    .preference(
+                                        key: ItemFramePreferenceKey.self,
+                                        value: [item.id: geometry.frame(in: .named(coordinateSpaceName))]
+                                    )
+                            }
+                        )
+                        .padding(.horizontal, LayoutDesign.iconSpacing / 2)
+
+                    // Drop indicator after each item
+                    dropIndicator(at: index + 1)
                 }
             }
 
             Spacer(minLength: 0)
+        }
+        .coordinateSpace(name: coordinateSpaceName)
+        .onPreferenceChange(ItemFramePreferenceKey.self) { frames in
+            itemFrames = frames
         }
         .padding(LayoutDesign.sectionPadding)
         .frame(maxWidth: .infinity, minHeight: LayoutDesign.sectionMinHeight, alignment: .leading)
@@ -448,12 +481,43 @@ private struct LayoutSectionView: View {
                 .stroke(isDropTargeted ? Color.accentColor : Color.clear, lineWidth: 2)
         )
         .dropDestination(for: SettingsLayoutItem.self) { droppedItems, _ in
-            // Handle drop: move first dropped item to this section
+            // Handle drop: move first dropped item to this section at calculated index
             guard let item = droppedItems.first else { return false }
-            onMoveItem(item, sectionType, items.count)
+
+            // Use the calculated insert index, or append at end if not determined
+            let insertIndex = dropInsertIndex >= 0 ? dropInsertIndex : items.count
+            onMoveItem(item, sectionType, insertIndex)
+
+            // Reset drop state
+            dropInsertIndex = -1
             return true
         } isTargeted: { targeted in
             isDropTargeted = targeted
+            if !targeted {
+                dropInsertIndex = -1
+            }
+        }
+        .onDrop(of: [.settingsLayoutItem], delegate: DropPositionDelegate(
+            items: items,
+            itemFrames: itemFrames,
+            dropInsertIndex: $dropInsertIndex
+        ))
+    }
+
+    /// Visual drop indicator shown between items during drag
+    /// - Parameter index: The insertion index this indicator represents
+    @ViewBuilder
+    private func dropIndicator(at index: Int) -> some View {
+        if isDropTargeted && dropInsertIndex == index {
+            RoundedRectangle(cornerRadius: LayoutDesign.dropIndicatorWidth / 2)
+                .fill(Color.accentColor)
+                .frame(width: LayoutDesign.dropIndicatorWidth, height: LayoutDesign.iconSize + 4)
+                .transition(.opacity.combined(with: .scale(scale: 0.8)))
+                .animation(.easeInOut(duration: 0.15), value: dropInsertIndex)
+        } else {
+            // Invisible spacer to maintain layout consistency
+            Color.clear
+                .frame(width: LayoutDesign.dropIndicatorWidth, height: LayoutDesign.iconSize)
         }
     }
 
@@ -463,6 +527,82 @@ private struct LayoutSectionView: View {
             .font(.system(size: 12))
             .foregroundColor(.secondary)
             .frame(maxWidth: .infinity, alignment: .center)
+    }
+}
+
+// MARK: - ItemFramePreferenceKey
+
+/// Preference key for collecting item frames for drop position calculation
+private struct ItemFramePreferenceKey: PreferenceKey {
+    static var defaultValue: [UUID: CGRect] = [:]
+
+    static func reduce(value: inout [UUID: CGRect], nextValue: () -> [UUID: CGRect]) {
+        value.merge(nextValue()) { _, new in new }
+    }
+}
+
+// MARK: - DropPositionDelegate
+
+/// Drop delegate that calculates insertion index based on drop location.
+/// Updates `dropInsertIndex` during drag to show the visual indicator.
+private struct DropPositionDelegate: DropDelegate {
+
+    /// Items in the section (ordered)
+    let items: [SettingsLayoutItem]
+
+    /// Cached frames of each item in coordinate space
+    let itemFrames: [UUID: CGRect]
+
+    /// Binding to the drop insert index for visual feedback
+    @Binding var dropInsertIndex: Int
+
+    func dropUpdated(info: DropInfo) -> DropProposal? {
+        // Calculate insert index based on horizontal position
+        let dropLocation = info.location
+        dropInsertIndex = calculateInsertIndex(at: dropLocation)
+        return DropProposal(operation: .move)
+    }
+
+    func dropExited(info: DropInfo) {
+        // Keep the last valid index for the actual drop operation
+        // The dropDestination handler will use this value
+    }
+
+    func performDrop(info: DropInfo) -> Bool {
+        // Let the dropDestination handler perform the actual drop
+        // This delegate is only for position tracking
+        return false
+    }
+
+    func validateDrop(info: DropInfo) -> Bool {
+        return true
+    }
+
+    /// Calculates the insertion index based on the drop point's horizontal position.
+    /// - Parameter point: The drop location in the section's coordinate space
+    /// - Returns: The index at which to insert the dropped item
+    private func calculateInsertIndex(at point: CGPoint) -> Int {
+        guard !items.isEmpty else { return 0 }
+
+        // Sort items by their horizontal position (left to right)
+        let sortedFrames = items.compactMap { item -> (Int, CGRect)? in
+            guard let frame = itemFrames[item.id],
+                  let index = items.firstIndex(where: { $0.id == item.id }) else {
+                return nil
+            }
+            return (index, frame)
+        }.sorted { $0.1.minX < $1.1.minX }
+
+        // Find the insertion point based on horizontal position
+        for (itemIndex, frame) in sortedFrames {
+            let midX = frame.midX
+            if point.x < midX {
+                return itemIndex
+            }
+        }
+
+        // If past all items, insert at end
+        return items.count
     }
 }
 
