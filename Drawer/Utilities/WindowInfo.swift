@@ -37,8 +37,8 @@ struct WindowInfo: Identifiable {
         guard
             let info = dictionary as? [CFString: Any],
             let windowID = info[kCGWindowNumber] as? CGWindowID,
-            let boundsDict = info[kCGWindowBounds],
-            let frame = CGRect(dictionaryRepresentation: boundsDict as! CFDictionary),
+            let boundsDict = info[kCGWindowBounds] as? [String: Any],
+            let frame = CGRect(dictionaryRepresentation: boundsDict as CFDictionary),
             let layer = info[kCGWindowLayer] as? Int,
             let alpha = info[kCGWindowAlpha] as? Double,
             let ownerPID = info[kCGWindowOwnerPID] as? pid_t

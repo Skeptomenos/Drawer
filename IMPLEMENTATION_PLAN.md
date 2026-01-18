@@ -46,7 +46,7 @@ This phase addresses 2 potential crashes and 13 code quality issues identified d
 | 1.2.4 | `Drawer/App/AppState.swift:79-87` | Fix NotificationCenter observer cleanup in deinit | [x] |
 | 1.2.5 | `Drawer/Core/Engines/IconCapturer.swift:418` | Fix off-by-one: `> 50` → `>= 50` | [x] |
 | 1.2.6 | `Drawer/Core/Engines/IconCapturer.swift:381-382` | Make `standardIconWidth` and `iconSpacing` private | [x] |
-| 1.2.7 | `Drawer/Utilities/WindowInfo.swift:41` | Replace force cast with safe unwrap | [ ] |
+| 1.2.7 | `Drawer/Utilities/WindowInfo.swift:41` | Replace force cast with safe unwrap | [x] |
 | 1.2.8 | `Drawer/UI/Settings/AboutView.swift:43` | Extract URL to static constant | [ ] |
 | 1.2.9 | `Drawer/UI/Panels/DrawerContentView.swift:189` | Add debug logging for capture errors | [ ] |
 | 1.2.10 | `Drawer/Utilities/ScreenCapture.swift:110-111` | Use integer comparison instead of float | [ ] |
