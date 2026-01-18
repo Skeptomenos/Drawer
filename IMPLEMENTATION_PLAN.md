@@ -14,7 +14,7 @@ Phase 5 implements the ability to physically reposition menu bar icons by draggi
 |-------|-------------|--------|-------|
 | 5.1 | Core Models | **100%** | Complete - IconIdentifier & IconItem models + tests |
 | 5.2 | Bridging Extensions | **100%** | getWindowList, getWindowFrame, activeSpaceID all exist |
-| 5.3 | IconRepositioner Engine | **50%** | MouseCursor + Skeleton + CGEvent Move complete (3/6 tasks) |
+| 5.3 | IconRepositioner Engine | **67%** | MouseCursor + Skeleton + CGEvent Move + Frame Detection complete (4/6 tasks) |
 | 5.4 | Settings UI Integration | 0% | Drag-drop UI exists but no repositioner hook |
 | 5.5 | Persistence | 10% | Basic layout save exists, needs icon position persistence |
 
@@ -74,18 +74,19 @@ Phase 5.1 is fully complete. The core models for icon identification and represe
 - **Dependencies**: Task 5.3.2
 - **Verification**: Build passed, 358 tests pass, committed as feat(5.3.3)
 
-#### Task 5.3.4: Implement Frame Change Detection
+#### Task 5.3.4: Implement Frame Change Detection [COMPLETE]
 - **File**: `Drawer/Core/Engines/IconRepositioner.swift` (modify)
 - **Scope**: Verification that move succeeded
 - **Details**:
   - `waitForFrameChange(of item: IconItem, initialFrame: CGRect) async throws`
-    - Use `ContinuousClock` for timing
-    - Poll every 10ms until frame differs from initial
-    - Throw `.timeout` if 50ms deadline exceeded
-    - Throw `.invalidItem` if frame cannot be retrieved
-  - `itemHasCorrectPosition(item:for:) throws -> Bool` - verify final position
+    - Uses `ContinuousClock` for timing
+    - Polls every 10ms (`frameChangePollInterval`) until frame differs from initial
+    - Throws `.timeout` if 50ms (`frameChangeTimeout`) deadline exceeded
+    - Throws `.invalidItem` if frame cannot be retrieved
+  - `performMove` updated to be async and call `waitForFrameChange` after both mouse down and mouse up events
+  - `itemHasCorrectPosition(item:for:) throws -> Bool` - verify final position (already existed)
 - **Dependencies**: Task 5.3.3
-- **Verification**: `xcodebuild -scheme Drawer build`
+- **Verification**: Build passed, 358 tests pass, committed as feat(5.3.4), tagged v0.5.1-alpha.7
 
 #### Task 5.3.5: Implement Retry and Wake-Up Logic
 - **File**: `Drawer/Core/Engines/IconRepositioner.swift` (modify)
