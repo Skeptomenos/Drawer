@@ -75,13 +75,16 @@ enum Bridging {
         let count = getWindowCount()
         guard count > 0 else { return [] }
 
-        var list = [CGWindowID](repeating: 0, count: count)
+        // Add buffer margin to handle TOCTOU race condition:
+        // Windows may be created between getWindowCount() and CGSGetWindowList()
+        let bufferSize = count + 10
+        var list = [CGWindowID](repeating: 0, count: bufferSize)
         var actualCount: Int32 = 0
 
         let result = CGSGetWindowList(
             CGSMainConnectionID(),
             0,
-            Int32(count),
+            Int32(bufferSize),
             &list,
             &actualCount
         )
@@ -98,13 +101,16 @@ enum Bridging {
         let count = getOnScreenWindowCount()
         guard count > 0 else { return [] }
 
-        var list = [CGWindowID](repeating: 0, count: count)
+        // Add buffer margin to handle TOCTOU race condition:
+        // Windows may be created between getOnScreenWindowCount() and CGSGetOnScreenWindowList()
+        let bufferSize = count + 10
+        var list = [CGWindowID](repeating: 0, count: bufferSize)
         var actualCount: Int32 = 0
 
         let result = CGSGetOnScreenWindowList(
             CGSMainConnectionID(),
             0,
-            Int32(count),
+            Int32(bufferSize),
             &list,
             &actualCount
         )
@@ -121,13 +127,16 @@ enum Bridging {
         let count = getWindowCount()
         guard count > 0 else { return [] }
 
-        var list = [CGWindowID](repeating: 0, count: count)
+        // Add buffer margin to handle TOCTOU race condition:
+        // Windows may be created between getWindowCount() and CGSGetProcessMenuBarWindowList()
+        let bufferSize = count + 10
+        var list = [CGWindowID](repeating: 0, count: bufferSize)
         var actualCount: Int32 = 0
 
         let result = CGSGetProcessMenuBarWindowList(
             CGSMainConnectionID(),
             0,
-            Int32(count),
+            Int32(bufferSize),
             &list,
             &actualCount
         )

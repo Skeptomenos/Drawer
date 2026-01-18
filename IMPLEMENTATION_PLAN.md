@@ -32,7 +32,7 @@ This phase addresses 2 potential crashes and 13 code quality issues identified d
 | Task | File | Issue | Status |
 |------|------|-------|--------|
 | 1.1.1 | `Drawer/UI/Overlay/OverlayPanelController.swift:76` | Force unwrap `NSScreen.screens.first!` can crash on headless/screen-change | [x] |
-| 1.1.2 | `Drawer/Bridging/Bridging.swift:74-95` | TOCTOU race condition in window list allocation | [ ] |
+| 1.1.2 | `Drawer/Bridging/Bridging.swift:74-95` | TOCTOU race condition in window list allocation | [x] |
 
 **Verification**: Build and run; test overlay mode on single/multi-monitor setups.
 
