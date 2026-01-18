@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// MARK: - OnboardingStep
+
 enum OnboardingStep: Int, CaseIterable {
     case welcome = 0
     case permissions = 1
@@ -23,12 +25,21 @@ enum OnboardingStep: Int, CaseIterable {
     }
 }
 
+// MARK: - OnboardingView
+
 struct OnboardingView: View {
+
+    // MARK: - Environment & State
+
     @Environment(\.dismiss) private var dismiss
     @StateObject private var permissionManager = PermissionManager.shared
     @State private var currentStep: OnboardingStep = .welcome
 
+    // MARK: - Properties
+
     let onComplete: () -> Void
+
+    // MARK: - Body
 
     var body: some View {
         VStack(spacing: 0) {
@@ -45,6 +56,8 @@ struct OnboardingView: View {
         .background(Color(nsColor: .windowBackgroundColor))
     }
 
+    // MARK: - Step Content Views
+
     @ViewBuilder
     private var stepContent: some View {
         switch currentStep {
@@ -58,6 +71,8 @@ struct OnboardingView: View {
             CompletionStepView()
         }
     }
+
+    // MARK: - Navigation
 
     private var navigationBar: some View {
         HStack {
@@ -102,6 +117,8 @@ struct OnboardingView: View {
         }
     }
 
+    // MARK: - Computed Properties
+
     private var nextButtonTitle: String {
         switch currentStep {
         case .welcome:
@@ -119,6 +136,8 @@ struct OnboardingView: View {
         true
     }
 
+    // MARK: - Private Methods
+
     private func advanceToNextStep() {
         withAnimation(.easeInOut(duration: 0.2)) {
             if let nextStep = OnboardingStep(rawValue: currentStep.rawValue + 1) {
@@ -132,6 +151,8 @@ struct OnboardingView: View {
         dismiss()
     }
 }
+
+// MARK: - Preview
 
 #Preview {
     OnboardingView(onComplete: {})
