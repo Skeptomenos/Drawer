@@ -18,7 +18,7 @@ set -e
 # Configuration
 APP_NAME="Drawer"
 SCHEME="Drawer"
-PROJECT="Hidden Bar.xcodeproj"
+PROJECT="Drawer.xcodeproj"
 BUILD_DIR="build"
 DMG_DIR="dist"
 

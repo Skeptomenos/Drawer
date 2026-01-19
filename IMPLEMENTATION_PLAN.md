@@ -202,7 +202,7 @@ This plan implements fixes in 4 phases with 19 tasks total.
 
 ### Task 19: Manual Verification [COMPLETED]
 - **Action**: Built and launched app via `XcodeBuildMCP_build_run_macos`
-- **App Path**: `/Users/david.helmus/Library/Developer/Xcode/DerivedData/Hidden_Bar-angvmmogmjcamxcbubcdchxmcuyu/Build/Products/Debug/Drawer.app`
+- **App Path**: `/Users/david.helmus/Library/Developer/Xcode/DerivedData/Drawer-*/Build/Products/Debug/Drawer.app`
 - **Status**: Completed
 - **Verification Checklist**:
   1. [x] Click reload button - icons stay in same order (not switching) - **VERIFIED via unit tests**

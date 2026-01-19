@@ -9,7 +9,7 @@
 import Foundation
 
 enum Constant {
-    static let appName = "Hidden Bar"
+    static let appName = "Drawer"
     static let launcherAppId = "com.dwarvesv.LauncherApplication"
     
     static var isUsingLTRLanguage = false

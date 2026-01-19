@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "92C5054D21FEC03B0084719A"
-               BuildableName = "LauncherApplication.app"
-               BlueprintName = "LauncherApplication"
-               ReferencedContainer = "container:Hidden Bar.xcodeproj">
+               BlueprintIdentifier = "929113F021F9D04100173149"
+               BuildableName = "Drawer.app"
+               BlueprintName = "Drawer"
+               ReferencedContainer = "container:Drawer.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -27,40 +27,21 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "92C5054D21FEC03B0084719A"
-            BuildableName = "LauncherApplication.app"
-            BlueprintName = "LauncherApplication"
-            ReferencedContainer = "container:Hidden Bar.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
       <Testables>
          <TestableReference
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "92C5055E21FEC03C0084719A"
-               BuildableName = "LauncherApplicationTests.xctest"
-               BlueprintName = "LauncherApplicationTests"
-               ReferencedContainer = "container:Hidden Bar.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "92C5056921FEC03C0084719A"
-               BuildableName = "LauncherApplicationUITests.xctest"
-               BlueprintName = "LauncherApplicationUITests"
-               ReferencedContainer = "container:Hidden Bar.xcodeproj">
+               BlueprintIdentifier = "DRAWERTEST00500000000001"
+               BuildableName = "DrawerTests.xctest"
+               BlueprintName = "DrawerTests"
+               ReferencedContainer = "container:Drawer.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
-      buildConfiguration = "Release"
+      buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
@@ -73,10 +54,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "92C5054D21FEC03B0084719A"
-            BuildableName = "LauncherApplication.app"
-            BlueprintName = "LauncherApplication"
-            ReferencedContainer = "container:Hidden Bar.xcodeproj">
+            BlueprintIdentifier = "929113F021F9D04100173149"
+            BuildableName = "Drawer.app"
+            BlueprintName = "Drawer"
+            ReferencedContainer = "container:Drawer.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -90,10 +71,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "92C5054D21FEC03B0084719A"
-            BuildableName = "LauncherApplication.app"
-            BlueprintName = "LauncherApplication"
-            ReferencedContainer = "container:Hidden Bar.xcodeproj">
+            BlueprintIdentifier = "929113F021F9D04100173149"
+            BuildableName = "Drawer.app"
+            BlueprintName = "Drawer"
+            ReferencedContainer = "container:Drawer.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

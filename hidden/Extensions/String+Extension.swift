@@ -1,6 +1,6 @@
 //
 //  String+Extension.swift
-//  Hidden Bar
+//  Drawer
 //
 //  Created by Licardo on 2020/3/9.
 //  Copyright © 2020 Dwarves Foundation. All rights reserved.

@@ -12,11 +12,11 @@
                 <application id="hnw-xV-0zn" sceneMemberID="viewController">
                     <menu key="mainMenu" title="Main Menu" systemMenu="main" id="AYu-sK-qS6">
                         <items>
-                            <menuItem title="Hidden Bar" id="1Xt-HY-uBw">
+                            <menuItem title="Drawer" id="1Xt-HY-uBw">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Hidden Bar" systemMenu="apple" id="uQy-DD-JDr">
+                                <menu key="submenu" title="Drawer" systemMenu="apple" id="uQy-DD-JDr">
                                     <items>
-                                        <menuItem title="About Hidden Bar" id="5kV-Vb-QxS">
+                                        <menuItem title="About Drawer" id="5kV-Vb-QxS">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="orderFrontStandardAboutPanel:" target="Ady-hI-5gd" id="Exp-CZ-Vem"/>
@@ -30,7 +30,7 @@
                                             <menu key="submenu" title="Services" systemMenu="services" id="hz9-B4-Xy5"/>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="4je-JR-u6R"/>
-                                        <menuItem title="Hide Hidden Bar" keyEquivalent="h" id="Olw-nP-bQN">
+                                        <menuItem title="Hide Drawer" keyEquivalent="h" id="Olw-nP-bQN">
                                             <connections>
                                                 <action selector="hide:" target="Ady-hI-5gd" id="PnN-Uc-m68"/>
                                             </connections>
@@ -48,7 +48,7 @@
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="kCx-OE-vgT"/>
-                                        <menuItem title="Quit Hidden Bar" keyEquivalent="q" id="4sb-4s-VLi">
+                                        <menuItem title="Quit Drawer" keyEquivalent="q" id="4sb-4s-VLi">
                                             <connections>
                                                 <action selector="terminate:" target="Ady-hI-5gd" id="Te7-pn-YzF"/>
                                             </connections>
@@ -62,7 +62,7 @@
                         <outlet property="delegate" destination="Voe-Tx-rLC" id="PrD-fu-P6m"/>
                     </connections>
                 </application>
-                <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="Hidden_Bar" customModuleProvider="target"/>
+                <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="Drawer" customModuleProvider="target"/>
                 <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -71,7 +71,7 @@
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
             <objects>
-                <windowController storyboardIdentifier="MainWindow" showSeguePresentationStyle="single" id="B8D-0N-5wS" customClass="PreferencesWindowController" customModule="Hidden_Bar" customModuleProvider="target" sceneMemberID="viewController">
+                <windowController storyboardIdentifier="MainWindow" showSeguePresentationStyle="single" id="B8D-0N-5wS" customClass="PreferencesWindowController" customModule="Drawer" customModuleProvider="target" sceneMemberID="viewController">
                     <window key="window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" titlebarAppearsTransparent="YES" titleVisibility="hidden" id="IQv-IB-iLA">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" fullSizeContentView="YES"/>
                         <rect key="contentRect" x="196" y="240" width="450" height="270"/>
@@ -134,7 +134,7 @@
         <!--About View Controller-->
         <scene sceneID="L15-VB-wIc">
             <objects>
-                <viewController storyboardIdentifier="aboutVC" id="3gK-Dw-PWX" customClass="AboutViewController" customModule="Hidden_Bar" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="aboutVC" id="3gK-Dw-PWX" customClass="AboutViewController" customModule="Drawer" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="PLL-3M-w8R">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="481"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -164,7 +164,7 @@
                                                             <subviews>
                                                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ekW-28-SJX">
                                                                     <rect key="frame" x="-2" y="25" width="176" height="41"/>
-                                                                    <textFieldCell key="cell" lineBreakMode="clipping" title="Hidden Bar" id="2xp-Ht-xa6">
+                                                                    <textFieldCell key="cell" lineBreakMode="clipping" title="Drawer" id="2xp-Ht-xa6">
                                                                         <font key="font" metaFont="systemMedium" size="35"/>
                                                                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -244,7 +244,7 @@
                                                         </constraints>
                                                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="ico_compass" id="Fni-Bp-VZz"/>
                                                     </imageView>
-                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="jmL-Oh-IlC" customClass="HyperlinkTextField" customModule="Hidden_Bar" customModuleProvider="target">
+                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="jmL-Oh-IlC" customClass="HyperlinkTextField" customModule="Drawer" customModuleProvider="target">
                                                         <rect key="frame" x="30" y="4" width="128" height="16"/>
                                                         <textFieldCell key="cell" lineBreakMode="clipping" title="Know more about us" id="Xb1-xM-sYy">
                                                             <font key="font" metaFont="system"/>
@@ -276,7 +276,7 @@
                                                         </constraints>
                                                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="ico_twitter" id="tB4-GY-gGd"/>
                                                     </imageView>
-                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="c5D-4V-z75" customClass="HyperlinkTextField" customModule="Hidden_Bar" customModuleProvider="target">
+                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="c5D-4V-z75" customClass="HyperlinkTextField" customModule="Drawer" customModuleProvider="target">
                                                         <rect key="frame" x="30" y="4" width="125" height="16"/>
                                                         <textFieldCell key="cell" lineBreakMode="clipping" title="Follow us on Twitter" id="Tba-C7-Zr8">
                                                             <font key="font" metaFont="system"/>
@@ -308,7 +308,7 @@
                                                         </constraints>
                                                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="ico_github" id="Abo-SQ-xfQ"/>
                                                     </imageView>
-                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="6si-3e-Hzw" customClass="HyperlinkTextField" customModule="Hidden_Bar" customModuleProvider="target">
+                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="6si-3e-Hzw" customClass="HyperlinkTextField" customModule="Drawer" customModuleProvider="target">
                                                         <rect key="frame" x="30" y="4" width="178" height="16"/>
                                                         <textFieldCell key="cell" lineBreakMode="clipping" title="This app is fully open source" id="fqc-io-QOP">
                                                             <font key="font" metaFont="system"/>
@@ -340,7 +340,7 @@
                                                         </constraints>
                                                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="ico_email" id="K3d-Co-Iq1"/>
                                                     </imageView>
-                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="KzE-2n-Rp9" customClass="HyperlinkTextField" customModule="Hidden_Bar" customModuleProvider="target">
+                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="KzE-2n-Rp9" customClass="HyperlinkTextField" customModule="Drawer" customModuleProvider="target">
                                                         <rect key="frame" x="30" y="4" width="55" height="16"/>
                                                         <textFieldCell key="cell" lineBreakMode="clipping" title="Email us" id="sRr-sO-uV0">
                                                             <font key="font" metaFont="system"/>
@@ -411,7 +411,7 @@
         <!--Preferences View Controller-->
         <scene sceneID="hIz-AP-VOD">
             <objects>
-                <viewController storyboardIdentifier="prefVC" showSeguePresentationStyle="single" id="XfG-lQ-9wD" customClass="PreferencesViewController" customModule="Hidden_Bar" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="prefVC" showSeguePresentationStyle="single" id="XfG-lQ-9wD" customClass="PreferencesViewController" customModule="Drawer" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="m2S-Jp-Qdl">
                         <rect key="frame" x="0.0" y="0.0" width="668" height="481"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -427,7 +427,7 @@
                                             <textFieldCell key="cell" alignment="center" id="k7C-e5-6a0">
                                                 <font key="font" metaFont="system"/>
                                                 <string key="title">In your Mac's menu bar, hold ⌘ and drag icons
-between sections to configure Hidden Bar.</string>
+between sections to configure Drawer.</string>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -629,7 +629,7 @@ between sections to configure Hidden Bar.</string>
                                         <subviews>
                                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cbR-Jv-adm">
                                                 <rect key="frame" x="-2" y="116" width="207" height="18"/>
-                                                <buttonCell key="cell" type="check" title="Start Hidden Bar when I log in" bezelStyle="regularSquare" imagePosition="left" inset="2" id="W1G-55-zGo">
+                                                <buttonCell key="cell" type="check" title="Start Drawer when I log in" bezelStyle="regularSquare" imagePosition="left" inset="2" id="W1G-55-zGo">
                                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                     <font key="font" metaFont="system"/>
                                                 </buttonCell>

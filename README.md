@@ -122,7 +122,7 @@ Drawer/
 ### Setup
 
 1. Clone the repository
-2. Open `Hidden Bar.xcodeproj` in Xcode
+2. Open `Drawer.xcodeproj` in Xcode
 3. Select the `Drawer` scheme
 4. Build and run
 

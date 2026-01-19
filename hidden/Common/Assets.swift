@@ -1,6 +1,6 @@
 //
 //  Assets.swift
-//  Hidden Bar
+//  Drawer
 //
 //  Created by Peter Luo on 2021/5/28.
 //  Copyright © 2021 Dwarves Foundation. All rights reserved.

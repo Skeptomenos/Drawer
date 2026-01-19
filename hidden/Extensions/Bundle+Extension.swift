@@ -1,6 +1,6 @@
 //
 //  Bundle+Extension.swift
-//  Hidden Bar
+//  Drawer
 //
 //  Created by phucld on 12/19/19.
 //  Copyright © 2019 Dwarves Foundation. All rights reserved.

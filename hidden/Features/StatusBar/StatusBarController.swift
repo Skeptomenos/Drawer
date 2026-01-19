@@ -91,8 +91,8 @@ class StatusBarController {
             button.sendAction(on: [.leftMouseUp, .rightMouseUp])
         }
         
-        btnExpandCollapse.autosaveName = "hiddenbar_expandcollapse";
-        btnSeparate.autosaveName = "hiddenbar_separate";
+        btnExpandCollapse.autosaveName = "drawer_expandcollapse";
+        btnSeparate.autosaveName = "drawer_separate";
     }
     
     @objc func btnExpandCollapsePressed(sender: NSStatusBarButton) {
@@ -248,7 +248,7 @@ extension StatusBarController {
                 button.image = self.imgIconLine
                 button.appearsDisabled = true
             }
-            self.btnAlwaysHidden?.autosaveName = "hiddenbar_terminate";
+            self.btnAlwaysHidden?.autosaveName = "drawer_terminate";
             
         }else {
             self.btnAlwaysHidden = nil

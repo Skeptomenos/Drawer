@@ -1,6 +1,6 @@
 //
 //  SelectedSecond.swift
-//  Hidden Bar
+//  Drawer
 //
 //  Created by phucld on 12/18/19.
 //  Copyright © 2019 Dwarves Foundation. All rights reserved.

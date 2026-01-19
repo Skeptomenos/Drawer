@@ -1,6 +1,6 @@
 ## Privacy Policy
 
-Dwarves Foundation built the Hidden Bar app as an Open Source app. This app is provided by Dwarves Foundation at no cost and is intended for use as is.
+Dwarves Foundation built the Drawer app as an Open Source app. This app is provided by Dwarves Foundation at no cost and is intended for use as is.
 
 **Information Collection and Use**
 

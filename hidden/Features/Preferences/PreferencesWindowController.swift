@@ -1,6 +1,6 @@
 //
 //  PreferencesWindowController.swift
-//  Hidden Bar
+//  Drawer
 //
 //  Created by Phuc Le Dien on 2/22/19.
 //  Copyright © 2019 Dwarves Foundation. All rights reserved.
