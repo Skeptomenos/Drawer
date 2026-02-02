@@ -56,7 +56,7 @@ struct LayoutItemView: View {
         )
         .resizable()
         .aspectRatio(contentMode: .fit)
-        .frame(height: LayoutDesign.iconSize)
+        .frame(width: LayoutDesign.iconSize, height: LayoutDesign.iconSize)
     }
 
     /// Placeholder shown when image is not available
