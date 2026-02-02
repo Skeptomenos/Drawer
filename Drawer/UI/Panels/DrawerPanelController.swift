@@ -111,19 +111,20 @@ final class DrawerPanelController: ObservableObject {
         // This ensures consistent state in tests and production
         isVisible = true
 
-        NSAnimationContext.runAnimationGroup({ context in
-            context.duration = DrawerAnimation.showDuration
-            context.timingFunction = DrawerAnimation.showTimingFunction
-            context.allowsImplicitAnimation = true
+        Task { @MainActor [weak self] in
+            await NSAnimationContext.runAnimationGroup { context in
+                context.duration = DrawerAnimation.showDuration
+                context.timingFunction = DrawerAnimation.showTimingFunction
+                context.allowsImplicitAnimation = true
 
-            panel.animator().setFrame(targetFrame, display: true)
-            panel.animator().alphaValue = 1
-        }, completionHandler: { [weak self] in
+                panel.animator().setFrame(targetFrame, display: true)
+                panel.animator().alphaValue = 1
+            }
             self?.isAnimating = false
             #if DEBUG
             self?.logger.debug("Drawer panel show animation complete")
             #endif
-        })
+        }
     }
 
     private func animateHide(panel: DrawerPanel) {
@@ -140,21 +141,22 @@ final class DrawerPanelController: ObservableObject {
         var endFrame = panel.frame
         endFrame.origin.y += DrawerAnimation.slideOffset / 2
 
-        NSAnimationContext.runAnimationGroup({ context in
-            context.duration = DrawerAnimation.hideDuration
-            context.timingFunction = DrawerAnimation.hideTimingFunction
-            context.allowsImplicitAnimation = true
+        Task { @MainActor [weak self] in
+            await NSAnimationContext.runAnimationGroup { context in
+                context.duration = DrawerAnimation.hideDuration
+                context.timingFunction = DrawerAnimation.hideTimingFunction
+                context.allowsImplicitAnimation = true
 
-            panel.animator().alphaValue = 0
-            panel.animator().setFrame(endFrame, display: true)
-        }, completionHandler: { [weak self] in
+                panel.animator().alphaValue = 0
+                panel.animator().setFrame(endFrame, display: true)
+            }
             panel.orderOut(nil)
             panel.alphaValue = 1
             self?.isAnimating = false
             #if DEBUG
             self?.logger.debug("Drawer panel hide animation complete")
             #endif
-        })
+        }
     }
 
     func toggle<Content: View>(content: Content, alignedTo xPosition: CGFloat? = nil, on screen: NSScreen? = nil) {

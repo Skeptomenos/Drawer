@@ -120,14 +120,15 @@ final class OverlayPanelController: ObservableObject {
     func hide() {
         guard let panel = panel, isVisible else { return }
 
-        NSAnimationContext.runAnimationGroup({ [hideDuration] context in
-            context.duration = hideDuration
-            panel.animator().alphaValue = 0
-        }, completionHandler: { [weak self] in
+        Task { @MainActor [weak self, hideDuration] in
+            await NSAnimationContext.runAnimationGroup { context in
+                context.duration = hideDuration
+                panel.animator().alphaValue = 0
+            }
             panel.orderOut(nil)
             self?.isVisible = false
             self?.logger.debug("Overlay hidden")
-        })
+        }
     }
 
     /// Toggles overlay visibility.

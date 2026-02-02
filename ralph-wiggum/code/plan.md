@@ -23,7 +23,7 @@
 | [ ] | **Task 3.1**: File structure debundling | `specs/ARCH-001_File_Debundling.md` | Extract nested types to separate files (SettingsMenuBarLayoutView, DrawerContentView, etc.) |
 | [ ] | **Task 3.2**: Logic extraction - ViewModels | `specs/ARCH-002_Docs_and_Logic.md` | Move business logic from SettingsMenuBarLayoutView to MenuBarLayoutViewModel |
 | [ ] | **Task 3.3**: Migration to @Observable macro | `specs/DEP-003_Observable_Migration.md` | Convert 13 ObservableObject classes to @Observable; update @Published, @ObservedObject, @EnvironmentObject |
-| [ ] | **Task 3.4**: Animation context async wrapper | `specs/CODE_REVIEW_ISSUES.md:CONC-002` | Create NSAnimationContext.runAnimationGroup async extension |
+| [x] | **Task 3.4**: Animation context async wrapper | `specs/CODE_REVIEW_ISSUES.md:CONC-002` | Done in v0.5.1-alpha.30: Created NSAnimationContext+Async.swift, refactored DrawerPanelController and OverlayPanelController to use async/await pattern |
 | | **Phase 4: Testing & Documentation** | | |
 | [ ] | **Task 4.1**: Test infrastructure - create UI test target | `specs/CODE_REVIEW_ISSUES.md:TEST-001` | Create DrawerUITests target with app launch smoke test |
 | [ ] | **Task 4.2**: Unit tests - UI panels | `specs/CODE_REVIEW_ISSUES.md:TEST-002` | Add tests for DrawerPanelController state transitions and positioning |
