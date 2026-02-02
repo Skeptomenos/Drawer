@@ -190,6 +190,21 @@ final class IconCapturer {
 
     // MARK: - Public API
 
+    /// Captures all hidden menu bar icons by temporarily expanding the menu bar.
+    ///
+    /// This method performs a complete capture workflow:
+    /// 1. Expands the menu bar if collapsed to reveal hidden icons
+    /// 2. Waits for the menu bar to render
+    /// 3. Captures each icon individually using window-based detection
+    /// 4. Restores the menu bar to its original collapsed/expanded state
+    ///
+    /// The capture uses window-based detection to identify individual menu bar items,
+    /// falling back to ScreenCaptureKit-based slicing if window detection fails.
+    ///
+    /// - Parameter menuBarManager: The manager controlling menu bar visibility state
+    /// - Returns: A `MenuBarCaptureResult` containing the captured icons and metadata
+    /// - Throws: `CaptureError.permissionDenied` if Screen Recording permission is not granted
+    /// - Throws: `CaptureError.systemError` if a capture is already in progress or system errors occur
     func captureHiddenIcons(menuBarManager: MenuBarManager) async throws -> MenuBarCaptureResult {
         guard !isCapturing else {
             logger.warning("Capture already in progress, skipping")
@@ -265,6 +280,14 @@ final class IconCapturer {
         return captureResult
     }
 
+    /// Captures the entire menu bar region as a single image.
+    ///
+    /// This is a lower-level method that captures the full menu bar without
+    /// individual icon slicing. Useful when you need the raw menu bar image
+    /// for display or further processing.
+    ///
+    /// - Returns: A `CGImage` of the menu bar region
+    /// - Throws: `CaptureError.permissionDenied` if Screen Recording permission is not granted
     func captureMenuBarRegion() async throws -> CGImage {
         guard permissionManager.hasScreenRecording else {
             throw CaptureError.permissionDenied
@@ -520,6 +543,10 @@ final class IconCapturer {
         return icons
     }
 
+    /// Clears cached capture results and errors.
+    ///
+    /// Call this to free memory when capture results are no longer needed,
+    /// or to reset state before a fresh capture.
     func clearLastCapture() {
         lastCaptureResult = nil
         lastError = nil

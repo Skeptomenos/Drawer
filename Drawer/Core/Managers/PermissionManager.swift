@@ -145,20 +145,30 @@ final class PermissionManager: PermissionProviding {
 
     // MARK: - Status Refresh
 
-    /// Refreshes the status of all permissions
+    /// Refreshes the cached status of all system permissions.
+    ///
+    /// Queries the system for current Accessibility and Screen Recording permission states
+    /// and updates the corresponding status properties. Triggers `onPermissionStatusChanged`
+    /// callback if any status changed.
     func refreshAllStatuses() {
         refreshAccessibilityStatus()
         refreshScreenRecordingStatus()
     }
 
-    /// Refreshes Accessibility permission status
+    /// Refreshes the cached Accessibility permission status.
+    ///
+    /// Queries `AXIsProcessTrusted()` and updates `accessibilityStatus`.
+    /// Triggers `onPermissionStatusChanged` if status changed.
     func refreshAccessibilityStatus() {
         let isGranted = AXIsProcessTrusted()
         accessibilityStatus = isGranted ? .granted : .denied
         logger.debug("Accessibility permission: \(isGranted ? "granted" : "denied")")
     }
 
-    /// Refreshes Screen Recording permission status
+    /// Refreshes the cached Screen Recording permission status.
+    ///
+    /// Queries `CGPreflightScreenCaptureAccess()` (does not prompt user) and updates `screenRecordingStatus`.
+    /// Triggers `onPermissionStatusChanged` if status changed.
     func refreshScreenRecordingStatus() {
         let isGranted = CGPreflightScreenCaptureAccess()
         screenRecordingStatus = isGranted ? .granted : .denied
@@ -209,7 +219,12 @@ final class PermissionManager: PermissionProviding {
         }
     }
 
-    /// Requests a specific permission type
+    /// Requests a specific permission from the user.
+    ///
+    /// Triggers the appropriate system prompt or opens System Settings for the given permission type.
+    /// The status is refreshed asynchronously after a short delay to allow for user interaction.
+    ///
+    /// - Parameter permission: The type of permission to request (`.accessibility` or `.screenRecording`)
     func request(_ permission: PermissionType) {
         switch permission {
         case .accessibility:
