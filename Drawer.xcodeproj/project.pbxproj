@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DRAWERUITEST0010000000001 /* DrawerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERUITEST0020000000001 /* DrawerUITests.swift */; };
 		DRAWERTEST00100000000001 /* SetupVerificationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000001 /* SetupVerificationTests.swift */; };
 		DRAWERTEST00100000000002 /* MockSettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000003 /* MockSettingsManager.swift */; };
 		DRAWERTEST00100000000003 /* MockSettingsManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000004 /* MockSettingsManagerTests.swift */; };
@@ -167,6 +168,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXContainerItemProxy section */
+		DRAWERUITEST0030000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 929113E921F9D04100173149 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 929113F021F9D04100173149;
+			remoteInfo = Drawer;
+		};
 		DRAWERTEST00300000000001 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 929113E921F9D04100173149 /* Project object */;
@@ -177,6 +185,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		DRAWERUITEST0020000000001 /* DrawerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerUITests.swift; sourceTree = "<group>"; };
+		DRAWERUITEST0020000000002 /* DrawerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DrawerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DRAWERUITEST0020000000003 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DRAWERTEST00200000000001 /* SetupVerificationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupVerificationTests.swift; sourceTree = "<group>"; };
 		DRAWERTEST00200000000002 /* DrawerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DrawerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DRAWERTEST00200000000003 /* MockSettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockSettingsManager.swift; sourceTree = "<group>"; };
@@ -559,11 +570,21 @@
 			path = Common;
 			sourceTree = "<group>";
 		};
+		DRAWERUITEST0040000000001 /* DrawerUITests */ = {
+			isa = PBXGroup;
+			children = (
+				DRAWERUITEST0020000000001 /* DrawerUITests.swift */,
+				DRAWERUITEST0020000000003 /* Info.plist */,
+			);
+			path = DrawerUITests;
+			sourceTree = "<group>";
+		};
 		929113E821F9D04100173149 = {
 			isa = PBXGroup;
 			children = (
 				DRAWER003000000000000001 /* Drawer */,
 				DRAWERTEST00400000000001 /* DrawerTests */,
+				DRAWERUITEST0040000000001 /* DrawerUITests */,
 				9220587D22127050008A8B03 /* Hidden.entitlements */,
 				929113F321F9D04100173149 /* hidden */,
 				92C5054F21FEC03C0084719A /* LauncherApplication */,
@@ -776,6 +797,7 @@
 				929113F121F9D04100173149 /* Drawer.app */,
 				92C5054E21FEC03B0084719A /* LauncherApplication.app */,
 				DRAWERTEST00200000000002 /* DrawerTests.xctest */,
+				DRAWERUITEST0020000000002 /* DrawerUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -869,6 +891,24 @@
 			productReference = 92C5054E21FEC03B0084719A /* LauncherApplication.app */;
 			productType = "com.apple.product-type.application";
 		};
+		DRAWERUITEST0050000000001 /* DrawerUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DRAWERUITEST0070000000001 /* Build configuration list for PBXNativeTarget "DrawerUITests" */;
+			buildPhases = (
+				DRAWERUITEST0060000000001 /* Sources */,
+				DRAWERUITEST0060000000002 /* Frameworks */,
+				DRAWERUITEST0060000000003 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DRAWERUITEST0080000000001 /* PBXTargetDependency */,
+			);
+			name = DrawerUITests;
+			productName = DrawerUITests;
+			productReference = DRAWERUITEST0020000000002 /* DrawerUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		DRAWERTEST00500000000001 /* DrawerTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = DRAWERTEST00700000000001 /* Build configuration list for PBXNativeTarget "DrawerTests" */;
@@ -939,6 +979,7 @@
 				929113F021F9D04100173149 /* Drawer */,
 				92C5054D21FEC03B0084719A /* LauncherApplication */,
 				DRAWERTEST00500000000001 /* DrawerTests */,
+				DRAWERUITEST0050000000001 /* DrawerUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -1052,6 +1093,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DRAWERUITEST0060000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DRAWERUITEST0010000000001 /* DrawerUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DRAWERTEST00600000000001 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1101,6 +1150,16 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXFrameworksBuildPhase section for DrawerUITests */
+		DRAWERUITEST0060000000002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section for DrawerUITests */
+
 /* Begin PBXFrameworksBuildPhase section for DrawerTests */
 		DRAWERTEST00600000000002 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -1110,6 +1169,16 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section for DrawerTests */
+
+/* Begin PBXResourcesBuildPhase section for DrawerUITests */
+		DRAWERUITEST0060000000003 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section for DrawerUITests */
 
 /* Begin PBXResourcesBuildPhase section for DrawerTests */
 		DRAWERTEST00600000000003 /* Resources */ = {
@@ -1122,6 +1191,11 @@
 /* End PBXResourcesBuildPhase section for DrawerTests */
 
 /* Begin PBXTargetDependency section */
+		DRAWERUITEST0080000000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 929113F021F9D04100173149 /* Drawer */;
+			targetProxy = DRAWERUITEST0030000000001 /* PBXContainerItemProxy */;
+		};
 		DRAWERTEST00800000000001 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 929113F021F9D04100173149 /* Drawer */;
@@ -1395,6 +1469,56 @@
 			};
 			name = Release;
 		};
+		DRAWERUITEST0070000000002 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = DrawerUITests/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = DrawerUITests;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.drawer.DrawerUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = Drawer;
+			};
+			name = Debug;
+		};
+		DRAWERUITEST0070000000003 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = DrawerUITests/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = DrawerUITests;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.drawer.DrawerUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = Drawer;
+			};
+			name = Release;
+		};
 		DRAWERTEST00700000000002 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1471,6 +1595,15 @@
 			buildConfigurations = (
 				92C5057221FEC03D0084719A /* Debug */,
 				92C5057321FEC03D0084719A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DRAWERUITEST0070000000001 /* Build configuration list for PBXNativeTarget "DrawerUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DRAWERUITEST0070000000002 /* Debug */,
+				DRAWERUITEST0070000000003 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

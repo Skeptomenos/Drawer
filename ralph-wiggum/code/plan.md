@@ -25,7 +25,7 @@
 | [x] | **Task 3.3**: Migration to @Observable macro | `specs/DEP-003_Observable_Migration.md` | Done in v0.5.1-alpha.34: 12/13 classes migrated. SettingsManager intentionally remains ObservableObject due to @AppStorage incompatibility (documented in spec) |
 | [x] | **Task 3.4**: Animation context async wrapper | `specs/CODE_REVIEW_ISSUES.md:CONC-002` | Done in v0.5.1-alpha.30: Created NSAnimationContext+Async.swift, refactored DrawerPanelController and OverlayPanelController to use async/await pattern |
 | | **Phase 4: Testing & Documentation** | | |
-| [ ] | **Task 4.1**: Test infrastructure - create UI test target | `specs/CODE_REVIEW_ISSUES.md:TEST-001` | Create DrawerUITests target with app launch smoke test |
+| [x] | **Task 4.1**: Test infrastructure - create UI test target | `specs/CODE_REVIEW_ISSUES.md:TEST-001` | Done in v0.5.1-alpha.35: Created DrawerUITests target with 4 smoke tests (app launch, terminate, relaunch stability, settings window) |
 | [ ] | **Task 4.2**: Unit tests - UI panels | `specs/CODE_REVIEW_ISSUES.md:TEST-002` | Add tests for DrawerPanelController state transitions and positioning |
 | [ ] | **Task 4.3**: Unit tests - mock boundary fixes | `specs/CODE_REVIEW_ISSUES.md:TEST-003` | Create protocol-based abstractions for SCStream/SCShareableContent |
 | [ ] | **Task 4.4**: Unit tests - post @Observable updates | `specs/CODE_REVIEW_ISSUES.md:TEST-005` | Update tests to use new observation patterns after Task 3.3 |
