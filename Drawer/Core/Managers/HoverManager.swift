@@ -6,12 +6,15 @@
 //
 
 import AppKit
+import os.log
 
 @MainActor
 @Observable
 final class HoverManager {
 
     static let shared = HoverManager()
+    
+    @ObservationIgnored private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "com.drawer", category: "HoverManager")
 
     private(set) var isMouseInTriggerZone: Bool = false
     private(set) var isMouseInDrawerArea: Bool = false
@@ -43,23 +46,38 @@ final class HoverManager {
         case none, up, down
     }
 
-    var onShouldShowDrawer: (() -> Void)?
+    var onShouldShowDrawer: ((NSScreen?) -> Void)?
     var onShouldHideDrawer: (() -> Void)?
+    
+    private var triggerScreen: NSScreen?
 
     private var drawerFrame: CGRect = .zero
     private var isDrawerVisible: Bool = false
 
     private init() {}
 
-    func startMonitoring() {
-        guard !isMonitoring else { return }
+    nonisolated deinit {
+        #if DEBUG
+        print("HoverManager deallocated - ensure stopMonitoring() was called before deallocation")
+        #endif
+    }
 
+    func startMonitoring() {
+        guard !isMonitoring else { 
+            logger.debug("Already monitoring, skipping start")
+            return 
+        }
+
+        logger.debug("Starting monitoring...")
+        logger.debug("Settings: showOnHover=\(SettingsManager.shared.showOnHover), showOnScrollDown=\(SettingsManager.shared.showOnScrollDown)")
+        
         mouseMonitor = GlobalEventMonitor(mask: .mouseMoved) { [weak self] event in
             Task { @MainActor in
                 self?.handleMouseMoved(event)
             }
         }
         mouseMonitor?.start()
+        logger.debug("Mouse monitor started, isRunning=\(self.mouseMonitor?.isRunning == true)")
 
         scrollMonitor = GlobalEventMonitor(mask: .scrollWheel) { [weak self] event in
             Task { @MainActor in
@@ -67,6 +85,7 @@ final class HoverManager {
             }
         }
         scrollMonitor?.start()
+        logger.debug("Scroll monitor started, isRunning=\(self.scrollMonitor?.isRunning == true)")
 
         clickMonitor = GlobalEventMonitor(mask: [.leftMouseDown, .rightMouseDown]) { [weak self] event in
             Task { @MainActor in
@@ -74,6 +93,7 @@ final class HoverManager {
             }
         }
         clickMonitor?.start()
+        logger.debug("Click monitor started, isRunning=\(self.clickMonitor?.isRunning == true)")
 
         // Subscribe to app deactivation notifications for focus-loss detection.
         // Hides drawer when user switches to another application (Cmd+Tab, clicking another app).
@@ -88,6 +108,7 @@ final class HoverManager {
         }
 
         isMonitoring = true
+        logger.debug("Monitoring started successfully, isMonitoring=\(self.isMonitoring)")
     }
 
     func stopMonitoring() {
@@ -124,6 +145,7 @@ final class HoverManager {
 
     private func handleMouseMoved(_ event: NSEvent?) {
         let mouseLocation = NSEvent.mouseLocation
+        let eventScreen = NSScreen.screens.first(where: { $0.frame.contains(mouseLocation) })
 
         let wasInTriggerZone = isMouseInTriggerZone
         let wasInDrawerArea = isMouseInDrawerArea
@@ -131,8 +153,15 @@ final class HoverManager {
         isMouseInTriggerZone = isInMenuBarTriggerZone(mouseLocation)
         isMouseInDrawerArea = isDrawerVisible && isInDrawerArea(mouseLocation)
 
-        // Only schedule hover-to-show if showOnHover setting is enabled
+        if isMouseInTriggerZone && !wasInTriggerZone {
+            logger.debug("ENTERED trigger zone, drawerVisible=\(self.isDrawerVisible), showOnHover=\(SettingsManager.shared.showOnHover)")
+        } else if !isMouseInTriggerZone && wasInTriggerZone {
+            logger.debug("LEFT trigger zone")
+        }
+
         if isMouseInTriggerZone && !wasInTriggerZone && !isDrawerVisible && SettingsManager.shared.showOnHover {
+            logger.debug("Scheduling show drawer (hover)")
+            triggerScreen = eventScreen
             scheduleShowDrawer()
         } else if !isMouseInTriggerZone && wasInTriggerZone && !isDrawerVisible {
             cancelShowDrawer()
@@ -154,14 +183,15 @@ final class HoverManager {
 
     func isInMenuBarTriggerZone(_ point: NSPoint) -> Bool {
         guard let screen = NSScreen.screens.first(where: { $0.frame.contains(point) }) else {
+            logger.debug("isInMenuBarTriggerZone: no screen contains point \(point.x, privacy: .public),\(point.y, privacy: .public)")
             return false
         }
 
         let screenTop = screen.frame.maxY
-        let triggerZoneTop = screenTop
-        let triggerZoneBottom = screenTop - menuBarHeight
-
-        return point.y >= triggerZoneBottom && point.y <= triggerZoneTop
+        let screenMenuBarHeight = MenuBarMetrics.height(for: screen)
+        let triggerZoneBottom = screenTop - screenMenuBarHeight
+        
+        return point.y >= triggerZoneBottom && point.y <= screenTop
     }
 
     func isInDrawerArea(_ point: NSPoint) -> Bool {
@@ -176,7 +206,7 @@ final class HoverManager {
         showDebounceTimer = Timer.scheduledTimer(withTimeInterval: debounceInterval, repeats: false) { [weak self] _ in
             Task { @MainActor in
                 guard let self = self, self.isMouseInTriggerZone else { return }
-                self.onShouldShowDrawer?()
+                self.onShouldShowDrawer?(self.triggerScreen)
             }
         }
     }
@@ -219,8 +249,8 @@ final class HoverManager {
         }
 
         let mouseLocation = NSEvent.mouseLocation
-
-        // Only process scroll events in the menu bar trigger zone or drawer area
+        let eventScreen = NSScreen.screens.first(where: { $0.frame.contains(mouseLocation) })
+        
         let isInTriggerZone = isInMenuBarTriggerZone(mouseLocation)
         let isInDrawer = isDrawerVisible && isInDrawerArea(mouseLocation)
 
@@ -228,6 +258,8 @@ final class HoverManager {
             resetScrollState()
             return
         }
+        
+        triggerScreen = eventScreen
 
         // Get scroll delta, accounting for natural scrolling preference.
         // scrollingDeltaY is positive for scroll-up gesture (content moves down).
@@ -258,11 +290,11 @@ final class HoverManager {
         // Check if we've reached the threshold
         if accumulatedScrollDelta >= scrollThreshold {
             if currentDirection == .down && !isDrawerVisible && settings.showOnScrollDown {
-                // Scroll down gesture to show drawer (respects setting)
-                onShouldShowDrawer?()
+                logger.debug("Scroll threshold reached (down), calling onShouldShowDrawer on screen: \(self.triggerScreen?.localizedName ?? "nil", privacy: .public)")
+                onShouldShowDrawer?(triggerScreen)
                 resetScrollState()
             } else if currentDirection == .up && isDrawerVisible && settings.hideOnScrollUp {
-                // Scroll up gesture to hide drawer (respects setting)
+                logger.debug("Scroll threshold reached (up), calling onShouldHideDrawer")
                 onShouldHideDrawer?()
                 resetScrollState()
             }

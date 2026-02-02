@@ -47,27 +47,33 @@ final class AppState {
     }
 
     init(
-        settings: SettingsManager = .shared,
-        permissions: PermissionManager = .shared,
-        drawerManager: DrawerManager = .shared,
-        iconCapturer: IconCapturer = .shared,
-        eventSimulator: EventSimulator = .shared,
-        hoverManager: HoverManager = .shared
+        settings: SettingsManager? = nil,
+        permissions: PermissionManager? = nil,
+        drawerManager: DrawerManager? = nil,
+        iconCapturer: IconCapturer? = nil,
+        eventSimulator: EventSimulator? = nil,
+        hoverManager: HoverManager? = nil
     ) {
-        self.settings = settings
-        self.permissions = permissions
-        self.drawerManager = drawerManager
-        self.iconCapturer = iconCapturer
-        self.eventSimulator = eventSimulator
-        self.hoverManager = hoverManager
-        self.menuBarManager = MenuBarManager(settings: settings)
+        let resolvedSettings = settings ?? .shared
+        let resolvedPermissions = permissions ?? .shared
+        let resolvedDrawerManager = drawerManager ?? .shared
+        let resolvedIconCapturer = iconCapturer ?? .shared
+        let resolvedEventSimulator = eventSimulator ?? .shared
+        let resolvedHoverManager = hoverManager ?? .shared
+        
+        self.settings = resolvedSettings
+        self.permissions = resolvedPermissions
+        self.drawerManager = resolvedDrawerManager
+        self.iconCapturer = resolvedIconCapturer
+        self.eventSimulator = resolvedEventSimulator
+        self.hoverManager = resolvedHoverManager
+        self.menuBarManager = MenuBarManager(settings: resolvedSettings)
         self.drawerController = DrawerPanelController()
 
-        // Initialize overlay mode manager for alternative display mode
         self.overlayModeManager = OverlayModeManager(
-            settings: settings,
-            iconCapturer: iconCapturer,
-            eventSimulator: eventSimulator,
+            settings: resolvedSettings,
+            iconCapturer: resolvedIconCapturer,
+            eventSimulator: resolvedEventSimulator,
             menuBarManager: menuBarManager
         )
 
@@ -178,8 +184,10 @@ final class AppState {
     }
 
     private func setupHoverBindings() {
-        hoverManager.onShouldShowDrawer = { [weak self] in
-            self?.showDrawerWithCapture()
+        logger.debug("setupHoverBindings() called")
+        
+        hoverManager.onShouldShowDrawer = { [weak self] screen in
+            self?.showDrawerWithCapture(on: screen)
         }
 
         hoverManager.onShouldHideDrawer = { [weak self] in
@@ -212,7 +220,10 @@ final class AppState {
             .store(in: &cancellables)
 
         // Start monitoring on init if any gesture trigger is enabled
-        if settings.showOnHover || settings.showOnScrollDown || settings.hideOnScrollUp || settings.hideOnClickOutside || settings.hideOnMouseAway {
+        let shouldStart = settings.showOnHover || settings.showOnScrollDown || settings.hideOnScrollUp || settings.hideOnClickOutside || settings.hideOnMouseAway
+        logger.debug("Checking hover monitoring: showOnHover=\(self.settings.showOnHover), showOnScrollDown=\(self.settings.showOnScrollDown), hideOnScrollUp=\(self.settings.hideOnScrollUp), hideOnClickOutside=\(self.settings.hideOnClickOutside), hideOnMouseAway=\(self.settings.hideOnMouseAway) -> shouldStart=\(shouldStart)")
+        if shouldStart {
+            logger.debug("Calling hoverManager.startMonitoring()")
             hoverManager.startMonitoring()
         }
     }
@@ -224,13 +235,13 @@ final class AppState {
         cancellables.removeAll()
     }
 
-    func showDrawerWithCapture() {
+    func showDrawerWithCapture(on screen: NSScreen? = nil) {
         Task {
-            await captureAndShowDrawer()
+            await captureAndShowDrawer(on: screen)
         }
     }
 
-    func captureAndShowDrawer() async {
+    func captureAndShowDrawer(on screen: NSScreen? = nil) async {
         #if DEBUG
         logger.debug("=== CAPTURE AND SHOW DRAWER (B2.3) ===")
         logger.debug("hasScreenRecording: \(self.permissions.hasScreenRecording)")
@@ -271,7 +282,7 @@ final class AppState {
             #endif
 
             let separatorX = menuBarManager.separatorXPosition
-            drawerController.show(content: contentView, alignedTo: separatorX)
+            drawerController.show(content: contentView, alignedTo: separatorX, on: screen)
             drawerManager.show()
             hoverManager.updateDrawerFrame(drawerController.panelFrame)
 
@@ -290,7 +301,7 @@ final class AppState {
                 error: error
             )
             let separatorX = menuBarManager.separatorXPosition
-            drawerController.show(content: contentView, alignedTo: separatorX)
+            drawerController.show(content: contentView, alignedTo: separatorX, on: screen)
             drawerManager.show()
         }
     }

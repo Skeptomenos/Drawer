@@ -66,6 +66,9 @@ final class DrawerPanelController {
 
     // MARK: - Panel Lifecycle
 
+    /// Gap between drawer panel and screen edge when right-aligned
+    private static let screenEdgeGap: CGFloat = 5
+
     func show<Content: View>(content: Content, alignedTo xPosition: CGFloat? = nil, on screen: NSScreen? = nil) {
         guard !isAnimating else { return }
 
@@ -77,12 +80,24 @@ final class DrawerPanelController {
 
         guard let panel = panel else { return }
 
-        if let alignX = xPosition {
-            // Right-align: drawer's right edge aligns with the separator's left edge
-            let rightAlignedX = alignX - panel.frame.width
-            panel.position(alignedTo: rightAlignedX, on: screen)
+        let targetScreen = screen ?? NSScreen.main
+
+        if let alignX = xPosition, let targetScreen = targetScreen {
+            let isXOnTargetScreen = alignX >= targetScreen.frame.minX && alignX <= targetScreen.frame.maxX
+
+            if isXOnTargetScreen {
+                let rightAlignedX = alignX - panel.frame.width
+                panel.position(alignedTo: rightAlignedX, on: targetScreen)
+            } else {
+                let rightAlignedX = targetScreen.frame.maxX - panel.frame.width - Self.screenEdgeGap
+                panel.position(alignedTo: rightAlignedX, on: targetScreen)
+
+                #if DEBUG
+                logger.debug("Separator X (\(alignX)) not on target screen, right-aligning to screen edge: \(rightAlignedX)")
+                #endif
+            }
         } else {
-            panel.position(on: screen)
+            panel.position(on: targetScreen)
         }
 
         animateShow(panel: panel)
@@ -187,16 +202,28 @@ final class DrawerPanelController {
             DrawerContainerView {
                 content
             }
+            .fixedSize()
         )
 
         let hosting = NSHostingView(rootView: styledContent)
-        hosting.frame = newPanel.contentView?.bounds ?? .zero
+        let fittingSize = hosting.fittingSize
+        
+        var panelFrame = newPanel.frame
+        panelFrame.size.width = max(fittingSize.width, DrawerPanel.defaultWidth)
+        panelFrame.size.height = max(fittingSize.height, DrawerPanel.defaultHeight)
+        newPanel.setFrame(panelFrame, display: false)
+        
+        hosting.frame = NSRect(origin: .zero, size: panelFrame.size)
         hosting.autoresizingMask = [.width, .height]
 
         newPanel.contentView = hosting
 
         self.panel = newPanel
         self.hostingView = hosting
+        
+        #if DEBUG
+        logger.debug("Panel created with size: \(panelFrame.width)x\(panelFrame.height) (fittingSize: \(fittingSize.width)x\(fittingSize.height))")
+        #endif
     }
 
     func updateContent<Content: View>(_ content: Content) {
@@ -204,8 +231,18 @@ final class DrawerPanelController {
             DrawerContainerView {
                 content
             }
+            .fixedSize()
         )
         hostingView?.rootView = styledContent
+        
+        guard let hosting = hostingView, let panel = panel else { return }
+        
+        let fittingSize = hosting.fittingSize
+        var panelFrame = panel.frame
+        panelFrame.size.width = max(fittingSize.width, DrawerPanel.defaultWidth)
+        panelFrame.size.height = max(fittingSize.height, DrawerPanel.defaultHeight)
+        panel.setFrame(panelFrame, display: true)
+        hosting.frame = NSRect(origin: .zero, size: panelFrame.size)
     }
 
     func updateWidth(_ width: CGFloat) {
