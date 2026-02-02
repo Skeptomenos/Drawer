@@ -188,8 +188,8 @@ final class MenuBarManager {
     private var debugTimer: Timer?
     #endif
 
-    init(settings: SettingsManager = .shared) {
-        self.settings = settings
+    init(settings: SettingsManager? = nil) {
+        self.settings = settings ?? .shared
 
         setupSections(attempt: 1)
         setupAlwaysHiddenSection()

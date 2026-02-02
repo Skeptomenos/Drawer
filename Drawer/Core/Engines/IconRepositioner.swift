@@ -36,6 +36,9 @@ enum RepositionError: Error, LocalizedError {
     /// The move operation could not be completed after all retries.
     case couldNotComplete(IconItem)
     
+    /// The undocumented CGEventField for window ID is unavailable on this macOS version.
+    case windowIDFieldUnavailable
+    
     var errorDescription: String? {
         switch self {
         case .notMovable(let item):
@@ -52,6 +55,8 @@ enum RepositionError: Error, LocalizedError {
             return "Failed to create event source for repositioning"
         case .couldNotComplete(let item):
             return "Could not move '\(item.displayName)' after multiple attempts"
+        case .windowIDFieldUnavailable:
+            return "Icon repositioning is not available on this macOS version"
         }
     }
 }
@@ -81,14 +86,9 @@ enum MoveDestination {
 // MARK: - CGEventField Extension
 
 private extension CGEventField {
-    /// Undocumented but stable field for setting the window ID on a CGEvent.
-    /// Uses rawValue 0x33 which has been stable since macOS 10.4.
-    static let windowID: CGEventField = {
-        guard let field = CGEventField(rawValue: 0x33) else {
-            fatalError("CGEventField windowID (0x33) unavailable - this indicates a breaking macOS API change")
-        }
-        return field
-    }()
+    // Undocumented but stable field (0x33) for window ID targeting, stable since macOS 10.4.
+    // Returns nil if unavailable (indicates breaking macOS API change).
+    static let windowID: CGEventField? = CGEventField(rawValue: 0x33)
 }
 
 // MARK: - IconRepositioner
@@ -335,9 +335,12 @@ final class IconRepositioner {
         event.setIntegerValueField(.mouseEventWindowUnderMousePointer, value: windowID)
         event.setIntegerValueField(.mouseEventWindowUnderMousePointerThatCanHandleThisEvent, value: windowID)
         
-        // Set undocumented but stable field 0x33 for window ID
-        // This is used by macOS to identify the target window
-        event.setIntegerValueField(.windowID, value: windowID)
+        // Set undocumented window ID field (0x33) if available
+        if let windowIDField = CGEventField.windowID {
+            event.setIntegerValueField(windowIDField, value: windowID)
+        } else {
+            logger.warning("CGEventField windowID (0x33) unavailable - icon repositioning may not work correctly")
+        }
         
         // Set unique user data for event matching/debugging
         let userData = Int64(truncatingIfNeeded: Int(bitPattern: ObjectIdentifier(event)))

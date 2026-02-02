@@ -175,11 +175,11 @@ final class IconCapturer {
     private let renderWaitTime: UInt64 = 50_000_000
 
     init(
-        permissionManager: any PermissionProviding = PermissionManager.shared,
-        screenCaptureProvider: any ScreenCaptureProviding = ScreenCaptureProvider.shared
+        permissionManager: (any PermissionProviding)? = nil,
+        screenCaptureProvider: (any ScreenCaptureProviding)? = nil
     ) {
-        self.permissionManager = permissionManager
-        self.screenCaptureProvider = screenCaptureProvider
+        self.permissionManager = permissionManager ?? PermissionManager.shared
+        self.screenCaptureProvider = screenCaptureProvider ?? ScreenCaptureProvider.shared
     }
 
     #if DEBUG

@@ -103,6 +103,13 @@ final class PermissionManager: PermissionProviding {
         }
     }
 
+    // MARK: - Request Debouncing
+
+    /// Prevents repeated permission dialogs when hover triggers rapid requests
+    @ObservationIgnored private var isScreenRecordingRequestPending = false
+    @ObservationIgnored private let screenRecordingRequestCooldown: TimeInterval = 5.0
+    @ObservationIgnored private var lastScreenRecordingRequestTime: Date?
+
     // MARK: - Computed Properties
 
     /// Whether Accessibility permission is granted
@@ -207,14 +214,26 @@ final class PermissionManager: PermissionProviding {
     ///
     /// - Note: Uses `CGRequestScreenCaptureAccess()` which triggers the system prompt.
     func requestScreenRecording() {
+        if isScreenRecordingRequestPending {
+            logger.debug("Screen Recording request already pending, skipping")
+            return
+        }
+        
+        if let lastRequest = lastScreenRecordingRequestTime,
+           Date().timeIntervalSince(lastRequest) < screenRecordingRequestCooldown {
+            logger.debug("Screen Recording request within cooldown, skipping")
+            return
+        }
+        
         logger.info("Requesting Screen Recording permission")
+        isScreenRecordingRequestPending = true
+        lastScreenRecordingRequestTime = Date()
 
-        // This will show the system prompt asking user to grant permission
         CGRequestScreenCaptureAccess()
 
-        // Refresh status after a short delay to allow user interaction
         Task {
-            try? await Task.sleep(for: .seconds(1))
+            try? await Task.sleep(for: .seconds(2))
+            isScreenRecordingRequestPending = false
             refreshScreenRecordingStatus()
         }
     }

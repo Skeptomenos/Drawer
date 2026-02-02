@@ -28,7 +28,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         AppDelegate.shared = self
-
         _ = AppState.shared
 
         showOnboardingIfNeeded()

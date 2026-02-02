@@ -62,11 +62,11 @@ final class IconPositionRestorer {
     ///   - settingsManager: The settings manager to read saved positions from.
     ///   - repositioner: The repositioner to use for moving icons.
     init(
-        settingsManager: SettingsManager = .shared,
-        repositioner: IconRepositioner = .shared
+        settingsManager: SettingsManager? = nil,
+        repositioner: IconRepositioner? = nil
     ) {
-        self.settingsManager = settingsManager
-        self.repositioner = repositioner
+        self.settingsManager = settingsManager ?? .shared
+        self.repositioner = repositioner ?? .shared
     }
     
     // MARK: - Public Methods
