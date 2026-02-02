@@ -12,6 +12,8 @@ import SwiftUI
 // MARK: - SettingsManager
 
 /// Centralized settings management using @AppStorage for persistence.
+/// Uses ObservableObject (not @Observable) because @AppStorage property wrappers
+/// are incompatible with @Observable's generated accessors.
 @MainActor
 final class SettingsManager: ObservableObject {
 

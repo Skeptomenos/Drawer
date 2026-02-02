@@ -22,7 +22,7 @@
 | | **Phase 3: Architecture** | | |
 | [x] | **Task 3.1**: File structure debundling | `specs/ARCH-001_File_Debundling.md` | Done in v0.5.1-alpha.31: Verified all nested types already debundled (LayoutSectionView, LayoutItemView, DrawerItemView, SectionHeader, IconRow, OverlayIconView, OverlayBackground, PermissionRow, PermissionBadge) |
 | [x] | **Task 3.2**: Logic extraction - ViewModels | `specs/ARCH-002_Docs_and_Logic.md` | Done in v0.5.1-alpha.33: Created MenuBarLayoutViewModel.swift, extracted all business logic and state from SettingsMenuBarLayoutView (layoutItems, imageCache, windowIDCache, isRefreshing, errorMessage, hasUnsavedChanges, performReposition, calculateDestination, getSectionItems, findIconItem, refreshItems, saveLayout, moveItem, addSpacer, resetIconPositions, saveCurrentPositions, showRepositionError) |
-| [ ] | **Task 3.3**: Migration to @Observable macro | `specs/DEP-003_Observable_Migration.md` | Convert 13 ObservableObject classes to @Observable; update @Published, @ObservedObject, @EnvironmentObject |
+| [x] | **Task 3.3**: Migration to @Observable macro | `specs/DEP-003_Observable_Migration.md` | Done in v0.5.1-alpha.34: 12/13 classes migrated. SettingsManager intentionally remains ObservableObject due to @AppStorage incompatibility (documented in spec) |
 | [x] | **Task 3.4**: Animation context async wrapper | `specs/CODE_REVIEW_ISSUES.md:CONC-002` | Done in v0.5.1-alpha.30: Created NSAnimationContext+Async.swift, refactored DrawerPanelController and OverlayPanelController to use async/await pattern |
 | | **Phase 4: Testing & Documentation** | | |
 | [ ] | **Task 4.1**: Test infrastructure - create UI test target | `specs/CODE_REVIEW_ISSUES.md:TEST-001` | Create DrawerUITests target with app launch smoke test |
@@ -120,20 +120,22 @@ Global replacements:
 - `.font(.system(size: N))` -> `.font(.caption)` (etc. per size mapping)
 
 ### Task 3.3: @Observable Migration
-13 classes to migrate:
+12 classes migrated to @Observable (already done by prior work):
 1. AppState
-2. SettingsManager
-3. MenuBarManager
-4. PermissionManager
-5. DrawerManager
-6. HoverManager
-7. OverlayModeManager
-8. LaunchAtLoginManager
-9. IconCapturer
-10. ControlItem
-11. MenuBarSection
-12. DrawerPanelController
-13. OverlayPanelController
+2. MenuBarManager
+3. PermissionManager
+4. DrawerManager
+5. HoverManager
+6. OverlayModeManager
+7. LaunchAtLoginManager
+8. IconCapturer
+9. ControlItem
+10. MenuBarSection
+11. DrawerPanelController
+12. OverlayPanelController
+
+**Exception:** SettingsManager remains ObservableObject due to @AppStorage incompatibility.
+@AppStorage creates computed properties that conflict with @Observable's generated accessors.
 
 ---
 

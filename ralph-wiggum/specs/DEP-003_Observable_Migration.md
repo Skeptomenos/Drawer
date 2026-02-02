@@ -9,6 +9,15 @@ The entire project (13 classes) still uses the legacy `ObservableObject` and `@P
 **Affected Classes:**
 `AppState`, `SettingsManager`, `MenuBarManager`, `PermissionManager`, `DrawerManager`, `HoverManager`, `OverlayModeManager`, `LaunchAtLoginManager`, `IconCapturer`, `ControlItem`, `MenuBarSection`, `DrawerPanelController`, `OverlayPanelController`.
 
+## Known Limitation: @AppStorage Incompatibility
+**SettingsManager cannot be migrated to @Observable.** The `@AppStorage` property wrapper creates computed properties internally, which conflicts with `@Observable`'s generated accessors. Build error:
+```
+error: property wrapper cannot be applied to a computed property
+@AppStorage("autoCollapseEnabled") var autoCollapseEnabled: Bool = true
+```
+
+**Resolution:** SettingsManager intentionally remains `ObservableObject`. This is correct behavior per Apple's design - both patterns coexist in SwiftUI. The 12 other classes are migrated to `@Observable`.
+
 ## Mitigation Plan
 1. **Annotate Classes:** Replace `class X: ObservableObject` with `@Observable class X`.
 2. **Remove @Published:** Remove all `@Published` property wrappers from class properties.
