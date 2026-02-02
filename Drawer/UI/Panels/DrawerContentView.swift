@@ -173,10 +173,14 @@ struct DrawerContentView: View {
     /// Renders items without section headers (flat layout)
     private var flatItemsView: some View {
         ForEach(items) { item in
-            DrawerItemView(item: item)
-                .onTapGesture {
-                    onItemTap?(item)
-                }
+            Button {
+                onItemTap?(item)
+            } label: {
+                DrawerItemView(item: item)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Menu bar icon \(item.index + 1)")
+            .accessibilityHint("Double tap to activate")
         }
     }
 
@@ -284,10 +288,14 @@ struct IconRow: View {
     var body: some View {
         HStack(spacing: DrawerDesign.iconSpacing) {
             ForEach(items) { item in
-                DrawerItemView(item: item)
-                    .onTapGesture {
-                        onItemTap?(item)
-                    }
+                Button {
+                    onItemTap?(item)
+                } label: {
+                    DrawerItemView(item: item)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Menu bar icon \(item.index + 1)")
+                .accessibilityHint("Double tap to activate")
             }
         }
     }
