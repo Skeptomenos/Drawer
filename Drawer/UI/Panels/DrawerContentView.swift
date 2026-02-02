@@ -8,45 +8,6 @@
 import os.log
 import SwiftUI
 
-// MARK: - Design Constants
-
-/// Visual design constants for the Drawer, based on reference image analysis.
-/// See: specs/reference_images/icon-drawer.jpg
-enum DrawerDesign {
-    /// Horizontal spacing between icons (10pt)
-    static let iconSpacing: CGFloat = 10
-
-    /// Horizontal padding at leading/trailing edges (16pt)
-    static let horizontalPadding: CGFloat = 16
-
-    /// Vertical padding at top/bottom (7pt - midpoint of 6-8pt range)
-    static let verticalPadding: CGFloat = 7
-
-    /// Standard icon size (22pt x 22pt)
-    static let iconSize: CGFloat = 22
-
-    /// Corner radius for the drawer container (11pt - midpoint of 10-12pt range)
-    static let cornerRadius: CGFloat = 11
-
-    /// Rim light border width (1pt)
-    static let rimLightWidth: CGFloat = 1
-
-    /// Rim light opacity (17.5% - midpoint of 15-20% range)
-    static let rimLightOpacity: Double = 0.175
-
-    /// Shadow radius (12pt - midpoint of 10-15pt range)
-    static let shadowRadius: CGFloat = 12
-
-    /// Shadow Y offset (3pt - midpoint of 2-4pt range)
-    static let shadowYOffset: CGFloat = 3
-
-    /// Shadow opacity
-    static let shadowOpacity: Double = 0.3
-
-    /// Overall drawer height (34pt - midpoint of 32-36pt range)
-    static let drawerHeight: CGFloat = 34
-}
-
 // MARK: - DrawerContentView
 
 /// The main content view displayed inside the Drawer panel.
@@ -236,68 +197,6 @@ struct DrawerContentView: View {
                     .font(.caption2.weight(.medium))
                     .foregroundStyle(.white.opacity(0.6))
             )
-    }
-}
-
-// MARK: - DrawerItemView
-
-/// Renders a single drawer item (captured icon)
-struct DrawerItemView: View {
-
-    let item: DrawerItem
-
-    @State private var isHovered: Bool = false
-
-    var body: some View {
-        Image(decorative: item.image, scale: NSScreen.main?.backingScaleFactor ?? 2.0)
-            .resizable()
-            .aspectRatio(contentMode: .fit)
-            .frame(width: DrawerDesign.iconSize, height: DrawerDesign.iconSize)
-            .scaleEffect(isHovered ? 1.1 : 1.0)
-            .animation(.spring(response: 0.2, dampingFraction: 0.6), value: isHovered)
-            .onHover { hovering in
-                isHovered = hovering
-            }
-            .contentShape(Rectangle())
-            .accessibilityLabel("Menu bar icon \(item.index + 1)")
-            .accessibilityHint("Double tap to activate")
-    }
-}
-
-// MARK: - SectionHeader
-
-/// Header label for a section in the drawer
-struct SectionHeader: View {
-    let title: String
-
-    var body: some View {
-        Text(title)
-            .font(.caption2.weight(.medium))
-            .foregroundStyle(.secondary)
-            .padding(.horizontal, 8)
-    }
-}
-
-// MARK: - IconRow
-
-/// Horizontal row of icons for a section
-struct IconRow: View {
-    let items: [DrawerItem]
-    var onItemTap: ((DrawerItem) -> Void)?
-
-    var body: some View {
-        HStack(spacing: DrawerDesign.iconSpacing) {
-            ForEach(items) { item in
-                Button {
-                    onItemTap?(item)
-                } label: {
-                    DrawerItemView(item: item)
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel("Menu bar icon \(item.index + 1)")
-                .accessibilityHint("Double tap to activate")
-            }
-        }
     }
 }
 

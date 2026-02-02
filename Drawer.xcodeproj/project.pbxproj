@@ -60,6 +60,16 @@
 		DRAWER001000000000000009 /* DrawerPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000009 /* DrawerPanel.swift */; };
 		DRAWER001000000000000010 /* DrawerPanelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000010 /* DrawerPanelController.swift */; };
 		DRAWER001000000000000011 /* DrawerContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000011 /* DrawerContentView.swift */; };
+		DRAWER001000000000000073 /* IconRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000073 /* IconRow.swift */; };
+		DRAWER001000000000000080 /* OverlayIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000080 /* OverlayIconView.swift */; };
+		DRAWER001000000000000081 /* OverlayIconButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000081 /* OverlayIconButtonStyle.swift */; };
+		DRAWER001000000000000082 /* OverlayBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000082 /* OverlayBackground.swift */; };
+		DRAWER001000000000000083 /* OverlayVisualEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000083 /* OverlayVisualEffectView.swift */; };
+		DRAWER001000000000000084 /* PermissionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000084 /* PermissionRow.swift */; };
+		DRAWER001000000000000085 /* PermissionBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000085 /* PermissionBadge.swift */; };
+		DRAWER001000000000000072 /* SectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000072 /* SectionHeader.swift */; };
+		DRAWER001000000000000071 /* DrawerItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000071 /* DrawerItemView.swift */; };
+		DRAWER001000000000000070 /* DrawerDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000070 /* DrawerDesign.swift */; };
 		DRAWER001000000000000012 /* IconCapturer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000012 /* IconCapturer.swift */; };
 		DRAWER001000000000000013 /* DrawerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000013 /* DrawerItem.swift */; };
 		DRAWER001000000000000014 /* DrawerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000014 /* DrawerManager.swift */; };
@@ -129,6 +139,11 @@
 		92D2122221FEE06600C92FF4 /* LauncherApplication.app in Sources */ = {isa = PBXBuildFile; fileRef = 92C5054E21FEC03B0084719A /* LauncherApplication.app */; };
 		967F4B2524169BC800F18D3C /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 967F4B2424169BC800F18D3C /* String+Extension.swift */; };
 		967F4B2824169CAF00F18D3C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 967F4B2A24169CAF00F18D3C /* Localizable.strings */; };
+		DRAWER001000000000000060 /* LayoutDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000060 /* LayoutDesign.swift */; };
+		DRAWER001000000000000061 /* LayoutSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000061 /* LayoutSectionView.swift */; };
+		DRAWER001000000000000062 /* ItemFramePreferenceKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000062 /* ItemFramePreferenceKey.swift */; };
+		DRAWER001000000000000063 /* DropPositionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000063 /* DropPositionDelegate.swift */; };
+		DRAWER001000000000000064 /* LayoutItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000064 /* LayoutItemView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -209,6 +224,16 @@
 		DRAWER002000000000000009 /* DrawerPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerPanel.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000010 /* DrawerPanelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerPanelController.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000011 /* DrawerContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerContentView.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000073 /* IconRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconRow.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000080 /* OverlayIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayIconView.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000081 /* OverlayIconButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayIconButtonStyle.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000082 /* OverlayBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayBackground.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000083 /* OverlayVisualEffectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayVisualEffectView.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000084 /* PermissionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionRow.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000085 /* PermissionBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionBadge.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000072 /* SectionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeader.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000071 /* DrawerItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerItemView.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000070 /* DrawerDesign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerDesign.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000012 /* IconCapturer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconCapturer.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000013 /* DrawerItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerItem.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000014 /* DrawerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerManager.swift; sourceTree = "<group>"; };
@@ -304,6 +329,11 @@
 		FF57A44A25E6C50200988FC2 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Main.strings"; sourceTree = "<group>"; };
 		FF57A44B25E6C50200988FC2 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		FF8A0FB5265E10DB00C76226 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Main.strings"; sourceTree = "<group>"; };
+		DRAWER002000000000000060 /* LayoutDesign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutDesign.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000061 /* LayoutSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutSectionView.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000062 /* ItemFramePreferenceKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemFramePreferenceKey.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000063 /* DropPositionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropPositionDelegate.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000064 /* LayoutItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutItemView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -617,6 +647,11 @@
 				DRAWER002000000000000048 /* LayoutReconciler.swift */,
 				DRAWER002000000000000049 /* IconMatcher.swift */,
 				DRAWER002000000000000021 /* AboutView.swift */,
+				DRAWER002000000000000060 /* LayoutDesign.swift */,
+				DRAWER002000000000000061 /* LayoutSectionView.swift */,
+				DRAWER002000000000000062 /* ItemFramePreferenceKey.swift */,
+				DRAWER002000000000000063 /* DropPositionDelegate.swift */,
+				DRAWER002000000000000064 /* LayoutItemView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -627,6 +662,10 @@
 				DRAWER002000000000000037 /* OverlayPanel.swift */,
 				DRAWER002000000000000038 /* OverlayContentView.swift */,
 				DRAWER002000000000000039 /* OverlayPanelController.swift */,
+				DRAWER002000000000000080 /* OverlayIconView.swift */,
+				DRAWER002000000000000081 /* OverlayIconButtonStyle.swift */,
+				DRAWER002000000000000082 /* OverlayBackground.swift */,
+				DRAWER002000000000000083 /* OverlayVisualEffectView.swift */,
 			);
 			path = Overlay;
 			sourceTree = "<group>";
@@ -637,6 +676,10 @@
 				DRAWER002000000000000009 /* DrawerPanel.swift */,
 				DRAWER002000000000000010 /* DrawerPanelController.swift */,
 				DRAWER002000000000000011 /* DrawerContentView.swift */,
+				DRAWER002000000000000070 /* DrawerDesign.swift */,
+				DRAWER002000000000000071 /* DrawerItemView.swift */,
+				DRAWER002000000000000072 /* SectionHeader.swift */,
+				DRAWER002000000000000073 /* IconRow.swift */,
 			);
 			path = Panels;
 			sourceTree = "<group>";
@@ -645,6 +688,8 @@
 			isa = PBXGroup;
 			children = (
 				DRAWER002000000000000008 /* PermissionStatusView.swift */,
+				DRAWER002000000000000084 /* PermissionRow.swift */,
+				DRAWER002000000000000085 /* PermissionBadge.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -924,6 +969,21 @@
 				DRAWER001000000000000019 /* GeneralSettingsView.swift in Sources */,
 				DRAWER001000000000000020 /* AppearanceSettingsView.swift in Sources */,
 				DRAWER001000000000000042 /* SettingsMenuBarLayoutView.swift in Sources */,
+				DRAWER001000000000000060 /* LayoutDesign.swift in Sources */,
+				DRAWER001000000000000061 /* LayoutSectionView.swift in Sources */,
+				DRAWER001000000000000062 /* ItemFramePreferenceKey.swift in Sources */,
+				DRAWER001000000000000063 /* DropPositionDelegate.swift in Sources */,
+				DRAWER001000000000000064 /* LayoutItemView.swift in Sources */,
+				DRAWER001000000000000070 /* DrawerDesign.swift in Sources */,
+				DRAWER001000000000000071 /* DrawerItemView.swift in Sources */,
+				DRAWER001000000000000072 /* SectionHeader.swift in Sources */,
+				DRAWER001000000000000073 /* IconRow.swift in Sources */,
+				DRAWER001000000000000080 /* OverlayIconView.swift in Sources */,
+				DRAWER001000000000000081 /* OverlayIconButtonStyle.swift in Sources */,
+				DRAWER001000000000000082 /* OverlayBackground.swift in Sources */,
+				DRAWER001000000000000083 /* OverlayVisualEffectView.swift in Sources */,
+				DRAWER001000000000000084 /* PermissionRow.swift in Sources */,
+				DRAWER001000000000000085 /* PermissionBadge.swift in Sources */,
 				DRAWER001000000000000048 /* LayoutReconciler.swift in Sources */,
 				DRAWER001000000000000049 /* IconMatcher.swift in Sources */,
 				DRAWER001000000000000021 /* AboutView.swift in Sources */,
