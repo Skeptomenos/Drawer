@@ -184,6 +184,8 @@ final class IconRepositioner {
         
         // Retry loop: attempt up to maxRetries times, using wake-up clicks between attempts
         for attempt in 1...maxRetries {
+            try Task.checkCancellation()
+            
             do {
                 try await performMove(item: item, to: destination)
                 
@@ -477,6 +479,8 @@ final class IconRepositioner {
         let deadline = ContinuousClock.now + frameChangeTimeout
         
         while ContinuousClock.now < deadline {
+            try Task.checkCancellation()
+            
             guard let currentFrame = Bridging.getWindowFrame(for: item.windowID) else {
                 throw RepositionError.invalidItem(item)
             }

@@ -13,7 +13,7 @@
 |--------|------|----------------|-------|
 | | **Phase 1: Critical Stability** | | |
 | [x] | **Task 1.1**: Fix drawer panel alignment to separator position | `specs/BUG-001_Drawer_Alignment.md` | Done in v0.5.1-alpha.25 |
-| [ ] | **Task 1.2**: Concurrency hardening - debounce & cancellation | `specs/CONC-001_DispatchQueue_main.md`, `specs/CONC-003_Cancellation_Checks.md` | Replace `DispatchQueue.main.asyncAfter` with Task, add `Task.isCancelled` checks in IconCapturer & IconRepositioner loops |
+| [x] | **Task 1.2**: Concurrency hardening - debounce & cancellation | `specs/CONC-001_DispatchQueue_main.md`, `specs/CONC-003_Cancellation_Checks.md` | Done in v0.5.1-alpha.26: Replaced DispatchQueue.main.asyncAfter with Task in MenuBarManager toggle(), added Task.isCancelled/checkCancellation in IconCapturer slicing loop and IconRepositioner polling/retry loops |
 | [ ] | **Task 1.3**: Accessibility - replace onTapGesture with Button | `specs/A11Y-001_onTapGesture_Accessibility.md` | Wrap gesture handlers in Button with `.buttonStyle(.plain)` and `accessibilityLabel` |
 | | **Phase 2: Safety & Modernization** | | |
 | [ ] | **Task 2.1**: Safety sweep - eliminate force unwraps & IUOs | `specs/SEC-003_MenuBarManager_IUOs.md`, `specs/CODE_REVIEW_ISSUES.md:SEC-001,SEC-002` | Fix MenuBarManager IUOs, CGEventField force unwrap, URL force unwrap |

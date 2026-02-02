@@ -400,6 +400,8 @@ final class IconCapturer: ObservableObject {
 
         var currentX: CGFloat = 0
         while currentX + iconWidthPixels <= imageWidth {
+            guard !Task.isCancelled else { break }
+            
             let cropRect = CGRect(
                 x: currentX,
                 y: 0,

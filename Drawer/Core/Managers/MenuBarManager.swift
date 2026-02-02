@@ -63,6 +63,7 @@ final class MenuBarManager: ObservableObject {
     private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "com.drawer", category: "MenuBarManager")
     private var cancellables = Set<AnyCancellable>()
     private var autoCollapseTask: Task<Void, Never>?
+    private var toggleDebounceTask: Task<Void, Never>?
 
     // MARK: - Constants
 
@@ -169,6 +170,7 @@ final class MenuBarManager: ObservableObject {
         debugTimer?.invalidate()
         #endif
         autoCollapseTask?.cancel()
+        toggleDebounceTask?.cancel()
         cancellables.removeAll()
     }
 
@@ -474,7 +476,12 @@ final class MenuBarManager: ObservableObject {
             collapse()
         }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + debounceDelay) { [weak self] in
+        // Cancel any previous debounce task and start a new one
+        // This uses Task + Task.sleep instead of DispatchQueue.main.asyncAfter per CONC-001
+        toggleDebounceTask?.cancel()
+        toggleDebounceTask = Task { [weak self] in
+            try? await Task.sleep(for: .seconds(self?.debounceDelay ?? 0.3))
+            guard !Task.isCancelled else { return }
             self?.isToggling = false
         }
     }
@@ -514,7 +521,7 @@ final class MenuBarManager: ObservableObject {
         autoCollapseTask = Task { [weak self] in
             try? await Task.sleep(for: .seconds(delay))
             guard !Task.isCancelled else { return }
-            await self?.collapse()
+            self?.collapse()
         }
     }
 
