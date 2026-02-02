@@ -64,24 +64,6 @@ struct CompletionStepView: View {
     }
 }
 
-private struct QuickRefRow: View {
-    let icon: String
-    let text: String
-
-    var body: some View {
-        HStack(spacing: 12) {
-            Image(systemName: icon)
-                .font(.body)
-                .foregroundStyle(.secondary)
-                .frame(width: 20)
-
-            Text(text)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-        }
-    }
-}
-
 #Preview {
     CompletionStepView()
         .frame(width: 520, height: 380)

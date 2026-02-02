@@ -144,6 +144,12 @@
 		DRAWER001000000000000062 /* ItemFramePreferenceKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000062 /* ItemFramePreferenceKey.swift */; };
 		DRAWER001000000000000063 /* DropPositionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000063 /* DropPositionDelegate.swift */; };
 		DRAWER001000000000000064 /* LayoutItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000064 /* LayoutItemView.swift */; };
+		DRAWER001000000000000086 /* DrawerContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000086 /* DrawerContainerView.swift */; };
+		DRAWER001000000000000087 /* DrawerBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000087 /* DrawerBackgroundView.swift */; };
+		DRAWER001000000000000088 /* QuickRefRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000088 /* QuickRefRow.swift */; };
+		DRAWER001000000000000089 /* InstructionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000089 /* InstructionRow.swift */; };
+		DRAWER001000000000000090 /* OnboardingPermissionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000090 /* OnboardingPermissionRow.swift */; };
+		DRAWER001000000000000091 /* FeatureRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000091 /* FeatureRow.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -334,6 +340,12 @@
 		DRAWER002000000000000062 /* ItemFramePreferenceKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemFramePreferenceKey.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000063 /* DropPositionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropPositionDelegate.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000064 /* LayoutItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutItemView.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000086 /* DrawerContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerContainerView.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000087 /* DrawerBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerBackgroundView.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000088 /* QuickRefRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickRefRow.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000089 /* InstructionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionRow.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000090 /* OnboardingPermissionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPermissionRow.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000091 /* FeatureRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureRow.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -630,9 +642,13 @@
 			children = (
 				DRAWER002000000000000022 /* OnboardingView.swift */,
 				DRAWER002000000000000023 /* WelcomeStepView.swift */,
+				DRAWER002000000000000091 /* FeatureRow.swift */,
 				DRAWER002000000000000024 /* PermissionsStepView.swift */,
+				DRAWER002000000000000090 /* OnboardingPermissionRow.swift */,
 				DRAWER002000000000000025 /* TutorialStepView.swift */,
+				DRAWER002000000000000089 /* InstructionRow.swift */,
 				DRAWER002000000000000026 /* CompletionStepView.swift */,
+				DRAWER002000000000000088 /* QuickRefRow.swift */,
 			);
 			path = Onboarding;
 			sourceTree = "<group>";
@@ -676,6 +692,8 @@
 				DRAWER002000000000000009 /* DrawerPanel.swift */,
 				DRAWER002000000000000010 /* DrawerPanelController.swift */,
 				DRAWER002000000000000011 /* DrawerContentView.swift */,
+				DRAWER002000000000000086 /* DrawerContainerView.swift */,
+				DRAWER002000000000000087 /* DrawerBackgroundView.swift */,
 				DRAWER002000000000000070 /* DrawerDesign.swift */,
 				DRAWER002000000000000071 /* DrawerItemView.swift */,
 				DRAWER002000000000000072 /* SectionHeader.swift */,
@@ -1012,6 +1030,12 @@
 				DRAWER001000000000000045 /* IconRepositioner.swift in Sources */,
 				DRAWER001000000000000047 /* IconPositionRestorer.swift in Sources */,
 				DRAWER001000000000000046 /* MouseCursor.swift in Sources */,
+				DRAWER001000000000000086 /* DrawerContainerView.swift in Sources */,
+				DRAWER001000000000000087 /* DrawerBackgroundView.swift in Sources */,
+				DRAWER001000000000000088 /* QuickRefRow.swift in Sources */,
+				DRAWER001000000000000089 /* InstructionRow.swift in Sources */,
+				DRAWER001000000000000090 /* OnboardingPermissionRow.swift in Sources */,
+				DRAWER001000000000000091 /* FeatureRow.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
