@@ -6,6 +6,7 @@
 //
 
 import Combine
+import ScreenCaptureKit
 import XCTest
 
 @testable import Drawer
@@ -17,11 +18,13 @@ final class IconCapturerTests: XCTestCase {
 
     private var sut: IconCapturer!
     private var cancellables: Set<AnyCancellable>!
+    private var mockScreenCaptureProvider: MockScreenCaptureProvider!
 
     // MARK: - Setup & Teardown
 
     override func setUp() async throws {
         try await super.setUp()
+        mockScreenCaptureProvider = MockScreenCaptureProvider()
         sut = IconCapturer()
         cancellables = []
     }
@@ -30,6 +33,7 @@ final class IconCapturerTests: XCTestCase {
         sut.clearLastCapture()
         cancellables = nil
         sut = nil
+        mockScreenCaptureProvider = nil
         try await super.tearDown()
     }
 
@@ -543,5 +547,284 @@ final class IconCapturerTests: XCTestCase {
         }
 
         capturer.setIsCapturingForTesting(false)
+    }
+
+    // MARK: - ICN-012: captureMenuBarRegion throws screenNotFound when no matching display
+
+    func testICN012_CaptureMenuBarRegionThrowsScreenNotFoundWhenNoMatchingDisplay() async throws {
+        // Arrange
+        let mockPermissionManager = MockPermissionManager()
+        mockPermissionManager.mockHasScreenRecording = true
+
+        let mockProvider = MockScreenCaptureProvider()
+        mockProvider.mockShareableContentResult = ShareableContentResult(displays: [], windows: [])
+
+        let capturer = IconCapturer(
+            permissionManager: mockPermissionManager,
+            screenCaptureProvider: mockProvider
+        )
+
+        // Act & Assert
+        do {
+            _ = try await capturer.captureMenuBarRegion()
+            XCTFail("ICN-012: Should throw when no matching display found")
+        } catch let error as CaptureError {
+            switch error {
+            case .screenNotFound:
+                XCTAssertTrue(
+                    mockProvider.getShareableContentCalled,
+                    "ICN-012: getShareableContent should be called"
+                )
+                XCTAssertFalse(
+                    mockProvider.captureImageCalled,
+                    "ICN-012: captureImage should NOT be called when no display found"
+                )
+            default:
+                XCTFail("ICN-012: Expected .screenNotFound but got \(error)")
+            }
+        }
+    }
+
+    // MARK: - ICN-013: captureMenuBarRegion with mock provider throws on getShareableContent failure
+
+    func testICN013_CaptureMenuBarRegionThrowsOnGetShareableContentFailure() async throws {
+        // Arrange
+        let mockPermissionManager = MockPermissionManager()
+        mockPermissionManager.mockHasScreenRecording = true
+
+        let mockProvider = MockScreenCaptureProvider()
+        mockProvider.shouldThrowOnGetShareableContent = true
+        mockProvider.mockError = .screenNotFound
+
+        let capturer = IconCapturer(
+            permissionManager: mockPermissionManager,
+            screenCaptureProvider: mockProvider
+        )
+
+        // Act & Assert
+        do {
+            _ = try await capturer.captureMenuBarRegion()
+            XCTFail("ICN-013: Should throw when getShareableContent fails")
+        } catch let error as CaptureError {
+            switch error {
+            case .screenNotFound:
+                XCTAssertTrue(
+                    mockProvider.getShareableContentCalled,
+                    "ICN-013: getShareableContent should be called before failure"
+                )
+                XCTAssertFalse(
+                    mockProvider.captureImageCalled,
+                    "ICN-013: captureImage should NOT be called after getShareableContent failure"
+                )
+            default:
+                XCTFail("ICN-013: Expected .screenNotFound but got \(error)")
+            }
+        }
+    }
+
+    // MARK: - ICN-014: getShareableContent passes correct parameters
+
+    func testICN014_GetShareableContentPassesCorrectParameters() async throws {
+        // Arrange
+        let mockPermissionManager = MockPermissionManager()
+        mockPermissionManager.mockHasScreenRecording = true
+
+        let mockProvider = MockScreenCaptureProvider()
+        mockProvider.mockShareableContentResult = ShareableContentResult(displays: [], windows: [])
+
+        let capturer = IconCapturer(
+            permissionManager: mockPermissionManager,
+            screenCaptureProvider: mockProvider
+        )
+
+        // Act - will fail with screenNotFound but we just want to verify parameters
+        do {
+            _ = try await capturer.captureMenuBarRegion()
+        } catch {
+            // Expected to throw screenNotFound
+        }
+
+        // Assert
+        XCTAssertEqual(
+            mockProvider.lastGetShareableContentExcludeDesktopWindows,
+            false,
+            "ICN-014: excludeDesktopWindows should be false"
+        )
+        XCTAssertEqual(
+            mockProvider.lastGetShareableContentOnScreenWindowsOnly,
+            true,
+            "ICN-014: onScreenWindowsOnly should be true"
+        )
+    }
+
+    // MARK: - ICN-015: Mock provider tracks call counts correctly
+
+    func testICN015_MockProviderTracksCallCountsCorrectly() async throws {
+        // Arrange
+        let mockPermissionManager = MockPermissionManager()
+        mockPermissionManager.mockHasScreenRecording = true
+
+        let mockProvider = MockScreenCaptureProvider()
+        mockProvider.mockShareableContentResult = ShareableContentResult(displays: [], windows: [])
+
+        let capturer = IconCapturer(
+            permissionManager: mockPermissionManager,
+            screenCaptureProvider: mockProvider
+        )
+
+        // Act - each call will fail but still increments counters
+        for _ in 0..<3 {
+            do {
+                _ = try await capturer.captureMenuBarRegion()
+            } catch {
+                // Expected to throw screenNotFound
+            }
+        }
+
+        // Assert
+        XCTAssertEqual(
+            mockProvider.getShareableContentCallCount,
+            3,
+            "ICN-015: getShareableContent should be called 3 times"
+        )
+    }
+
+    // MARK: - ICN-016: determineSectionType returns correct section for icon positions
+
+    func testICN016_DetermineSectionTypeReturnsCorrectSection() async throws {
+        // Arrange
+        let capturer = IconCapturer()
+        let hiddenSeparatorX: CGFloat = 200
+        let alwaysHiddenSeparatorX: CGFloat = 100
+
+        // Act & Assert - icon to the left of alwaysHidden separator
+        let alwaysHiddenFrame = CGRect(x: 50, y: 0, width: 22, height: 24)
+        let alwaysHiddenResult = capturer.determineSectionType(
+            for: alwaysHiddenFrame,
+            hiddenSeparatorX: hiddenSeparatorX,
+            alwaysHiddenSeparatorX: alwaysHiddenSeparatorX
+        )
+        XCTAssertEqual(
+            alwaysHiddenResult,
+            .alwaysHidden,
+            "ICN-016: Icon at x=50 should be in alwaysHidden section"
+        )
+
+        // Icon between alwaysHidden and hidden separators
+        let hiddenFrame = CGRect(x: 150, y: 0, width: 22, height: 24)
+        let hiddenResult = capturer.determineSectionType(
+            for: hiddenFrame,
+            hiddenSeparatorX: hiddenSeparatorX,
+            alwaysHiddenSeparatorX: alwaysHiddenSeparatorX
+        )
+        XCTAssertEqual(
+            hiddenResult,
+            .hidden,
+            "ICN-016: Icon at x=150 should be in hidden section"
+        )
+
+        // Icon to the right of hidden separator
+        let visibleFrame = CGRect(x: 250, y: 0, width: 22, height: 24)
+        let visibleResult = capturer.determineSectionType(
+            for: visibleFrame,
+            hiddenSeparatorX: hiddenSeparatorX,
+            alwaysHiddenSeparatorX: alwaysHiddenSeparatorX
+        )
+        XCTAssertEqual(
+            visibleResult,
+            .visible,
+            "ICN-016: Icon at x=250 should be in visible section"
+        )
+    }
+
+    // MARK: - ICN-017: captureMenuBarRegion without permission throws permissionDenied
+
+    func testICN017_CaptureMenuBarRegionWithoutPermissionThrowsPermissionDenied() async throws {
+        // Arrange
+        let mockPermissionManager = MockPermissionManager()
+        mockPermissionManager.mockHasScreenRecording = false
+
+        let mockProvider = MockScreenCaptureProvider()
+
+        let capturer = IconCapturer(
+            permissionManager: mockPermissionManager,
+            screenCaptureProvider: mockProvider
+        )
+
+        // Act & Assert
+        do {
+            _ = try await capturer.captureMenuBarRegion()
+            XCTFail("ICN-017: Should throw permissionDenied when no screen recording permission")
+        } catch let error as CaptureError {
+            switch error {
+            case .permissionDenied:
+                XCTAssertFalse(
+                    mockProvider.getShareableContentCalled,
+                    "ICN-017: getShareableContent should NOT be called when permission denied"
+                )
+                XCTAssertFalse(
+                    mockProvider.captureImageCalled,
+                    "ICN-017: captureImage should NOT be called when permission denied"
+                )
+            default:
+                XCTFail("ICN-017: Expected .permissionDenied but got \(error)")
+            }
+        }
+    }
+
+    // MARK: - ICN-018: Mock provider resetTracking clears all state
+
+    func testICN018_MockProviderResetTrackingClearsAllState() async throws {
+        // Arrange - set mock state directly without calling real ScreenCaptureKit APIs
+        let mockProvider = MockScreenCaptureProvider()
+
+        // Simulate that methods were called by setting tracking state directly
+        mockProvider.getShareableContentCalled = true
+        mockProvider.getShareableContentCallCount = 5
+        mockProvider.captureImageCalled = true
+        mockProvider.captureImageCallCount = 3
+        mockProvider.lastGetShareableContentExcludeDesktopWindows = false
+        mockProvider.lastGetShareableContentOnScreenWindowsOnly = true
+
+        // Verify pre-conditions
+        XCTAssertTrue(mockProvider.getShareableContentCalled, "ICN-018: Pre-condition check")
+        XCTAssertEqual(mockProvider.getShareableContentCallCount, 5, "ICN-018: Pre-condition check")
+        XCTAssertTrue(mockProvider.captureImageCalled, "ICN-018: Pre-condition check")
+        XCTAssertEqual(mockProvider.captureImageCallCount, 3, "ICN-018: Pre-condition check")
+
+        // Act
+        mockProvider.resetTracking()
+
+        // Assert
+        XCTAssertFalse(
+            mockProvider.getShareableContentCalled,
+            "ICN-018: getShareableContentCalled should be false after reset"
+        )
+        XCTAssertEqual(
+            mockProvider.getShareableContentCallCount,
+            0,
+            "ICN-018: getShareableContentCallCount should be 0 after reset"
+        )
+        XCTAssertFalse(
+            mockProvider.captureImageCalled,
+            "ICN-018: captureImageCalled should be false after reset"
+        )
+        XCTAssertEqual(
+            mockProvider.captureImageCallCount,
+            0,
+            "ICN-018: captureImageCallCount should be 0 after reset"
+        )
+        XCTAssertNil(
+            mockProvider.lastGetShareableContentExcludeDesktopWindows,
+            "ICN-018: lastGetShareableContentExcludeDesktopWindows should be nil after reset"
+        )
+        XCTAssertNil(
+            mockProvider.lastGetShareableContentOnScreenWindowsOnly,
+            "ICN-018: lastGetShareableContentOnScreenWindowsOnly should be nil after reset"
+        )
+        XCTAssertNil(
+            mockProvider.lastCaptureImageConfiguration,
+            "ICN-018: lastCaptureImageConfiguration should be nil after reset"
+        )
     }
 }

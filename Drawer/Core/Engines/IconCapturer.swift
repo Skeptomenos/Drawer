@@ -8,7 +8,80 @@
 import AppKit
 import Foundation
 import os.log
-import ScreenCaptureKit
+@preconcurrency import ScreenCaptureKit
+
+// MARK: - ScreenCaptureProviding
+
+/// Protocol abstracting ScreenCaptureKit system boundary for testability (TEST-003).
+@MainActor
+protocol ScreenCaptureProviding: Sendable {
+    func getShareableContent(
+        excludeDesktopWindows: Bool,
+        onScreenWindowsOnly: Bool
+    ) async throws -> ShareableContentResult
+
+    func captureImage(
+        contentFilter: SCContentFilter,
+        configuration: SCStreamConfiguration
+    ) async throws -> CGImage
+}
+
+// MARK: - ShareableContentResult
+
+/// Testable wrapper for SCShareableContent results.
+struct ShareableContentResult: Sendable {
+    let displays: [SCDisplay]
+    let windows: [SCWindow]
+
+    init(from content: SCShareableContent) {
+        self.displays = content.displays
+        self.windows = content.windows
+    }
+
+    init(displays: [SCDisplay], windows: [SCWindow] = []) {
+        self.displays = displays
+        self.windows = windows
+    }
+}
+
+// MARK: - ScreenCaptureProvider
+
+/// Production implementation using actual ScreenCaptureKit APIs.
+@MainActor
+final class ScreenCaptureProvider: ScreenCaptureProviding {
+    static let shared = ScreenCaptureProvider()
+
+    init() {}
+
+    func getShareableContent(
+        excludeDesktopWindows: Bool,
+        onScreenWindowsOnly: Bool
+    ) async throws -> ShareableContentResult {
+        do {
+            let content = try await SCShareableContent.excludingDesktopWindows(
+                excludeDesktopWindows,
+                onScreenWindowsOnly: onScreenWindowsOnly
+            )
+            return ShareableContentResult(from: content)
+        } catch {
+            throw CaptureError.systemError(error)
+        }
+    }
+
+    func captureImage(
+        contentFilter: SCContentFilter,
+        configuration: SCStreamConfiguration
+    ) async throws -> CGImage {
+        do {
+            return try await SCScreenshotManager.captureImage(
+                contentFilter: contentFilter,
+                configuration: configuration
+            )
+        } catch {
+            throw CaptureError.systemError(error)
+        }
+    }
+}
 
 // MARK: - CaptureError
 
@@ -88,6 +161,7 @@ final class IconCapturer {
     private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "com.drawer", category: "IconCapturer")
 
     private let permissionManager: any PermissionProviding
+    private let screenCaptureProvider: any ScreenCaptureProviding
 
     private(set) var isCapturing: Bool = false
     private(set) var lastCaptureResult: MenuBarCaptureResult?
@@ -100,8 +174,12 @@ final class IconCapturer {
     private var menuBarHeight: CGFloat { MenuBarMetrics.height }
     private let renderWaitTime: UInt64 = 50_000_000
 
-    init(permissionManager: any PermissionProviding = PermissionManager.shared) {
+    init(
+        permissionManager: any PermissionProviding = PermissionManager.shared,
+        screenCaptureProvider: any ScreenCaptureProviding = ScreenCaptureProvider.shared
+    ) {
         self.permissionManager = permissionManager
+        self.screenCaptureProvider = screenCaptureProvider
     }
 
     #if DEBUG
@@ -344,12 +422,15 @@ final class IconCapturer {
     private func captureUsingScreenCaptureKit() async throws -> CGImage {
         logger.debug("Capturing using ScreenCaptureKit")
 
-        let content: SCShareableContent
+        let content: ShareableContentResult
         do {
-            content = try await SCShareableContent.excludingDesktopWindows(false, onScreenWindowsOnly: true)
+            content = try await screenCaptureProvider.getShareableContent(
+                excludeDesktopWindows: false,
+                onScreenWindowsOnly: true
+            )
         } catch {
             logger.error("Failed to get shareable content: \(error.localizedDescription)")
-            throw CaptureError.systemError(error)
+            throw error
         }
 
         guard let display = content.displays.first(where: { $0.displayID == CGMainDisplayID() }) else {
@@ -376,7 +457,7 @@ final class IconCapturer {
         config.captureResolution = .best
 
         do {
-            let image = try await SCScreenshotManager.captureImage(
+            let image = try await screenCaptureProvider.captureImage(
                 contentFilter: filter,
                 configuration: config
             )
@@ -384,7 +465,7 @@ final class IconCapturer {
             return image
         } catch {
             logger.error("ScreenCaptureKit capture failed: \(error.localizedDescription)")
-            throw CaptureError.systemError(error)
+            throw error
         }
     }
 
