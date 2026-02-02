@@ -10,7 +10,7 @@ import SwiftUI
 // MARK: - PermissionStatusView
 
 struct PermissionStatusView: View {
-    @StateObject private var permissionManager = PermissionManager.shared
+    @State private var permissionManager = PermissionManager.shared
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {

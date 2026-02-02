@@ -6,7 +6,6 @@
 //
 
 import AppKit
-import Combine
 import os.log
 
 // MARK: - OverlayModeManager
@@ -27,18 +26,21 @@ import os.log
 /// 6. EventSimulator sends click to hidden icon
 /// 7. Overlay dismisses
 @MainActor
-final class OverlayModeManager: ObservableObject {
+@Observable
+final class OverlayModeManager {
 
     // MARK: - Published State
 
-    /// Whether the overlay panel is currently visible
-    @Published private(set) var isOverlayVisible: Bool = false
+    /// Whether the overlay panel is currently visible (delegated to overlayController)
+    var isOverlayVisible: Bool {
+        overlayController.isVisible
+    }
 
     /// Whether icons are currently being captured
-    @Published private(set) var isCapturing: Bool = false
+    private(set) var isCapturing: Bool = false
 
     /// The currently displayed items in the overlay
-    @Published private(set) var capturedItems: [DrawerItem] = []
+    private(set) var capturedItems: [DrawerItem] = []
 
     // MARK: - Dependencies
 
@@ -52,8 +54,7 @@ final class OverlayModeManager: ObservableObject {
         subsystem: Bundle.main.bundleIdentifier ?? "com.drawer",
         category: "OverlayModeManager"
     )
-    private var cancellables = Set<AnyCancellable>()
-    private var autoHideTask: Task<Void, Never>?
+    @ObservationIgnored private var autoHideTask: Task<Void, Never>?
 
     // MARK: - Configuration
 
@@ -74,14 +75,6 @@ final class OverlayModeManager: ObservableObject {
         self.eventSimulator = eventSimulator
         self.menuBarManager = menuBarManager
         self.overlayController = overlayController ?? OverlayPanelController()
-
-        setupBindings()
-    }
-
-    private func setupBindings() {
-        // Sync visibility state from overlay controller
-        overlayController.$isVisible
-            .assign(to: &$isOverlayVisible)
     }
 
     // MARK: - Public API
@@ -242,10 +235,4 @@ final class OverlayModeManager: ObservableObject {
         autoHideTask = nil
     }
 
-    // MARK: - Cleanup
-
-    deinit {
-        autoHideTask?.cancel()
-        cancellables.removeAll()
-    }
 }

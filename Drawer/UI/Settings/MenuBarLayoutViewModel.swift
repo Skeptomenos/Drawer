@@ -24,24 +24,25 @@ import SwiftUI
 /// This separation follows ARCH-002: Views should not contain business logic.
 /// The View observes this ViewModel's published properties for UI updates.
 @MainActor
-final class MenuBarLayoutViewModel: ObservableObject {
+@Observable
+final class MenuBarLayoutViewModel {
 
     // MARK: - Published State
 
     /// Items for display, populated from IconCapturer and reconciled with saved layout
-    @Published private(set) var layoutItems: [SettingsLayoutItem] = []
+    private(set) var layoutItems: [SettingsLayoutItem] = []
 
     /// Cache mapping layout item IDs to captured CGImages
-    @Published private(set) var imageCache: [UUID: CGImage] = [:]
+    private(set) var imageCache: [UUID: CGImage] = [:]
 
     /// Whether a refresh is in progress
-    @Published private(set) var isRefreshing: Bool = false
+    private(set) var isRefreshing: Bool = false
 
     /// Error message if capture fails
-    @Published var errorMessage: String?
+    var errorMessage: String?
 
     /// Whether layout has been modified (for save indication)
-    @Published private(set) var hasUnsavedChanges: Bool = false
+    private(set) var hasUnsavedChanges: Bool = false
 
     // MARK: - Internal State
 

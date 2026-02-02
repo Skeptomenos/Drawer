@@ -10,7 +10,7 @@ import SwiftUI
 // MARK: - PermissionBadge
 
 struct PermissionBadge: View {
-    @StateObject private var permissionManager = PermissionManager.shared
+    @State private var permissionManager = PermissionManager.shared
 
     var body: some View {
         HStack(spacing: 4) {

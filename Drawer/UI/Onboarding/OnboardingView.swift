@@ -32,7 +32,7 @@ struct OnboardingView: View {
     // MARK: - Environment & State
 
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var permissionManager = PermissionManager.shared
+    @State private var permissionManager = PermissionManager.shared
     @State private var currentStep: OnboardingStep = .welcome
 
     // MARK: - Properties

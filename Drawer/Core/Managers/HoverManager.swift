@@ -6,27 +6,27 @@
 //
 
 import AppKit
-import Combine
 
 @MainActor
-final class HoverManager: ObservableObject {
+@Observable
+final class HoverManager {
 
     static let shared = HoverManager()
 
-    @Published private(set) var isMouseInTriggerZone: Bool = false
-    @Published private(set) var isMouseInDrawerArea: Bool = false
-    @Published private(set) var isMonitoring: Bool = false
+    private(set) var isMouseInTriggerZone: Bool = false
+    private(set) var isMouseInDrawerArea: Bool = false
+    private(set) var isMonitoring: Bool = false
 
     private var menuBarHeight: CGFloat { MenuBarMetrics.height }
     private let debounceInterval: TimeInterval = 0.15
     private let hideDebounceInterval: TimeInterval = 0.3
 
-    private var mouseMonitor: GlobalEventMonitor?
-    private var scrollMonitor: GlobalEventMonitor?
-    private var clickMonitor: GlobalEventMonitor?
-    private var appDeactivationObserver: NSObjectProtocol?
-    private var showDebounceTimer: Timer?
-    private var hideDebounceTimer: Timer?
+    @ObservationIgnored private var mouseMonitor: GlobalEventMonitor?
+    @ObservationIgnored private var scrollMonitor: GlobalEventMonitor?
+    @ObservationIgnored private var clickMonitor: GlobalEventMonitor?
+    @ObservationIgnored private var appDeactivationObserver: NSObjectProtocol?
+    @ObservationIgnored private var showDebounceTimer: Timer?
+    @ObservationIgnored private var hideDebounceTimer: Timer?
 
     // MARK: - Scroll Gesture Properties
 
@@ -50,17 +50,6 @@ final class HoverManager: ObservableObject {
     private var isDrawerVisible: Bool = false
 
     private init() {}
-
-    deinit {
-        mouseMonitor?.stop()
-        scrollMonitor?.stop()
-        clickMonitor?.stop()
-        if let observer = appDeactivationObserver {
-            NSWorkspace.shared.notificationCenter.removeObserver(observer)
-        }
-        showDebounceTimer?.invalidate()
-        hideDebounceTimer?.invalidate()
-    }
 
     func startMonitoring() {
         guard !isMonitoring else { return }

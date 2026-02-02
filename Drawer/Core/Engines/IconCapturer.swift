@@ -6,7 +6,6 @@
 //
 
 import AppKit
-import Combine
 import Foundation
 import os.log
 import ScreenCaptureKit
@@ -81,7 +80,8 @@ struct MenuBarCaptureResult {
 // MARK: - IconCapturer
 
 @MainActor
-final class IconCapturer: ObservableObject {
+@Observable
+final class IconCapturer {
 
     static let shared = IconCapturer()
 
@@ -89,9 +89,13 @@ final class IconCapturer: ObservableObject {
 
     private let permissionManager: any PermissionProviding
 
-    @Published private(set) var isCapturing: Bool = false
-    @Published private(set) var lastCaptureResult: MenuBarCaptureResult?
-    @Published private(set) var lastError: CaptureError?
+    private(set) var isCapturing: Bool = false
+    private(set) var lastCaptureResult: MenuBarCaptureResult?
+    private(set) var lastError: CaptureError?
+    
+    @ObservationIgnored var onCaptureCompleted: ((MenuBarCaptureResult) -> Void)?
+    @ObservationIgnored var onCaptureStarted: (() -> Void)?
+    @ObservationIgnored var onCaptureError: ((CaptureError) -> Void)?
 
     private var menuBarHeight: CGFloat { MenuBarMetrics.height }
     private let renderWaitTime: UInt64 = 50_000_000
@@ -116,6 +120,7 @@ final class IconCapturer: ObservableObject {
 
         isCapturing = true
         lastError = nil
+        onCaptureStarted?()
 
         defer {
             isCapturing = false
@@ -178,6 +183,7 @@ final class IconCapturer: ObservableObject {
         }
 
         lastCaptureResult = captureResult
+        onCaptureCompleted?(captureResult)
         return captureResult
     }
 

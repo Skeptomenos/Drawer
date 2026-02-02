@@ -5,7 +5,6 @@
 //  Copyright © 2026 Drawer. MIT License.
 //
 
-import Combine
 import Foundation
 
 @testable import Drawer
@@ -13,12 +12,13 @@ import Foundation
 /// SETUP-005: Mock implementation of PermissionManager for testing.
 /// Allows tests to control permission states without requiring actual system permissions.
 @MainActor
-final class MockPermissionManager: ObservableObject, PermissionProviding {
+@Observable
+final class MockPermissionManager: PermissionProviding {
 
-    // MARK: - Published State (mirrors PermissionManager)
+    // MARK: - State (mirrors PermissionManager)
 
-    @Published private(set) var accessibilityStatus: PermissionStatus = .unknown
-    @Published private(set) var screenRecordingStatus: PermissionStatus = .unknown
+    private(set) var accessibilityStatus: PermissionStatus = .unknown
+    private(set) var screenRecordingStatus: PermissionStatus = .unknown
 
     // MARK: - Configurable Permission States
 
@@ -54,15 +54,9 @@ final class MockPermissionManager: ObservableObject, PermissionProviding {
         !hasAllPermissions
     }
 
-    // MARK: - Combine (mirrors PermissionManager)
+    // MARK: - Callback (mirrors PermissionManager @Observable pattern)
 
-    var permissionStatusChanged: AnyPublisher<Void, Never> {
-        Publishers.Merge(
-            $accessibilityStatus.map { _ in () },
-            $screenRecordingStatus.map { _ in () }
-        )
-        .eraseToAnyPublisher()
-    }
+    var onPermissionStatusChanged: (() -> Void)?
 
     // MARK: - Test Tracking
 
@@ -104,6 +98,7 @@ final class MockPermissionManager: ObservableObject, PermissionProviding {
         refreshAllStatusesCallCount += 1
         accessibilityStatus = mockHasAccessibility ? .granted : .denied
         screenRecordingStatus = mockHasScreenRecording ? .granted : .denied
+        onPermissionStatusChanged?()
     }
 
     func refreshAccessibilityStatus() {

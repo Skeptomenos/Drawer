@@ -14,7 +14,7 @@ struct DrawerApp: App {
     var body: some Scene {
         Settings {
             SettingsView()
-                .environmentObject(AppState.shared)
+                .environment(AppState.shared)
         }
     }
 }

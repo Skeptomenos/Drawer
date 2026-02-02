@@ -10,29 +10,36 @@ import Combine
 import os.log
 
 @MainActor
-final class AppState: ObservableObject {
+@Observable
+final class AppState {
 
-    @Published var isCollapsed: Bool = true
-    @Published private(set) var isDrawerVisible: Bool = false
-    @Published private(set) var hasRequiredPermissions: Bool = false
-    @Published private(set) var isCapturing: Bool = false
-    @Published private(set) var captureError: CaptureError?
+    var isCollapsed: Bool = true
+    private(set) var isDrawerVisible: Bool = false {
+        didSet {
+            if oldValue != isDrawerVisible {
+                hoverManager.setDrawerVisible(isDrawerVisible)
+            }
+        }
+    }
+    private(set) var hasRequiredPermissions: Bool = false
+    private(set) var isCapturing: Bool = false
+    private(set) var captureError: CaptureError?
 
-    let menuBarManager: MenuBarManager
-    let settings: SettingsManager
-    let permissions: PermissionManager
-    let drawerController: DrawerPanelController
-    let drawerManager: DrawerManager
-    let iconCapturer: IconCapturer
-    let eventSimulator: EventSimulator
-    let hoverManager: HoverManager
-    let overlayModeManager: OverlayModeManager
+    @ObservationIgnored let menuBarManager: MenuBarManager
+    @ObservationIgnored let settings: SettingsManager
+    @ObservationIgnored let permissions: PermissionManager
+    @ObservationIgnored let drawerController: DrawerPanelController
+    @ObservationIgnored let drawerManager: DrawerManager
+    @ObservationIgnored let iconCapturer: IconCapturer
+    @ObservationIgnored let eventSimulator: EventSimulator
+    @ObservationIgnored let hoverManager: HoverManager
+    @ObservationIgnored let overlayModeManager: OverlayModeManager
 
     static let shared = AppState()
 
-    private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "com.drawer", category: "AppState")
-    private var cancellables = Set<AnyCancellable>()
-    private var menuBarFailureObserver: NSObjectProtocol?
+    @ObservationIgnored private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "com.drawer", category: "AppState")
+    @ObservationIgnored private var cancellables = Set<AnyCancellable>()
+    @ObservationIgnored private var menuBarFailureObserver: NSObjectProtocol?
 
     var hasCompletedOnboarding: Bool {
         get { settings.hasCompletedOnboarding }
@@ -64,10 +71,10 @@ final class AppState: ObservableObject {
             menuBarManager: menuBarManager
         )
 
-        // Using assign(to:) with &$ is safe - no retain cycle created
-        // See: https://developer.apple.com/documentation/combine/publisher/assign(to:)
-        menuBarManager.$isCollapsed
-            .assign(to: &$isCollapsed)
+        menuBarManager.onCollapsedChanged = { [weak self] collapsed in
+            self?.isCollapsed = collapsed
+        }
+        isCollapsed = menuBarManager.isCollapsed
 
         setupPermissionBindings()
         setupDrawerBindings()
@@ -88,12 +95,9 @@ final class AppState: ObservableObject {
     }
 
     private func setupPermissionBindings() {
-        permissions.permissionStatusChanged
-            .sink { [weak self] in
-                self?.hasRequiredPermissions = self?.permissions.hasAllPermissions ?? false
-            }
-            .store(in: &cancellables)
-
+        permissions.onPermissionStatusChanged = { [weak self] in
+            self?.hasRequiredPermissions = self?.permissions.hasAllPermissions ?? false
+        }
         hasRequiredPermissions = permissions.hasAllPermissions
     }
 
@@ -141,16 +145,16 @@ final class AppState: ObservableObject {
     }
 
     private func setupDrawerBindings() {
-        drawerController.$isVisible
-            .assign(to: &$isDrawerVisible)
-
-        drawerManager.$isVisible
-            .sink { [weak self] visible in
-                if !visible {
-                    self?.drawerController.hide()
-                }
+        drawerManager.onVisibilityChanged = { [weak self] visible in
+            self?.isDrawerVisible = visible
+            if !visible {
+                self?.drawerController.hide()
             }
-            .store(in: &cancellables)
+        }
+        
+        drawerController.onVisibilityChanged = { [weak self] visible in
+            self?.isDrawerVisible = visible
+        }
 
         menuBarManager.onShowDrawer = { [weak self] in
             self?.showDrawerWithCapture()
@@ -158,23 +162,22 @@ final class AppState: ObservableObject {
     }
 
     private func setupCapturerBindings() {
-        iconCapturer.$isCapturing
-            .assign(to: &$isCapturing)
-
-        iconCapturer.$lastError
-            .assign(to: &$captureError)
-
-        iconCapturer.$lastCaptureResult
-            .compactMap { $0 }
-            .sink { [weak self] result in
-                self?.drawerManager.updateItems(from: result)
-            }
-            .store(in: &cancellables)
+        iconCapturer.onCaptureCompleted = { [weak self] result in
+            self?.drawerManager.updateItems(from: result)
+            self?.isCapturing = false
+        }
+        
+        iconCapturer.onCaptureStarted = { [weak self] in
+            self?.isCapturing = true
+        }
+        
+        iconCapturer.onCaptureError = { [weak self] error in
+            self?.captureError = error
+            self?.isCapturing = false
+        }
     }
 
     private func setupHoverBindings() {
-        // Callbacks from HoverManager - no need to check settings here
-        // HoverManager already checks the appropriate setting for each trigger type
         hoverManager.onShouldShowDrawer = { [weak self] in
             self?.showDrawerWithCapture()
         }
@@ -182,12 +185,6 @@ final class AppState: ObservableObject {
         hoverManager.onShouldHideDrawer = { [weak self] in
             self?.hideDrawer()
         }
-
-        $isDrawerVisible
-            .sink { [weak self] visible in
-                self?.hoverManager.setDrawerVisible(visible)
-            }
-            .store(in: &cancellables)
 
         // Subscribe to all gesture trigger setting changes
         // Monitor should run if ANY gesture trigger is enabled
@@ -220,7 +217,7 @@ final class AppState: ObservableObject {
         }
     }
 
-    deinit {
+    func cleanup() {
         if let observer = menuBarFailureObserver {
             NotificationCenter.default.removeObserver(observer)
         }

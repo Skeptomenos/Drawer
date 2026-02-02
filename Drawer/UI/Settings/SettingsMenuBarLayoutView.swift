@@ -21,11 +21,11 @@ struct SettingsMenuBarLayoutView: View {
 
     // MARK: - Environment
 
-    @EnvironmentObject private var appState: AppState
+    @Environment(AppState.self) private var appState
 
     // MARK: - ViewModel
 
-    @StateObject private var viewModel = MenuBarLayoutViewModel()
+    @State private var viewModel = MenuBarLayoutViewModel()
 
     // MARK: - Local UI State
 
@@ -193,5 +193,5 @@ struct SettingsMenuBarLayoutView: View {
 #Preview {
     SettingsMenuBarLayoutView()
         .frame(width: 500, height: 600)
-        .environmentObject(AppState.shared)
+        .environment(AppState.shared)
 }

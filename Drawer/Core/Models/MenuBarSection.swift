@@ -6,25 +6,17 @@
 //
 
 import AppKit
-import Combine
 import os.log
 
 // MARK: - MenuBarSectionType
 
-/// Represents the type of menu bar section
 enum MenuBarSectionType: String, Codable, CaseIterable, Identifiable {
-    /// The always-visible toggle button area
     case visible
-
-    /// The hideable section (between separator and toggle)
     case hidden
-
-    /// The always-hidden section (only visible in Drawer panel)
     case alwaysHidden
 
     var id: String { rawValue }
 
-    /// Display name for UI
     var displayName: String {
         switch self {
         case .visible: return "Visible"
@@ -36,10 +28,9 @@ enum MenuBarSectionType: String, Codable, CaseIterable, Identifiable {
 
 // MARK: - MenuBarSection
 
-/// Represents a logical section of the menu bar.
-/// Each section contains a control item that manages its separator/toggle.
 @MainActor
-final class MenuBarSection: ObservableObject, Identifiable {
+@Observable
+final class MenuBarSection: Identifiable {
 
     // MARK: - Properties
 
@@ -51,12 +42,10 @@ final class MenuBarSection: ObservableObject, Identifiable {
         subsystem: Bundle.main.bundleIdentifier ?? "com.drawer",
         category: "MenuBarSection"
     )
-    private var cancellables = Set<AnyCancellable>()
 
-    // MARK: - Published State
+    // MARK: - Observable State
 
-    /// Whether this section is currently expanded (showing its icons)
-    @Published var isExpanded: Bool = false {
+    var isExpanded: Bool = false {
         didSet {
             guard oldValue != isExpanded else { return }
             controlItem.state = isExpanded ? .expanded : .collapsed
@@ -64,8 +53,7 @@ final class MenuBarSection: ObservableObject, Identifiable {
         }
     }
 
-    /// Whether this section is enabled (visible in menu bar)
-    @Published var isEnabled: Bool = true {
+    var isEnabled: Bool = true {
         didSet {
             guard oldValue != isEnabled else { return }
             if !isEnabled {
@@ -117,13 +105,8 @@ final class MenuBarSection: ObservableObject, Identifiable {
         isExpanded = true
     }
 
-    /// Collapses this section (hides icons)
     func collapse() {
         guard isExpanded else { return }
         isExpanded = false
-    }
-
-    deinit {
-        cancellables.removeAll()
     }
 }

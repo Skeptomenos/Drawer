@@ -5,7 +5,6 @@
 //  Copyright © 2026 Drawer. MIT License.
 //
 
-import Combine
 import XCTest
 
 @testable import Drawer
@@ -16,18 +15,15 @@ final class PermissionManagerTests: XCTestCase {
     // MARK: - Properties
 
     private var sut: PermissionManager!
-    private var cancellables: Set<AnyCancellable>!
 
     // MARK: - Setup & Teardown
 
     override func setUp() async throws {
         try await super.setUp()
         sut = PermissionManager.shared
-        cancellables = []
     }
 
     override func tearDown() async throws {
-        cancellables = nil
         sut = nil
         try await super.tearDown()
     }
@@ -297,89 +293,42 @@ final class PermissionManagerTests: XCTestCase {
         )
     }
 
-    // MARK: - PRM-010: permissionStatusChanged publisher fires on status change
+    // MARK: - PRM-010: refreshAccessibilityStatus updates status property
 
-    func testPRM010_PermissionStatusChangedPublisherFiresOnStatusChange() async throws {
+    func testPRM010_RefreshAccessibilityStatusUpdatesProperty() async throws {
         // Arrange
-        var receivedEvents: [Void] = []
-        let expectation = XCTestExpectation(description: "PRM-010: Publisher should fire on status change")
-        expectation.assertForOverFulfill = false
-
-        sut.permissionStatusChanged
-            .sink { _ in
-                receivedEvents.append(())
-                expectation.fulfill()
-            }
-            .store(in: &cancellables)
+        let expectedGranted = AXIsProcessTrusted()
+        let expectedStatus: PermissionStatus = expectedGranted ? .granted : .denied
 
         // Act
         sut.refreshAccessibilityStatus()
 
         // Assert
-        await fulfillment(of: [expectation], timeout: 2.0)
-
-        XCTAssertGreaterThanOrEqual(
-            receivedEvents.count,
-            1,
-            "PRM-010: permissionStatusChanged should fire when status is refreshed"
+        XCTAssertEqual(
+            sut.accessibilityStatus,
+            expectedStatus,
+            "PRM-010: accessibilityStatus should reflect AXIsProcessTrusted() after refresh"
+        )
+        XCTAssertNotEqual(
+            sut.accessibilityStatus,
+            .unknown,
+            "PRM-010: accessibilityStatus should not be .unknown after refresh"
         )
     }
 
-    // MARK: - PRM-011: refreshAllStatuses updates published state
+    // MARK: - PRM-011: refreshAllStatuses updates state
 
-    func testPRM011_RefreshAllStatusesUpdatesPublishedState() async throws {
+    func testPRM011_RefreshAllStatusesUpdatesState() async throws {
         // Arrange
         let expectedAccessibilityGranted = AXIsProcessTrusted()
         let expectedScreenRecordingGranted = CGPreflightScreenCaptureAccess()
         let expectedAccessibilityStatus: PermissionStatus = expectedAccessibilityGranted ? .granted : .denied
         let expectedScreenRecordingStatus: PermissionStatus = expectedScreenRecordingGranted ? .granted : .denied
 
-        var accessibilityStatusUpdates: [PermissionStatus] = []
-        var screenRecordingStatusUpdates: [PermissionStatus] = []
-
-        let accessibilityExpectation = XCTestExpectation(description: "PRM-011: accessibilityStatus should be updated")
-        accessibilityExpectation.assertForOverFulfill = false
-
-        let screenRecordingExpectation = XCTestExpectation(description: "PRM-011: screenRecordingStatus should be updated")
-        screenRecordingExpectation.assertForOverFulfill = false
-
-        sut.$accessibilityStatus
-            .dropFirst() // Skip initial value
-            .sink { status in
-                accessibilityStatusUpdates.append(status)
-                accessibilityExpectation.fulfill()
-            }
-            .store(in: &cancellables)
-
-        sut.$screenRecordingStatus
-            .dropFirst() // Skip initial value
-            .sink { status in
-                screenRecordingStatusUpdates.append(status)
-                screenRecordingExpectation.fulfill()
-            }
-            .store(in: &cancellables)
-
         // Act
         sut.refreshAllStatuses()
 
-        // Assert
-        await fulfillment(of: [accessibilityExpectation, screenRecordingExpectation], timeout: 2.0)
-
-        // Verify accessibilityStatus was updated
-        XCTAssertGreaterThanOrEqual(
-            accessibilityStatusUpdates.count,
-            1,
-            "PRM-011: accessibilityStatus should receive at least one update from refreshAllStatuses()"
-        )
-
-        // Verify screenRecordingStatus was updated
-        XCTAssertGreaterThanOrEqual(
-            screenRecordingStatusUpdates.count,
-            1,
-            "PRM-011: screenRecordingStatus should receive at least one update from refreshAllStatuses()"
-        )
-
-        // Verify final state matches system permission state
+        // Assert - Verify final state matches system permission state
         XCTAssertEqual(
             sut.accessibilityStatus,
             expectedAccessibilityStatus,

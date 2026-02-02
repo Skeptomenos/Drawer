@@ -6,18 +6,18 @@
 //
 
 import AppKit
-import Combine
 import os.log
 
 /// Encapsulates an NSStatusItem with reactive state management.
 /// Automatically updates the status item's length and visibility when state changes.
 @MainActor
-final class ControlItem: ObservableObject {
+@Observable
+final class ControlItem {
 
-    // MARK: - Published State
+    // MARK: - Observable State
 
     /// The current state of the control item
-    @Published var state: ControlItemState = .collapsed {
+    var state: ControlItemState = .collapsed {
         didSet {
             guard oldValue != state else { return }
             updateStatusItemForState()
@@ -25,7 +25,7 @@ final class ControlItem: ObservableObject {
     }
 
     /// The current image to display
-    @Published var image: ControlItemImage? {
+    var image: ControlItemImage? {
         didSet { updateImage() }
     }
 

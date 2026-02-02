@@ -6,7 +6,6 @@
 //
 
 import AppKit
-import Combine
 import XCTest
 @testable import Drawer
 
@@ -16,18 +15,15 @@ final class ControlItemTests: XCTestCase {
     // MARK: - Properties
 
     private var sut: ControlItem!
-    private var cancellables: Set<AnyCancellable>!
 
     // MARK: - Setup & Teardown
 
     override func setUp() async throws {
         try await super.setUp()
-        cancellables = Set<AnyCancellable>()
     }
 
     override func tearDown() async throws {
         sut = nil
-        cancellables = nil
         try await super.tearDown()
     }
 
@@ -109,29 +105,20 @@ final class ControlItemTests: XCTestCase {
         XCTAssertEqual(sut.length, collapsedLength, "CI-006: Changing to collapsed should update length")
     }
 
-    // MARK: - CI-007: State Change Publishes
+    // MARK: - CI-007: State Change Is Observable
 
-    func testCI007_StateChangePublishes() throws {
+    func testCI007_StateChangeIsObservable() throws {
         // Arrange
         sut = ControlItem(initialState: .collapsed)
-        var receivedStates: [ControlItemState] = []
-        let expectation = expectation(description: "CI-007: State should publish")
-        expectation.expectedFulfillmentCount = 1
-
-        sut.$state
-            .dropFirst() // Skip initial value
-            .sink { state in
-                receivedStates.append(state)
-                expectation.fulfill()
-            }
-            .store(in: &cancellables)
+        let initialState = sut.state
+        XCTAssertEqual(initialState, .collapsed, "CI-007: Precondition - should be collapsed")
 
         // Act
         sut.state = .expanded
 
         // Assert
-        wait(for: [expectation], timeout: 1.0)
-        XCTAssertEqual(receivedStates, [.expanded], "CI-007: State change should publish")
+        XCTAssertEqual(sut.state, .expanded, "CI-007: State change should be reflected")
+        XCTAssertNotEqual(sut.state, initialState, "CI-007: State should have changed from initial")
     }
 
     // MARK: - CI-008: Setting Same State Does Not Trigger Side Effects

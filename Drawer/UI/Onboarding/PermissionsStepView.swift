@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PermissionsStepView: View {
-    @StateObject private var permissionManager = PermissionManager.shared
+    @State private var permissionManager = PermissionManager.shared
 
     var body: some View {
         VStack(spacing: 24) {

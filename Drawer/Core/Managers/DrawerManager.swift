@@ -5,21 +5,14 @@
 //  Copyright © 2026 Drawer. MIT License.
 //
 
-import Combine
 import Foundation
 import os.log
 
 // MARK: - DrawerManager
 
-/// Manages the state and items displayed in the Drawer.
-///
-/// This manager is responsible for:
-/// - Storing the current drawer items (captured icons)
-/// - Converting captured icons to drawer items
-/// - Managing drawer visibility state
-/// - Coordinating with IconCapturer for refreshing items
 @MainActor
-final class DrawerManager: ObservableObject {
+@Observable
+final class DrawerManager {
 
     // MARK: - Singleton
 
@@ -29,19 +22,24 @@ final class DrawerManager: ObservableObject {
 
     private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "com.drawer", category: "DrawerManager")
 
-    // MARK: - Published State
+    // MARK: - Observable State
 
-    /// The items currently displayed in the drawer
-    @Published private(set) var items: [DrawerItem] = []
-
-    /// Whether the drawer is currently visible
-    @Published var isVisible: Bool = false
-
-    /// Whether items are currently being loaded/captured
-    @Published private(set) var isLoading: Bool = false
-
-    /// The last error that occurred during item loading
-    @Published private(set) var lastError: Error?
+    private(set) var items: [DrawerItem] = []
+    private(set) var isLoading: Bool = false
+    private(set) var lastError: Error?
+    
+    private var _isVisible: Bool = false
+    var isVisible: Bool {
+        get { _isVisible }
+        set {
+            _isVisible = newValue
+            onVisibilityChanged?(newValue)
+        }
+    }
+    
+    // MARK: - Callbacks
+    
+    @ObservationIgnored var onVisibilityChanged: ((Bool) -> Void)?
 
     // MARK: - Initialization
 

@@ -11,18 +11,30 @@ import os.log
 
 // MARK: - MenuBarManager
 
-/// Implements the "10k pixel hack" - hides menu bar icons by expanding a separator to 10,000px,
-/// pushing icons off-screen. This is the HEART of the app.
-///
-/// Architecture: Uses a section-based design with `MenuBarSection` objects wrapping `ControlItem`s.
-/// This prepares for future features like "Always Hidden" section while maintaining backward compatibility.
 @MainActor
-final class MenuBarManager: ObservableObject {
+@Observable
+final class MenuBarManager {
+
+    // MARK: - Callbacks
+
+    @ObservationIgnored var onCollapsedChanged: ((Bool) -> Void)?
 
     // MARK: - Published State
 
-    @Published private(set) var isCollapsed: Bool = true
-    @Published private(set) var isToggling: Bool = false
+    private(set) var isCollapsed: Bool = true {
+        didSet {
+            guard oldValue != isCollapsed else { return }
+            onCollapsedChanged?(isCollapsed)
+            updateSectionStateForCollapsed(isCollapsed)
+        }
+    }
+
+    private func updateSectionStateForCollapsed(_ collapsed: Bool) {
+        hiddenSection.isExpanded = !collapsed
+        visibleSection.controlItem.image = collapsed ? expandImage : collapseImage
+        logger.debug("State updated: isCollapsed=\(collapsed), separator length=\(self.hiddenSection.controlItem.length)")
+    }
+    private(set) var isToggling: Bool = false
 
     // MARK: - Sections
 
@@ -85,11 +97,11 @@ final class MenuBarManager: ObservableObject {
 
     // MARK: - Dependencies
 
-    private let settings: SettingsManager
-    private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "com.drawer", category: "MenuBarManager")
-    private var cancellables = Set<AnyCancellable>()
-    private var autoCollapseTask: Task<Void, Never>?
-    private var toggleDebounceTask: Task<Void, Never>?
+    @ObservationIgnored private let settings: SettingsManager
+    @ObservationIgnored private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "com.drawer", category: "MenuBarManager")
+    @ObservationIgnored private var cancellables = Set<AnyCancellable>()
+    @ObservationIgnored private var autoCollapseTask: Task<Void, Never>?
+    @ObservationIgnored private var toggleDebounceTask: Task<Void, Never>?
 
     // MARK: - Constants
 
@@ -182,7 +194,6 @@ final class MenuBarManager: ObservableObject {
         setupSections(attempt: 1)
         setupAlwaysHiddenSection()
         setupSettingsBindings()
-        setupStateBindings()
 
         logger.debug("Initialized with section-based architecture")
 
@@ -191,7 +202,7 @@ final class MenuBarManager: ObservableObject {
         #endif
     }
 
-    deinit {
+    func cleanup() {
         #if DEBUG
         debugTimer?.invalidate()
         #endif
@@ -377,25 +388,7 @@ final class MenuBarManager: ObservableObject {
             .store(in: &cancellables)
     }
 
-    /// Reactive binding: changes to `isCollapsed` automatically update section state and toggle image.
-    /// This eliminates manual synchronization in expand()/collapse() methods and prevents desync bugs.
-    /// See: specs/phase1-reactive-state-binding.md
-    private func setupStateBindings() {
-        $isCollapsed
-            .dropFirst()  // Skip initial value (already handled in setupSections)
-            .sink { [weak self] collapsed in
-                guard let self = self else { return }
-                // Update hidden section's expanded state
-                self.hiddenSection.isExpanded = !collapsed
-                // Note: alwaysHiddenSection stays collapsed (never expands) - no update needed
-                // Update toggle button image
-                self.visibleSection.controlItem.image = collapsed
-                    ? self.expandImage
-                    : self.collapseImage
-                self.logger.debug("State binding triggered: isCollapsed=\(collapsed), separator length=\(self.hiddenSection.controlItem.length)")
-            }
-            .store(in: &cancellables)
-    }
+
 
     #if DEBUG
     private func setupDebugTimer() {

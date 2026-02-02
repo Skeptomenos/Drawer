@@ -6,7 +6,6 @@
 //
 
 import AppKit
-import Combine
 import XCTest
 @testable import Drawer
 
@@ -17,20 +16,17 @@ final class MenuBarSectionTests: XCTestCase {
 
     private var sut: MenuBarSection!
     private var controlItem: ControlItem!
-    private var cancellables: Set<AnyCancellable>!
 
     // MARK: - Setup & Teardown
 
     override func setUp() async throws {
         try await super.setUp()
-        cancellables = Set<AnyCancellable>()
         controlItem = ControlItem()
     }
 
     override func tearDown() async throws {
         sut = nil
         controlItem = nil
-        cancellables = nil
         try await super.tearDown()
     }
 
@@ -147,18 +143,13 @@ final class MenuBarSectionTests: XCTestCase {
     func testMBS009_ExpandWhenAlreadyExpandedIsNoOp() throws {
         // Arrange
         sut = MenuBarSection(type: .hidden, controlItem: controlItem, isExpanded: true)
-        var changeCount = 0
-
-        sut.$isExpanded
-            .dropFirst()
-            .sink { _ in changeCount += 1 }
-            .store(in: &cancellables)
+        XCTAssertTrue(sut.isExpanded, "MBS-009: Precondition - should be expanded")
 
         // Act
         sut.expand()
 
         // Assert
-        XCTAssertEqual(changeCount, 0, "MBS-009: expand() when already expanded should not trigger change")
+        XCTAssertTrue(sut.isExpanded, "MBS-009: expand() when already expanded should remain expanded")
     }
 
     // MARK: - MBS-010: Collapse Method
@@ -179,18 +170,13 @@ final class MenuBarSectionTests: XCTestCase {
     func testMBS011_CollapseWhenAlreadyCollapsedIsNoOp() throws {
         // Arrange
         sut = MenuBarSection(type: .hidden, controlItem: controlItem, isExpanded: false)
-        var changeCount = 0
-
-        sut.$isExpanded
-            .dropFirst()
-            .sink { _ in changeCount += 1 }
-            .store(in: &cancellables)
+        XCTAssertFalse(sut.isExpanded, "MBS-011: Precondition - should be collapsed")
 
         // Act
         sut.collapse()
 
         // Assert
-        XCTAssertEqual(changeCount, 0, "MBS-011: collapse() when already collapsed should not trigger change")
+        XCTAssertFalse(sut.isExpanded, "MBS-011: collapse() when already collapsed should remain collapsed")
     }
 
     // MARK: - MBS-012: Section Type Visible

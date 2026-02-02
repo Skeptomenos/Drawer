@@ -12,10 +12,9 @@ import ServiceManagement
 
 // MARK: - LaunchAtLoginManager
 
-/// Manages the "Launch at Login" functionality using the modern SMAppService API (macOS 13+).
-/// Replaces the deprecated SMLoginItemSetEnabled and eliminates the need for a helper app.
 @MainActor
-final class LaunchAtLoginManager: ObservableObject {
+@Observable
+final class LaunchAtLoginManager {
 
     // MARK: - Singleton
 
@@ -25,13 +24,10 @@ final class LaunchAtLoginManager: ObservableObject {
 
     private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "com.drawer", category: "LaunchAtLogin")
 
-    // MARK: - Published State
+    // MARK: - Observable State
 
-    /// Whether launch at login is currently enabled
-    @Published private(set) var isEnabled: Bool = false
-
-    /// Last error message if registration/unregistration failed
-    @Published private(set) var lastError: String?
+    private(set) var isEnabled: Bool = false
+    private(set) var lastError: String?
 
     // MARK: - Initialization
 

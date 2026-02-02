@@ -6,7 +6,6 @@
 //
 
 import AppKit
-import Combine
 import os.log
 import SwiftUI
 
@@ -32,21 +31,33 @@ private enum DrawerAnimation {
 // MARK: - DrawerPanelController
 
 @MainActor
-final class DrawerPanelController: ObservableObject {
+@Observable
+final class DrawerPanelController {
 
     // MARK: - Published State
 
-    @Published private(set) var isVisible: Bool = false
+    private(set) var isVisible: Bool = false {
+        didSet {
+            if oldValue != isVisible {
+                onVisibilityChanged?(isVisible)
+            }
+        }
+    }
+
+    // MARK: - Callbacks
+
+    /// Called when visibility changes (replaces Combine publisher for @Observable)
+    @ObservationIgnored var onVisibilityChanged: ((Bool) -> Void)?
 
     // MARK: - Properties
 
-    private var panel: DrawerPanel?
+    @ObservationIgnored private var panel: DrawerPanel?
 
     var panelFrame: CGRect {
         panel?.frame ?? .zero
     }
-    private var hostingView: NSHostingView<AnyView>?
-    private var isAnimating: Bool = false
+    @ObservationIgnored private var hostingView: NSHostingView<AnyView>?
+    @ObservationIgnored private var isAnimating: Bool = false
     private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "com.drawer", category: "DrawerPanelController")
 
     // MARK: - Initialization

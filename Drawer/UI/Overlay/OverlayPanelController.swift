@@ -6,7 +6,6 @@
 //
 
 import AppKit
-import Combine
 import os.log
 import SwiftUI
 
@@ -20,17 +19,18 @@ import SwiftUI
 /// - Positioning at menu bar level
 /// - Updating content when items change
 @MainActor
-final class OverlayPanelController: ObservableObject {
+@Observable
+final class OverlayPanelController {
 
     // MARK: - Published State
 
     /// Whether the overlay panel is currently visible
-    @Published private(set) var isVisible: Bool = false
+    private(set) var isVisible: Bool = false
 
     // MARK: - Properties
 
-    private var panel: OverlayPanel?
-    private var hostingView: NSHostingView<AnyView>?
+    @ObservationIgnored private var panel: OverlayPanel?
+    @ObservationIgnored private var hostingView: NSHostingView<AnyView>?
     private let logger = Logger(
         subsystem: Bundle.main.bundleIdentifier ?? "com.drawer",
         category: "OverlayPanelController"
@@ -160,7 +160,4 @@ final class OverlayPanelController: ObservableObject {
         isVisible = false
     }
 
-    deinit {
-        panel?.close()
-    }
 }

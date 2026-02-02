@@ -6,13 +6,11 @@
 //
 
 import AppKit
-import Combine
 import Foundation
 import os.log
 
 // MARK: - PermissionProviding Protocol
 
-/// Protocol for permission checking, enabling dependency injection for testing.
 @MainActor
 protocol PermissionProviding {
     var hasAccessibility: Bool { get }
@@ -71,29 +69,39 @@ enum PermissionStatus: Equatable {
 
 // MARK: - PermissionManager
 
-/// Centralized manager for TCC (Transparency, Consent, and Control) permissions.
-/// Handles Accessibility and Screen Recording permissions required for Phase 2 features.
-///
-/// - Note: Phase 1 only checks status; Phase 2 will require these permissions for
-///   CGEvent simulation (click-through) and ScreenCaptureKit (icon capture).
 @MainActor
-final class PermissionManager: ObservableObject, PermissionProviding {
+@Observable
+final class PermissionManager: PermissionProviding {
 
     // MARK: - Singleton
 
     static let shared = PermissionManager()
 
+    // MARK: - Callbacks
+
+    @ObservationIgnored var onPermissionStatusChanged: (() -> Void)?
+
     // MARK: - Logger
 
-    private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "com.drawer", category: "Permissions")
+    @ObservationIgnored private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "com.drawer", category: "Permissions")
 
     // MARK: - Published State
 
-    /// Current status of Accessibility permission
-    @Published private(set) var accessibilityStatus: PermissionStatus = .unknown
+    private(set) var accessibilityStatus: PermissionStatus = .unknown {
+        didSet {
+            if oldValue != accessibilityStatus {
+                onPermissionStatusChanged?()
+            }
+        }
+    }
 
-    /// Current status of Screen Recording permission
-    @Published private(set) var screenRecordingStatus: PermissionStatus = .unknown
+    private(set) var screenRecordingStatus: PermissionStatus = .unknown {
+        didSet {
+            if oldValue != screenRecordingStatus {
+                onPermissionStatusChanged?()
+            }
+        }
+    }
 
     // MARK: - Computed Properties
 
@@ -118,16 +126,7 @@ final class PermissionManager: ObservableObject, PermissionProviding {
         !hasAllPermissions
     }
 
-    // MARK: - Combine
 
-    /// Publisher that emits when any permission status changes
-    var permissionStatusChanged: AnyPublisher<Void, Never> {
-        Publishers.Merge(
-            $accessibilityStatus.map { _ in () },
-            $screenRecordingStatus.map { _ in () }
-        )
-        .eraseToAnyPublisher()
-    }
 
     // MARK: - Initialization
 
@@ -252,7 +251,7 @@ final class PermissionManager: ObservableObject, PermissionProviding {
 
     // MARK: - Polling
 
-    private var pollingTask: Task<Void, Never>?
+    @ObservationIgnored private var pollingTask: Task<Void, Never>?
 
     /// Sets up periodic polling to detect permission changes.
     /// This is necessary because there's no notification for TCC changes.
@@ -272,7 +271,7 @@ final class PermissionManager: ObservableObject, PermissionProviding {
         }
     }
 
-    deinit {
+    func cleanup() {
         pollingTask?.cancel()
     }
 

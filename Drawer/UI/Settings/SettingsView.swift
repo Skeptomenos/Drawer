@@ -57,7 +57,7 @@ struct SettingsView: View {
 
     // MARK: - Environment
 
-    @EnvironmentObject private var appState: AppState
+    @Environment(AppState.self) private var appState
 
     // MARK: - State
 
@@ -71,10 +71,10 @@ struct SettingsView: View {
             sidebarContent
         } detail: {
             detailContent
-                .environmentObject(appState)
+                .environment(appState)
         }
         .frame(width: 680, height: 540)
-        .environmentObject(appState)
+        .environment(appState)
     }
 
     // MARK: - Sidebar Content
@@ -112,5 +112,5 @@ struct SettingsView: View {
 
 #Preview {
     SettingsView()
-        .environmentObject(AppState())
+        .environment(AppState())
 }
