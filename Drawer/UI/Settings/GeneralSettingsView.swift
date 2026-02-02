@@ -100,7 +100,7 @@ struct GeneralSettingsView: View {
                             .padding(.horizontal, 8)
                             .padding(.vertical, 4)
                             .background(Color.secondary.opacity(0.2))
-                            .cornerRadius(4)
+                            .clipShape(.rect(cornerRadius: 4))
 
                         Button("Clear") {
                             settings.globalHotkey = nil

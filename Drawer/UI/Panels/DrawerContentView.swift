@@ -192,8 +192,8 @@ struct DrawerContentView: View {
                 .frame(width: DrawerDesign.iconSize, height: DrawerDesign.iconSize)
 
             Text("Capturing...")
-                .font(.system(size: 11, weight: .medium))
-                .foregroundColor(.secondary)
+                .font(.caption2.weight(.medium))
+                .foregroundStyle(.secondary)
         }
     }
 
@@ -205,12 +205,12 @@ struct DrawerContentView: View {
 
         return HStack(spacing: DrawerDesign.iconSpacing) {
             Image(systemName: "exclamationmark.triangle")
-                .font(.system(size: 14, weight: .medium))
-                .foregroundColor(.orange)
+                .font(.subheadline.weight(.medium))
+                .foregroundStyle(.orange)
 
             Text("Capture failed")
-                .font(.system(size: 11, weight: .medium))
-                .foregroundColor(.secondary)
+                .font(.caption2.weight(.medium))
+                .foregroundStyle(.secondary)
         }
     }
 
@@ -233,8 +233,8 @@ struct DrawerContentView: View {
             .frame(width: DrawerDesign.iconSize - 4, height: DrawerDesign.iconSize - 4)
             .overlay(
                 Image(systemName: iconName)
-                    .font(.system(size: 10, weight: .medium))
-                    .foregroundColor(.white.opacity(0.6))
+                    .font(.caption2.weight(.medium))
+                    .foregroundStyle(.white.opacity(0.6))
             )
     }
 }
@@ -272,8 +272,8 @@ struct SectionHeader: View {
 
     var body: some View {
         Text(title)
-            .font(.system(size: 11, weight: .medium))
-            .foregroundColor(.secondary)
+            .font(.caption2.weight(.medium))
+            .foregroundStyle(.secondary)
             .padding(.horizontal, 8)
     }
 }

@@ -39,7 +39,7 @@ struct CompletionStepView: View {
                 .frame(width: 100, height: 100)
 
             Image(systemName: "checkmark.circle.fill")
-                .font(.system(size: 64))
+                .font(.largeTitle)
                 .foregroundStyle(.green)
         }
     }

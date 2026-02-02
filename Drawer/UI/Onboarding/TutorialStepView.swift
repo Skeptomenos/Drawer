@@ -26,7 +26,7 @@ struct TutorialStepView: View {
     private var headerSection: some View {
         VStack(spacing: 12) {
             Image(systemName: "hand.draw")
-                .font(.system(size: 48))
+                .font(.largeTitle)
                 .foregroundStyle(Color.accentColor)
 
             Text("Arrange Your Icons")

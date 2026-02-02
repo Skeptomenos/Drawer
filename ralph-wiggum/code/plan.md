@@ -17,7 +17,7 @@
 | [x] | **Task 1.3**: Accessibility - replace onTapGesture with Button | `specs/A11Y-001_onTapGesture_Accessibility.md` | Done in v0.5.1-alpha.27: Replaced onTapGesture with Button in flatItemsView and IconRow, applied .buttonStyle(.plain) and accessibilityLabel/Hint |
 | | **Phase 2: Safety & Modernization** | | |
 | [x] | **Task 2.1**: Safety sweep - eliminate force unwraps & IUOs | `specs/SEC-003_MenuBarManager_IUOs.md`, `specs/CODE_REVIEW_ISSUES.md:SEC-001,SEC-002` | Done in v0.5.1-alpha.28: Converted MenuBarManager IUOs to computed properties with fatalError safety, wrapped CGEventField rawValue in safe closure, wrapped URL literal in safe closure |
-| [ ] | **Task 2.2**: UI modernization - deprecated SwiftUI modifiers | `specs/DEP-001_Modernize_SwiftUI_Modifiers.md`, `specs/DEP-004_Dynamic_Type.md` | Replace foregroundColor -> foregroundStyle, cornerRadius -> clipShape, hardcoded fonts -> Dynamic Type |
+| [x] | **Task 2.2**: UI modernization - deprecated SwiftUI modifiers | `specs/DEP-001_Modernize_SwiftUI_Modifiers.md`, `specs/DEP-004_Dynamic_Type.md` | Done in v0.5.1-alpha.29: Replaced 15x foregroundColor→foregroundStyle, 1x cornerRadius→clipShape, 17x hardcoded fonts→Dynamic Type (kept 8pt lockIconSize as decorative) |
 | [ ] | **Task 2.3**: GeometryReader cleanup | `specs/CODE_REVIEW_ISSUES.md:DEP-005` | Evaluate and replace GeometryReader with containerRelativeFrame() where possible |
 | | **Phase 3: Architecture** | | |
 | [ ] | **Task 3.1**: File structure debundling | `specs/ARCH-001_File_Debundling.md` | Extract nested types to separate files (SettingsMenuBarLayoutView, DrawerContentView, etc.) |

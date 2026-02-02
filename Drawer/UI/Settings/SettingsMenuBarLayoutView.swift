@@ -148,11 +148,11 @@ struct SettingsMenuBarLayoutView: View {
     private func errorView(_ message: String) -> some View {
         HStack(spacing: 8) {
             Image(systemName: "exclamationmark.triangle.fill")
-                .foregroundColor(.orange)
+                .foregroundStyle(.orange)
 
             Text(message)
-                .font(.system(size: 12))
-                .foregroundColor(.secondary)
+                .font(.caption)
+                .foregroundStyle(.secondary)
 
             Spacer()
         }
@@ -179,8 +179,8 @@ struct SettingsMenuBarLayoutView: View {
                             .frame(width: LayoutDesign.headerIconSize, height: LayoutDesign.headerIconSize)
 
                         Image(systemName: "menubar.rectangle")
-                            .font(.system(size: 24))
-                            .foregroundColor(.secondary)
+                            .font(.title2)
+                            .foregroundStyle(.secondary)
                     }
 
                     Text("Menu Bar Items")
@@ -189,7 +189,7 @@ struct SettingsMenuBarLayoutView: View {
 
                     Text("Drag items between sections to re-order your menu bar")
                         .font(.subheadline)
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
                 }
 
@@ -212,8 +212,8 @@ struct SettingsMenuBarLayoutView: View {
             refreshItems()
         } label: {
             Image(systemName: "arrow.clockwise")
-                .font(.system(size: 14))
-                .foregroundColor(.secondary)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
         }
         .buttonStyle(.plain)
         .disabled(isRefreshing)
@@ -226,15 +226,15 @@ struct SettingsMenuBarLayoutView: View {
     private var paletteSection: some View {
         VStack(alignment: .leading, spacing: LayoutDesign.sectionHeaderSpacing) {
             Label("Palette", systemImage: "square.grid.2x2")
-                .font(.system(size: 13, weight: .medium))
-                .foregroundColor(.primary)
+                .font(.footnote.weight(.medium))
+                .foregroundStyle(.primary)
 
             HStack(spacing: 12) {
                 Button {
                     addSpacer()
                 } label: {
                     Text("Add a Spacer")
-                        .font(.system(size: 12, weight: .medium))
+                        .font(.caption.weight(.medium))
                 }
                 .buttonStyle(.borderedProminent)
                 .controlSize(.small)
@@ -243,7 +243,7 @@ struct SettingsMenuBarLayoutView: View {
                     showResetConfirmation = true
                 } label: {
                     Text("Reset Icon Positions")
-                        .font(.system(size: 12, weight: .medium))
+                        .font(.caption.weight(.medium))
                 }
                 .buttonStyle(.bordered)
                 .controlSize(.small)
@@ -788,12 +788,12 @@ private struct LayoutSectionView: View {
             // Section header with item count
             HStack {
                 Label(sectionTitle, systemImage: sectionIcon)
-                    .font(.system(size: 13, weight: .medium))
-                    .foregroundColor(.primary)
+                    .font(.footnote.weight(.medium))
+                    .foregroundStyle(.primary)
 
                 Text("(\(items.count))")
-                    .font(.system(size: 11))
-                    .foregroundColor(.secondary)
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
             }
 
             // Section container with drop support
@@ -904,8 +904,8 @@ private struct LayoutSectionView: View {
     /// Empty state shown when section has no items
     private var emptyStateView: some View {
         Text("Drop items here")
-            .font(.system(size: 12))
-            .foregroundColor(.secondary)
+            .font(.caption)
+            .foregroundStyle(.secondary)
             .frame(maxWidth: .infinity, alignment: .center)
     }
 }
@@ -1028,7 +1028,7 @@ private struct LayoutItemView: View {
             if item.isImmovable {
                 Image(systemName: "lock.fill")
                     .font(.system(size: lockIconSize, weight: .medium))
-                    .foregroundColor(.secondary)
+                    .foregroundStyle(.secondary)
                     .padding(lockIconPadding)
             }
         }

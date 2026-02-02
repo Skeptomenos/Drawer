@@ -30,7 +30,7 @@ struct PermissionsStepView: View {
     private var headerSection: some View {
         VStack(spacing: 12) {
             Image(systemName: "lock.shield")
-                .font(.system(size: 48))
+                .font(.largeTitle)
                 .foregroundStyle(Color.accentColor)
 
             Text("Permissions Required")
