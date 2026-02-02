@@ -150,6 +150,7 @@
 		DRAWER001000000000000089 /* InstructionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000089 /* InstructionRow.swift */; };
 		DRAWER001000000000000090 /* OnboardingPermissionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000090 /* OnboardingPermissionRow.swift */; };
 		DRAWER001000000000000091 /* FeatureRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000091 /* FeatureRow.swift */; };
+		DRAWER001000000000000092 /* MenuBarLayoutViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000092 /* MenuBarLayoutViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -219,6 +220,7 @@
 		DRAWERTEST00200000000041 /* SettingsMenuBarLayoutViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsMenuBarLayoutViewTests.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000048 /* LayoutReconciler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutReconciler.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000049 /* IconMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconMatcher.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000092 /* MenuBarLayoutViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarLayoutViewModel.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000001 /* DrawerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerApp.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000002 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		DRAWER002000000000000003 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -660,6 +662,7 @@
 				DRAWER002000000000000019 /* GeneralSettingsView.swift */,
 				DRAWER002000000000000020 /* AppearanceSettingsView.swift */,
 				DRAWER002000000000000042 /* SettingsMenuBarLayoutView.swift */,
+				DRAWER002000000000000092 /* MenuBarLayoutViewModel.swift */,
 				DRAWER002000000000000048 /* LayoutReconciler.swift */,
 				DRAWER002000000000000049 /* IconMatcher.swift */,
 				DRAWER002000000000000021 /* AboutView.swift */,
@@ -1036,6 +1039,7 @@
 				DRAWER001000000000000089 /* InstructionRow.swift in Sources */,
 				DRAWER001000000000000090 /* OnboardingPermissionRow.swift in Sources */,
 				DRAWER001000000000000091 /* FeatureRow.swift in Sources */,
+				DRAWER001000000000000092 /* MenuBarLayoutViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
