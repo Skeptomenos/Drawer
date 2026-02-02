@@ -67,7 +67,9 @@ final class DrawerPanelController: ObservableObject {
         guard let panel = panel else { return }
 
         if let alignX = xPosition {
-            panel.position(alignedTo: alignX, on: screen)
+            // Right-align: drawer's right edge aligns with the separator's left edge
+            let rightAlignedX = alignX - panel.frame.width
+            panel.position(alignedTo: rightAlignedX, on: screen)
         } else {
             panel.position(on: screen)
         }

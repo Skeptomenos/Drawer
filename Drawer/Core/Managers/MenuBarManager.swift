@@ -79,6 +79,10 @@ final class MenuBarManager: ObservableObject {
         hiddenSection.controlItem.length
     }
 
+    var separatorXPosition: CGFloat? {
+        hiddenSection.controlItem.button?.window?.frame.origin.x
+    }
+
     /// Exposes the current toggle button image accessibility description for testing purposes.
     var currentToggleImageDescription: String? {
         visibleSection.controlItem.button?.image?.accessibilityDescription

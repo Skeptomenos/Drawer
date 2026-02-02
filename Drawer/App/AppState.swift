@@ -273,7 +273,8 @@ final class AppState: ObservableObject {
             logger.debug("Showing drawer panel with \(self.drawerManager.items.count) items")
             #endif
 
-            drawerController.show(content: contentView)
+            let separatorX = menuBarManager.separatorXPosition
+            drawerController.show(content: contentView, alignedTo: separatorX)
             drawerManager.show()
             hoverManager.updateDrawerFrame(drawerController.panelFrame)
 
@@ -291,7 +292,8 @@ final class AppState: ObservableObject {
                 isLoading: false,
                 error: error
             )
-            drawerController.show(content: contentView)
+            let separatorX = menuBarManager.separatorXPosition
+            drawerController.show(content: contentView, alignedTo: separatorX)
             drawerManager.show()
         }
     }
