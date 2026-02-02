@@ -29,7 +29,7 @@
 | [x] | **Task 4.2**: Unit tests - UI panels | `specs/CODE_REVIEW_ISSUES.md:TEST-002` | Done in v0.5.1-alpha.36: Created DrawerPanelControllerTests.swift with 20 tests covering initial state, show/hide/toggle transitions, visibility callbacks, panel positioning, content updates, and dispose behavior |
 | [x] | **Task 4.3**: Unit tests - mock boundary fixes | `specs/CODE_REVIEW_ISSUES.md:TEST-003` | Done in v0.5.1-alpha.37: Created ScreenCaptureProviding protocol, ShareableContentResult struct, ScreenCaptureProvider implementation. Refactored IconCapturer to use DI. Created MockScreenCaptureProvider with call tracking and error simulation. Added tests ICN-012 through ICN-018. |
 | [x] | **Task 4.4**: Unit tests - post @Observable updates | `specs/CODE_REVIEW_ISSUES.md:TEST-005` | Done in v0.5.1-alpha.36: Updated AppStateTests, PermissionManagerTests, ControlItemTests, MenuBarSectionTests, and MockPermissionManager to use @Observable callback patterns instead of Combine publishers |
-| [ ] | **Task 4.5**: Logging standardization | `specs/ARCH-002_Docs_and_Logic.md:LOG-001` | Replace print() with logger.debug(), fix stale comments |
+| [x] | **Task 4.5**: Logging standardization | `specs/ARCH-002_Docs_and_Logic.md:LOG-001` | Done in v0.5.1-alpha.38: Replaced print() in DrawerContentView preview with comment, improved "what" comments to "why" in IconRepositioner and MenuBarManager |
 | [ ] | **Task 4.6**: API documentation | `specs/ARCH-002_Docs_and_Logic.md:DOC-003` | Add /// documentation to IconCapturer and PermissionManager public methods |
 
 ---

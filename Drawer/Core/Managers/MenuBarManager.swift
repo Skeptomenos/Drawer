@@ -347,7 +347,7 @@ final class MenuBarManager {
         spacer.autosaveName = "drawer_always_hidden_spacer_v2"
         alwaysHiddenSpacer = spacer
         
-        // Log positions
+        // Verify layout by logging positions after window creation settles
         Task { @MainActor in
             try? await Task.sleep(nanoseconds: 500_000_000)
             if let spacerWindow = spacer.button?.window, let ctrlWindow = alwaysHiddenControl.button?.window {

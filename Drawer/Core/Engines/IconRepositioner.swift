@@ -240,8 +240,7 @@ final class IconRepositioner {
             throw RepositionError.invalidEventSource
         }
         
-        // Calculate points
-        // Start at an off-screen point to avoid visual artifacts
+        // Start at an off-screen point to avoid visual artifacts during drag
         let startPoint = CGPoint(x: 20_000, y: 20_000)
         let endPoint = try getEndPoint(for: destination)
         

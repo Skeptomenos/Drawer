@@ -246,8 +246,8 @@ struct DrawerContentView: View {
     DrawerContainerView {
         DrawerContentView(
             items: PreviewHelpers.createMockDrawerItems(count: 6),
-            onItemTap: { item in
-                print("Tapped item \(item.index)")
+            onItemTap: { _ in
+                // Previews don't log - visual inspection only
             }
         )
     }
