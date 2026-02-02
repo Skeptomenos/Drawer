@@ -490,13 +490,13 @@ final class MenuBarManagerTests: XCTestCase {
         XCTAssertTrue(sut.isCollapsed, "Precondition: should start collapsed")
 
         // Assert initial sync
-        XCTAssertFalse(sut.hiddenSection?.isExpanded ?? true, "MBM-022: hiddenSection.isExpanded should be false when isCollapsed=true")
+        XCTAssertFalse(sut.hiddenSection.isExpanded, "MBM-022: hiddenSection.isExpanded should be false when isCollapsed=true")
 
         // Act - expand
         sut.toggle()
 
         // Assert sync after toggle
         XCTAssertFalse(sut.isCollapsed, "Should be expanded after toggle")
-        XCTAssertTrue(sut.hiddenSection?.isExpanded ?? false, "MBM-022: hiddenSection.isExpanded should be true when isCollapsed=false")
+        XCTAssertTrue(sut.hiddenSection.isExpanded, "MBM-022: hiddenSection.isExpanded should be true when isCollapsed=false")
     }
 }

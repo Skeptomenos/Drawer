@@ -35,10 +35,36 @@ final class MenuBarManager: ObservableObject {
     private var alwaysHiddenSpacer: ControlItem?
 
     /// The hidden section (separator that expands to hide icons)
-    private(set) var hiddenSection: MenuBarSection!
+    /// Internal storage - use `hiddenSection` computed property for safe access.
+    private var _hiddenSection: MenuBarSection?
 
     /// The visible section (toggle button)
-    private(set) var visibleSection: MenuBarSection!
+    /// Internal storage - use `visibleSection` computed property for safe access.
+    private var _visibleSection: MenuBarSection?
+
+    /// The hidden section (separator that expands to hide icons).
+    /// Accessing before `setupSections` completes is a programmer error.
+    private(set) var hiddenSection: MenuBarSection {
+        get {
+            guard let section = _hiddenSection else {
+                fatalError("hiddenSection accessed before setupSections completed. This is a programmer error.")
+            }
+            return section
+        }
+        set { _hiddenSection = newValue }
+    }
+
+    /// The visible section (toggle button).
+    /// Accessing before `setupSections` completes is a programmer error.
+    private(set) var visibleSection: MenuBarSection {
+        get {
+            guard let section = _visibleSection else {
+                fatalError("visibleSection accessed before setupSections completed. This is a programmer error.")
+            }
+            return section
+        }
+        set { _visibleSection = newValue }
+    }
 
     /// All active sections including optional always-hidden
     private var sections: [MenuBarSection] {

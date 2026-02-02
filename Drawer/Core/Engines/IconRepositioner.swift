@@ -82,8 +82,13 @@ enum MoveDestination {
 
 private extension CGEventField {
     /// Undocumented but stable field for setting the window ID on a CGEvent.
-    /// This allows targeting events to specific windows.
-    static let windowID = CGEventField(rawValue: 0x33)!
+    /// Uses rawValue 0x33 which has been stable since macOS 10.4.
+    static let windowID: CGEventField = {
+        guard let field = CGEventField(rawValue: 0x33) else {
+            fatalError("CGEventField windowID (0x33) unavailable - this indicates a breaking macOS API change")
+        }
+        return field
+    }()
 }
 
 // MARK: - IconRepositioner

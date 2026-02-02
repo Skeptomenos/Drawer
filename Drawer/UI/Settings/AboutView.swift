@@ -10,7 +10,12 @@ import SwiftUI
 struct AboutView: View {
     // MARK: - Constants
 
-    private static let githubURL = URL(string: "https://github.com/dwarvesf/hidden")!
+    private static let githubURL: URL = {
+        guard let url = URL(string: "https://github.com/dwarvesf/hidden") else {
+            fatalError("Invalid hardcoded GitHub URL - this is a programmer error")
+        }
+        return url
+    }()
 
     // MARK: - Properties
 
