@@ -57,6 +57,47 @@ Modify these with extreme caution. Always verify menu bar behavior after changes
 - `IconCapturer.swift` - ScreenCaptureKit capture logic
 - `DrawerPanelController.swift` - Panel presentation
 
+## Build & Deploy (Required)
+
+After ANY code change: **build → rm old → cp to /Applications → launch**
+```bash
+xcodebuild -project Drawer.xcodeproj -scheme Drawer -configuration Debug CURRENT_PROJECT_VERSION=$(date +%Y%m%d%H%M) build
+rm -rf /Applications/Drawer.app
+cp -R ~/Library/Developer/Xcode/DerivedData/Drawer-*/Build/Products/Debug/Drawer.app /Applications/
+open /Applications/Drawer.app
+```
+
+**Note:** DerivedData copy is expected (Xcode build cache). Only /Applications matters.
+
+### Permission Reset (Required After Rebuild)
+
+After rebuilding and installing, macOS TCC invalidates permissions. **You MUST reset them:**
+
+1. **Reset permissions via CLI:**
+```bash
+# Reset Accessibility permission
+tccutil reset Accessibility com.drawer.app
+
+# Reset Screen Recording permission  
+tccutil reset ScreenCapture com.drawer.app
+```
+
+2. **Restart Drawer** to trigger permission prompts:
+```bash
+pkill -x Drawer && sleep 1 && open /Applications/Drawer.app
+```
+
+3. **Grant permissions manually** (required - no CLI method with SIP enabled):
+   - System Settings → Privacy & Security → Accessibility → Enable Drawer
+   - System Settings → Privacy & Security → Screen Recording → Enable Drawer
+
+4. **Restart Drawer** again to pick up new permissions:
+```bash
+pkill -x Drawer && sleep 1 && open /Applications/Drawer.app
+```
+
+**Symptom of stale permissions:** Settings → Menu Bar Layout shows 0 icons with permission warning.
+
 ## Testing (Required)
 
 Use **XcodeBuildMCP tools** for all building and testing. Do not use manual xcodebuild commands.

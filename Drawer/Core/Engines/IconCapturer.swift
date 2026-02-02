@@ -188,6 +188,48 @@ final class IconCapturer {
     }
     #endif
 
+    // MARK: - Drawer Control Item Filtering
+
+    private static let drawerControlItemTitles: Set<String> = [
+        "drawer_toggle_v4",
+        "drawer_separator_v4",
+        "drawer_always_hidden_separator_v2",
+        "drawer_always_hidden_spacer_v2"
+    ]
+
+    private func isDrawerControlItem(_ item: MenuBarItem) -> Bool {
+        let title = item.title
+        let ownerName = item.ownerName
+        let pid = item.window.ownerPID
+        let drawerPID = ProcessInfo.processInfo.processIdentifier
+        
+        // NSLog always works - use for debugging filter execution
+        NSLog("DRAWER_FILTER: title='%@', owner='%@', pid=%d, drawerPID=%d, match=%d",
+              title ?? "nil", ownerName ?? "nil", pid, drawerPID, pid == drawerPID ? 1 : 0)
+        
+        // Primary filter: Match by process ID (most reliable)
+        if pid == drawerPID {
+            NSLog("DRAWER_FILTER: FILTERED (pid match) - %@", title ?? "nil")
+            return true
+        }
+        
+        if let title {
+            if Self.drawerControlItemTitles.contains(title) {
+                NSLog("DRAWER_FILTER: FILTERED (title match) - %@", title)
+                return true
+            }
+            if title == "com.drawer.app" {
+                NSLog("DRAWER_FILTER: FILTERED (com.drawer.app) - %@", title)
+                return true
+            }
+        }
+        if let ownerName, ownerName == "Drawer" {
+            NSLog("DRAWER_FILTER: FILTERED (owner=Drawer) - %@", title ?? "nil")
+            return true
+        }
+        return false
+    }
+
     // MARK: - Public API
 
     /// Captures all hidden menu bar icons by temporarily expanding the menu bar.
@@ -232,12 +274,28 @@ final class IconCapturer {
             menuBarManager.expand()
         }
 
-        logger.debug("Waiting for menu bar to render")
-        try await Task.sleep(nanoseconds: renderWaitTime)
+        var hiddenSeparatorX: CGFloat = 0
+        var alwaysHiddenSeparatorX: CGFloat?
+        let maxAttempts = 10
+        let pollInterval: UInt64 = 30_000_000
 
-        // Get separator positions for section type detection
-        let hiddenSeparatorX = menuBarManager.hiddenSection.controlItem.button?.window?.frame.origin.x ?? 0
-        let alwaysHiddenSeparatorX: CGFloat? = menuBarManager.alwaysHiddenSection?.controlItem.button?.window?.frame.origin.x
+        for attempt in 1...maxAttempts {
+            try await Task.sleep(nanoseconds: pollInterval)
+
+            hiddenSeparatorX = menuBarManager.hiddenSection.controlItem.button?.window?.frame.origin.x ?? 0
+            alwaysHiddenSeparatorX = menuBarManager.alwaysHiddenSection?.controlItem.button?.window?.frame.origin.x
+
+            if hiddenSeparatorX > 0 {
+                logger.debug("Separator positions valid after \(attempt) attempts (\(attempt * 30)ms)")
+                break
+            }
+
+            if attempt == maxAttempts {
+                logger.warning("Separator positions still invalid after \(maxAttempts) attempts, proceeding anyway")
+            }
+        }
+
+        logger.debug("Section separators: hiddenSeparatorX=\(hiddenSeparatorX), alwaysHiddenSeparatorX=\(alwaysHiddenSeparatorX ?? -1)")
 
         let captureResult: MenuBarCaptureResult
         do {
@@ -311,10 +369,12 @@ final class IconCapturer {
         logger.debug("Screen: \(screen.localizedName), displayID: \(screen.displayID)")
         #endif
 
-        let menuBarItems = MenuBarItem.getMenuBarItemsForDisplay(screen.displayID)
+        let allMenuBarItems = MenuBarItem.getMenuBarItemsForDisplay(screen.displayID)
+        let menuBarItems = allMenuBarItems.filter { !isDrawerControlItem($0) }
 
         #if DEBUG
-        logger.debug("MenuBarItem.getMenuBarItemsForDisplay returned \(menuBarItems.count) items")
+        logger.debug("=== MENU BAR ITEM FILTERING ===")
+        logger.debug("Total items: \(allMenuBarItems.count), After filtering Drawer controls: \(menuBarItems.count)")
         for (index, item) in menuBarItems.enumerated() {
             let frame = item.frame
             let ownerName = item.ownerName ?? "nil"
@@ -324,11 +384,11 @@ final class IconCapturer {
         #endif
 
         guard !menuBarItems.isEmpty else {
-            logger.warning("No menu bar items found, falling back to ScreenCaptureKit")
+            logger.warning("No menu bar items found after filtering, falling back to ScreenCaptureKit")
             return try await performLegacyCapture()
         }
 
-        logger.debug("Found \(menuBarItems.count) menu bar item windows")
+        logger.debug("Found \(menuBarItems.count) menu bar item windows (after excluding Drawer controls)")
 
         let imagesByInfo = ScreenCapture.captureMenuBarItems(menuBarItems, on: screen)
 

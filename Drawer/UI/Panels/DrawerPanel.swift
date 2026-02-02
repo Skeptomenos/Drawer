@@ -92,7 +92,7 @@ final class DrawerPanel: NSPanel {
         let panelWidth = frame.width
         let panelHeight = frame.height
 
-        let originX = fullFrame.midX - (panelWidth / 2)
+        let originX = fullFrame.maxX - panelWidth - Self.menuBarGap
         let originY = fullFrame.maxY - menuBarHeight - Self.menuBarGap - panelHeight
 
         #if DEBUG

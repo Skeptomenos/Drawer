@@ -281,8 +281,8 @@ final class AppState {
             logger.debug("Showing drawer panel with \(self.drawerManager.items.count) items")
             #endif
 
-            let separatorX = menuBarManager.separatorXPosition
-            drawerController.show(content: contentView, alignedTo: separatorX, on: screen)
+            // Use screen-edge alignment (most reliable) instead of separator X (timing-dependent)
+            drawerController.show(content: contentView, on: screen)
             drawerManager.show()
             hoverManager.updateDrawerFrame(drawerController.panelFrame)
 
@@ -300,8 +300,7 @@ final class AppState {
                 isLoading: false,
                 error: error
             )
-            let separatorX = menuBarManager.separatorXPosition
-            drawerController.show(content: contentView, alignedTo: separatorX, on: screen)
+            drawerController.show(content: contentView, on: screen)
             drawerManager.show()
         }
     }

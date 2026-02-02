@@ -351,10 +351,14 @@ final class MenuBarManager {
         Task { @MainActor in
             try? await Task.sleep(nanoseconds: 500_000_000)
             if let spacerWindow = spacer.button?.window, let ctrlWindow = alwaysHiddenControl.button?.window {
-                self.logger.debug("Always Hidden Setup: Spacer X=\(spacerWindow.frame.origin.x), Ctrl X=\(ctrlWindow.frame.origin.x)")
-                self.logger.debug("Spacer Width: \(spacerWindow.frame.width), Ctrl Width: \(ctrlWindow.frame.width)")
+                self.logger.info("🔍 Always Hidden Setup: Spacer X=\(spacerWindow.frame.origin.x), Ctrl X=\(ctrlWindow.frame.origin.x)")
+                self.logger.info("🔍 Spacer Width: \(spacerWindow.frame.width), Ctrl Width: \(ctrlWindow.frame.width)")
+                self.logger.info("🔍 Spacer Length (statusItem): \(spacer.length)")
+                print("🔍 [DEBUG] Spacer frame: \(spacerWindow.frame), Ctrl frame: \(ctrlWindow.frame)")
+                print("🔍 [DEBUG] Spacer length: \(spacer.length)")
             } else {
                 self.logger.error("Could not get window frames for Always Hidden section")
+                print("🔍 [DEBUG] ERROR: Could not get window frames!")
             }
         }
         
