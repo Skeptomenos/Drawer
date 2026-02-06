@@ -1,581 +1,762 @@
-# Code Review Issues & Mitigation Strategies
+# Drawer Code Review Issues Report
 
-**Date:** 2026-02-02  
-**Reviewer:** AI Code Review  
-**Project:** Drawer (macOS Menu Bar Utility)
-
----
-
-## Summary
-
-| Severity     | Count | Status     |
-| ------------ | ----- | ---------- |
-| **Critical** | 1     | Open       |
-| **High**     | 3     | Open       |
-| **Medium**   | 4     | Open       |
-| **Low**      | 3     | Open       |
+> **Generated:** 2026-02-02  
+> **Reviewed By:** OpenCode Agent  
+> **Rules Reference:** `rules/*.md`  
+> **Total Issues Found:** 72
 
 ---
 
-## Critical Issues
+## Executive Summary
 
-### CRIT-001: Production fatalError in IconRepositioner
+This report documents all code issues discovered during a comprehensive review of the Drawer codebase against the project's defined rules in `rules/`. Issues are categorized by severity and include detailed mitigation strategies with effort estimates.
 
-**File:** `Drawer/Core/Engines/IconRepositioner.swift:86-91`
+| Category                      | Count | Severity |
+| ----------------------------- | ----- | -------- |
+| Swift Concurrency             | 6     | HIGH     |
+| Accessibility                 | 2     | HIGH     |
+| Type Safety / Security        | 4     | MEDIUM   |
+| Swift/SwiftUI Deprecated APIs | 28    | MEDIUM   |
+| Architecture / Code Hygiene   | 12    | MEDIUM   |
+| Testing Gaps                  | 5     | MEDIUM   |
+| Bugs (Functional)             | 1     | HIGH     |
+| Logging / Documentation       | 14    | LOW      |
+
+---
+
+## Table of Contents
+
+1. [Bugs (Functional Issues)](#1-bugs-functional-issues)
+2. [Swift Concurrency Violations](#2-swift-concurrency-violations)
+3. [Accessibility Violations](#3-accessibility-violations)
+4. [Type Safety / Security Violations](#4-type-safety--security-violations)
+5. [Swift/SwiftUI Deprecated APIs](#5-swiftswiftui-deprecated-apis)
+6. [Architecture / Code Hygiene](#6-architecture--code-hygiene)
+7. [Testing Gaps](#7-testing-gaps)
+8. [Logging / Documentation](#8-logging--documentation)
+9. [Remediation Priority Matrix](#9-remediation-priority-matrix)
+
+---
+
+## 1. Bugs (Functional Issues)
+
+### BUG-001: Drawer Panel Not Aligned to Separator Position
+
+| Property    | Value                                                                                  |
+| ----------- | -------------------------------------------------------------------------------------- |
+| **Severity**  | HIGH                                                                                   |
+| **File**      | `App/AppState.swift:276, 294`                                                            |
+| **Rule**      | Functional correctness                                                                 |
+| **Status**    | Open                                                                                   |
 
 **Description:**  
-The code uses `fatalError()` when an undocumented CGEventField (0x33) is unavailable. If Apple changes or removes this field in a future macOS release, the app will crash on launch for all users.
+The drawer panel appears centered on the screen instead of being anchored to the right edge of the separator icon (where hidden icons are located). This creates a visual disconnect between the menu bar icons and the drawer.
+
+**Root Cause:**  
+In `AppState.swift`, the `drawerController.show(content:)` is called without the `alignedTo: xPosition` parameter:
+
+```swift
+// Current (incorrect):
+drawerController.show(content: contentView)
+
+// Should be:
+let separatorX = menuBarManager.separatorPosition.x
+drawerController.show(content: contentView, alignedTo: separatorX)
+```
+
+The `DrawerPanelController.show()` method supports alignment via the `alignedTo` parameter, but it's not being used.
+
+**Mitigation Strategy:**
+1. Get the separator's screen position from `MenuBarManager`
+2. Pass the X coordinate to `drawerController.show(content:, alignedTo:)`
+3. Ensure the drawer's right edge aligns with the separator icon
+
+**Effort Estimate:** 2 hours
+
+---
+
+## 2. Swift Concurrency Violations
+
+> **Rule Reference:** `rules/rules_swift_concurrency.md`
+
+### CONC-001: DispatchQueue.main.asyncAfter Usage
+
+| Property    | Value                                  |
+| ----------- | -------------------------------------- |
+| **Severity**  | HIGH                                   |
+| **File**      | `Core/Managers/MenuBarManager.swift:473` |
+| **Rule**      | "DispatchQueue.main → @MainActor"      |
 
 **Current Code:**
 ```swift
-private extension CGEventField {
-    static let windowID: CGEventField = {
-        guard let field = CGEventField(rawValue: 0x33) else {
-            fatalError("CGEventField windowID (0x33) unavailable - this indicates a breaking macOS API change")
-        }
-        return field
-    }()
+DispatchQueue.main.asyncAfter(deadline: .now() + debounceDelay) { [weak self] in
+    // debounced work
 }
 ```
 
-**Risk:** App crash on future macOS versions.
-
-**Mitigation Strategy:**
-
-1. Convert to optional with graceful degradation:
-
+**Mitigation:**
 ```swift
-// MARK: - CGEventField Extension
-
-private extension CGEventField {
-    /// Undocumented but stable field for setting the window ID on a CGEvent.
-    /// Uses rawValue 0x33 which has been stable since macOS 10.4.
-    /// Returns nil if the field is unavailable (indicates a breaking macOS API change).
-    static let windowID: CGEventField? = CGEventField(rawValue: 0x33)
+Task { @MainActor in
+    try? await Task.sleep(for: .seconds(debounceDelay))
+    // debounced work
 }
 ```
 
-2. Add a new error case to `RepositionError`:
-
-```swift
-/// The undocumented CGEventField for window ID is unavailable on this macOS version.
-case windowIDFieldUnavailable
-
-var errorDescription: String? {
-    // ... existing cases ...
-    case .windowIDFieldUnavailable:
-        return "Icon repositioning is not available on this macOS version"
-}
-```
-
-3. Update `createMoveEvent()` to handle nil gracefully:
-
-```swift
-// In createMoveEvent(), replace line 340:
-// OLD: event.setIntegerValueField(.windowID, value: windowID)
-
-// NEW:
-if let windowIDField = CGEventField.windowID {
-    event.setIntegerValueField(windowIDField, value: windowID)
-} else {
-    logger.warning("CGEventField windowID (0x33) unavailable - icon repositioning may not work correctly")
-}
-```
-
-**Effort:** 30 minutes  
-**Priority:** P0 - Fix immediately
+**Effort Estimate:** 30 minutes
 
 ---
 
-## High Priority Issues
+### CONC-002: Completion Handlers in Animation Context
 
-### HIGH-001: Swift 6 Concurrency Warnings
-
-**Files:**
-- `Drawer/App/AppState.swift:50-55`
-- `Drawer/Core/Managers/MenuBarManager.swift:191`
-- `Drawer/Core/Engines/IconCapturer.swift:178-179`
-- `Drawer/Core/Managers/IconPositionRestorer.swift:65-66`
-
-**Description:**  
-8 instances of `@MainActor` static properties being accessed from non-isolated contexts in default parameters. These are warnings in Swift 5.x but will be **errors in Swift 6**.
-
-**Current Code (example from AppState.swift):**
-```swift
-init(
-    settings: SettingsManager = .shared,      // Warning
-    permissions: PermissionManager = .shared, // Warning
-    drawerManager: DrawerManager = .shared,   // Warning
-    iconCapturer: IconCapturer = .shared,     // Warning
-    eventSimulator: EventSimulator = .shared, // Warning
-    hoverManager: HoverManager = .shared      // Warning
-) { ... }
-```
-
-**Risk:** Code will not compile in Swift 6 mode.
-
-**Mitigation Strategy:**
-
-**Option A: Mark init as @MainActor (Recommended)**
-```swift
-@MainActor
-init(
-    settings: SettingsManager = .shared,
-    permissions: PermissionManager = .shared,
-    // ... etc
-) { ... }
-```
-
-**Option B: Remove default parameters**
-```swift
-init(
-    settings: SettingsManager,
-    permissions: PermissionManager,
-    // ... etc
-) { ... }
-
-// Usage sites must explicitly pass dependencies:
-let appState = AppState(
-    settings: SettingsManager.shared,
-    permissions: PermissionManager.shared,
-    // ... etc
-)
-```
-
-**Option C: Use nonisolated static accessors (if dependencies don't require MainActor for init)**
-```swift
-// In SettingsManager:
-nonisolated static var shared: SettingsManager {
-    MainActor.assumeIsolated { _shared }
-}
-@MainActor private static let _shared = SettingsManager()
-```
-
-**Recommended:** Option A for most cases.
-
-**Effort:** 2 hours  
-**Priority:** P1 - Fix before Swift 6 migration
-
----
-
-### HIGH-002: Deprecated CGWindowListCreateImage API
-
-**File:** `Drawer/Utilities/ScreenCapture.swift:102`
-
-**Description:**  
-The code uses `CGWindowListCreateImage` which is deprecated. Apple recommends migrating to ScreenCaptureKit.
+| Property    | Value                                            |
+| ----------- | ------------------------------------------------ |
+| **Severity**  | MEDIUM                                           |
+| **Files**     | `UI/Panels/DrawerPanelController.swift:119, 148` |
+|             | `UI/Overlay/OverlayPanelController.swift:126`    |
+| **Rule**      | "Completion handlers → async/await"              |
 
 **Current Code:**
 ```swift
-// Line 102 - using deprecated API
-CGWindowListCreateImage(...)
+NSAnimationContext.runAnimationGroup({ context in
+    // animation
+}, completionHandler: { [weak self] in
+    // completion
+})
 ```
 
-**Risk:** API may be removed in future macOS versions; deprecation warnings clutter build output.
-
-**Mitigation Strategy:**
-
-1. The project already has `ScreenCaptureProvider` protocol and implementation. Extend this to cover all capture scenarios.
-
-2. Create a new method in `ScreenCaptureProvider`:
+**Mitigation:**
+Create an async wrapper extension:
 ```swift
-protocol ScreenCaptureProviding: Sendable {
-    // ... existing methods ...
-    
-    func captureWindows(
-        _ windowIDs: [CGWindowID],
-        on screen: NSScreen
-    ) async throws -> [CGWindowID: CGImage]
-}
-```
-
-3. Implement using `SCScreenshotManager.captureImage` with appropriate filters.
-
-4. Keep the deprecated implementation as a fallback behind a feature flag for older macOS versions if needed.
-
-**Effort:** 4 hours  
-**Priority:** P1 - Address before next major release
-
----
-
-### HIGH-003: Missing deinit Cleanup in HoverManager
-
-**File:** `Drawer/Core/Managers/HoverManager.swift`
-
-**Description:**  
-The `HoverManager` stores notification observers and event monitors but lacks a `deinit` to ensure cleanup if the object is deallocated without `stopMonitoring()` being called.
-
-**Current Code:**
-```swift
-@MainActor
-@Observable
-final class HoverManager {
-    // ... properties ...
-    
-    // NO deinit defined
-}
-```
-
-**Risk:** Memory leaks and zombie observers if manager is deallocated unexpectedly.
-
-**Mitigation Strategy:**
-
-Add a deinit:
-```swift
-deinit {
-    // Note: This runs on whatever thread/actor deallocates the object
-    // For @MainActor classes, cleanup should be done via a method call
-    // before the last reference is released.
-    
-    // If these are still set, log a warning in DEBUG
-    #if DEBUG
-    if mouseMonitor != nil || scrollMonitor != nil || clickMonitor != nil {
-        print("Warning: HoverManager deallocated without stopMonitoring() being called")
-    }
-    #endif
-}
-```
-
-Better approach - ensure `stopMonitoring()` is always called:
-```swift
-// In AppState.cleanup() or wherever HoverManager lifecycle is managed:
-func cleanup() {
-    hoverManager.stopMonitoring()
-    // ... other cleanup ...
-}
-```
-
-**Effort:** 15 minutes  
-**Priority:** P1 - Fix soon
-
----
-
-## Medium Priority Issues
-
-### MED-001: Unused Variable Warning
-
-**File:** `Drawer/UI/Settings/LayoutReconciler.swift:122`
-
-**Description:**  
-The variable `hasSectionOverride` is declared but never used, causing a compiler warning.
-
-**Current Code:**
-```swift
-let hasSectionOverride: Bool
-
-if let saved = matchingSaved, saved.section != capturedIcon.sectionType {
-    effectiveSection = saved.section
-    hasSectionOverride = true  // Assigned but never read
-    matchedCount += 1
-} else {
-    effectiveSection = capturedIcon.sectionType
-    hasSectionOverride = false // Assigned but never read
-    newCount += 1
-}
-```
-
-**Risk:** Build warnings; potential incomplete implementation.
-
-**Mitigation Strategy:**
-
-**Option A: Remove if not needed**
-```swift
-if let saved = matchingSaved, saved.section != capturedIcon.sectionType {
-    effectiveSection = saved.section
-    matchedCount += 1
-} else {
-    effectiveSection = capturedIcon.sectionType
-    newCount += 1
-}
-```
-
-**Option B: Use the variable (if there was intended functionality)**
-```swift
-// If this was meant to track overrides, use it:
-let hasSectionOverride = matchingSaved?.section != capturedIcon.sectionType
-if hasSectionOverride {
-    // ... handle override case
-}
-```
-
-**Option C: Prefix with underscore to suppress warning**
-```swift
-let _hasSectionOverride: Bool  // Intentionally unused
-```
-
-**Effort:** 5 minutes  
-**Priority:** P2 - Fix when convenient
-
----
-
-### MED-002: EventSimulator Missing @MainActor Annotation
-
-**File:** `Drawer/Utilities/EventSimulator.swift`
-
-**Description:**  
-Unlike other manager classes, `EventSimulator` is not marked `@MainActor`. While CGEvent posting doesn't strictly require the main thread, the inconsistency could lead to confusion.
-
-**Current Code:**
-```swift
-final class EventSimulator {
-    static let shared = EventSimulator()
-    // ...
-}
-```
-
-**Risk:** Inconsistent patterns; potential threading confusion.
-
-**Mitigation Strategy:**
-
-Add `@MainActor` for consistency:
-```swift
-@MainActor
-final class EventSimulator {
-    static let shared = EventSimulator()
-    // ...
-}
-```
-
-Or document why it's intentionally different:
-```swift
-/// EventSimulator handles CGEvent posting which is thread-safe.
-/// Unlike UI-focused managers, this class is intentionally not @MainActor
-/// to allow flexibility in event posting from background tasks.
-final class EventSimulator { ... }
-```
-
-**Effort:** 15 minutes  
-**Priority:** P2 - Address for consistency
-
----
-
-### MED-003: Timer-Based Debouncing Inconsistency
-
-**File:** `Drawer/Core/Managers/HoverManager.swift:176-199`
-
-**Description:**  
-Uses `Timer.scheduledTimer` for debouncing while the rest of the codebase uses `Task`-based async patterns. This creates an inconsistent code style.
-
-**Current Code:**
-```swift
-private func scheduleShowDrawer() {
-    showDebounceTimer?.invalidate()
-    showDebounceTimer = Timer.scheduledTimer(withTimeInterval: debounceInterval, repeats: false) { [weak self] _ in
-        Task { @MainActor in
-            guard let self = self, self.isMouseInTriggerZone else { return }
-            self.onShouldShowDrawer?()
+extension NSAnimationContext {
+    static func runAnimationGroup(_ changes: @escaping () -> Void) async {
+        await withCheckedContinuation { continuation in
+            runAnimationGroup(changes) { continuation.resume() }
         }
     }
 }
 ```
 
-**Risk:** Inconsistent patterns; Timer requires RunLoop.
-
-**Mitigation Strategy:**
-
-Convert to Task-based debouncing:
-```swift
-@ObservationIgnored private var showDebounceTask: Task<Void, Never>?
-
-private func scheduleShowDrawer() {
-    showDebounceTask?.cancel()
-    showDebounceTask = Task { [weak self] in
-        try? await Task.sleep(for: .seconds(self?.debounceInterval ?? 0.15))
-        guard !Task.isCancelled, let self = self, self.isMouseInTriggerZone else { return }
-        self.onShouldShowDrawer?()
-    }
-}
-
-private func cancelShowDrawer() {
-    showDebounceTask?.cancel()
-    showDebounceTask = nil
-}
-```
-
-**Effort:** 1 hour  
-**Priority:** P2 - Refactor for consistency
+**Effort Estimate:** 1 hour
 
 ---
 
-### MED-004: Acceptable fatalErrors Review
+### CONC-003: Missing Task.isCancelled Check in IconCapturer
 
-**Files:**
-- `Drawer/Core/Managers/MenuBarManager.swift:62,74`
-- `Drawer/UI/Settings/AboutView.swift:15`
+| Property    | Value                              |
+| ----------- | ---------------------------------- |
+| **Severity**  | HIGH                               |
+| **File**      | `Core/Engines/IconCapturer.swift:402` |
+| **Rule**      | "Always check Task.isCancelled"    |
 
-**Description:**  
-These `fatalError` calls are used for programmer error detection, which is an acceptable Swift pattern. However, they should be reviewed to ensure they can never be triggered by user actions.
-
-**Current Code (MenuBarManager):**
+**Current Code:**
 ```swift
-private(set) var hiddenSection: MenuBarSection {
-    get {
-        guard let section = _hiddenSection else {
-            fatalError("hiddenSection accessed before setupSections completed. This is a programmer error.")
-        }
-        return section
-    }
-    // ...
+while currentX + iconWidthPixels <= imageWidth {
+    // slicing loop - no cancellation check
 }
 ```
 
-**Current Code (AboutView):**
+**Mitigation:**
 ```swift
-private let githubURL = URL(string: "https://github.com/...")!
-// This will fatalError if the string is malformed
+while currentX + iconWidthPixels <= imageWidth {
+    guard !Task.isCancelled else { break }
+    // slicing loop
+}
 ```
 
-**Risk:** Low - these catch programming errors, not runtime conditions.
+**Effort Estimate:** 15 minutes
 
-**Mitigation Strategy:**
+---
 
-For MenuBarManager - acceptable as-is, but add documentation:
+### CONC-004: Missing Task.isCancelled Check in IconRepositioner
+
+| Property    | Value                                 |
+| ----------- | ------------------------------------- |
+| **Severity**  | HIGH                                  |
+| **File**      | `Core/Engines/IconRepositioner.swift:479` |
+| **Rule**      | "Always check Task.isCancelled"       |
+
+**Current Code:**
 ```swift
-/// The hidden section (separator that expands to hide icons).
-///
-/// - Important: Accessing this property before `setupSections()` completes is a programmer error
-///   and will trigger a fatal error. This should only happen during development.
-private(set) var hiddenSection: MenuBarSection { ... }
+while ContinuousClock.now < deadline {
+    // polling loop - no cancellation check
+}
 ```
 
-For AboutView - use static validation:
+**Mitigation:**
 ```swift
-private static let githubURL: URL = {
-    guard let url = URL(string: "https://github.com/Skeptomenos/Drawer") else {
-        assertionFailure("Invalid hardcoded GitHub URL")
-        return URL(string: "https://github.com")!
+while ContinuousClock.now < deadline {
+    guard !Task.isCancelled else { break }
+    // polling loop
+}
+```
+
+**Effort Estimate:** 15 minutes
+
+---
+
+## 3. Accessibility Violations
+
+> **Rule Reference:** `rules/rules_swift.md` Section 3
+
+### A11Y-001: onTapGesture Without Button Alternative
+
+| Property    | Value                              |
+| ----------- | ---------------------------------- |
+| **Severity**  | HIGH                               |
+| **File**      | `UI/Panels/DrawerContentView.swift:177, 288` |
+| **Rule**      | "Replace onTapGesture with Button" |
+
+**Current Code:**
+```swift
+DrawerItemView(item: item)
+    .onTapGesture {
+        onItemTap?(item)
     }
-    return url
+```
+
+**Issue:**  
+`onTapGesture` does not support VoiceOver, keyboard navigation, or eye-tracking. Interactive elements must use `Button`.
+
+**Mitigation:**
+```swift
+Button {
+    onItemTap?(item)
+} label: {
+    DrawerItemView(item: item)
+}
+.buttonStyle(.plain)
+.accessibilityLabel(item.name ?? "Menu bar icon \(item.index)")
+```
+
+**Effort Estimate:** 1 hour
+
+---
+
+## 4. Type Safety / Security Violations
+
+> **Rule Reference:** `rules/rules_swift.md` Section 4, `rules/security.md`
+
+### SEC-001: Force Unwrap of CGEventField
+
+| Property    | Value                                 |
+| ----------- | ------------------------------------- |
+| **Severity**  | MEDIUM                                |
+| **File**      | `Core/Engines/IconRepositioner.swift:86` |
+| **Rule**      | "NO force unwraps in production"      |
+
+**Current Code:**
+```swift
+static let windowID = CGEventField(rawValue: 0x33)!
+```
+
+**Mitigation:**
+```swift
+static let windowID: CGEventField = {
+    guard let field = CGEventField(rawValue: 0x33) else {
+        fatalError("CGEventField windowID (0x33) unavailable on this system")
+    }
+    return field
 }()
 ```
 
-**Effort:** 30 minutes  
-**Priority:** P2 - Review when convenient
+**Effort Estimate:** 15 minutes
 
 ---
 
-## Low Priority Issues
+### SEC-002: Force Unwrap of URL
 
-### LOW-001: Debug Timer Verbosity
-
-**File:** `Drawer/Core/Managers/MenuBarManager.swift:393-412`
-
-**Description:**  
-A 5-second debug timer logs section state continuously in DEBUG builds. This can clutter logs during development.
+| Property    | Value                       |
+| ----------- | --------------------------- |
+| **Severity**  | LOW                         |
+| **File**      | `UI/Settings/AboutView.swift:13` |
+| **Rule**      | "NO force unwraps"          |
 
 **Current Code:**
 ```swift
-#if DEBUG
-private func setupDebugTimer() {
-    debugTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { [weak self] _ in
-        // Logs every 5 seconds
-    }
-}
-#endif
+private static let githubURL = URL(string: "https://github.com/dwarvesf/hidden")!
 ```
 
-**Mitigation Strategy:**
-
-Make opt-in via environment variable:
+**Mitigation:**
 ```swift
-#if DEBUG
-private func setupDebugTimer() {
-    guard ProcessInfo.processInfo.environment["DRAWER_DEBUG_TIMER"] != nil else { return }
-    debugTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { ... }
+private static let githubURL = URL(string: "https://github.com/dwarvesf/hidden")
+// Handle optional in usage, or use static fatalError pattern
+```
+
+**Effort Estimate:** 10 minutes
+
+---
+
+### SEC-003: Implicitly Unwrapped Optionals in MenuBarManager
+
+| Property    | Value                              |
+| ----------- | ---------------------------------- |
+| **Severity**  | MEDIUM                             |
+| **File**      | `Core/Managers/MenuBarManager.swift:38, 41` |
+| **Rule**      | "NO force unwraps"                 |
+
+**Current Code:**
+```swift
+private(set) var hiddenSection: MenuBarSection!
+private(set) var visibleSection: MenuBarSection!
+```
+
+**Mitigation:**
+Convert to non-optional with guaranteed initialization:
+```swift
+private(set) var hiddenSection: MenuBarSection
+private(set) var visibleSection: MenuBarSection
+
+init() {
+    hiddenSection = MenuBarSection(type: .hidden)
+    visibleSection = MenuBarSection(type: .visible)
+    // ... rest of init
 }
-#endif
 ```
 
-**Effort:** 10 minutes  
-**Priority:** P3 - Nice to have
+**Effort Estimate:** 1 hour
 
 ---
 
-### LOW-002: Inconsistent Import Ordering
+## 5. Swift/SwiftUI Deprecated APIs
 
-**Files:** Various
+> **Rule Reference:** `rules/rules_swift.md` Section 1
 
-**Description:**  
-Some files don't follow the documented import ordering (Apple frameworks first, alphabetically sorted, then third-party).
+### DEP-001: foregroundColor() Usage (15 instances)
+
+| Property    | Value                                                                                              |
+| ----------- | -------------------------------------------------------------------------------------------------- |
+| **Severity**  | MEDIUM                                                                                             |
+| **Files**     | `UI/Settings/SettingsMenuBarLayoutView.swift:151, 155, 183, 192, 216, 230, 792, 796, 908, 1031`   |
+|             | `UI/Panels/DrawerContentView.swift:192, 205, 209, 233, 272`                                        |
+| **Rule**      | "foregroundColor() → foregroundStyle()"                                                            |
+
+**Mitigation:**
+Global find/replace: `.foregroundColor(` → `.foregroundStyle(`
+
+**Effort Estimate:** 30 minutes
+
+---
+
+### DEP-002: cornerRadius() Usage (1 instance)
+
+| Property    | Value                                    |
+| ----------- | ---------------------------------------- |
+| **Severity**  | LOW                                      |
+| **File**      | `UI/Settings/GeneralSettingsView.swift:103` |
+| **Rule**      | "cornerRadius() → clipShape()"           |
+
+**Current Code:**
+```swift
+.cornerRadius(4)
+```
+
+**Mitigation:**
+```swift
+.clipShape(.rect(cornerRadius: 4))
+```
+
+**Effort Estimate:** 10 minutes
+
+---
+
+### DEP-003: ObservableObject / @Published Usage (13 classes)
+
+| Property    | Value                                           |
+| ----------- | ----------------------------------------------- |
+| **Severity**  | MEDIUM                                          |
+| **Rule**      | "ObservableObject → @Observable macro"          |
+
+**Affected Classes:**
+
+| File                                     | Class                  |
+| ---------------------------------------- | ---------------------- |
+| `App/AppState.swift`                       | `AppState`               |
+| `Core/Managers/SettingsManager.swift`      | `SettingsManager`        |
+| `Core/Managers/MenuBarManager.swift`       | `MenuBarManager`         |
+| `Core/Managers/PermissionManager.swift`    | `PermissionManager`      |
+| `Core/Managers/DrawerManager.swift`        | `DrawerManager`          |
+| `Core/Managers/HoverManager.swift`         | `HoverManager`           |
+| `Core/Managers/OverlayModeManager.swift`   | `OverlayModeManager`     |
+| `Core/Managers/LaunchAtLoginManager.swift` | `LaunchAtLoginManager`   |
+| `Core/Engines/IconCapturer.swift`          | `IconCapturer`           |
+| `Core/Models/ControlItem.swift`            | `ControlItem`            |
+| `Core/Models/MenuBarSection.swift`         | `MenuBarSection`         |
+| `UI/Panels/DrawerPanelController.swift`    | `DrawerPanelController`  |
+| `UI/Overlay/OverlayPanelController.swift`  | `OverlayPanelController` |
 
 **Mitigation Strategy:**
+This is a significant refactoring effort that requires a dedicated spec. Changes include:
+1. Replace `ObservableObject` protocol with `@Observable` macro
+2. Remove `@Published` property wrappers
+3. Update `@ObservedObject` to use new property wrapper patterns
+4. Update `@EnvironmentObject` to `@Environment`
 
-Add a SwiftLint rule or document in `docs/CODE_STYLE.md`:
-```yaml
-# .swiftlint.yml
-sorted_imports:
-  severity: warning
+**Effort Estimate:** 8 hours (requires separate spec)
+
+---
+
+### DEP-004: Hardcoded Font Sizes (18 instances)
+
+| Property    | Value                                                                                                        |
+| ----------- | ------------------------------------------------------------------------------------------------------------ |
+| **Severity**  | MEDIUM                                                                                                       |
+| **Files**     | `UI/Settings/SettingsMenuBarLayoutView.swift:154, 182, 215, 229, 237, 246, 791, 795, 907, 1030`             |
+|             | `UI/Panels/DrawerContentView.swift:191, 204, 208, 232, 271`                                                  |
+|             | `UI/Onboarding/TutorialStepView.swift:29`                                                                    |
+|             | `UI/Onboarding/CompletionStepView.swift:42`                                                                  |
+|             | `UI/Onboarding/PermissionsStepView.swift:33`                                                                 |
+| **Rule**      | "NO hardcoded fonts - use Dynamic Type"                                                                      |
+
+**Current Code Examples:**
+```swift
+.font(.system(size: 12))
+.font(.system(size: 11, weight: .medium))
+.font(.system(size: 48))
 ```
 
-**Effort:** 30 minutes  
-**Priority:** P3 - Style improvement
+**Mitigation:**
+Replace with Dynamic Type styles:
+
+| Hardcoded Size | Dynamic Type Replacement |
+| -------------- | ------------------------ |
+| 10-11          | `.caption2`                |
+| 12             | `.caption`                 |
+| 13             | `.footnote`                |
+| 14-15          | `.subheadline`             |
+| 16-17          | `.body`                    |
+| 18-20          | `.title3`                  |
+| 24-28          | `.title2`                  |
+| 34+            | `.title` or `.largeTitle`    |
+| 48+            | `.largeTitle`              |
+
+**Effort Estimate:** 3 hours
 
 ---
 
-### LOW-003: Empty MARK Sections
+### DEP-005: GeometryReader Usage (1 instance)
 
-**Files:** Various
+| Property    | Value                                        |
+| ----------- | -------------------------------------------- |
+| **Severity**  | LOW                                          |
+| **File**      | `UI/Settings/SettingsMenuBarLayoutView.swift:816` |
+| **Rule**      | "Prefer visualEffect() or containerRelativeFrame()" |
 
-**Description:**  
-Some files have `// MARK: -` sections with minimal content, reducing readability.
+**Mitigation:**
+Evaluate if `containerRelativeFrame()` or `visualEffect()` can replace the `GeometryReader`. If spatial layout is truly needed, document the exception.
 
-**Mitigation Strategy:**
-
-Consolidate or remove sparse MARK sections during normal maintenance.
-
-**Effort:** Ongoing  
-**Priority:** P3 - Address opportunistically
-
----
-
-## Implementation Checklist
-
-### Phase 1: Critical & High Priority (This Sprint)
-
-- [ ] **CRIT-001:** Convert IconRepositioner fatalError to optional handling
-- [ ] **HIGH-001:** Fix Swift 6 concurrency warnings in all 4 files
-- [ ] **HIGH-002:** Create migration plan for CGWindowListCreateImage deprecation
-- [ ] **HIGH-003:** Add deinit to HoverManager or ensure cleanup path
-
-### Phase 2: Medium Priority (Next Sprint)
-
-- [ ] **MED-001:** Remove unused `hasSectionOverride` variable
-- [ ] **MED-002:** Standardize EventSimulator @MainActor annotation
-- [ ] **MED-003:** Migrate Timer-based debouncing to Task-based
-- [ ] **MED-004:** Add documentation to acceptable fatalError usages
-
-### Phase 3: Low Priority (Backlog)
-
-- [ ] **LOW-001:** Make debug timer opt-in
-- [ ] **LOW-002:** Add SwiftLint sorted_imports rule
-- [ ] **LOW-003:** Clean up sparse MARK sections
+**Effort Estimate:** 1 hour (investigation)
 
 ---
 
-## Verification
+## 6. Architecture / Code Hygiene
 
-After implementing fixes, verify with:
+> **Rule Reference:** `rules/architecture.md`
 
-```bash
-# Build with all warnings treated as errors
-xcodebuild -scheme Drawer -configuration Debug \
-    OTHER_SWIFT_FLAGS="-warnings-as-errors" \
-    build
+### ARCH-001: Multiple Types Per File (8 files)
 
-# Build with Swift 6 strict concurrency checking
-xcodebuild -scheme Drawer -configuration Debug \
-    OTHER_SWIFT_FLAGS="-strict-concurrency=complete" \
-    build
+| Property    | Value                                        |
+| ----------- | -------------------------------------------- |
+| **Severity**  | MEDIUM                                       |
+| **Rule**      | "One type per file"                          |
 
-# Run tests
-xcodebuild -scheme Drawer -destination 'platform=macOS' test
+**Affected Files:**
+
+| File                                        | Types                                              | Lines |
+| ------------------------------------------- | -------------------------------------------------- | ----- |
+| `UI/Settings/SettingsMenuBarLayoutView.swift` | 5+ (LayoutSectionView, ItemFramePreferenceKey, etc.) | 1081  |
+| `UI/Panels/DrawerContentView.swift`           | 5+ (DrawerItemView, SectionHeader, IconRow, etc.)  | 350+  |
+| `UI/Overlay/OverlayContentView.swift`         | 5+ (OverlayIconView, OverlayBackground, etc.)      | 200+  |
+| `UI/Components/PermissionStatusView.swift`    | 3 (PermissionRow, PermissionBadge)                 | 100+  |
+| `UI/Onboarding/*.swift`                       | 2+ each (internal private structs)                 | Varies |
+
+**Mitigation:**
+Extract sub-views to separate files:
+- `SettingsMenuBarLayoutView.swift` → `LayoutSectionView.swift`, `LayoutItemView.swift`, `DropPositionDelegate.swift`
+- `DrawerContentView.swift` → `DrawerItemView.swift`, `SectionHeader.swift`, `IconRow.swift`
+
+**Effort Estimate:** 6 hours
+
+---
+
+### ARCH-002: Business Logic in Views
+
+| Property    | Value                                            |
+| ----------- | ------------------------------------------------ |
+| **Severity**  | MEDIUM                                           |
+| **File**      | `UI/Settings/SettingsMenuBarLayoutView.swift:351-571` |
+| **Rule**      | "Views contain only UI, logic in Services"       |
+
+**Issue:**
+The view contains repositioning and destination calculation logic (`performReposition`, `calculateDestination`, `getSectionItems`) that should be in a ViewModel or Service.
+
+**Mitigation:**
+Create `MenuBarLayoutViewModel.swift` and move business logic there.
+
+**Effort Estimate:** 4 hours
+
+---
+
+## 7. Testing Gaps
+
+> **Rule Reference:** `rules/testing.md`
+
+### TEST-001: Missing DrawerUITests Target
+
+| Property    | Value                       |
+| ----------- | --------------------------- |
+| **Severity**  | MEDIUM                      |
+| **Issue**     | No UI test target exists    |
+| **Rule**      | "E2E (10%): Critical flows" |
+
+**Mitigation:**
+1. Create `DrawerUITests/` target in Xcode project
+2. Add XCUITest for critical flows:
+   - App launch → permissions check
+   - Toggle drawer visibility
+   - Click-through behavior
+
+**Effort Estimate:** 4 hours
+
+---
+
+### TEST-002: Missing Tests for UI Panels
+
+| Property    | Value                                             |
+| ----------- | ------------------------------------------------- |
+| **Severity**  | MEDIUM                                            |
+| **Files**     | `DrawerPanelController`, `DrawerContentView`        |
+| **Rule**      | "Unit (60%): Pure functions, Utils"               |
+
+**Mitigation:**
+Add unit tests for:
+- `DrawerPanelController` state transitions (show/hide/toggle)
+- Panel positioning logic
+
+**Effort Estimate:** 3 hours
+
+---
+
+### TEST-003: IconCapturerTests Mocks Internal Logic
+
+| Property    | Value                                       |
+| ----------- | ------------------------------------------- |
+| **Severity**  | MEDIUM                                      |
+| **File**      | `DrawerTests/Core/Engines/IconCapturerTests.swift` |
+| **Rule**      | "Do NOT mock internal Service/Repo logic"  |
+
+**Issue:**
+`MockIconCapturer` mocks the internal engine state instead of the system boundary (`ScreenCaptureKit`).
+
+**Mitigation:**
+Create protocol-based abstraction for `SCStream` and `SCShareableContent` to mock at the correct boundary.
+
+**Effort Estimate:** 3 hours
+
+---
+
+### TEST-004: Missing Edge Case Tests
+
+| Property    | Value                          |
+| ----------- | ------------------------------ |
+| **Severity**  | LOW                            |
+| **File**      | `DrawerTests/Core/Managers/MenuBarManagerTests.swift` |
+| **Rule**      | Testing pyramid coverage       |
+
+**Missing Scenarios:**
+- Multiple display configuration changes
+- Menu bar crash/restart recovery
+- Rapid toggle cycling
+
+**Effort Estimate:** 2 hours
+
+---
+
+### TEST-005: @Observable Migration Test Updates
+
+| Property    | Value                                        |
+| ----------- | -------------------------------------------- |
+| **Severity**  | MEDIUM                                       |
+| **Issue**     | When DEP-003 is resolved, tests need updates |
+
+**Mitigation:**
+After `@Observable` migration, update all tests that rely on `ObservableObject` patterns:
+- Update `@ObservedObject` usage in test views
+- Verify `@Published` replacement works correctly
+- Update mock implementations
+
+**Effort Estimate:** 2 hours (dependent on DEP-003)
+
+---
+
+## 8. Logging / Documentation
+
+> **Rule Reference:** `rules/logging.md`, `rules/documentation.md`
+
+### LOG-001: print() Statement in Production Code
+
+| Property    | Value                               |
+| ----------- | ----------------------------------- |
+| **Severity**  | LOW                                 |
+| **File**      | `UI/Panels/DrawerContentView.swift:343` |
+| **Rule**      | "print() is FORBIDDEN"              |
+
+**Current Code:**
+```swift
+print("Tapped item \(item.index)")
 ```
 
+**Mitigation:**
+```swift
+Self.logger.debug("Tapped item \(item.index)")
+```
+
+**Effort Estimate:** 5 minutes
+
 ---
 
-## References
+### DOC-001: Stale Comment (Phase 1/Phase 2)
 
-- [docs/ARCHITECTURE.md](ARCHITECTURE.md) - Project architecture
-- [docs/CODE_STYLE.md](CODE_STYLE.md) - Code style guidelines
-- [Apple: Migrating to Swift 6](https://developer.apple.com/documentation/swift/migrating-to-swift-6)
-- [Apple: ScreenCaptureKit](https://developer.apple.com/documentation/screencapturekit)
+| Property    | Value                                  |
+| ----------- | -------------------------------------- |
+| **Severity**  | LOW                                    |
+| **File**      | `Core/Managers/PermissionManager.swift:77-78` |
+| **Rule**      | "NO stale comments"                    |
+
+**Current:**
+```swift
+/// - Note: Phase 1 only checks status; Phase 2 will require these permissions...
+```
+
+**Issue:** Phase 2 features are already implemented.
+
+**Mitigation:**
+Update to reflect current state or remove.
+
+**Effort Estimate:** 10 minutes
+
+---
+
+### DOC-002: "What not Why" Comments (9 instances)
+
+| Property    | Value                                             |
+| ----------- | ------------------------------------------------- |
+| **Severity**  | LOW                                               |
+| **Files**     | `Core/Managers/MenuBarManager.swift:303, 307`       |
+|             | `Core/Engines/IconRepositioner.swift:236, 254, 265, 270, 273, 277, 282` |
+| **Rule**      | "Comment the Intent, not the Syntax"              |
+
+**Examples:**
+```swift
+// Log positions       // ❌ Describes what
+// Calculate points    // ❌ Describes what
+```
+
+**Mitigation:**
+Either remove trivial comments or expand to explain "why".
+
+**Effort Estimate:** 30 minutes
+
+---
+
+### DOC-003: Missing API Documentation (8 methods)
+
+| Property    | Value                                                           |
+| ----------- | --------------------------------------------------------------- |
+| **Severity**  | LOW                                                             |
+| **Files**     | `Core/Engines/IconCapturer.swift:111, 184, 434`                   |
+|             | `Core/Managers/PermissionManager.swift:150, 156, 163, 214`        |
+| **Rule**      | "API Documentation required"                                    |
+
+**Missing Docs For:**
+- `IconCapturer.captureHiddenIcons()`
+- `IconCapturer.captureMenuBarRegion()`
+- `IconCapturer.clearLastCapture()`
+- `PermissionManager.refreshAllStatuses()`
+- `PermissionManager.refreshAccessibilityStatus()`
+- `PermissionManager.refreshScreenRecordingStatus()`
+- `PermissionManager.request(_:)`
+
+**Mitigation:**
+Add `///` documentation blocks to these public API methods.
+
+**Effort Estimate:** 2 hours
+
+---
+
+## 9. Remediation Priority Matrix
+
+### Phase 1: Critical (Immediate - This Week)
+
+| ID       | Issue                                 | Files   | Effort   |
+| -------- | ------------------------------------- | ------- | -------- |
+| BUG-001  | Drawer not aligned to separator       | 2       | 2 hours  |
+| CONC-003 | Missing Task.isCancelled in IconCapturer | 1       | 15 min   |
+| CONC-004 | Missing Task.isCancelled in IconRepositioner | 1       | 15 min   |
+| CONC-001 | DispatchQueue.main.asyncAfter           | 1       | 30 min   |
+| A11Y-001 | onTapGesture without Button           | 1       | 1 hour   |
+| SEC-003  | IUOs in MenuBarManager                | 1       | 1 hour   |
+| **TOTAL**  |                                       |         | **5 hrs**  |
+
+### Phase 2: High Priority (This Sprint)
+
+| ID       | Issue                           | Files   | Effort   |
+| -------- | ------------------------------- | ------- | -------- |
+| DEP-001  | Replace foregroundColor()       | 2       | 30 min   |
+| DEP-002  | Replace cornerRadius()          | 1       | 10 min   |
+| DEP-004  | Replace hardcoded fonts         | 5       | 3 hours  |
+| SEC-001  | Force unwrap CGEventField       | 1       | 15 min   |
+| SEC-002  | Force unwrap URL                | 1       | 10 min   |
+| TEST-001 | Create DrawerUITests target     | New     | 4 hours  |
+| DOC-003  | Add API documentation           | 2       | 2 hours  |
+| **TOTAL**  |                                 |         | **10 hrs** |
+
+### Phase 3: Medium Priority (Next Sprint)
+
+| ID       | Issue                               | Files   | Effort   |
+| -------- | ----------------------------------- | ------- | -------- |
+| DEP-003  | Migrate to @Observable              | 13      | 8 hours  |
+| ARCH-001 | Extract multiple types per file     | 8       | 6 hours  |
+| ARCH-002 | Move logic from Views to ViewModels | 1       | 4 hours  |
+| CONC-002 | Wrap NSAnimationContext in async    | 2       | 1 hour   |
+| TEST-002 | Add UI Panel tests                  | 2       | 3 hours  |
+| TEST-003 | Fix IconCapturer mock boundaries    | 1       | 3 hours  |
+| TEST-005 | Update tests after @Observable      | Multiple | 2 hours  |
+| **TOTAL**  |                                     |         | **27 hrs** |
+
+### Phase 4: Low Priority (Backlog)
+
+| ID       | Issue                           | Files   | Effort   |
+| -------- | ------------------------------- | ------- | -------- |
+| LOG-001  | Remove print() statement        | 1       | 5 min    |
+| DOC-001  | Update stale Phase 1/2 comment  | 1       | 10 min   |
+| DOC-002  | Clean up "what" comments        | 2       | 30 min   |
+| DEP-005  | Evaluate GeometryReader         | 1       | 1 hour   |
+| TEST-004 | Add edge case tests             | 1       | 2 hours  |
+| **TOTAL**  |                                 |         | **4 hrs**  |
+
+---
+
+## Appendix: Rule Files Referenced
+
+| Rule File                    | Categories Covered                    |
+| ---------------------------- | ------------------------------------- |
+| `rules/rules_swift.md`         | DEP-001 to DEP-005, SEC-001 to SEC-003, A11Y-001 |
+| `rules/rules_swift_concurrency.md` | CONC-001 to CONC-004                    |
+| `rules/architecture.md`        | ARCH-001, ARCH-002                    |
+| `rules/testing.md`             | TEST-001 to TEST-005                  |
+| `rules/logging.md`             | LOG-001                               |
+| `rules/documentation.md`       | DOC-001 to DOC-003                    |
+| `rules/security.md`            | SEC-001 to SEC-003                    |
+
+---
+
+## Next Steps
+
+1. **Immediate:** Address Phase 1 critical issues (BUG-001, CONC-003/004, A11Y-001)
+2. **Create Spec:** DEP-003 (@Observable migration) requires a dedicated specification document
+3. **Sprint Planning:** Add Phase 2 items to current sprint backlog
+4. **Tracking:** Create individual tickets/issues for each item as needed
+
+---
+
+*Report generated by OpenCode comprehensive code review.*

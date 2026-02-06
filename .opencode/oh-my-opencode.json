@@ -1,0 +1,78 @@
+{
+  "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-opencode/master/assets/oh-my-opencode.schema.json",
+  "sisyphus_agent": {
+    "disabled": false,
+    "default_builder_enabled": true,
+    "planner_enabled": true,
+    "replace_plan": false
+  },
+  "agents": {
+    "sisyphus": {
+      "model": "genaipilot-vertex-anthropic/claude-opus-4-5@20251101",
+      "temperature": 0.3,
+      "permission": {
+        "edit": "allow",
+        "bash": "allow",
+        "webfetch": "allow",
+        "external_directory": "allow"
+      },
+      "disable": false
+    },
+    "prometheus": {
+      "model": "its-vertex/gemini-3-pro-preview",
+      "disable": false
+    },
+    "oracle": {
+      "model": "genaipilot-vertex-anthropic/claude-opus-4-5@20251101",
+      "temperature": 0.2,
+      "disable": false
+    },
+    "librarian": {
+      "model": "its-vertex/gemini-3-flash-preview",
+      "temperature": 0.1,
+      "disable": false
+    },
+    "explore": {
+      "model": "its-vertex/gemini-3-flash-preview",
+      "temperature": 0,
+      "disable": false
+    },
+    "multimodal-looker": {
+      "model": "its-vertex/gemini-3-pro-preview",
+      "temperature": 0.2,
+      "disable": false
+    },
+    "metis": {
+      "model": "genaipilot-vertex-anthropic/claude-opus-4-5@20251101",
+      "disable": false
+    },
+    "momus": {
+      "model": "genaipilot-vertex-anthropic/claude-opus-4-5@20251101",
+      "disable": false
+    },
+    "atlas": {
+      "model": "its-vertex/gemini-3-pro-preview",
+      "disable": false
+    }
+  },
+  "categories": {
+    "visual-engineering": {
+      "model": "its-vertex/gemini-3-pro-preview"
+    },
+    "ultrabrain": {
+      "model": "genaipilot-vertex-anthropic/claude-opus-4-5@20251101"
+    },
+    "quick": {
+      "model": "its-vertex/gemini-3-pro-preview"
+    },
+    "unspecified-low": {
+      "model": "its-vertex/gemini-3-pro-preview"
+    },
+    "unspecified-high": {
+      "model": "genaipilot-vertex-anthropic/claude-opus-4-5@20251101"
+    },
+    "writing": {
+      "model": "its-vertex/gemini-3-pro-preview"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+schemaVersion: 1
+
+# Workflow selection - enable all workflows for Drawer development
+enabledWorkflows: ["simulator", "ui-automation", "debugging", "macos", "swift-package", "session-management"]
+
+# Session defaults for Drawer project
+sessionDefaults:
+  projectPath: "/Users/david.helmus/repos/apps/Drawer/Drawer.xcodeproj"
+  scheme: "Drawer"
+  configuration: "Debug"
+  platform: "macOS"
+  arch: "arm64"
+  suppressWarnings: true
+
+# Build settings
+incrementalBuildsEnabled: false
+
+# Debugging
+debug: false
+debuggerBackend: "dap"
+
+# UI automation
+uiDebuggerGuardMode: "error"
