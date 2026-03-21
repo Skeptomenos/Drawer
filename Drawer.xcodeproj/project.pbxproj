@@ -1,0 +1,1658 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 52;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		DRAWERUITEST0010000000001 /* DrawerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERUITEST0020000000001 /* DrawerUITests.swift */; };
+		DRAWERTEST00100000000001 /* SetupVerificationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000001 /* SetupVerificationTests.swift */; };
+		DRAWERTEST00100000000002 /* MockSettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000003 /* MockSettingsManager.swift */; };
+		DRAWERTEST00100000000003 /* MockSettingsManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000004 /* MockSettingsManagerTests.swift */; };
+		DRAWERTEST00100000000004 /* MockPermissionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000005 /* MockPermissionManager.swift */; };
+		DRAWERTEST00100000000005 /* MockPermissionManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000006 /* MockPermissionManagerTests.swift */; };
+		DRAWERTEST00100000000006 /* MockMenuBarManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000007 /* MockMenuBarManager.swift */; };
+		DRAWERTEST00100000000007 /* MockMenuBarManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000008 /* MockMenuBarManagerTests.swift */; };
+		DRAWERTEST00100000000008 /* MockIconCapturer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000009 /* MockIconCapturer.swift */; };
+		DRAWERTEST00100000000009 /* MockIconCapturerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000010 /* MockIconCapturerTests.swift */; };
+		DRAWERTEST00100000000010 /* MenuBarManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000011 /* MenuBarManagerTests.swift */; };
+		DRAWERTEST00100000000011 /* SettingsManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000012 /* SettingsManagerTests.swift */; };
+		DRAWERTEST00100000000012 /* DrawerManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000013 /* DrawerManagerTests.swift */; };
+		DRAWERTEST00100000000013 /* HoverManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000014 /* HoverManagerTests.swift */; };
+		DRAWERTEST00100000000015 /* LaunchAtLoginManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000015 /* LaunchAtLoginManagerTests.swift */; };
+		DRAWERTEST00100000000016 /* DrawerItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000016 /* DrawerItemTests.swift */; };
+		DRAWERTEST00100000000017 /* GlobalHotkeyConfigTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000017 /* GlobalHotkeyConfigTests.swift */; };
+		DRAWERTEST00100000000018 /* CaptureErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000018 /* CaptureErrorTests.swift */; };
+		DRAWERTEST00100000000019 /* EventSimulatorErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000019 /* EventSimulatorErrorTests.swift */; };
+		DRAWERTEST00100000000020 /* PermissionTypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000020 /* PermissionTypeTests.swift */; };
+		DRAWERTEST00100000000021 /* PermissionManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000021 /* PermissionManagerTests.swift */; };
+		DRAWERTEST00100000000022 /* IconCapturerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000022 /* IconCapturerTests.swift */; };
+		DRAWERTEST00100000000023 /* EventSimulatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000023 /* EventSimulatorTests.swift */; };
+		DRAWERTEST00100000000024 /* GlobalEventMonitorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000024 /* GlobalEventMonitorTests.swift */; };
+		DRAWERTEST00100000000025 /* LocalEventMonitorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000025 /* LocalEventMonitorTests.swift */; };
+		DRAWERTEST00100000000026 /* WindowInfoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000026 /* WindowInfoTests.swift */; };
+		DRAWERTEST00100000000027 /* MenuBarMetricsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000027 /* MenuBarMetricsTests.swift */; };
+		DRAWERTEST00100000000028 /* AppStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000028 /* AppStateTests.swift */; };
+		DRAWERTEST00100000000029 /* ControlItemStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000029 /* ControlItemStateTests.swift */; };
+		DRAWERTEST00100000000030 /* ControlItemImageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000030 /* ControlItemImageTests.swift */; };
+		DRAWERTEST00100000000031 /* ControlItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000031 /* ControlItemTests.swift */; };
+		DRAWERTEST00100000000032 /* MenuBarSectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000032 /* MenuBarSectionTests.swift */; };
+		DRAWERTEST00100000000033 /* OverlayModeManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000033 /* OverlayModeManagerTests.swift */; };
+		DRAWERTEST00100000000034 /* MockEventSimulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000034 /* MockEventSimulator.swift */; };
+		DRAWERTEST00100000000035 /* MockOverlayPanelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000035 /* MockOverlayPanelController.swift */; };
+		DRAWERTEST00100000000036 /* ScreenCaptureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000036 /* ScreenCaptureTests.swift */; };
+		DRAWERTEST00100000000037 /* SettingsLayoutItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000037 /* SettingsLayoutItemTests.swift */; };
+		DRAWERTEST00100000000038 /* MenuBarItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000038 /* MenuBarItemTests.swift */; };
+		DRAWERTEST00100000000039 /* IconRepositionerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000039 /* IconRepositionerTests.swift */; };
+		DRAWERTEST00100000000040 /* MockCapturedIconFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000040 /* MockCapturedIconFactory.swift */; };
+		DRAWERTEST00100000000041 /* SettingsMenuBarLayoutViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000041 /* SettingsMenuBarLayoutViewTests.swift */; };
+		DRAWERTEST00100000000042 /* DrawerPanelControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000042 /* DrawerPanelControllerTests.swift */; };
+		DRAWERTEST00100000000043 /* MockScreenCaptureProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWERTEST00200000000043 /* MockScreenCaptureProvider.swift */; };
+		DRAWER001000000000000048 /* LayoutReconciler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000048 /* LayoutReconciler.swift */; };
+		DRAWER001000000000000049 /* IconMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000049 /* IconMatcher.swift */; };
+		DRAWER001000000000000001 /* DrawerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000001 /* DrawerApp.swift */; };
+		DRAWER001000000000000002 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000002 /* AppState.swift */; };
+		DRAWER001000000000000003 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000003 /* AppDelegate.swift */; };
+		DRAWER001000000000000004 /* MenuBarManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000004 /* MenuBarManager.swift */; };
+		DRAWER001000000000000005 /* SettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000005 /* SettingsManager.swift */; };
+		DRAWER001000000000000006 /* LaunchAtLoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000006 /* LaunchAtLoginManager.swift */; };
+		DRAWER001000000000000007 /* PermissionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000007 /* PermissionManager.swift */; };
+		DRAWER001000000000000008 /* PermissionStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000008 /* PermissionStatusView.swift */; };
+		DRAWER001000000000000009 /* DrawerPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000009 /* DrawerPanel.swift */; };
+		DRAWER001000000000000010 /* DrawerPanelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000010 /* DrawerPanelController.swift */; };
+		DRAWER001000000000000011 /* DrawerContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000011 /* DrawerContentView.swift */; };
+		DRAWER001000000000000073 /* IconRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000073 /* IconRow.swift */; };
+		DRAWER001000000000000080 /* OverlayIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000080 /* OverlayIconView.swift */; };
+		DRAWER001000000000000081 /* OverlayIconButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000081 /* OverlayIconButtonStyle.swift */; };
+		DRAWER001000000000000082 /* OverlayBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000082 /* OverlayBackground.swift */; };
+		DRAWER001000000000000083 /* OverlayVisualEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000083 /* OverlayVisualEffectView.swift */; };
+		DRAWER001000000000000084 /* PermissionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000084 /* PermissionRow.swift */; };
+		DRAWER001000000000000085 /* PermissionBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000085 /* PermissionBadge.swift */; };
+		DRAWER001000000000000072 /* SectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000072 /* SectionHeader.swift */; };
+		DRAWER001000000000000071 /* DrawerItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000071 /* DrawerItemView.swift */; };
+		DRAWER001000000000000070 /* DrawerDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000070 /* DrawerDesign.swift */; };
+		DRAWER001000000000000012 /* IconCapturer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000012 /* IconCapturer.swift */; };
+		DRAWER001000000000000013 /* DrawerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000013 /* DrawerItem.swift */; };
+		DRAWER001000000000000014 /* DrawerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000014 /* DrawerManager.swift */; };
+		DRAWER001000000000000015 /* EventSimulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000015 /* EventSimulator.swift */; };
+		DRAWER001000000000000016 /* HoverManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000016 /* HoverManager.swift */; };
+		DRAWER001000000000000017 /* GlobalEventMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000017 /* GlobalEventMonitor.swift */; };
+		DRAWER001000000000000018 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000018 /* SettingsView.swift */; };
+		DRAWER001000000000000019 /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000019 /* GeneralSettingsView.swift */; };
+		DRAWER001000000000000020 /* AppearanceSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000020 /* AppearanceSettingsView.swift */; };
+		DRAWER001000000000000021 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000021 /* AboutView.swift */; };
+		DRAWER001000000000000042 /* SettingsMenuBarLayoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000042 /* SettingsMenuBarLayoutView.swift */; };
+		DRAWER001000000000000022 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000022 /* OnboardingView.swift */; };
+		DRAWER001000000000000023 /* WelcomeStepView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000023 /* WelcomeStepView.swift */; };
+		DRAWER001000000000000024 /* PermissionsStepView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000024 /* PermissionsStepView.swift */; };
+		DRAWER001000000000000025 /* TutorialStepView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000025 /* TutorialStepView.swift */; };
+		DRAWER001000000000000026 /* CompletionStepView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000026 /* CompletionStepView.swift */; };
+		DRAWER001000000000000027 /* Private.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000027 /* Private.swift */; };
+		DRAWER001000000000000028 /* Bridging.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000028 /* Bridging.swift */; };
+		DRAWER001000000000000029 /* WindowInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000029 /* WindowInfo.swift */; };
+		DRAWER001000000000000030 /* ScreenCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000030 /* ScreenCapture.swift */; };
+		DRAWER001000000000000031 /* MenuBarMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000031 /* MenuBarMetrics.swift */; };
+		DRAWER001000000000000032 /* Notification+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000032 /* Notification+Extensions.swift */; };
+		DRAWER001000000000000033 /* ControlItemState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000033 /* ControlItemState.swift */; };
+		DRAWER001000000000000034 /* ControlItemImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000034 /* ControlItemImage.swift */; };
+		DRAWER001000000000000035 /* ControlItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000035 /* ControlItem.swift */; };
+		DRAWER001000000000000036 /* MenuBarSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000036 /* MenuBarSection.swift */; };
+		DRAWER001000000000000037 /* OverlayPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000037 /* OverlayPanel.swift */; };
+		DRAWER001000000000000038 /* OverlayContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000038 /* OverlayContentView.swift */; };
+		DRAWER001000000000000039 /* OverlayPanelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000039 /* OverlayPanelController.swift */; };
+		DRAWER001000000000000040 /* OverlayModeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000040 /* OverlayModeManager.swift */; };
+		DRAWER001000000000000041 /* SettingsLayoutItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000041 /* SettingsLayoutItem.swift */; };
+		DRAWER001000000000000043 /* IconIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000043 /* IconIdentifier.swift */; };
+		DRAWER001000000000000044 /* IconItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000044 /* IconItem.swift */; };
+		DRAWER001000000000000045 /* IconRepositioner.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000045 /* IconRepositioner.swift */; };
+		DRAWER001000000000000046 /* MouseCursor.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000046 /* MouseCursor.swift */; };
+		DRAWER001000000000000047 /* IconPositionRestorer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000047 /* IconPositionRestorer.swift */; };
+		00117C4426600671005E517C /* Assets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00117C4326600671005E517C /* Assets.swift */; };
+		00137CDF24A63DB1004AC855 /* Notification.Name+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00137CDE24A63DB1004AC855 /* Notification.Name+Extension.swift */; };
+		0842CDFB23A9FDD000D14BD4 /* GlobalKeybindingPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0842CDFA23A9FDD000D14BD4 /* GlobalKeybindingPreferences.swift */; };
+		08A5F85A23AA007A00981CA5 /* PreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A5F85923AA007A00981CA5 /* PreferencesViewController.swift */; };
+		08A5F85C23AA013100981CA5 /* SelectedSecond.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A5F85B23AA013100981CA5 /* SelectedSecond.swift */; };
+		08A5F85F23AA01EE00981CA5 /* HotKey in Frameworks */ = {isa = PBXBuildFile; productRef = 08A5F85E23AA01EE00981CA5 /* HotKey */; };
+		08A5F86123AA085B00981CA5 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A5F86023AA085B00981CA5 /* Preferences.swift */; };
+		08A5F86423AA09F300981CA5 /* UserDefault+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A5F86323AA09F300981CA5 /* UserDefault+Extension.swift */; };
+		08B9F32C2411883300AA0551 /* NSWindow+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B9F32B2411883300AA0551 /* NSWindow+Extension.swift */; };
+		08C20FDE23AABDD10035D978 /* HyperlinkTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C20FDD23AABDD10035D978 /* HyperlinkTextField.swift */; };
+		08C20FE023AB44E60035D978 /* Bundle+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C20FDF23AB44E60035D978 /* Bundle+Extension.swift */; };
+		08C20FE223AB452C0035D978 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C20FE123AB452C0035D978 /* AboutViewController.swift */; };
+		3CF14C82221FA49D0083D42B /* PreferencesWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CF14C81221FA49D0083D42B /* PreferencesWindowController.swift */; };
+		55F3F1192608923B0054B881 /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F3F1182608923B0054B881 /* Date+Extension.swift */; };
+		55F3F11D2608925A0054B881 /* StackView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F3F11C2608925A0054B881 /* StackView+Extension.swift */; };
+		9220587E2212A7C0008A8B03 /* LauncherApplication.app in Copy Files */ = {isa = PBXBuildFile; fileRef = 92C5054E21FEC03B0084719A /* LauncherApplication.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		929113F521F9D04100173149 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929113F421F9D04100173149 /* AppDelegate.swift */; };
+		929113F921F9D04200173149 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 929113F821F9D04200173149 /* Assets.xcassets */; };
+		929113FC21F9D04200173149 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 929113FA21F9D04200173149 /* Main.storyboard */; };
+		92C5055121FEC03C0084719A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C5055021FEC03C0084719A /* AppDelegate.swift */; };
+		92C5055321FEC03C0084719A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C5055221FEC03C0084719A /* ViewController.swift */; };
+		92C5055521FEC03C0084719A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 92C5055421FEC03C0084719A /* Assets.xcassets */; };
+		92C5055821FEC03C0084719A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 92C5055621FEC03C0084719A /* Main.storyboard */; };
+		92C5057F21FEC24C0084719A /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92C5057E21FEC24C0084719A /* ServiceManagement.framework */; };
+		92C5058121FEC2590084719A /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92C5058021FEC2590084719A /* Cocoa.framework */; };
+		92C97B88220032ED0007559C /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C97B87220032ED0007559C /* Util.swift */; };
+		92C97B8B220049D20007559C /* NSBarButtonItem+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C97B8A220049D10007559C /* NSBarButtonItem+Extension.swift */; };
+		92C97B8D220058740007559C /* NSView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C97B8C220058740007559C /* NSView+Extension.swift */; };
+		92C97B8F220147FE0007559C /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C97B8E220147FE0007559C /* Constant.swift */; };
+		92C97B9122018C1F0007559C /* StatusBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C97B9022018C1F0007559C /* StatusBarController.swift */; };
+		92D2122221FEE06600C92FF4 /* LauncherApplication.app in Sources */ = {isa = PBXBuildFile; fileRef = 92C5054E21FEC03B0084719A /* LauncherApplication.app */; };
+		967F4B2524169BC800F18D3C /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 967F4B2424169BC800F18D3C /* String+Extension.swift */; };
+		967F4B2824169CAF00F18D3C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 967F4B2A24169CAF00F18D3C /* Localizable.strings */; };
+		DRAWER001000000000000060 /* LayoutDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000060 /* LayoutDesign.swift */; };
+		DRAWER001000000000000061 /* LayoutSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000061 /* LayoutSectionView.swift */; };
+		DRAWER001000000000000062 /* ItemFramePreferenceKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000062 /* ItemFramePreferenceKey.swift */; };
+		DRAWER001000000000000063 /* DropPositionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000063 /* DropPositionDelegate.swift */; };
+		DRAWER001000000000000064 /* LayoutItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000064 /* LayoutItemView.swift */; };
+		DRAWER001000000000000086 /* DrawerContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000086 /* DrawerContainerView.swift */; };
+		DRAWER001000000000000087 /* DrawerBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000087 /* DrawerBackgroundView.swift */; };
+		DRAWER001000000000000088 /* QuickRefRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000088 /* QuickRefRow.swift */; };
+		DRAWER001000000000000089 /* InstructionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000089 /* InstructionRow.swift */; };
+		DRAWER001000000000000090 /* OnboardingPermissionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000090 /* OnboardingPermissionRow.swift */; };
+		DRAWER001000000000000091 /* FeatureRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000091 /* FeatureRow.swift */; };
+		DRAWER001000000000000092 /* MenuBarLayoutViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DRAWER002000000000000092 /* MenuBarLayoutViewModel.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		92C5057B21FEC17A0084719A /* Copy Files */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Contents/Library/LoginItems;
+			dstSubfolderSpec = 1;
+			files = (
+			);
+			name = "Copy Files";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXContainerItemProxy section */
+		DRAWERUITEST0030000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 929113E921F9D04100173149 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 929113F021F9D04100173149;
+			remoteInfo = Drawer;
+		};
+		DRAWERTEST00300000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 929113E921F9D04100173149 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 929113F021F9D04100173149;
+			remoteInfo = Drawer;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		DRAWERUITEST0020000000001 /* DrawerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerUITests.swift; sourceTree = "<group>"; };
+		DRAWERUITEST0020000000002 /* DrawerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DrawerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DRAWERUITEST0020000000003 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DRAWERTEST00200000000001 /* SetupVerificationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupVerificationTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000002 /* DrawerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DrawerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DRAWERTEST00200000000003 /* MockSettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockSettingsManager.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000004 /* MockSettingsManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockSettingsManagerTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000005 /* MockPermissionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPermissionManager.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000006 /* MockPermissionManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPermissionManagerTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000007 /* MockMenuBarManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockMenuBarManager.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000008 /* MockMenuBarManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockMenuBarManagerTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000009 /* MockIconCapturer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockIconCapturer.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000010 /* MockIconCapturerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockIconCapturerTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000011 /* MenuBarManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarManagerTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000012 /* SettingsManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManagerTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000013 /* DrawerManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerManagerTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000014 /* HoverManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoverManagerTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000015 /* LaunchAtLoginManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchAtLoginManagerTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000016 /* DrawerItemTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerItemTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000017 /* GlobalHotkeyConfigTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalHotkeyConfigTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000018 /* CaptureErrorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureErrorTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000019 /* EventSimulatorErrorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventSimulatorErrorTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000020 /* PermissionTypeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionTypeTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000021 /* PermissionManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionManagerTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000022 /* IconCapturerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconCapturerTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000023 /* EventSimulatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventSimulatorTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000024 /* GlobalEventMonitorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalEventMonitorTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000025 /* LocalEventMonitorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalEventMonitorTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000026 /* WindowInfoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowInfoTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000027 /* MenuBarMetricsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarMetricsTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000028 /* AppStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStateTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000029 /* ControlItemStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlItemStateTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000030 /* ControlItemImageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlItemImageTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000031 /* ControlItemTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlItemTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000032 /* MenuBarSectionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarSectionTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000033 /* OverlayModeManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayModeManagerTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000034 /* MockEventSimulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockEventSimulator.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000035 /* MockOverlayPanelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockOverlayPanelController.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000036 /* ScreenCaptureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenCaptureTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000037 /* SettingsLayoutItemTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsLayoutItemTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000038 /* MenuBarItemTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarItemTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000039 /* IconRepositionerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconRepositionerTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000040 /* MockCapturedIconFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCapturedIconFactory.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000041 /* SettingsMenuBarLayoutViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsMenuBarLayoutViewTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000042 /* DrawerPanelControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerPanelControllerTests.swift; sourceTree = "<group>"; };
+		DRAWERTEST00200000000043 /* MockScreenCaptureProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockScreenCaptureProvider.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000048 /* LayoutReconciler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutReconciler.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000049 /* IconMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconMatcher.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000092 /* MenuBarLayoutViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarLayoutViewModel.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000001 /* DrawerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerApp.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000002 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000003 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000004 /* MenuBarManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarManager.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000005 /* SettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManager.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000006 /* LaunchAtLoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchAtLoginManager.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000007 /* PermissionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionManager.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000008 /* PermissionStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionStatusView.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000009 /* DrawerPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerPanel.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000010 /* DrawerPanelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerPanelController.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000011 /* DrawerContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerContentView.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000073 /* IconRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconRow.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000080 /* OverlayIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayIconView.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000081 /* OverlayIconButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayIconButtonStyle.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000082 /* OverlayBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayBackground.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000083 /* OverlayVisualEffectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayVisualEffectView.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000084 /* PermissionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionRow.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000085 /* PermissionBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionBadge.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000072 /* SectionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeader.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000071 /* DrawerItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerItemView.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000070 /* DrawerDesign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerDesign.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000012 /* IconCapturer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconCapturer.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000013 /* DrawerItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerItem.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000014 /* DrawerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerManager.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000015 /* EventSimulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventSimulator.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000016 /* HoverManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoverManager.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000017 /* GlobalEventMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalEventMonitor.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000018 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000019 /* GeneralSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsView.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000020 /* AppearanceSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettingsView.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000021 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000042 /* SettingsMenuBarLayoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsMenuBarLayoutView.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000022 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000023 /* WelcomeStepView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeStepView.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000024 /* PermissionsStepView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsStepView.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000025 /* TutorialStepView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialStepView.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000026 /* CompletionStepView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletionStepView.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000027 /* Private.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Private.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000028 /* Bridging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bridging.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000029 /* WindowInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowInfo.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000030 /* ScreenCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenCapture.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000031 /* MenuBarMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarMetrics.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000032 /* Notification+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification+Extensions.swift"; sourceTree = "<group>"; };
+		DRAWER002000000000000033 /* ControlItemState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlItemState.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000034 /* ControlItemImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlItemImage.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000035 /* ControlItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlItem.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000036 /* MenuBarSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarSection.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000037 /* OverlayPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayPanel.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000038 /* OverlayContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayContentView.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000039 /* OverlayPanelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayPanelController.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000040 /* OverlayModeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayModeManager.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000041 /* SettingsLayoutItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsLayoutItem.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000043 /* IconIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconIdentifier.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000044 /* IconItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconItem.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000045 /* IconRepositioner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconRepositioner.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000046 /* MouseCursor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MouseCursor.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000047 /* IconPositionRestorer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconPositionRestorer.swift; sourceTree = "<group>"; };
+		00117C4326600671005E517C /* Assets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assets.swift; sourceTree = "<group>"; };
+		00137CDE24A63DB1004AC855 /* Notification.Name+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification.Name+Extension.swift"; sourceTree = "<group>"; };
+		0842CDFA23A9FDD000D14BD4 /* GlobalKeybindingPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalKeybindingPreferences.swift; sourceTree = "<group>"; };
+		08A5F85923AA007A00981CA5 /* PreferencesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesViewController.swift; sourceTree = "<group>"; };
+		08A5F85B23AA013100981CA5 /* SelectedSecond.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedSecond.swift; sourceTree = "<group>"; };
+		08A5F86023AA085B00981CA5 /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
+		08A5F86323AA09F300981CA5 /* UserDefault+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefault+Extension.swift"; sourceTree = "<group>"; };
+		08B9F32B2411883300AA0551 /* NSWindow+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSWindow+Extension.swift"; sourceTree = "<group>"; };
+		08C20FDD23AABDD10035D978 /* HyperlinkTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HyperlinkTextField.swift; sourceTree = "<group>"; };
+		08C20FDF23AB44E60035D978 /* Bundle+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+Extension.swift"; sourceTree = "<group>"; };
+		08C20FE123AB452C0035D978 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
+		3CF14C81221FA49D0083D42B /* PreferencesWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesWindowController.swift; sourceTree = "<group>"; };
+		55188DF7279A737800A92772 /* hr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hr; path = hr.lproj/Main.strings; sourceTree = "<group>"; };
+		55188DF8279A737900A92772 /* hr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hr; path = hr.lproj/Main.strings; sourceTree = "<group>"; };
+		55188DF9279A737900A92772 /* hr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hr; path = hr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		55D9B6B52660F153007AF073 /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/Main.strings; sourceTree = "<group>"; };
+		55D9B6B62660F153007AF073 /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/Main.strings; sourceTree = "<group>"; };
+		55D9B6B72660F153007AF073 /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/Localizable.strings; sourceTree = "<group>"; };
+		55D9B6B82661DEDA007AF073 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Main.strings; sourceTree = "<group>"; };
+		55D9B6B92661DEDA007AF073 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Main.strings; sourceTree = "<group>"; };
+		55D9B6BA2661DEDA007AF073 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
+		55D9B6BB2661DEE7007AF073 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Main.strings; sourceTree = "<group>"; };
+		55D9B6BC2661DEE8007AF073 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Main.strings; sourceTree = "<group>"; };
+		55D9B6BD2661DEE8007AF073 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		55F3F1182608923B0054B881 /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
+		55F3F11C2608925A0054B881 /* StackView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StackView+Extension.swift"; sourceTree = "<group>"; };
+		9220587D22127050008A8B03 /* Hidden.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Hidden.entitlements; path = Hidden/Hidden.entitlements; sourceTree = "<group>"; };
+		929113F121F9D04100173149 /* Drawer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Drawer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		929113F421F9D04100173149 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		929113F821F9D04200173149 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		929113FB21F9D04200173149 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		929113FD21F9D04200173149 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		92C5054E21FEC03B0084719A /* LauncherApplication.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LauncherApplication.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		92C5055021FEC03C0084719A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		92C5055221FEC03C0084719A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		92C5055421FEC03C0084719A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		92C5055721FEC03C0084719A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		92C5055921FEC03C0084719A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		92C5055A21FEC03C0084719A /* LauncherApplication.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LauncherApplication.entitlements; sourceTree = "<group>"; };
+		92C5057E21FEC24C0084719A /* ServiceManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceManagement.framework; path = System/Library/Frameworks/ServiceManagement.framework; sourceTree = SDKROOT; };
+		92C5058021FEC2590084719A /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		92C97B87220032ED0007559C /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
+		92C97B8A220049D10007559C /* NSBarButtonItem+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSBarButtonItem+Extension.swift"; sourceTree = "<group>"; };
+		92C97B8C220058740007559C /* NSView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSView+Extension.swift"; sourceTree = "<group>"; };
+		92C97B8E220147FE0007559C /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
+		92C97B9022018C1F0007559C /* StatusBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarController.swift; sourceTree = "<group>"; };
+		967F4B2424169BC800F18D3C /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
+		967F4B2924169CAF00F18D3C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		967F4B2B24169CB200F18D3C /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		967F4B2C24169CB400F18D3C /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		B1326443261D7E0200319D35 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main.strings; sourceTree = "<group>"; };
+		B1326444261D7E0200319D35 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main.strings; sourceTree = "<group>"; };
+		B1326445261D7E0200319D35 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		B350A2CC23AAFB47003A04AC /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
+		B8404C9A24041A4300E6DBF8 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Main.strings; sourceTree = "<group>"; };
+		B8404C9B24041A4300E6DBF8 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Main.strings; sourceTree = "<group>"; };
+		FF57A44A25E6C50200988FC2 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Main.strings"; sourceTree = "<group>"; };
+		FF57A44B25E6C50200988FC2 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		FF8A0FB5265E10DB00C76226 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Main.strings"; sourceTree = "<group>"; };
+		DRAWER002000000000000060 /* LayoutDesign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutDesign.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000061 /* LayoutSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutSectionView.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000062 /* ItemFramePreferenceKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemFramePreferenceKey.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000063 /* DropPositionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropPositionDelegate.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000064 /* LayoutItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutItemView.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000086 /* DrawerContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerContainerView.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000087 /* DrawerBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerBackgroundView.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000088 /* QuickRefRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickRefRow.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000089 /* InstructionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionRow.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000090 /* OnboardingPermissionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPermissionRow.swift; sourceTree = "<group>"; };
+		DRAWER002000000000000091 /* FeatureRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureRow.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		929113EE21F9D04100173149 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				08A5F85F23AA01EE00981CA5 /* HotKey in Frameworks */,
+				92C5058121FEC2590084719A /* Cocoa.framework in Frameworks */,
+				92C5057F21FEC24C0084719A /* ServiceManagement.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		92C5054B21FEC03B0084719A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		DRAWERTEST00400000000001 /* DrawerTests */ = {
+			isa = PBXGroup;
+			children = (
+				DRAWERTEST00400000000008 /* App */,
+				DRAWERTEST00400000000003 /* Core */,
+				DRAWERTEST00400000000005 /* Models */,
+				DRAWERTEST00400000000009 /* UI */,
+				DRAWERTEST00400000000007 /* Utilities */,
+				DRAWERTEST00400000000002 /* Mocks */,
+				DRAWERTEST00200000000001 /* SetupVerificationTests.swift */,
+			);
+			path = DrawerTests;
+			sourceTree = "<group>";
+		};
+		DRAWERTEST00400000000009 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				DRAWERTEST00400000000011 /* Panels */,
+				DRAWERTEST00400000000010 /* Settings */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		DRAWERTEST00400000000011 /* Panels */ = {
+			isa = PBXGroup;
+			children = (
+				DRAWERTEST00200000000042 /* DrawerPanelControllerTests.swift */,
+			);
+			path = Panels;
+			sourceTree = "<group>";
+		};
+		DRAWERTEST00400000000010 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				DRAWERTEST00200000000041 /* SettingsMenuBarLayoutViewTests.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		DRAWERTEST00400000000008 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				DRAWERTEST00200000000028 /* AppStateTests.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		DRAWERTEST00400000000007 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				DRAWERTEST00200000000019 /* EventSimulatorErrorTests.swift */,
+				DRAWERTEST00200000000023 /* EventSimulatorTests.swift */,
+				DRAWERTEST00200000000024 /* GlobalEventMonitorTests.swift */,
+				DRAWERTEST00200000000025 /* LocalEventMonitorTests.swift */,
+				DRAWERTEST00200000000027 /* MenuBarMetricsTests.swift */,
+				DRAWERTEST00200000000036 /* ScreenCaptureTests.swift */,
+				DRAWERTEST00200000000026 /* WindowInfoTests.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		DRAWERTEST00400000000005 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				DRAWERTEST00200000000029 /* ControlItemStateTests.swift */,
+				DRAWERTEST00200000000030 /* ControlItemImageTests.swift */,
+				DRAWERTEST00200000000031 /* ControlItemTests.swift */,
+				DRAWERTEST00200000000016 /* DrawerItemTests.swift */,
+				DRAWERTEST00200000000017 /* GlobalHotkeyConfigTests.swift */,
+				DRAWERTEST00200000000032 /* MenuBarSectionTests.swift */,
+				DRAWERTEST00200000000038 /* MenuBarItemTests.swift */,
+				DRAWERTEST00200000000037 /* SettingsLayoutItemTests.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		DRAWERTEST00400000000003 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				DRAWERTEST00400000000006 /* Engines */,
+				DRAWERTEST00400000000004 /* Managers */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		DRAWERTEST00400000000006 /* Engines */ = {
+			isa = PBXGroup;
+			children = (
+				DRAWERTEST00200000000018 /* CaptureErrorTests.swift */,
+				DRAWERTEST00200000000022 /* IconCapturerTests.swift */,
+				DRAWERTEST00200000000039 /* IconRepositionerTests.swift */,
+			);
+			path = Engines;
+			sourceTree = "<group>";
+		};
+		DRAWERTEST00400000000004 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				DRAWERTEST00200000000011 /* MenuBarManagerTests.swift */,
+				DRAWERTEST00200000000012 /* SettingsManagerTests.swift */,
+				DRAWERTEST00200000000013 /* DrawerManagerTests.swift */,
+				DRAWERTEST00200000000014 /* HoverManagerTests.swift */,
+				DRAWERTEST00200000000015 /* LaunchAtLoginManagerTests.swift */,
+				DRAWERTEST00200000000020 /* PermissionTypeTests.swift */,
+				DRAWERTEST00200000000021 /* PermissionManagerTests.swift */,
+				DRAWERTEST00200000000033 /* OverlayModeManagerTests.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		DRAWERTEST00400000000002 /* Mocks */ = {
+			isa = PBXGroup;
+			children = (
+				DRAWERTEST00200000000003 /* MockSettingsManager.swift */,
+				DRAWERTEST00200000000004 /* MockSettingsManagerTests.swift */,
+				DRAWERTEST00200000000005 /* MockPermissionManager.swift */,
+				DRAWERTEST00200000000006 /* MockPermissionManagerTests.swift */,
+				DRAWERTEST00200000000007 /* MockMenuBarManager.swift */,
+				DRAWERTEST00200000000008 /* MockMenuBarManagerTests.swift */,
+				DRAWERTEST00200000000009 /* MockIconCapturer.swift */,
+				DRAWERTEST00200000000010 /* MockIconCapturerTests.swift */,
+				DRAWERTEST00200000000034 /* MockEventSimulator.swift */,
+				DRAWERTEST00200000000035 /* MockOverlayPanelController.swift */,
+				DRAWERTEST00200000000040 /* MockCapturedIconFactory.swift */,
+				DRAWERTEST00200000000043 /* MockScreenCaptureProvider.swift */,
+			);
+			path = Mocks;
+			sourceTree = "<group>";
+		};
+		0842CDF923A9FDB900D14BD4 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				0842CDFA23A9FDD000D14BD4 /* GlobalKeybindingPreferences.swift */,
+				08A5F85B23AA013100981CA5 /* SelectedSecond.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		0842CDFC23A9FF6D00D14BD4 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				08C20FDC23AABC440035D978 /* About */,
+				0842CDFE23A9FF7C00D14BD4 /* Preferences */,
+				0842CDFD23A9FF7500D14BD4 /* StatusBar */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		0842CDFD23A9FF7500D14BD4 /* StatusBar */ = {
+			isa = PBXGroup;
+			children = (
+				92C97B9022018C1F0007559C /* StatusBarController.swift */,
+			);
+			path = StatusBar;
+			sourceTree = "<group>";
+		};
+		0842CDFE23A9FF7C00D14BD4 /* Preferences */ = {
+			isa = PBXGroup;
+			children = (
+				08A5F85923AA007A00981CA5 /* PreferencesViewController.swift */,
+				3CF14C81221FA49D0083D42B /* PreferencesWindowController.swift */,
+			);
+			path = Preferences;
+			sourceTree = "<group>";
+		};
+		08A5F86223AA09D900981CA5 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				08A5F86323AA09F300981CA5 /* UserDefault+Extension.swift */,
+				08C20FDF23AB44E60035D978 /* Bundle+Extension.swift */,
+				08B9F32B2411883300AA0551 /* NSWindow+Extension.swift */,
+				967F4B2424169BC800F18D3C /* String+Extension.swift */,
+				00137CDE24A63DB1004AC855 /* Notification.Name+Extension.swift */,
+				55F3F1182608923B0054B881 /* Date+Extension.swift */,
+				55F3F11C2608925A0054B881 /* StackView+Extension.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		08C20FDC23AABC440035D978 /* About */ = {
+			isa = PBXGroup;
+			children = (
+				08C20FE123AB452C0035D978 /* AboutViewController.swift */,
+			);
+			path = About;
+			sourceTree = "<group>";
+		};
+		9267D3212201A49200EFFCE2 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				92C97B87220032ED0007559C /* Util.swift */,
+				00117C4326600671005E517C /* Assets.swift */,
+				92C97B8E220147FE0007559C /* Constant.swift */,
+				08A5F86023AA085B00981CA5 /* Preferences.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		DRAWERUITEST0040000000001 /* DrawerUITests */ = {
+			isa = PBXGroup;
+			children = (
+				DRAWERUITEST0020000000001 /* DrawerUITests.swift */,
+				DRAWERUITEST0020000000003 /* Info.plist */,
+			);
+			path = DrawerUITests;
+			sourceTree = "<group>";
+		};
+		929113E821F9D04100173149 = {
+			isa = PBXGroup;
+			children = (
+				DRAWER003000000000000001 /* Drawer */,
+				DRAWERTEST00400000000001 /* DrawerTests */,
+				DRAWERUITEST0040000000001 /* DrawerUITests */,
+				9220587D22127050008A8B03 /* Hidden.entitlements */,
+				929113F321F9D04100173149 /* hidden */,
+				92C5054F21FEC03C0084719A /* LauncherApplication */,
+				929113F221F9D04100173149 /* Products */,
+				92C5057D21FEC24C0084719A /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		DRAWER003000000000000001 /* Drawer */ = {
+			isa = PBXGroup;
+			children = (
+				DRAWER003000000000000002 /* App */,
+				DRAWER003000000000000013 /* Bridging */,
+				DRAWER003000000000000003 /* Core */,
+				DRAWER003000000000000009 /* Models */,
+				DRAWER003000000000000005 /* UI */,
+				DRAWER003000000000000010 /* Utilities */,
+			);
+			path = Drawer;
+			sourceTree = "<group>";
+		};
+		DRAWER003000000000000013 /* Bridging */ = {
+			isa = PBXGroup;
+			children = (
+				DRAWER002000000000000028 /* Bridging.swift */,
+				DRAWER003000000000000014 /* Shims */,
+			);
+			path = Bridging;
+			sourceTree = "<group>";
+		};
+		DRAWER003000000000000014 /* Shims */ = {
+			isa = PBXGroup;
+			children = (
+				DRAWER002000000000000027 /* Private.swift */,
+			);
+			path = Shims;
+			sourceTree = "<group>";
+		};
+		DRAWER003000000000000010 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				DRAWER002000000000000015 /* EventSimulator.swift */,
+				DRAWER002000000000000017 /* GlobalEventMonitor.swift */,
+				DRAWER002000000000000031 /* MenuBarMetrics.swift */,
+				DRAWER002000000000000046 /* MouseCursor.swift */,
+				DRAWER002000000000000032 /* Notification+Extensions.swift */,
+				DRAWER002000000000000030 /* ScreenCapture.swift */,
+				DRAWER002000000000000029 /* WindowInfo.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		DRAWER003000000000000009 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				DRAWER002000000000000013 /* DrawerItem.swift */,
+				DRAWER002000000000000043 /* IconIdentifier.swift */,
+				DRAWER002000000000000044 /* IconItem.swift */,
+				DRAWER002000000000000041 /* SettingsLayoutItem.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		DRAWER003000000000000005 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				DRAWER003000000000000006 /* Components */,
+				DRAWER003000000000000012 /* Onboarding */,
+				DRAWER003000000000000016 /* Overlay */,
+				DRAWER003000000000000007 /* Panels */,
+				DRAWER003000000000000011 /* Settings */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		DRAWER003000000000000012 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				DRAWER002000000000000022 /* OnboardingView.swift */,
+				DRAWER002000000000000023 /* WelcomeStepView.swift */,
+				DRAWER002000000000000091 /* FeatureRow.swift */,
+				DRAWER002000000000000024 /* PermissionsStepView.swift */,
+				DRAWER002000000000000090 /* OnboardingPermissionRow.swift */,
+				DRAWER002000000000000025 /* TutorialStepView.swift */,
+				DRAWER002000000000000089 /* InstructionRow.swift */,
+				DRAWER002000000000000026 /* CompletionStepView.swift */,
+				DRAWER002000000000000088 /* QuickRefRow.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		DRAWER003000000000000011 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				DRAWER002000000000000018 /* SettingsView.swift */,
+				DRAWER002000000000000019 /* GeneralSettingsView.swift */,
+				DRAWER002000000000000020 /* AppearanceSettingsView.swift */,
+				DRAWER002000000000000042 /* SettingsMenuBarLayoutView.swift */,
+				DRAWER002000000000000092 /* MenuBarLayoutViewModel.swift */,
+				DRAWER002000000000000048 /* LayoutReconciler.swift */,
+				DRAWER002000000000000049 /* IconMatcher.swift */,
+				DRAWER002000000000000021 /* AboutView.swift */,
+				DRAWER002000000000000060 /* LayoutDesign.swift */,
+				DRAWER002000000000000061 /* LayoutSectionView.swift */,
+				DRAWER002000000000000062 /* ItemFramePreferenceKey.swift */,
+				DRAWER002000000000000063 /* DropPositionDelegate.swift */,
+				DRAWER002000000000000064 /* LayoutItemView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		DRAWER003000000000000016 /* Overlay */ = {
+			isa = PBXGroup;
+			children = (
+				DRAWER002000000000000037 /* OverlayPanel.swift */,
+				DRAWER002000000000000038 /* OverlayContentView.swift */,
+				DRAWER002000000000000039 /* OverlayPanelController.swift */,
+				DRAWER002000000000000080 /* OverlayIconView.swift */,
+				DRAWER002000000000000081 /* OverlayIconButtonStyle.swift */,
+				DRAWER002000000000000082 /* OverlayBackground.swift */,
+				DRAWER002000000000000083 /* OverlayVisualEffectView.swift */,
+			);
+			path = Overlay;
+			sourceTree = "<group>";
+		};
+		DRAWER003000000000000007 /* Panels */ = {
+			isa = PBXGroup;
+			children = (
+				DRAWER002000000000000009 /* DrawerPanel.swift */,
+				DRAWER002000000000000010 /* DrawerPanelController.swift */,
+				DRAWER002000000000000011 /* DrawerContentView.swift */,
+				DRAWER002000000000000086 /* DrawerContainerView.swift */,
+				DRAWER002000000000000087 /* DrawerBackgroundView.swift */,
+				DRAWER002000000000000070 /* DrawerDesign.swift */,
+				DRAWER002000000000000071 /* DrawerItemView.swift */,
+				DRAWER002000000000000072 /* SectionHeader.swift */,
+				DRAWER002000000000000073 /* IconRow.swift */,
+			);
+			path = Panels;
+			sourceTree = "<group>";
+		};
+		DRAWER003000000000000006 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				DRAWER002000000000000008 /* PermissionStatusView.swift */,
+				DRAWER002000000000000084 /* PermissionRow.swift */,
+				DRAWER002000000000000085 /* PermissionBadge.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		DRAWER003000000000000002 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				DRAWER002000000000000001 /* DrawerApp.swift */,
+				DRAWER002000000000000002 /* AppState.swift */,
+				DRAWER002000000000000003 /* AppDelegate.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		DRAWER003000000000000003 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				DRAWER003000000000000008 /* Engines */,
+				DRAWER003000000000000004 /* Managers */,
+				DRAWER003000000000000015 /* Models */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		DRAWER003000000000000015 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				DRAWER002000000000000033 /* ControlItemState.swift */,
+				DRAWER002000000000000034 /* ControlItemImage.swift */,
+				DRAWER002000000000000035 /* ControlItem.swift */,
+				DRAWER002000000000000036 /* MenuBarSection.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		DRAWER003000000000000008 /* Engines */ = {
+			isa = PBXGroup;
+			children = (
+				DRAWER002000000000000012 /* IconCapturer.swift */,
+				DRAWER002000000000000045 /* IconRepositioner.swift */,
+			);
+			path = Engines;
+			sourceTree = "<group>";
+		};
+		DRAWER003000000000000004 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				DRAWER002000000000000014 /* DrawerManager.swift */,
+				DRAWER002000000000000016 /* HoverManager.swift */,
+				DRAWER002000000000000047 /* IconPositionRestorer.swift */,
+				DRAWER002000000000000006 /* LaunchAtLoginManager.swift */,
+				DRAWER002000000000000004 /* MenuBarManager.swift */,
+				DRAWER002000000000000040 /* OverlayModeManager.swift */,
+				DRAWER002000000000000007 /* PermissionManager.swift */,
+				DRAWER002000000000000005 /* SettingsManager.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		929113F221F9D04100173149 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				929113F121F9D04100173149 /* Drawer.app */,
+				92C5054E21FEC03B0084719A /* LauncherApplication.app */,
+				DRAWERTEST00200000000002 /* DrawerTests.xctest */,
+				DRAWERUITEST0020000000002 /* DrawerUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		929113F321F9D04100173149 /* hidden */ = {
+			isa = PBXGroup;
+			children = (
+				08A5F86223AA09D900981CA5 /* Extensions */,
+				0842CDFC23A9FF6D00D14BD4 /* Features */,
+				0842CDF923A9FDB900D14BD4 /* Models */,
+				9267D3212201A49200EFFCE2 /* Common */,
+				92C97B89220049B30007559C /* Views */,
+				929113F421F9D04100173149 /* AppDelegate.swift */,
+				929113F821F9D04200173149 /* Assets.xcassets */,
+				929113FA21F9D04200173149 /* Main.storyboard */,
+				929113FD21F9D04200173149 /* Info.plist */,
+				967F4B2A24169CAF00F18D3C /* Localizable.strings */,
+			);
+			path = hidden;
+			sourceTree = "<group>";
+		};
+		92C5054F21FEC03C0084719A /* LauncherApplication */ = {
+			isa = PBXGroup;
+			children = (
+				92C5055021FEC03C0084719A /* AppDelegate.swift */,
+				92C5055221FEC03C0084719A /* ViewController.swift */,
+				92C5055421FEC03C0084719A /* Assets.xcassets */,
+				92C5055621FEC03C0084719A /* Main.storyboard */,
+				92C5055921FEC03C0084719A /* Info.plist */,
+				92C5055A21FEC03C0084719A /* LauncherApplication.entitlements */,
+			);
+			path = LauncherApplication;
+			sourceTree = "<group>";
+		};
+		92C5057D21FEC24C0084719A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				92C5058021FEC2590084719A /* Cocoa.framework */,
+				92C5057E21FEC24C0084719A /* ServiceManagement.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		92C97B89220049B30007559C /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				92C97B8A220049D10007559C /* NSBarButtonItem+Extension.swift */,
+				92C97B8C220058740007559C /* NSView+Extension.swift */,
+				08C20FDD23AABDD10035D978 /* HyperlinkTextField.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		929113F021F9D04100173149 /* Drawer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9291141721F9D04200173149 /* Build configuration list for PBXNativeTarget "Drawer" */;
+			buildPhases = (
+				929113ED21F9D04100173149 /* Sources */,
+				929113EE21F9D04100173149 /* Frameworks */,
+				929113EF21F9D04100173149 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Drawer;
+			packageProductDependencies = (
+				08A5F85E23AA01EE00981CA5 /* HotKey */,
+			);
+			productName = Drawer;
+			productReference = 929113F121F9D04100173149 /* Drawer.app */;
+			productType = "com.apple.product-type.application";
+		};
+		92C5054D21FEC03B0084719A /* LauncherApplication */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 92C5057121FEC03D0084719A /* Build configuration list for PBXNativeTarget "LauncherApplication" */;
+			buildPhases = (
+				92C5054A21FEC03B0084719A /* Sources */,
+				92C5054B21FEC03B0084719A /* Frameworks */,
+				92C5054C21FEC03B0084719A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LauncherApplication;
+			productName = LauncherApplication;
+			productReference = 92C5054E21FEC03B0084719A /* LauncherApplication.app */;
+			productType = "com.apple.product-type.application";
+		};
+		DRAWERUITEST0050000000001 /* DrawerUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DRAWERUITEST0070000000001 /* Build configuration list for PBXNativeTarget "DrawerUITests" */;
+			buildPhases = (
+				DRAWERUITEST0060000000001 /* Sources */,
+				DRAWERUITEST0060000000002 /* Frameworks */,
+				DRAWERUITEST0060000000003 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DRAWERUITEST0080000000001 /* PBXTargetDependency */,
+			);
+			name = DrawerUITests;
+			productName = DrawerUITests;
+			productReference = DRAWERUITEST0020000000002 /* DrawerUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		DRAWERTEST00500000000001 /* DrawerTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DRAWERTEST00700000000001 /* Build configuration list for PBXNativeTarget "DrawerTests" */;
+			buildPhases = (
+				DRAWERTEST00600000000001 /* Sources */,
+				DRAWERTEST00600000000002 /* Frameworks */,
+				DRAWERTEST00600000000003 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DRAWERTEST00800000000001 /* PBXTargetDependency */,
+			);
+			name = DrawerTests;
+			productName = DrawerTests;
+			productReference = DRAWERTEST00200000000002 /* DrawerTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		929113E921F9D04100173149 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1010;
+				LastUpgradeCheck = 1130;
+				ORGANIZATIONNAME = "Dwarves Foundation";
+				TargetAttributes = {
+					929113F021F9D04100173149 = {
+						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1130;
+						SystemCapabilities = {
+							com.apple.Sandbox = {
+								enabled = 1;
+							};
+						};
+					};
+					92C5054D21FEC03B0084719A = {
+						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1130;
+					};
+				};
+			};
+			buildConfigurationList = 929113EC21F9D04100173149 /* Build configuration list for PBXProject "Drawer" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+				"zh-Hans",
+				ja,
+				"zh-Hant",
+				fr,
+				vi,
+				ar,
+				de,
+				hr,
+			);
+			mainGroup = 929113E821F9D04100173149;
+			packageReferences = (
+				08A5F85D23AA01EE00981CA5 /* XCRemoteSwiftPackageReference "HotKey" */,
+			);
+			productRefGroup = 929113F221F9D04100173149 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				929113F021F9D04100173149 /* Drawer */,
+				92C5054D21FEC03B0084719A /* LauncherApplication */,
+				DRAWERTEST00500000000001 /* DrawerTests */,
+				DRAWERUITEST0050000000001 /* DrawerUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		929113EF21F9D04100173149 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				929113F921F9D04200173149 /* Assets.xcassets in Resources */,
+				967F4B2824169CAF00F18D3C /* Localizable.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		92C5054C21FEC03B0084719A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				92C5055521FEC03C0084719A /* Assets.xcassets in Resources */,
+				92C5055821FEC03C0084719A /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		929113ED21F9D04100173149 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DRAWER001000000000000001 /* DrawerApp.swift in Sources */,
+				DRAWER001000000000000002 /* AppState.swift in Sources */,
+				DRAWER001000000000000003 /* AppDelegate.swift in Sources */,
+				DRAWER001000000000000004 /* MenuBarManager.swift in Sources */,
+				DRAWER001000000000000005 /* SettingsManager.swift in Sources */,
+				DRAWER001000000000000006 /* LaunchAtLoginManager.swift in Sources */,
+				DRAWER001000000000000007 /* PermissionManager.swift in Sources */,
+				DRAWER001000000000000008 /* PermissionStatusView.swift in Sources */,
+				DRAWER001000000000000009 /* DrawerPanel.swift in Sources */,
+				DRAWER001000000000000010 /* DrawerPanelController.swift in Sources */,
+				DRAWER001000000000000011 /* DrawerContentView.swift in Sources */,
+				DRAWER001000000000000012 /* IconCapturer.swift in Sources */,
+				DRAWER001000000000000013 /* DrawerItem.swift in Sources */,
+				DRAWER001000000000000014 /* DrawerManager.swift in Sources */,
+				DRAWER001000000000000015 /* EventSimulator.swift in Sources */,
+				DRAWER001000000000000016 /* HoverManager.swift in Sources */,
+				DRAWER001000000000000017 /* GlobalEventMonitor.swift in Sources */,
+				DRAWER001000000000000018 /* SettingsView.swift in Sources */,
+				DRAWER001000000000000019 /* GeneralSettingsView.swift in Sources */,
+				DRAWER001000000000000020 /* AppearanceSettingsView.swift in Sources */,
+				DRAWER001000000000000042 /* SettingsMenuBarLayoutView.swift in Sources */,
+				DRAWER001000000000000060 /* LayoutDesign.swift in Sources */,
+				DRAWER001000000000000061 /* LayoutSectionView.swift in Sources */,
+				DRAWER001000000000000062 /* ItemFramePreferenceKey.swift in Sources */,
+				DRAWER001000000000000063 /* DropPositionDelegate.swift in Sources */,
+				DRAWER001000000000000064 /* LayoutItemView.swift in Sources */,
+				DRAWER001000000000000070 /* DrawerDesign.swift in Sources */,
+				DRAWER001000000000000071 /* DrawerItemView.swift in Sources */,
+				DRAWER001000000000000072 /* SectionHeader.swift in Sources */,
+				DRAWER001000000000000073 /* IconRow.swift in Sources */,
+				DRAWER001000000000000080 /* OverlayIconView.swift in Sources */,
+				DRAWER001000000000000081 /* OverlayIconButtonStyle.swift in Sources */,
+				DRAWER001000000000000082 /* OverlayBackground.swift in Sources */,
+				DRAWER001000000000000083 /* OverlayVisualEffectView.swift in Sources */,
+				DRAWER001000000000000084 /* PermissionRow.swift in Sources */,
+				DRAWER001000000000000085 /* PermissionBadge.swift in Sources */,
+				DRAWER001000000000000048 /* LayoutReconciler.swift in Sources */,
+				DRAWER001000000000000049 /* IconMatcher.swift in Sources */,
+				DRAWER001000000000000021 /* AboutView.swift in Sources */,
+				DRAWER001000000000000022 /* OnboardingView.swift in Sources */,
+				DRAWER001000000000000023 /* WelcomeStepView.swift in Sources */,
+				DRAWER001000000000000024 /* PermissionsStepView.swift in Sources */,
+				DRAWER001000000000000025 /* TutorialStepView.swift in Sources */,
+				DRAWER001000000000000026 /* CompletionStepView.swift in Sources */,
+				DRAWER001000000000000027 /* Private.swift in Sources */,
+				DRAWER001000000000000028 /* Bridging.swift in Sources */,
+				DRAWER001000000000000029 /* WindowInfo.swift in Sources */,
+				DRAWER001000000000000030 /* ScreenCapture.swift in Sources */,
+				DRAWER001000000000000031 /* MenuBarMetrics.swift in Sources */,
+				DRAWER001000000000000032 /* Notification+Extensions.swift in Sources */,
+				DRAWER001000000000000033 /* ControlItemState.swift in Sources */,
+				DRAWER001000000000000034 /* ControlItemImage.swift in Sources */,
+				DRAWER001000000000000035 /* ControlItem.swift in Sources */,
+				DRAWER001000000000000036 /* MenuBarSection.swift in Sources */,
+				DRAWER001000000000000037 /* OverlayPanel.swift in Sources */,
+				DRAWER001000000000000038 /* OverlayContentView.swift in Sources */,
+				DRAWER001000000000000039 /* OverlayPanelController.swift in Sources */,
+				DRAWER001000000000000040 /* OverlayModeManager.swift in Sources */,
+				DRAWER001000000000000041 /* SettingsLayoutItem.swift in Sources */,
+				DRAWER001000000000000043 /* IconIdentifier.swift in Sources */,
+				DRAWER001000000000000044 /* IconItem.swift in Sources */,
+				DRAWER001000000000000045 /* IconRepositioner.swift in Sources */,
+				DRAWER001000000000000047 /* IconPositionRestorer.swift in Sources */,
+				DRAWER001000000000000046 /* MouseCursor.swift in Sources */,
+				DRAWER001000000000000086 /* DrawerContainerView.swift in Sources */,
+				DRAWER001000000000000087 /* DrawerBackgroundView.swift in Sources */,
+				DRAWER001000000000000088 /* QuickRefRow.swift in Sources */,
+				DRAWER001000000000000089 /* InstructionRow.swift in Sources */,
+				DRAWER001000000000000090 /* OnboardingPermissionRow.swift in Sources */,
+				DRAWER001000000000000091 /* FeatureRow.swift in Sources */,
+				DRAWER001000000000000092 /* MenuBarLayoutViewModel.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		92C5054A21FEC03B0084719A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				92C5055321FEC03C0084719A /* ViewController.swift in Sources */,
+				92C5055121FEC03C0084719A /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DRAWERUITEST0060000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DRAWERUITEST0010000000001 /* DrawerUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DRAWERTEST00600000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DRAWERTEST00100000000001 /* SetupVerificationTests.swift in Sources */,
+				DRAWERTEST00100000000002 /* MockSettingsManager.swift in Sources */,
+				DRAWERTEST00100000000003 /* MockSettingsManagerTests.swift in Sources */,
+				DRAWERTEST00100000000004 /* MockPermissionManager.swift in Sources */,
+				DRAWERTEST00100000000005 /* MockPermissionManagerTests.swift in Sources */,
+				DRAWERTEST00100000000006 /* MockMenuBarManager.swift in Sources */,
+				DRAWERTEST00100000000007 /* MockMenuBarManagerTests.swift in Sources */,
+				DRAWERTEST00100000000008 /* MockIconCapturer.swift in Sources */,
+				DRAWERTEST00100000000009 /* MockIconCapturerTests.swift in Sources */,
+				DRAWERTEST00100000000010 /* MenuBarManagerTests.swift in Sources */,
+				DRAWERTEST00100000000011 /* SettingsManagerTests.swift in Sources */,
+				DRAWERTEST00100000000012 /* DrawerManagerTests.swift in Sources */,
+				DRAWERTEST00100000000013 /* HoverManagerTests.swift in Sources */,
+				DRAWERTEST00100000000015 /* LaunchAtLoginManagerTests.swift in Sources */,
+				DRAWERTEST00100000000016 /* DrawerItemTests.swift in Sources */,
+				DRAWERTEST00100000000017 /* GlobalHotkeyConfigTests.swift in Sources */,
+				DRAWERTEST00100000000018 /* CaptureErrorTests.swift in Sources */,
+				DRAWERTEST00100000000019 /* EventSimulatorErrorTests.swift in Sources */,
+				DRAWERTEST00100000000020 /* PermissionTypeTests.swift in Sources */,
+				DRAWERTEST00100000000021 /* PermissionManagerTests.swift in Sources */,
+				DRAWERTEST00100000000022 /* IconCapturerTests.swift in Sources */,
+				DRAWERTEST00100000000023 /* EventSimulatorTests.swift in Sources */,
+				DRAWERTEST00100000000024 /* GlobalEventMonitorTests.swift in Sources */,
+				DRAWERTEST00100000000025 /* LocalEventMonitorTests.swift in Sources */,
+				DRAWERTEST00100000000026 /* WindowInfoTests.swift in Sources */,
+				DRAWERTEST00100000000027 /* MenuBarMetricsTests.swift in Sources */,
+				DRAWERTEST00100000000028 /* AppStateTests.swift in Sources */,
+				DRAWERTEST00100000000029 /* ControlItemStateTests.swift in Sources */,
+				DRAWERTEST00100000000030 /* ControlItemImageTests.swift in Sources */,
+				DRAWERTEST00100000000031 /* ControlItemTests.swift in Sources */,
+				DRAWERTEST00100000000032 /* MenuBarSectionTests.swift in Sources */,
+				DRAWERTEST00100000000033 /* OverlayModeManagerTests.swift in Sources */,
+				DRAWERTEST00100000000034 /* MockEventSimulator.swift in Sources */,
+				DRAWERTEST00100000000035 /* MockOverlayPanelController.swift in Sources */,
+				DRAWERTEST00100000000036 /* ScreenCaptureTests.swift in Sources */,
+				DRAWERTEST00100000000037 /* SettingsLayoutItemTests.swift in Sources */,
+				DRAWERTEST00100000000039 /* IconRepositionerTests.swift in Sources */,
+				DRAWERTEST00100000000038 /* MenuBarItemTests.swift in Sources */,
+				DRAWERTEST00100000000040 /* MockCapturedIconFactory.swift in Sources */,
+				DRAWERTEST00100000000041 /* SettingsMenuBarLayoutViewTests.swift in Sources */,
+				DRAWERTEST00100000000042 /* DrawerPanelControllerTests.swift in Sources */,
+				DRAWERTEST00100000000043 /* MockScreenCaptureProvider.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXFrameworksBuildPhase section for DrawerUITests */
+		DRAWERUITEST0060000000002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section for DrawerUITests */
+
+/* Begin PBXFrameworksBuildPhase section for DrawerTests */
+		DRAWERTEST00600000000002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section for DrawerTests */
+
+/* Begin PBXResourcesBuildPhase section for DrawerUITests */
+		DRAWERUITEST0060000000003 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section for DrawerUITests */
+
+/* Begin PBXResourcesBuildPhase section for DrawerTests */
+		DRAWERTEST00600000000003 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section for DrawerTests */
+
+/* Begin PBXTargetDependency section */
+		DRAWERUITEST0080000000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 929113F021F9D04100173149 /* Drawer */;
+			targetProxy = DRAWERUITEST0030000000001 /* PBXContainerItemProxy */;
+		};
+		DRAWERTEST00800000000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 929113F021F9D04100173149 /* Drawer */;
+			targetProxy = DRAWERTEST00300000000001 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		929113FA21F9D04200173149 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				929113FB21F9D04200173149 /* Base */,
+				B350A2CC23AAFB47003A04AC /* zh-Hans */,
+				B8404C9A24041A4300E6DBF8 /* ja */,
+				B1326443261D7E0200319D35 /* fr */,
+				FF8A0FB5265E10DB00C76226 /* zh-Hant */,
+				55D9B6B52660F153007AF073 /* vi */,
+				55D9B6B82661DEDA007AF073 /* ar */,
+				55D9B6BB2661DEE7007AF073 /* de */,
+				55188DF7279A737800A92772 /* hr */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		92C5055621FEC03C0084719A /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				92C5055721FEC03C0084719A /* Base */,
+				B8404C9B24041A4300E6DBF8 /* ja */,
+				FF57A44A25E6C50200988FC2 /* zh-Hant */,
+				B1326444261D7E0200319D35 /* fr */,
+				55D9B6B62660F153007AF073 /* vi */,
+				55D9B6B92661DEDA007AF073 /* ar */,
+				55D9B6BC2661DEE8007AF073 /* de */,
+				55188DF8279A737900A92772 /* hr */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		967F4B2A24169CAF00F18D3C /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				967F4B2924169CAF00F18D3C /* en */,
+				967F4B2B24169CB200F18D3C /* zh-Hans */,
+				967F4B2C24169CB400F18D3C /* ja */,
+				FF57A44B25E6C50200988FC2 /* zh-Hant */,
+				B1326445261D7E0200319D35 /* fr */,
+				55D9B6B72660F153007AF073 /* vi */,
+				55D9B6BA2661DEDA007AF073 /* ar */,
+				55D9B6BD2661DEE8007AF073 /* de */,
+				55188DF9279A737900A92772 /* hr */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		9291141521F9D04200173149 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		9291141621F9D04200173149 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		9291141821F9D04200173149 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Hidden/Hidden.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = hidden/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.drawer.app;
+				PRODUCT_NAME = Drawer;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		9291141921F9D04200173149 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Hidden/Hidden.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = hidden/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.drawer.app;
+				PRODUCT_NAME = Drawer;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		92C5057221FEC03D0084719A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = LauncherApplication/LauncherApplication.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = LauncherApplication/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dwarvesv.LauncherApplication;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		92C5057321FEC03D0084719A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = LauncherApplication/LauncherApplication.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = LauncherApplication/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dwarvesv.LauncherApplication;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		DRAWERUITEST0070000000002 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = DrawerUITests/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = DrawerUITests;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.drawer.DrawerUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = Drawer;
+			};
+			name = Debug;
+		};
+		DRAWERUITEST0070000000003 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = DrawerUITests/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = DrawerUITests;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.drawer.DrawerUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = Drawer;
+			};
+			name = Release;
+		};
+		DRAWERTEST00700000000002 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = DrawerTests;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.drawer.DrawerTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Drawer.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Drawer";
+			};
+			name = Debug;
+		};
+		DRAWERTEST00700000000003 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = DrawerTests;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.drawer.DrawerTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Drawer.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Drawer";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		929113EC21F9D04100173149 /* Build configuration list for PBXProject "Drawer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9291141521F9D04200173149 /* Debug */,
+				9291141621F9D04200173149 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9291141721F9D04200173149 /* Build configuration list for PBXNativeTarget "Drawer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9291141821F9D04200173149 /* Debug */,
+				9291141921F9D04200173149 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		92C5057121FEC03D0084719A /* Build configuration list for PBXNativeTarget "LauncherApplication" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				92C5057221FEC03D0084719A /* Debug */,
+				92C5057321FEC03D0084719A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DRAWERUITEST0070000000001 /* Build configuration list for PBXNativeTarget "DrawerUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DRAWERUITEST0070000000002 /* Debug */,
+				DRAWERUITEST0070000000003 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DRAWERTEST00700000000001 /* Build configuration list for PBXNativeTarget "DrawerTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DRAWERTEST00700000000002 /* Debug */,
+				DRAWERTEST00700000000003 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		08A5F85D23AA01EE00981CA5 /* XCRemoteSwiftPackageReference "HotKey" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/soffes/HotKey/";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		08A5F85E23AA01EE00981CA5 /* HotKey */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 08A5F85D23AA01EE00981CA5 /* XCRemoteSwiftPackageReference "HotKey" */;
+			productName = HotKey;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 929113E921F9D04100173149 /* Project object */;
+}

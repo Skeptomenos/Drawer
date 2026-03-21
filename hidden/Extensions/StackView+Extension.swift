@@ -1,0 +1,17 @@
+//
+//  StackView+Extension.swift
+//  Drawer
+//
+//  Created by Trung Phan on 22/03/2021.
+//  Copyright © 2021 Dwarves Foundation. All rights reserved.
+//
+
+import Cocoa
+
+extension NSStackView {
+    func removeAllSubViews() {
+        for view in self.views {
+            view.removeFromSuperview()
+        }
+    }
+}
