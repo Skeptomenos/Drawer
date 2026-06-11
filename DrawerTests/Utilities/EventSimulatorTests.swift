@@ -80,6 +80,7 @@ final class EventSimulatorTests: XCTestCase {
     // MARK: - EVS-003: simulateClick with invalid coordinates throws invalidCoordinates error
 
     func testEVS003_SimulateClickWithInvalidCoordinatesThrowsInvalidCoordinatesError() async throws {
+        try requireSystemTests()
         // Skip if no accessibility permission (would throw accessibilityNotGranted first)
         guard AXIsProcessTrusted() else {
             throw XCTSkip("EVS-003: Accessibility permission required to test coordinate validation")
@@ -111,6 +112,7 @@ final class EventSimulatorTests: XCTestCase {
     // MARK: - EVS-004: isValidScreenPoint inside screen returns true
 
     func testEVS004_IsValidScreenPointInsideScreenReturnsTrue() async throws {
+        try requireSystemTests()
         // Skip if no accessibility permission (would throw accessibilityNotGranted first)
         guard AXIsProcessTrusted() else {
             throw XCTSkip("EVS-004: Accessibility permission required to test coordinate validation")
@@ -144,6 +146,7 @@ final class EventSimulatorTests: XCTestCase {
     // MARK: - EVS-005: isValidScreenPoint outside all screens returns false
 
     func testEVS005_IsValidScreenPointOutsideAllScreensReturnsFalse() async throws {
+        try requireSystemTests()
         // Skip if no accessibility permission (would throw accessibilityNotGranted first)
         guard AXIsProcessTrusted() else {
             throw XCTSkip("EVS-005: Accessibility permission required to test coordinate validation")
@@ -176,6 +179,7 @@ final class EventSimulatorTests: XCTestCase {
     // MARK: - EVS-006: isValidScreenPoint in menu bar area
 
     func testEVS006_IsValidScreenPointInMenuBarAreaIsValid() async throws {
+        try requireSystemTests()
         // Skip if no accessibility permission (would throw accessibilityNotGranted first)
         guard AXIsProcessTrusted() else {
             throw XCTSkip("EVS-006: Accessibility permission required to test coordinate validation")

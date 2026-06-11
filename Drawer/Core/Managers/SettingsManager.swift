@@ -37,58 +37,67 @@ final class SettingsManager: ObservableObject {
 
     static let shared = SettingsManager()
 
+    // MARK: - Storage
+
+    /// The backing store for all settings. Injected for testability;
+    /// production uses `.standard`, tests use an isolated suite.
+    private let defaults: UserDefaults
+
     // MARK: - Published Settings (backed by @AppStorage)
 
     /// Whether auto-collapse is enabled (hides icons after delay)
-    @AppStorage("autoCollapseEnabled") var autoCollapseEnabled: Bool = true {
+    @AppStorage var autoCollapseEnabled: Bool {
         didSet { autoCollapseEnabledSubject.send(autoCollapseEnabled) }
     }
 
     /// Delay in seconds before auto-collapse triggers
-    @AppStorage("autoCollapseDelay") var autoCollapseDelay: Double = 10.0 {
+    @AppStorage var autoCollapseDelay: Double {
         didSet { autoCollapseDelaySubject.send(autoCollapseDelay) }
     }
 
-    @AppStorage("launchAtLogin") var launchAtLogin: Bool = false {
-        didSet { LaunchAtLoginManager.shared.setEnabled(launchAtLogin) }
+    @AppStorage var launchAtLogin: Bool {
+        didSet {
+            guard syncWithSystem else { return }
+            LaunchAtLoginManager.shared.setEnabled(launchAtLogin)
+        }
     }
 
     /// Whether to hide the separator icons in the menu bar
-    @AppStorage("hideSeparators") var hideSeparators: Bool = false
+    @AppStorage var hideSeparators: Bool
 
     /// Whether the "always hidden" section is enabled
-    @AppStorage("alwaysHiddenSectionEnabled") var alwaysHiddenSectionEnabled: Bool = false {
+    @AppStorage var alwaysHiddenSectionEnabled: Bool {
         didSet { alwaysHiddenSectionEnabledSubject.send(alwaysHiddenSectionEnabled) }
     }
 
     /// Whether to use full status bar width when expanded
-    @AppStorage("useFullStatusBarOnExpand") var useFullStatusBarOnExpand: Bool = false
+    @AppStorage var useFullStatusBarOnExpand: Bool
 
-    @AppStorage("showOnHover") var showOnHover: Bool = false {
+    @AppStorage var showOnHover: Bool {
         didSet { showOnHoverSubject.send(showOnHover) }
     }
 
-    @AppStorage("hasCompletedOnboarding") var hasCompletedOnboarding: Bool = false
+    @AppStorage var hasCompletedOnboarding: Bool
 
     // MARK: - Gesture Trigger Settings
 
     /// Whether scrolling down in the menu bar area shows the drawer
-    @AppStorage("showOnScrollDown") var showOnScrollDown: Bool = true {
+    @AppStorage var showOnScrollDown: Bool {
         didSet { showOnScrollDownSubject.send(showOnScrollDown) }
     }
 
     /// Whether scrolling up while drawer is visible hides it
-    @AppStorage("hideOnScrollUp") var hideOnScrollUp: Bool = true {
+    @AppStorage var hideOnScrollUp: Bool {
         didSet { hideOnScrollUpSubject.send(hideOnScrollUp) }
     }
 
     /// Whether clicking outside the drawer or switching apps hides it
-    @AppStorage("hideOnClickOutside") var hideOnClickOutside: Bool = true {
+    @AppStorage var hideOnClickOutside: Bool {
         didSet { hideOnClickOutsideSubject.send(hideOnClickOutside) }
     }
 
     /// Whether moving the mouse away from the drawer hides it
-    @AppStorage("hideOnMouseAway") var hideOnMouseAway: Bool = true {
+    @AppStorage var hideOnMouseAway: Bool {
         didSet { hideOnMouseAwaySubject.send(hideOnMouseAway) }
     }
 
@@ -97,7 +106,7 @@ final class SettingsManager: ObservableObject {
     /// Whether overlay mode is enabled (floating panel instead of expand mode).
     /// When true, hidden icons appear in a floating panel at menu bar level
     /// instead of expanding the menu bar. This solves the MacBook Notch problem.
-    @AppStorage("overlayModeEnabled") var overlayModeEnabled: Bool = false {
+    @AppStorage var overlayModeEnabled: Bool {
         didSet { overlayModeEnabledSubject.send(overlayModeEnabled) }
     }
 
@@ -140,15 +149,15 @@ final class SettingsManager: ObservableObject {
     /// Global hotkey configuration for toggle action
     var globalHotkey: GlobalHotkeyConfig? {
         get {
-            guard let data = UserDefaults.standard.data(forKey: "globalHotkey") else { return nil }
+            guard let data = defaults.data(forKey: "globalHotkey") else { return nil }
             return try? JSONDecoder().decode(GlobalHotkeyConfig.self, from: data)
         }
         set {
             if let newValue = newValue,
                let data = try? JSONEncoder().encode(newValue) {
-                UserDefaults.standard.set(data, forKey: "globalHotkey")
+                defaults.set(data, forKey: "globalHotkey")
             } else {
-                UserDefaults.standard.removeObject(forKey: "globalHotkey")
+                defaults.removeObject(forKey: "globalHotkey")
             }
             objectWillChange.send()
         }
@@ -169,16 +178,16 @@ final class SettingsManager: ObservableObject {
     /// Stores the user's preferred section assignments and ordering for menu bar icons.
     var menuBarLayout: [SettingsLayoutItem] {
         get {
-            guard let data = UserDefaults.standard.data(forKey: Self.layoutStorageKey) else {
+            guard let data = defaults.data(forKey: Self.layoutStorageKey) else {
                 return []
             }
             return (try? JSONDecoder().decode([SettingsLayoutItem].self, from: data)) ?? []
         }
         set {
             if newValue.isEmpty {
-                UserDefaults.standard.removeObject(forKey: Self.layoutStorageKey)
+                defaults.removeObject(forKey: Self.layoutStorageKey)
             } else if let data = try? JSONEncoder().encode(newValue) {
-                UserDefaults.standard.set(data, forKey: Self.layoutStorageKey)
+                defaults.set(data, forKey: Self.layoutStorageKey)
             }
             objectWillChange.send()
             menuBarLayoutChangedSubject.send(newValue)
@@ -206,16 +215,16 @@ final class SettingsManager: ObservableObject {
     /// Value: Array of IconIdentifier in order from left to right
     var savedIconPositions: [String: [IconIdentifier]] {
         get {
-            guard let data = UserDefaults.standard.data(forKey: Self.iconPositionsStorageKey) else {
+            guard let data = defaults.data(forKey: Self.iconPositionsStorageKey) else {
                 return [:]
             }
             return (try? JSONDecoder().decode([String: [IconIdentifier]].self, from: data)) ?? [:]
         }
         set {
             if newValue.isEmpty {
-                UserDefaults.standard.removeObject(forKey: Self.iconPositionsStorageKey)
+                defaults.removeObject(forKey: Self.iconPositionsStorageKey)
             } else if let data = try? JSONEncoder().encode(newValue) {
-                UserDefaults.standard.set(data, forKey: Self.iconPositionsStorageKey)
+                defaults.set(data, forKey: Self.iconPositionsStorageKey)
             }
             objectWillChange.send()
             iconPositionsChangedSubject.send(newValue)
@@ -251,9 +260,38 @@ final class SettingsManager: ObservableObject {
 
     // MARK: - Initialization
 
-    private init() {
+    /// Whether `launchAtLogin` changes propagate to `SMAppService`.
+    /// False in tests so settings tests never touch the real login-item registry.
+    private let syncWithSystem: Bool
+
+    /// Creates a settings manager.
+    /// - Parameters:
+    ///   - defaults: Backing store. Production uses `.standard`; tests must pass
+    ///     an isolated suite (e.g. `UserDefaults(suiteName: "test.<uuid>")`).
+    ///   - syncWithSystem: When false, skips `LaunchAtLoginManager`/`SMAppService`
+    ///     side effects. Tests must pass false.
+    init(defaults: UserDefaults = .standard, syncWithSystem: Bool = true) {
+        self.defaults = defaults
+        self.syncWithSystem = syncWithSystem
+
+        _autoCollapseEnabled = AppStorage(wrappedValue: true, "autoCollapseEnabled", store: defaults)
+        _autoCollapseDelay = AppStorage(wrappedValue: 10.0, "autoCollapseDelay", store: defaults)
+        _launchAtLogin = AppStorage(wrappedValue: false, "launchAtLogin", store: defaults)
+        _hideSeparators = AppStorage(wrappedValue: false, "hideSeparators", store: defaults)
+        _alwaysHiddenSectionEnabled = AppStorage(wrappedValue: false, "alwaysHiddenSectionEnabled", store: defaults)
+        _useFullStatusBarOnExpand = AppStorage(wrappedValue: false, "useFullStatusBarOnExpand", store: defaults)
+        _showOnHover = AppStorage(wrappedValue: false, "showOnHover", store: defaults)
+        _hasCompletedOnboarding = AppStorage(wrappedValue: false, "hasCompletedOnboarding", store: defaults)
+        _showOnScrollDown = AppStorage(wrappedValue: true, "showOnScrollDown", store: defaults)
+        _hideOnScrollUp = AppStorage(wrappedValue: true, "hideOnScrollUp", store: defaults)
+        _hideOnClickOutside = AppStorage(wrappedValue: true, "hideOnClickOutside", store: defaults)
+        _hideOnMouseAway = AppStorage(wrappedValue: true, "hideOnMouseAway", store: defaults)
+        _overlayModeEnabled = AppStorage(wrappedValue: false, "overlayModeEnabled", store: defaults)
+
         registerDefaults()
-        syncLaunchAtLoginWithSystem()
+        if syncWithSystem {
+            syncLaunchAtLoginWithSystem()
+        }
     }
 
     private func syncLaunchAtLoginWithSystem() {
@@ -267,7 +305,7 @@ final class SettingsManager: ObservableObject {
 
     /// Registers default values for first-launch experience
     private func registerDefaults() {
-        UserDefaults.standard.register(defaults: [
+        defaults.register(defaults: [
             "autoCollapseEnabled": true,
             "autoCollapseDelay": 10.0,
             "launchAtLogin": false,

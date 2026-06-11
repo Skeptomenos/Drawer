@@ -18,21 +18,36 @@ final class AppStateTests: XCTestCase {
     private var sut: AppState!
     private var mockSettings: MockSettingsManager!
     private var mockPermissions: MockPermissionManager!
+    private var testDefaults: UserDefaults!
+    private var testSuiteName: String!
+    private var testSettings: SettingsManager!
     private var cancellables: Set<AnyCancellable>!
 
     // MARK: - Setup & Teardown
 
     override func setUp() async throws {
+        try requireSystemTests()
         try await super.setUp()
+        // Isolated suite: tests must never touch the user's real defaults.
+        testSuiteName = "test.drawer.appstate"
+        testDefaults = UserDefaults(suiteName: testSuiteName)
+        testDefaults.removePersistentDomain(forName: testSuiteName)
+        testSettings = SettingsManager(defaults: testDefaults, syncWithSystem: false)
         mockSettings = MockSettingsManager()
         mockPermissions = MockPermissionManager()
         cancellables = Set<AnyCancellable>()
     }
 
     override func tearDown() async throws {
+        if let testSuiteName {
+            testDefaults?.removePersistentDomain(forName: testSuiteName)
+        }
         sut = nil
         mockSettings = nil
         mockPermissions = nil
+        testSettings = nil
+        testDefaults = nil
+        testSuiteName = nil
         cancellables = nil
         try await super.tearDown()
     }
@@ -41,7 +56,7 @@ final class AppStateTests: XCTestCase {
 
     private func createSUT() -> AppState {
         return AppState(
-            settings: SettingsManager.shared,
+            settings: testSettings,
             permissions: PermissionManager.shared,
             drawerManager: DrawerManager.shared,
             iconCapturer: IconCapturer.shared,

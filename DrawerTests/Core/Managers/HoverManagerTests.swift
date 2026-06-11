@@ -18,13 +18,14 @@ final class HoverManagerTests: XCTestCase {
     // MARK: - Setup & Teardown
 
     override func setUp() async throws {
+        try requireSystemTests()
         try await super.setUp()
         sut = HoverManager.shared
         sut.stopMonitoring()
     }
 
     override func tearDown() async throws {
-        sut.stopMonitoring()
+        sut?.stopMonitoring()  // optional: sut is nil when setUp skipped via requireSystemTests()
         sut = nil
         try await super.tearDown()
     }
@@ -203,7 +204,7 @@ final class HoverManagerTests: XCTestCase {
         defer { UserDefaults.standard.set(originalValue, forKey: "showOnScrollDown") }
 
         var showCallbackCalled = false
-        sut.onShouldShowDrawer = { showCallbackCalled = true }
+        sut.onShouldShowDrawer = { _ in showCallbackCalled = true }
 
         sut.startMonitoring()
 
@@ -278,7 +279,7 @@ final class HoverManagerTests: XCTestCase {
         defer { UserDefaults.standard.set(originalValue, forKey: "showOnHover") }
 
         var showCallbackCalled = false
-        sut.onShouldShowDrawer = { showCallbackCalled = true }
+        sut.onShouldShowDrawer = { _ in showCallbackCalled = true }
 
         sut.startMonitoring()
 
@@ -294,7 +295,7 @@ final class HoverManagerTests: XCTestCase {
         var showCallbackCalled = false
         var hideCallbackCalled = false
 
-        sut.onShouldShowDrawer = { showCallbackCalled = true }
+        sut.onShouldShowDrawer = { _ in showCallbackCalled = true }
         sut.onShouldHideDrawer = { hideCallbackCalled = true }
 
         // Assert: Callbacks are set but not yet called

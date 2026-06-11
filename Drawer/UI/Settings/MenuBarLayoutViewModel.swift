@@ -358,7 +358,9 @@ final class MenuBarLayoutViewModel {
     ///   - insertIndex: Position within the section (0 = leftmost).
     ///   - excludingItem: Item being moved (excluded from position calculations).
     /// - Returns: The MoveDestination, or nil if no valid destination found.
-    private func calculateDestination(
+    /// - Note: TEMPORARY lint disable on declaration line; simplified in hardening
+    ///   roadmap Phase 4 (layout editor correctness).
+    private func calculateDestination( // swiftlint:disable:this cyclomatic_complexity
         for targetSection: MenuBarSectionType,
         at insertIndex: Int,
         excludingItem: IconItem

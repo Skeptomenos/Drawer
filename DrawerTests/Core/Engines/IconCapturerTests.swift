@@ -88,6 +88,7 @@ final class IconCapturerTests: XCTestCase {
     // MARK: - ICN-004: Capture without permission throws permissionDenied
 
     func testICN004_CaptureWithoutPermissionThrowsPermissionDenied() async throws {
+        try requireSystemTests()
         // Arrange
         let mockPermissionManager = MockPermissionManager()
         mockPermissionManager.mockHasScreenRecording = false
@@ -121,6 +122,7 @@ final class IconCapturerTests: XCTestCase {
     // MARK: - ICN-005: clearLastCapture resets state
 
     func testICN005_ClearLastCaptureResetsState() async throws {
+        try requireSystemTests()
         // Arrange
         // First, trigger an error to set lastError
         let mockPermissionManager = MockPermissionManager()
@@ -511,6 +513,7 @@ final class IconCapturerTests: XCTestCase {
     // MARK: - ICN-011: Capture already in progress skips
 
     func testICN011_CaptureAlreadyInProgressSkips() async throws {
+        try requireSystemTests()
         // Arrange
         let mockPermissionManager = MockPermissionManager()
         mockPermissionManager.mockHasScreenRecording = true

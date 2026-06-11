@@ -354,11 +354,8 @@ final class MenuBarManager {
                 self.logger.info("🔍 Always Hidden Setup: Spacer X=\(spacerWindow.frame.origin.x), Ctrl X=\(ctrlWindow.frame.origin.x)")
                 self.logger.info("🔍 Spacer Width: \(spacerWindow.frame.width), Ctrl Width: \(ctrlWindow.frame.width)")
                 self.logger.info("🔍 Spacer Length (statusItem): \(spacer.length)")
-                print("🔍 [DEBUG] Spacer frame: \(spacerWindow.frame), Ctrl frame: \(ctrlWindow.frame)")
-                print("🔍 [DEBUG] Spacer length: \(spacer.length)")
             } else {
                 self.logger.error("Could not get window frames for Always Hidden section")
-                print("🔍 [DEBUG] ERROR: Could not get window frames!")
             }
         }
         
@@ -391,8 +388,6 @@ final class MenuBarManager {
             }
             .store(in: &cancellables)
     }
-
-
 
     #if DEBUG
     private func setupDebugTimer() {

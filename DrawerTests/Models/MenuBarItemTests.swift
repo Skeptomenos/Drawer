@@ -410,7 +410,8 @@ final class MenuBarItemTests: XCTestCase {
 
     // MARK: - getMenuBarItems Sorting Tests
 
-    func testGetMenuBarItems_ReturnsSortedByXPosition() {
+    func testGetMenuBarItems_ReturnsSortedByXPosition() throws {
+        try requireSystemTests()
         // Note: This test requires actual menu bar items to be present
         // In a real test environment with screen access, this would verify sorting
         // For CI environments, we test the sorting logic indirectly

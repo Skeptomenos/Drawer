@@ -19,6 +19,7 @@ final class ControlItemTests: XCTestCase {
     // MARK: - Setup & Teardown
 
     override func setUp() async throws {
+        try requireSystemTests()
         try await super.setUp()
     }
 

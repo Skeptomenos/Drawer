@@ -16,24 +16,28 @@ final class SettingsManagerTests: XCTestCase {
     // MARK: - Properties
 
     private var sut: SettingsManager!
+    private var testDefaults: UserDefaults!
+    private var testSuiteName: String!
     private var cancellables: Set<AnyCancellable>!
 
     // MARK: - Setup & Teardown
 
     override func setUp() async throws {
         try await super.setUp()
-        sut = SettingsManager.shared
+        // Isolated suite: tests must never touch the user's real defaults.
+        testSuiteName = "test.drawer.settings"
+        testDefaults = UserDefaults(suiteName: testSuiteName)
+        testDefaults.removePersistentDomain(forName: testSuiteName)
+        sut = SettingsManager(defaults: testDefaults, syncWithSystem: false)
         cancellables = []
-
-        // Reset to defaults before each test to ensure clean state
-        sut.resetToDefaults()
     }
 
     override func tearDown() async throws {
-        // Reset to defaults after each test
-        sut.resetToDefaults()
+        testDefaults.removePersistentDomain(forName: testSuiteName)
         cancellables = nil
         sut = nil
+        testDefaults = nil
+        testSuiteName = nil
         try await super.tearDown()
     }
 
@@ -110,7 +114,7 @@ final class SettingsManagerTests: XCTestCase {
     // MARK: - SET-008: Default hasCompletedOnboarding is false
 
     func testSET008_DefaultHasCompletedOnboardingIsFalse() async throws {
-        UserDefaults.standard.removeObject(forKey: "hasCompletedOnboarding")
+        testDefaults.removeObject(forKey: "hasCompletedOnboarding")
 
         XCTAssertFalse(sut.hasCompletedOnboarding, "SET-008: Default hasCompletedOnboarding should be false")
     }
@@ -309,14 +313,14 @@ final class SettingsManagerTests: XCTestCase {
 
         // Verify the hotkey was set
         XCTAssertNotNil(sut.globalHotkey, "SET-015: globalHotkey should be set before test")
-        XCTAssertNotNil(UserDefaults.standard.data(forKey: "globalHotkey"), "SET-015: UserDefaults should contain globalHotkey data")
+        XCTAssertNotNil(testDefaults.data(forKey: "globalHotkey"), "SET-015: UserDefaults should contain globalHotkey data")
 
         // Act - set globalHotkey to nil
         sut.globalHotkey = nil
 
         // Assert - globalHotkey should be nil and removed from UserDefaults
         XCTAssertNil(sut.globalHotkey, "SET-015: globalHotkey should be nil after setting to nil")
-        XCTAssertNil(UserDefaults.standard.data(forKey: "globalHotkey"), "SET-015: UserDefaults should not contain globalHotkey key after setting to nil")
+        XCTAssertNil(testDefaults.data(forKey: "globalHotkey"), "SET-015: UserDefaults should not contain globalHotkey key after setting to nil")
     }
 
     // MARK: - SET-016: menuBarLayout default is empty
@@ -482,7 +486,7 @@ final class SettingsManagerTests: XCTestCase {
         XCTAssertEqual(retrieved[MenuBarSectionType.alwaysHidden.rawValue]?[0].namespace, "com.adobe.acc.AdobeCreativeCloud")
 
         // Verify data is actually in UserDefaults
-        XCTAssertNotNil(UserDefaults.standard.data(forKey: "menuBarIconPositions"), "SET-021: UserDefaults should contain icon positions data")
+        XCTAssertNotNil(testDefaults.data(forKey: "menuBarIconPositions"), "SET-021: UserDefaults should contain icon positions data")
 
         // Cleanup
         sut.clearSavedPositions()
@@ -498,14 +502,14 @@ final class SettingsManagerTests: XCTestCase {
         sut.updateSavedPositions(for: .visible, icons: icons)
         sut.updateSavedPositions(for: .hidden, icons: icons)
         XCTAssertFalse(sut.savedIconPositions.isEmpty, "SET-022: Positions should not be empty before clear")
-        XCTAssertNotNil(UserDefaults.standard.data(forKey: "menuBarIconPositions"), "SET-022: UserDefaults should contain data before clear")
+        XCTAssertNotNil(testDefaults.data(forKey: "menuBarIconPositions"), "SET-022: UserDefaults should contain data before clear")
 
         // Act
         sut.clearSavedPositions()
 
         // Assert
         XCTAssertTrue(sut.savedIconPositions.isEmpty, "SET-022: Positions should be empty after clear")
-        XCTAssertNil(UserDefaults.standard.data(forKey: "menuBarIconPositions"), "SET-022: UserDefaults should not contain data after clear")
+        XCTAssertNil(testDefaults.data(forKey: "menuBarIconPositions"), "SET-022: UserDefaults should not contain data after clear")
     }
 
     // MARK: - SET-023: iconPositionsChangedSubject fires on save

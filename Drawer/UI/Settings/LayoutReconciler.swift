@@ -119,18 +119,15 @@ struct LayoutReconciler {
 
             // Spec 5.6: Use captured section as default, but respect user's section override
             let effectiveSection: MenuBarSectionType
-            let hasSectionOverride: Bool
 
             if let saved = matchingSaved, saved.section != capturedIcon.sectionType {
                 // User has overridden the section - respect their preference
                 effectiveSection = saved.section
-                hasSectionOverride = true
                 matchedCount += 1
                 logger.debug("[Reconcile] Icon \(capturedIcon.itemInfo?.ownerName ?? "unknown"): captured=\(capturedIcon.sectionType.displayName), override=\(saved.section.displayName)")
             } else {
                 // Use the captured section (ground truth)
                 effectiveSection = capturedIcon.sectionType
-                hasSectionOverride = false
                 newCount += 1
                 logger.debug("[Reconcile] Icon \(capturedIcon.itemInfo?.ownerName ?? "unknown"): captured=\(capturedIcon.sectionType.displayName), no override")
             }

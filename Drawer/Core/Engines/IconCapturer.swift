@@ -1,3 +1,5 @@
+// swiftlint:disable file_length
+// TEMPORARY: file split into Capture/ modules in hardening roadmap Phase 5.
 //
 //  IconCapturer.swift
 //  Drawer
@@ -202,32 +204,36 @@ final class IconCapturer {
         let ownerName = item.ownerName
         let pid = item.window.ownerPID
         let drawerPID = ProcessInfo.processInfo.processIdentifier
-        
-        // NSLog always works - use for debugging filter execution
-        NSLog("DRAWER_FILTER: title='%@', owner='%@', pid=%d, drawerPID=%d, match=%d",
-              title ?? "nil", ownerName ?? "nil", pid, drawerPID, pid == drawerPID ? 1 : 0)
-        
+
         // Primary filter: Match by process ID (most reliable)
         if pid == drawerPID {
-            NSLog("DRAWER_FILTER: FILTERED (pid match) - %@", title ?? "nil")
+            logFilterMatch(reason: "pid match", title: title)
             return true
         }
-        
+
         if let title {
             if Self.drawerControlItemTitles.contains(title) {
-                NSLog("DRAWER_FILTER: FILTERED (title match) - %@", title)
+                logFilterMatch(reason: "title match", title: title)
                 return true
             }
             if title == "com.drawer.app" {
-                NSLog("DRAWER_FILTER: FILTERED (com.drawer.app) - %@", title)
+                logFilterMatch(reason: "bundle-id title", title: title)
                 return true
             }
         }
         if let ownerName, ownerName == "Drawer" {
-            NSLog("DRAWER_FILTER: FILTERED (owner=Drawer) - %@", title ?? "nil")
+            logFilterMatch(reason: "owner=Drawer", title: title)
             return true
         }
         return false
+    }
+
+    /// Debug-only filter logging. Window titles are user data — never log them
+    /// in release builds (privacy), and always via Logger (policy: docs/LOGGING.md).
+    private func logFilterMatch(reason: String, title: String?) {
+        #if DEBUG
+        logger.debug("Drawer control item filtered (\(reason, privacy: .public)): \(title ?? "nil", privacy: .private)")
+        #endif
     }
 
     // MARK: - Public API

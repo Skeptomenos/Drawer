@@ -18,6 +18,10 @@ final class GlobalEventMonitorTests: XCTestCase {
 
     // MARK: - Setup & Teardown
 
+    override func setUpWithError() throws {
+        try requireSystemTests()
+    }
+
     override func setUp() {
         super.setUp()
         // Create a monitor with a no-op handler for testing

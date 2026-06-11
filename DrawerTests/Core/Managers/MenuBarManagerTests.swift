@@ -15,24 +15,39 @@ final class MenuBarManagerTests: XCTestCase {
 
     private var sut: MenuBarManager!
     private var mockSettings: MockSettingsManager!
+    private var testDefaults: UserDefaults!
+    private var testSuiteName: String!
+    private var testSettings: SettingsManager!
 
     // MARK: - Setup & Teardown
 
     override func setUp() async throws {
+        try requireSystemTests()
         try await super.setUp()
+        // Isolated suite: tests must never touch the user's real defaults.
+        testSuiteName = "test.drawer.mbm"
+        testDefaults = UserDefaults(suiteName: testSuiteName)
+        testDefaults.removePersistentDomain(forName: testSuiteName)
+        testSettings = SettingsManager(defaults: testDefaults, syncWithSystem: false)
         mockSettings = MockSettingsManager()
     }
 
     override func tearDown() async throws {
+        if let testSuiteName {
+            testDefaults?.removePersistentDomain(forName: testSuiteName)
+        }
         sut = nil
         mockSettings = nil
+        testSettings = nil
+        testDefaults = nil
+        testSuiteName = nil
         try await super.tearDown()
     }
 
     // MARK: - MBM-001: Initial State Tests
 
     func testMBM001_InitialStateIsCollapsedIsTrue() async throws {
-        sut = MenuBarManager(settings: SettingsManager.shared)
+        sut = MenuBarManager(settings: testSettings)
 
         XCTAssertTrue(sut.isCollapsed, "MBM-001: Initial state isCollapsed should be true")
     }
@@ -41,7 +56,7 @@ final class MenuBarManagerTests: XCTestCase {
 
     func testMBM002_InitialStateIsTogglingIsFalse() async throws {
         // Arrange & Act
-        sut = MenuBarManager(settings: SettingsManager.shared)
+        sut = MenuBarManager(settings: testSettings)
 
         // Assert
         XCTAssertFalse(sut.isToggling, "MBM-002: Initial state isToggling should be false")
@@ -51,7 +66,7 @@ final class MenuBarManagerTests: XCTestCase {
 
     func testMBM003_ToggleFromCollapsedExpands() async throws {
         // Arrange
-        sut = MenuBarManager(settings: SettingsManager.shared)
+        sut = MenuBarManager(settings: testSettings)
         XCTAssertTrue(sut.isCollapsed, "Precondition: should start collapsed")
 
         // Act
@@ -65,7 +80,7 @@ final class MenuBarManagerTests: XCTestCase {
 
     func testMBM004_ToggleFromExpandedCollapses() async throws {
         // Arrange
-        sut = MenuBarManager(settings: SettingsManager.shared)
+        sut = MenuBarManager(settings: testSettings)
 
         // First expand the menu bar
         sut.toggle()
@@ -86,7 +101,7 @@ final class MenuBarManagerTests: XCTestCase {
 
     func testMBM005_ExpandWhenAlreadyExpandedIsNoOp() async throws {
         // Arrange
-        sut = MenuBarManager(settings: SettingsManager.shared)
+        sut = MenuBarManager(settings: testSettings)
 
         // First expand the menu bar
         sut.toggle()
@@ -107,7 +122,7 @@ final class MenuBarManagerTests: XCTestCase {
 
     func testMBM006_CollapseWhenAlreadyCollapsedIsNoOp() async throws {
         // Arrange
-        sut = MenuBarManager(settings: SettingsManager.shared)
+        sut = MenuBarManager(settings: testSettings)
         XCTAssertTrue(sut.isCollapsed, "Precondition: should start collapsed")
 
         // Act - call collapse() when already collapsed
@@ -121,7 +136,7 @@ final class MenuBarManagerTests: XCTestCase {
 
     func testMBM007_IsTogglingPreventsDoubleToggle() async throws {
         // Arrange
-        sut = MenuBarManager(settings: SettingsManager.shared)
+        sut = MenuBarManager(settings: testSettings)
         XCTAssertTrue(sut.isCollapsed, "Precondition: should start collapsed")
         XCTAssertFalse(sut.isToggling, "Precondition: isToggling should be false")
 
@@ -154,7 +169,7 @@ final class MenuBarManagerTests: XCTestCase {
 
     func testMBM008_ExpandSetsCorrectSeparatorLength() async throws {
         // Arrange
-        sut = MenuBarManager(settings: SettingsManager.shared)
+        sut = MenuBarManager(settings: testSettings)
         XCTAssertTrue(sut.isCollapsed, "Precondition: should start collapsed")
 
         // Act
@@ -167,7 +182,7 @@ final class MenuBarManagerTests: XCTestCase {
     // MARK: - MBM-009: Collapse sets correct separator length
 
     func testMBM009_CollapseSetsCorrectSeparatorLength() async throws {
-        sut = MenuBarManager(settings: SettingsManager.shared)
+        sut = MenuBarManager(settings: testSettings)
         XCTAssertTrue(sut.isCollapsed, "Precondition: should start collapsed")
 
         sut.toggle()
@@ -190,7 +205,7 @@ final class MenuBarManagerTests: XCTestCase {
 
     func testMBM010_AutoCollapseTimerStartsOnExpand() async throws {
         // Arrange
-        let settings = SettingsManager.shared
+        let settings: SettingsManager = testSettings
         let originalEnabled = settings.autoCollapseEnabled
         let originalDelay = settings.autoCollapseDelay
 
@@ -223,7 +238,7 @@ final class MenuBarManagerTests: XCTestCase {
 
     func testMBM011_AutoCollapseTimerDoesNotStartWhenDisabled() async throws {
         // Arrange
-        let settings = SettingsManager.shared
+        let settings: SettingsManager = testSettings
         let originalEnabled = settings.autoCollapseEnabled
         let originalDelay = settings.autoCollapseDelay
 
@@ -254,7 +269,7 @@ final class MenuBarManagerTests: XCTestCase {
 
     func testMBM012_AutoCollapseTimerCancelsOnCollapse() async throws {
         // Arrange
-        let settings = SettingsManager.shared
+        let settings: SettingsManager = testSettings
         let originalEnabled = settings.autoCollapseEnabled
         let originalDelay = settings.autoCollapseDelay
 
@@ -309,7 +324,7 @@ final class MenuBarManagerTests: XCTestCase {
 
     func testMBM013_AutoCollapseTimerRestartsOnSettingsChange() async throws {
         // Arrange
-        let settings = SettingsManager.shared
+        let settings: SettingsManager = testSettings
         let originalEnabled = settings.autoCollapseEnabled
         let originalDelay = settings.autoCollapseDelay
 
@@ -353,7 +368,7 @@ final class MenuBarManagerTests: XCTestCase {
     // MARK: - MBM-014: Expand image is correct for LTR
 
     func testMBM014_ExpandImageIsCorrectForLTR() async throws {
-        sut = MenuBarManager(settings: SettingsManager.shared)
+        sut = MenuBarManager(settings: testSettings)
 
         guard sut.isLeftToRight else {
             throw XCTSkip("MBM-014: Test requires LTR layout, but current layout is RTL")
@@ -365,7 +380,7 @@ final class MenuBarManagerTests: XCTestCase {
     // MARK: - MBM-015: Collapse image is correct for LTR
 
     func testMBM015_CollapseImageIsCorrectForLTR() async throws {
-        sut = MenuBarManager(settings: SettingsManager.shared)
+        sut = MenuBarManager(settings: testSettings)
 
         guard sut.isLeftToRight else {
             throw XCTSkip("MBM-015: Test requires LTR layout, but current layout is RTL")
@@ -378,7 +393,7 @@ final class MenuBarManagerTests: XCTestCase {
 
     func testMBM016_ExpandImageIsCorrectForRTL() async throws {
         // Arrange
-        sut = MenuBarManager(settings: SettingsManager.shared)
+        sut = MenuBarManager(settings: testSettings)
 
         // Skip if not RTL layout
         guard !sut.isLeftToRight else {
@@ -393,7 +408,7 @@ final class MenuBarManagerTests: XCTestCase {
 
     func testMBM017_CollapseImageIsCorrectForRTL() async throws {
         // Arrange
-        sut = MenuBarManager(settings: SettingsManager.shared)
+        sut = MenuBarManager(settings: testSettings)
 
         // Skip if not RTL layout
         guard !sut.isLeftToRight else {
@@ -408,7 +423,7 @@ final class MenuBarManagerTests: XCTestCase {
 
     func testMBM018_InitialStateHasCorrectImage() async throws {
         // Arrange & Act
-        sut = MenuBarManager(settings: SettingsManager.shared)
+        sut = MenuBarManager(settings: testSettings)
 
         // Assert
         // Initial state is isCollapsed=true
@@ -421,7 +436,7 @@ final class MenuBarManagerTests: XCTestCase {
 
     func testMBM019_ToggleUpdatesImage() async throws {
         // Arrange
-        sut = MenuBarManager(settings: SettingsManager.shared)
+        sut = MenuBarManager(settings: testSettings)
         // Note: With ControlItemImage.sfSymbol(), the accessibilityDescription is the SF Symbol name
         XCTAssertEqual(sut.currentToggleImageDescription, sut.expandImageSymbolName, "Precondition: Start with expand symbol")
 
@@ -447,7 +462,7 @@ final class MenuBarManagerTests: XCTestCase {
 
     func testMBM020_InitialStateHasCorrectLength() async throws {
         // Arrange & Act
-        sut = MenuBarManager(settings: SettingsManager.shared)
+        sut = MenuBarManager(settings: testSettings)
 
         // Assert
         // Initial state is isCollapsed=true
@@ -465,7 +480,7 @@ final class MenuBarManagerTests: XCTestCase {
     func testMBM021_Phase0Regression_InitialSeparatorLengthMatchesCollapsedState() async throws {
         // Arrange
         // Create manager - it should start with isCollapsed=true by default
-        sut = MenuBarManager(settings: SettingsManager.shared)
+        sut = MenuBarManager(settings: testSettings)
 
         // Assert - CRITICAL REGRESSION TEST
         // Before the Phase 0 fix, this assertion would fail because:
@@ -486,7 +501,7 @@ final class MenuBarManagerTests: XCTestCase {
 
     func testMBM022_HiddenSectionSyncsWithIsCollapsed() async throws {
         // Arrange
-        sut = MenuBarManager(settings: SettingsManager.shared)
+        sut = MenuBarManager(settings: testSettings)
         XCTAssertTrue(sut.isCollapsed, "Precondition: should start collapsed")
 
         // Assert initial sync

@@ -157,10 +157,8 @@ final class EventSimulator {
     // MARK: - Validation
 
     private func isValidScreenPoint(_ point: CGPoint) -> Bool {
-        for screen in NSScreen.screens {
-            if screen.frame.contains(point) {
-                return true
-            }
+        for screen in NSScreen.screens where screen.frame.contains(point) {
+            return true
         }
 
         if let mainScreen = NSScreen.main {

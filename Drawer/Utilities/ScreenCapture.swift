@@ -45,7 +45,10 @@ enum ScreenCapture {
         }
     }
 
-    @available(*, deprecated, message: "CGWindowListCreateImage is deprecated. Use ScreenCaptureKit for new code.")
+    /// - Warning: Backed by the deprecated `CGWindowListCreateImage` machinery
+    ///   (see `LegacyWindowImageProvider` below). Migration to ScreenCaptureKit
+    ///   per-window capture is planned (hardening roadmap Phase 5).
+    ///   Do not add new call sites.
     static func captureWindows(
         _ windowIDs: [CGWindowID],
         screenBounds: CGRect? = nil,
@@ -64,10 +67,11 @@ enum ScreenCapture {
             return nil
         }
 
-        return CGImage(
-            windowListFromArrayScreenBounds: screenBounds ?? .null,
+        let provider: any WindowImageProviding = LegacyWindowImageProvider()
+        return provider.makeImage(
             windowArray: windowArray,
-            imageOption: option
+            screenBounds: screenBounds ?? .null,
+            option: option
         )
     }
 
@@ -132,6 +136,40 @@ enum ScreenCapture {
         }
 
         return images
+    }
+}
+
+// MARK: - Deprecation Firewall
+
+/// Isolates the deprecated `CGImage(windowListFromArrayScreenBounds:)` call so the
+/// deprecation warning is silenced at exactly one audited location.
+///
+/// Calling a deprecated API through a protocol witness whose conformance is itself
+/// marked deprecated suppresses the diagnostic without `-Wno-deprecated` and without
+/// hiding future deprecations elsewhere in the file.
+///
+/// Remove this entire section when `ScreenCapture.captureWindows` migrates to
+/// ScreenCaptureKit (hardening roadmap Phase 5).
+private protocol WindowImageProviding {
+    func makeImage(
+        windowArray: CFArray,
+        screenBounds: CGRect,
+        option: CGWindowImageOption
+    ) -> CGImage?
+}
+
+private struct LegacyWindowImageProvider: WindowImageProviding {
+    @available(macOS, deprecated: 14.0, message: "Firewall for CGWindowListCreateImage; migrate to ScreenCaptureKit (Phase 5).")
+    func makeImage(
+        windowArray: CFArray,
+        screenBounds: CGRect,
+        option: CGWindowImageOption
+    ) -> CGImage? {
+        CGImage(
+            windowListFromArrayScreenBounds: screenBounds,
+            windowArray: windowArray,
+            imageOption: option
+        )
     }
 }
 

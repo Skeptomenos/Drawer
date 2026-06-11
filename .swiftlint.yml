@@ -1,0 +1,64 @@
+# SwiftLint configuration for Drawer
+# Gate stage 1: `swiftlint --strict` (any warning fails the gate).
+# Policy source: AGENTS.md (zero force unwraps, no print, Logger-only logging).
+
+included:
+  - Drawer
+  - DrawerTests
+  - DrawerUITests
+
+excluded:
+  - hidden
+  - archive
+  - LauncherApplication
+  - DerivedData
+
+# Most defaults stay on. Rules below are deliberate policy choices.
+opt_in_rules:
+  - force_unwrapping        # zero-tolerance policy (AGENTS.md)
+  - empty_count
+  - closure_spacing
+  - contains_over_first_not_nil
+  - redundant_nil_coalescing
+
+disabled_rules:
+  - todo                    # TODOs tracked in plan documents, not lint
+  - trailing_whitespace     # cosmetic; not worth gate failures
+  - line_length             # logging/debug lines exceed 120 routinely
+  - identifier_name         # short names like x, y, id are fine
+  - type_body_length        # enforced via file_length instead
+  - function_body_length    # Phase 5 modularization handles size
+
+force_unwrapping:
+  severity: error
+
+force_try:
+  severity: error
+
+force_cast:
+  severity: error
+
+file_length:
+  warning: 400
+  error: 700
+  ignore_comment_only_lines: true
+
+cyclomatic_complexity:
+  warning: 15
+  error: 25
+
+custom_rules:
+  no_print:
+    name: "No print statements"
+    regex: '(^|\s)print\('
+    match_kinds:
+      - identifier
+    message: "Use Logger (os.log) instead of print. Policy: docs/LOGGING.md"
+    severity: error
+    included: "Drawer/.*\\.swift"
+  no_nslog:
+    name: "No NSLog statements"
+    regex: '\bNSLog\('
+    message: "Use Logger (os.log) instead of NSLog. Policy: docs/LOGGING.md"
+    severity: error
+    included: "Drawer/.*\\.swift"

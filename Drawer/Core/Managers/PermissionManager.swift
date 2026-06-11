@@ -133,8 +133,6 @@ final class PermissionManager: PermissionProviding {
         !hasAllPermissions
     }
 
-
-
     // MARK: - Initialization
 
     private init() {

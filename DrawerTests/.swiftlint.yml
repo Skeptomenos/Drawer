@@ -1,0 +1,11 @@
+# Test-target overrides (nested config; inherits root .swiftlint.yml).
+# Tests may use force-unwrap idioms on fixtures; production code may not.
+# Phase 3 (protocol seams + test rewrite) migrates these to XCTUnwrap.
+
+disabled_rules:
+  - file_length
+  - force_unwrapping
+  - force_try
+  - empty_count
+  - non_optional_string_data_conversion
+  - large_tuple

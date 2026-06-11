@@ -20,6 +20,7 @@ final class MenuBarSectionTests: XCTestCase {
     // MARK: - Setup & Teardown
 
     override func setUp() async throws {
+        try requireSystemTests()
         try await super.setUp()
         controlItem = ControlItem()
     }

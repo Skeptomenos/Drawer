@@ -18,6 +18,7 @@ final class DrawerPanelControllerTests: XCTestCase {
     // MARK: - Setup & Teardown
 
     override func setUp() async throws {
+        try requireSystemTests()
         try await super.setUp()
         sut = DrawerPanelController()
     }

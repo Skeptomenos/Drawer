@@ -27,6 +27,7 @@ final class OverlayModeManagerTests: XCTestCase {
     // MARK: - Setup & Teardown
 
     override func setUp() async throws {
+        try requireSystemTests()
         try await super.setUp()
 
         // Create real dependencies for testing

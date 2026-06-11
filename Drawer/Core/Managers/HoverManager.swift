@@ -56,11 +56,9 @@ final class HoverManager {
 
     private init() {}
 
-    nonisolated deinit {
-        #if DEBUG
-        print("HoverManager deallocated - ensure stopMonitoring() was called before deallocation")
-        #endif
-    }
+    // HoverManager is a never-deallocated singleton; monitors are cleaned up via
+    // stopMonitoring(). No deinit logging (Logger is unavailable in nonisolated deinit
+    // without crossing actor isolation; print is banned by lint policy).
 
     func startMonitoring() {
         guard !isMonitoring else { 

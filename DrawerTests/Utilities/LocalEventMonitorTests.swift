@@ -18,6 +18,10 @@ final class LocalEventMonitorTests: XCTestCase {
 
     // MARK: - Setup & Teardown
 
+    override func setUpWithError() throws {
+        try requireSystemTests()
+    }
+
     override func setUp() {
         super.setUp()
         // Create a monitor with a pass-through handler for testing

@@ -34,29 +34,11 @@ final class IconRepositionerTests: XCTestCase {
     // MARK: - Task 5.3.6: Test Immovable Items Throw .notMovable
 
     func testMove_ImmovableItem_ThrowsNotMovable() async throws {
-        // Arrange - Create an IconItem that represents an immovable system item
-        // We simulate Control Center (BentoBox) which is in the immovableItems set
-        let windowInfo: [String: Any] = [
-            kCGWindowNumber as String: CGWindowID(99999),
-            kCGWindowBounds as String: [
-                "X": CGFloat(100),
-                "Y": CGFloat(0),
-                "Width": CGFloat(22),
-                "Height": CGFloat(22)
-            ],
-            kCGWindowOwnerPID as String: pid_t(1),
-            kCGWindowOwnerName as String: "Control Center",
-            kCGWindowName as String: "BentoBox"
-        ]
-
-        // Create a mock immovable item by setting the owner name to match immovable pattern
-        // However, since we can't easily mock bundleIdentifier, we'll test the logic differently
-        // by verifying that the isMovable property works correctly on IconIdentifier
-
-        // Test the underlying logic: an item with isMovable = false should not be moveable
+        // Arrange - simulate Control Center (BentoBox), which is in the immovableItems set.
+        // We can't easily mock bundleIdentifier, so test the underlying logic:
+        // an item with isImmovable = true must be rejected by move().
         let immovableIdentifier = IconIdentifier(namespace: "com.apple.controlcenter", title: "BentoBox")
         XCTAssertTrue(immovableIdentifier.isImmovable, "Control Center should be detected as immovable")
-        XCTAssertFalse(!immovableIdentifier.isImmovable, "isMovable should be false for Control Center")
     }
 
     func testMove_CustomAppItem_IsMovable() async throws {

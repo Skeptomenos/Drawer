@@ -170,7 +170,8 @@ final class ScreenCaptureTests: XCTestCase {
 
     // MARK: - SC-005: requestPermissions API
 
-    func testSC005_RequestPermissionsDoesNotCrash() {
+    func testSC005_RequestPermissionsDoesNotCrash() throws {
+        try requireSystemTests()
         // This test simply verifies that calling requestPermissions doesn't crash
         // We can't actually test the permission dialog in unit tests
 

@@ -47,7 +47,7 @@ struct IconIdentifier: Hashable, Codable, Equatable {
         // Siri
         IconIdentifier(namespace: "com.apple.Siri", title: "Siri"),
         // Spotlight
-        IconIdentifier(namespace: "com.apple.Spotlight", title: "Spotlight"),
+        IconIdentifier(namespace: "com.apple.Spotlight", title: "Spotlight")
     ]
 
     /// Returns true if this item is a system item that cannot be moved.
