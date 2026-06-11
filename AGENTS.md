@@ -25,16 +25,16 @@ macOS 14+ menu bar utility that hides icons using the "10k pixel hack" — a sep
 - **Conflicts:** Report to user; do not auto-resolve.
 
 ### Rule Activation
-*Apply rules from `rules/` based on task context:*
+*Apply standards skills based on task context. Load via the Skill Catalog (`read_skill`) or from `_infra/skills/skills/dev-standards/<dir>/SKILL.md`:*
 
-| Task Context        | Rules                                                                          |
-| ------------------- | ------------------------------------------------------------------------------ |
-| All code changes    | `rules/architecture.md`, `rules/workflow.md`, `rules/testing.md`               |
-| Swift / SwiftUI     | `rules/rules_swift.md`, `rules/rules_swift_concurrency.md`, `rules/logging.md` |
-| iOS/macOS Agentic   | `rules/rules_ios_agentic.md`                                                   |
-| API / Design        | `rules/api_design.md`, `rules/security.md`                                     |
-| DevOps / CI         | `rules/devops.md`                                                              |
-| Documentation       | `rules/documentation.md`                                                       |
+| Task Context        | Skills                                                                 |
+| ------------------- | ---------------------------------------------------------------------- |
+| All code changes    | `architecture-standards`, `workflow-standards`, `testing-standards`    |
+| Swift / SwiftUI     | `swift-standards`, `swift-concurrency-standards`, `logging-standards`  |
+| iOS/macOS Agentic   | `ios-agentic-standards`                                                 |
+| API / Design        | `api-design-standards`, `security-standards`                           |
+| DevOps / CI         | `devops-standards`                                                      |
+| Documentation       | `documentation-standards`                                               |
 
 ### Workflow Loop
 1. **READ:** `docs/` + relevant `specs/*.md`.
