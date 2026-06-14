@@ -2,6 +2,21 @@
 
 This document explains how Drawer works under the hood. Understanding these concepts is essential for contributing to the codebase.
 
+## OS Compatibility Status (2026-06-12)
+
+| macOS | 10k hack | Per-item CG windows | Verdict |
+|-------|----------|---------------------|---------|
+| 14–26.0 | Works | Yes | Supported (26.x: item windows owned by Control Center; identification needs adaptation) |
+| 26.5 | Degraded | Owned by Control Center | Section misclassification (see Ice #946) |
+| 27 beta+ | **Dead** | **No (single menu bar window)** | **Unsupported — project sunset until a workaround exists** |
+
+On macOS 27 the separator expands rightward off-screen and neighbors reflow
+around it; `CGSGetProcessMenuBarWindowList` returns one window; a new
+`MenuBarAgent` XPC owns item visibility. AX enumeration (`AXExtrasMenuBar`)
+still provides per-item owner + frames and is the surviving identification
+primitive should development resume (overlay-first pivot recommended).
+Details: `_planning/research/2026-06-12-macos26-27-mechanism-spike.md`.
+
 ## Overview
 
 Drawer is a macOS menu bar utility that hides icons into a secondary, collapsible panel. It achieves this through a clever technique called the **"10k Pixel Hack"** combined with **ScreenCaptureKit** for icon visualization.

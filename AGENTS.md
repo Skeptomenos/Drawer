@@ -2,9 +2,18 @@
 
 macOS 14+ menu bar utility that hides icons using the "10k pixel hack" — a separator NSStatusItem expands to 10,000px, pushing icons off-screen.
 
+> **SUNSET (2026-06-12): development deferred.** The 10k-pixel hack is dead on
+> macOS 27 (probe-confirmed: status items reflow around expanded spacers at any
+> length; the menu bar is now a single window; per-item CG windows no longer
+> exist). Every manager in the ecosystem is broken on 27 (Ice, Thaw,
+> Bartender 6, BetterTouchTool). Do NOT resume feature work until a macOS 27
+> fix/workaround exists. Watch: Thaw issue #687 and the BTT community thread.
+> Full findings: `_planning/research/2026-06-12-macos26-27-mechanism-spike.md`.
+> Roadmap state: `_planning/plans/2026-06-11-hardening-roadmap.md` (DEFERRED).
+
 ## Identity
-- **Status:** poc
-- **Tech:** Swift, SwiftUI, macOS 14+
+- **Status:** archived (sunset 2026-06-12 — core mechanism broken by macOS 27; deferred until OS-level workaround exists)
+- **Tech:** Swift, SwiftUI, macOS 14+ (mechanism functional only up to macOS 26.4)
 
 ## Dev Standards
 

@@ -16,6 +16,15 @@
 
 ---
 
+> [!WARNING]
+> **Project sunset (June 2026).** macOS 26 Tahoe moved menu bar items into a
+> single Control-Center-owned window and macOS 27 removes per-item windows
+> entirely — the "10k pixel" hiding technique this app (and Hidden Bar, Ice,
+> Bartender, et al.) relies on no longer works there. macOS 26 also ships
+> native per-item hiding (System Settings → Menu Bar). Development is deferred
+> until a viable macOS 27 mechanism emerges. Drawer remains functional on
+> macOS 14–26.4.
+
 ## What is Drawer?
 
 Drawer is a high-performance macOS menu bar utility (forked from [Hidden Bar](https://github.com/dwarvesf/hidden)) that hides menu bar icons into a secondary, collapsible section. When you need them, they're just a click or hover away.
