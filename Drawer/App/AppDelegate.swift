@@ -28,6 +28,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         AppDelegate.shared = self
+
+        // Test host guard: when XCTest launches Drawer.app as TEST_HOST, do NOT
+        // bootstrap the app. Booting would create real menu bar status items and
+        // panels on the developer's machine for every test run.
+        // See Drawer/Utilities/TestEnvironment.swift.
+        guard !TestEnvironment.isRunningTests else {
+            logger.info("XCTest host detected - skipping app bootstrap")
+            return
+        }
+
         _ = AppState.shared
 
         showOnboardingIfNeeded()

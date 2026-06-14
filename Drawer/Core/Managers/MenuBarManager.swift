@@ -236,7 +236,7 @@ final class MenuBarManager {
         }
 
         toggleControl.image = isCollapsed ? expandImage : collapseImage
-        toggleControl.autosaveName = "drawer_toggle_v4"
+        toggleControl.autosaveName = TestEnvironment.statusItemAutosavePrefix + "drawer_toggle_v4"
         toggleControl.setAction(target: self, action: #selector(toggleButtonPressed))
         toggleControl.setSendAction(on: [.leftMouseUp, .rightMouseUp])
 
@@ -260,7 +260,7 @@ final class MenuBarManager {
         }
 
         separatorControl.image = separatorImage
-        separatorControl.autosaveName = "drawer_separator_v4"
+        separatorControl.autosaveName = TestEnvironment.statusItemAutosavePrefix + "drawer_separator_v4"
         separatorControl.setMenu(createContextMenu())
 
         hiddenSection = MenuBarSection(
@@ -316,7 +316,7 @@ final class MenuBarManager {
         }
 
         alwaysHiddenControl.image = alwaysHiddenSeparatorImage
-        alwaysHiddenControl.autosaveName = "drawer_always_hidden_separator_v2"
+        alwaysHiddenControl.autosaveName = TestEnvironment.statusItemAutosavePrefix + "drawer_always_hidden_separator_v2"
         alwaysHiddenControl.setMenu(createContextMenu())
 
         alwaysHiddenSection = MenuBarSection(
@@ -344,7 +344,7 @@ final class MenuBarManager {
         }
         
         // No image - this is an invisible spacer
-        spacer.autosaveName = "drawer_always_hidden_spacer_v2"
+        spacer.autosaveName = TestEnvironment.statusItemAutosavePrefix + "drawer_always_hidden_spacer_v2"
         alwaysHiddenSpacer = spacer
         
         // Verify layout by logging positions after window creation settles

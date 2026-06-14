@@ -13,8 +13,15 @@ struct DrawerApp: App {
 
     var body: some Scene {
         Settings {
-            SettingsView()
-                .environment(AppState.shared)
+            // Test host guard: touching AppState.shared boots the full object
+            // graph (real status items) before AppDelegate's guard can run.
+            // See Drawer/Utilities/TestEnvironment.swift.
+            if TestEnvironment.isRunningTests {
+                EmptyView()
+            } else {
+                SettingsView()
+                    .environment(AppState.shared)
+            }
         }
     }
 }
